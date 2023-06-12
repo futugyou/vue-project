@@ -36,7 +36,7 @@ const OpenaiWeb = () => {
 
   return (
     <micro-app
-      name='openai-web'
+      name='openai'
       url={`${import.meta.env.REACT_APP_OPENAI_SERVER}`}
       baseroute='/openai'
       data={microAppData}
@@ -46,6 +46,8 @@ const OpenaiWeb = () => {
       onUnmount={handleUnmount}
       onError={handleError}
       onDataChange={handleDataChange}
+      inline 
+      disableSandbox 
     ></micro-app>
   )
 }
