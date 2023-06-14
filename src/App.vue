@@ -1,16 +1,24 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div id=vue3-app>
+    <img alt="Vue logo" src="./assets/logo.png">
+    <div id='public-links' @click="onRouteChange">
+      <router-link to="/" page-path=''>Home</router-link> |
+    </div>
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
 
 export default defineComponent({
   name: 'App',
-  components: {
-    HelloWorld
+  methods: {
+    onRouteChange() {
+      if (window.__MICRO_APP_ENVIRONMENT__) {
+        window.microApp.setGlobalData({ name: window.__MICRO_APP_NAME__ })
+      }
+    }
   }
 });
 </script>
