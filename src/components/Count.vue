@@ -7,7 +7,10 @@ const message = ref('Hello World!')
 const pClass = ref('title')
 const increment = () => {
     counter.count++
-    message.value="Count has been increment"
+}
+
+const OnInput = (e: any) => {
+    message.value = e.target.value
 }
 </script>
 
@@ -15,6 +18,8 @@ const increment = () => {
     <h1>{{ message }}</h1>
     <p :class="pClass">Count is: {{ counter.count }}</p>
     <button @click="increment">Increment Count</button>
+    <input :value="message" @input="OnInput" placeholder="Hello World!" />
+    <input v-model="message" placeholder="Hello World!" />
 </template>
 
 <style>
