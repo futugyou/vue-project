@@ -2,7 +2,8 @@
   <div id=vue3-app>
     <img alt="Vue logo" src="./assets/logo.png">
     <div id='public-links' @click="onRouteChange">
-      <router-link to="/" page-path=''>Home</router-link> |
+      <router-link to="/" page-path=''>Home</router-link> |      
+      <router-link to="/count" page-path=''>Count</router-link>
     </div>
     <router-view />
   </div>
