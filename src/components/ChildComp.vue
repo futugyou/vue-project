@@ -6,4 +6,5 @@ emit('response', 'hello from child')
 
 <template>
     <h2>Child component</h2>
+    <slot>Fallback content</slot>
 </template>

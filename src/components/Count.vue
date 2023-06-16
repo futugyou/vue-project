@@ -74,8 +74,8 @@ watch(todoId, fetchData)
 
 // child emit
 const childMsg = ref('No child msg yet')
-const childEmit=(msg:string)=>{
-    childMsg.value = msg 
+const childEmit = (msg: string) => {
+    childMsg.value = msg
 }
 </script>
 
@@ -117,8 +117,9 @@ const childEmit=(msg:string)=>{
             <pre v-else>{{ todoData }}</pre>
         </div>
         <div class="layer">
-            <ChildComp  @response="childEmit" />
-            <p>{{ childMsg }}</p>
+            <ChildComp @response="childEmit">
+                <p>{{ childMsg }}</p>
+            </ChildComp>
         </div>
     </div>
 </template>
