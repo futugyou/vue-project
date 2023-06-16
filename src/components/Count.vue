@@ -50,6 +50,20 @@ watch(counter, (newCount) => {
     // 没错，console.log() 是一个副作用
     console.log(`new count is: ${newCount.count}`)
 })
+
+const todoId = ref(1)
+const todoData = ref(null)
+
+const fetchData = async () => {
+    todoData.value = null
+    const res = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${todoId.value}`
+    )
+    todoData.value = await res.json()
+}
+
+fetchData()
+watch(todoId, fetchData)
 </script>
 
 <template>
@@ -83,6 +97,12 @@ watch(counter, (newCount) => {
         <div class="layer">
             <p ref="p">hello</p>
         </div>
+        <div class="layer">
+            <p>Todo id: {{ todoId }}</p>
+            <button @click="todoId++">Fetch next todo</button>
+            <p v-if="!todoData">Loading...</p>
+            <pre v-else>{{ todoData }}</pre>
+        </div>
     </div>
 </template>
 
@@ -101,7 +121,7 @@ watch(counter, (newCount) => {
     align-items: center;
 }
 
-.layer{
+.layer {
     width: 50%;
     text-align: left;
     margin: 20px 0;
