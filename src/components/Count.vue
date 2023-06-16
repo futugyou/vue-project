@@ -1,5 +1,5 @@
 <script  lang="ts" setup>
-import { reactive, ref, computed ,onMounted } from 'vue'
+import { reactive, ref, computed ,onMounted,watch  } from 'vue'
 
 const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
@@ -46,6 +46,10 @@ onMounted(() => {
   p.value.innerHTML="this is test"
 })
 
+watch(counter, (newCount) => {
+  // 没错，console.log() 是一个副作用
+  console.log(`new count is: ${newCount.count}`)
+})
 </script>
 
 <template>
