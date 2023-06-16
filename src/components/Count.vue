@@ -1,10 +1,11 @@
 <script  lang="ts" setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed ,onMounted } from 'vue'
 
 const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
 const newTodo = ref("")
 const hideCompleted = ref(false)
+const p = ref(null)
 
 let id = 0
 const todos = ref([
@@ -18,7 +19,7 @@ const increment = () => {
     counter.count++
 }
 
-const OnInput = (e: any) => {
+const onInput = (e: any) => {
     message.value = e.target.value
 }
 
@@ -26,7 +27,7 @@ const removeTodo = (todo: any) => {
     todos.value = todos.value.filter(i => i.id != todo.id)
 }
 
-const AddNewTodo = (e: any) => {
+const addNewTodo = (e: any) => {
     if (newTodo.value.length > 0) {
         todos.value = todos.value.concat({ id: id++, text: newTodo.value, done: false })
         newTodo.value = ""
@@ -41,18 +42,22 @@ const filteredTodos = computed(() => {
     return todos.value
 })
 
+onMounted(() => { 
+  p.value.innerHTML="this is test"
+})
+
 </script>
 
 <template>
     <h1>{{ message }}</h1>
     <p :class="pClass">Count is: {{ counter.count }}</p>
     <button @click="increment">Increment Count</button>
-    <input :value="message" @input="OnInput" placeholder="Hello World!" v-if="counter.count % 2 == 0" />
+    <input :value="message" @input="onInput" placeholder="Hello World!" v-if="counter.count % 2 == 0" />
     <input v-model="message" placeholder="Hello World!" v-if="counter.count % 2 == 1" />
     <h1 v-else>this match last 'v-if'</h1>
 
     <input v-model="newTodo">
-    <button @click="AddNewTodo">Add Todo</button>
+    <button @click="addNewTodo">Add Todo</button>
     <ul>
         <li v-for="item in filteredTodos" :key="item.id">
             <input type="checkbox" v-model="item.done">
@@ -65,6 +70,7 @@ const filteredTodos = computed(() => {
     <button @click="hideCompleted = !hideCompleted">
         {{ hideCompleted ? 'Show all' : 'Hide completed' }}
     </button>
+    <p ref="p">hello</p>
 </template>
 
 <style>
