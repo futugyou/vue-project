@@ -1,5 +1,8 @@
 <script  lang="ts" setup>
 import { reactive, ref, computed, onMounted, watch } from 'vue'
+const props = defineProps({
+    id: Number
+})
 
 const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
@@ -7,7 +10,7 @@ const newTodo = ref("")
 const hideCompleted = ref(false)
 const p = ref(null)
 
-let id = 0
+let id = props.id ?? 0
 const todos = ref([
     { id: id++, text: 'Learn HTML', done: true },
     { id: id++, text: 'Learn JavaScript', done: true },
