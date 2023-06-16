@@ -1,5 +1,7 @@
-<script  lang="ts" setup>
+<script lang="ts" setup>
 import { reactive, ref, computed, onMounted, watch } from 'vue'
+import ChildComp from './ChildComp.vue'
+
 const props = defineProps({
     id: Number
 })
@@ -49,11 +51,13 @@ onMounted(() => {
     p.value.innerHTML = "this is test"
 })
 
+// watch
 watch(counter, (newCount) => {
     // 没错，console.log() 是一个副作用
     console.log(`new count is: ${newCount.count}`)
 })
 
+// watch 2
 const todoId = ref(1)
 const todoData = ref(null)
 
@@ -67,6 +71,12 @@ const fetchData = async () => {
 
 fetchData()
 watch(todoId, fetchData)
+
+// child emit
+const childMsg = ref('No child msg yet')
+const childEmit=(msg:string)=>{
+    childMsg.value = msg 
+}
 </script>
 
 <template>
@@ -105,6 +115,10 @@ watch(todoId, fetchData)
             <button @click="todoId++">Fetch next todo</button>
             <p v-if="!todoData">Loading...</p>
             <pre v-else>{{ todoData }}</pre>
+        </div>
+        <div class="layer">
+            <ChildComp  @response="childEmit" />
+            <p>{{ childMsg }}</p>
         </div>
     </div>
 </template>
