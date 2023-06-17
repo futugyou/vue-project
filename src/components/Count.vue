@@ -161,17 +161,22 @@ const onCtrlEnter = () => {
 }
 
 .container {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; */
+    grid-gap: 5px;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
 }
 
 .layer {
-    width: 50%;
+    /* width: 50%; */
     text-align: left;
     border: 1px solid #6acbe3;
     border-radius: 5px;
-    margin: 5px 0;
+    /* margin: 5px 0; */
     padding: 20px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 </style>
