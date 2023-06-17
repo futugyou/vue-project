@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted, watch,watchEffect  } from 'vue'
+import { reactive, ref, computed, onMounted, watch, watchEffect } from 'vue'
 import ChildComp from './ChildComp.vue'
 
 const props = defineProps({
@@ -75,7 +75,7 @@ watch(todoId, fetchData)
 // watch 3
 const todoId1 = ref(1)
 const todoData1 = ref(null)
-watchEffect(async()=>{
+watchEffect(async () => {
     todoData1.value = null
     const res = await fetch(
         `https://jsonplaceholder.typicode.com/todos/${todoId1.value}`
@@ -87,6 +87,12 @@ watchEffect(async()=>{
 const childMsg = ref('No child msg yet')
 const childEmit = (msg: string) => {
     childMsg.value = msg
+}
+
+// keyup
+const keyupValue = ref("")
+const onCtrlEnter = () => {
+    keyupValue.value = keyupValue.value.split('').reverse().join('')
 }
 </script>
 
@@ -138,6 +144,10 @@ const childEmit = (msg: string) => {
                 <p>{{ childMsg }}</p>
             </ChildComp>
         </div>
+        <div class="layer">
+            <h2>key up</h2>
+            <input @keyup.ctrl.enter="onCtrlEnter" v-model="keyupValue" />
+        </div>
     </div>
 </template>
 
@@ -159,7 +169,9 @@ const childEmit = (msg: string) => {
 .layer {
     width: 50%;
     text-align: left;
-    margin: 20px 0;
+    border: 1px solid #6acbe3;
+    border-radius: 5px;
+    margin: 5px 0;
     padding: 20px;
 }
 </style>
