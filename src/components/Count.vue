@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted, watch } from 'vue'
+import { reactive, ref, computed, onMounted, watch,watchEffect  } from 'vue'
 import ChildComp from './ChildComp.vue'
 
 const props = defineProps({
@@ -48,7 +48,7 @@ const filteredTodos = computed(() => {
 })
 
 onMounted(() => {
-    p.value.innerHTML = "this is test"
+    p.value!.innerHTML = "this is test"
 })
 
 // watch
@@ -71,6 +71,17 @@ const fetchData = async () => {
 
 fetchData()
 watch(todoId, fetchData)
+
+// watch 3
+const todoId1 = ref(1)
+const todoData1 = ref(null)
+watchEffect(async()=>{
+    todoData1.value = null
+    const res = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${todoId1.value}`
+    )
+    todoData1.value = await res.json()
+})
 
 // child emit
 const childMsg = ref('No child msg yet')
@@ -115,6 +126,12 @@ const childEmit = (msg: string) => {
             <button @click="todoId++">Fetch next todo</button>
             <p v-if="!todoData">Loading...</p>
             <pre v-else>{{ todoData }}</pre>
+        </div>
+        <div class="layer">
+            <p>Todo id: {{ todoId1 }}</p>
+            <button @click="todoId1++">Fetch1 next todo</button>
+            <p v-if="!todoData1">Loading...</p>
+            <pre v-else>{{ todoData1 }}</pre>
         </div>
         <div class="layer">
             <ChildComp @response="childEmit">
