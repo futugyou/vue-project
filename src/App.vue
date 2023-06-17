@@ -1,9 +1,10 @@
 <template>
   <div id=vue3-app>
     <img alt="Vue logo" src="./assets/logo.png" style="width: 20px;">
-    <div id='public-links' @click="onRouteChange">
+    <div id='public-links' @click="onRouteChange" style="margin-bottom: 20px">
       <router-link to="/" page-path=''>Home</router-link> |
-      <router-link to="/count" page-path=''>Count</router-link>
+      <router-link to="/base" page-path=''>Base</router-link> |
+      <router-link to="/form" page-path=''>Form</router-link>
     </div>
     <router-view />
   </div>

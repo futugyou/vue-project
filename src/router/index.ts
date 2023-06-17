@@ -1,5 +1,6 @@
 import Home from '../components/HelloWorld.vue'
-import Count from '../components/Count.vue'
+import Base from '../components/Base.vue'
+import FormComp from '../components/FormComp.vue'
 
 const routes = [
   {
@@ -8,9 +9,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/count',
-    name: 'Count',
-    component: Count
+    path: '/base',
+    name: 'Base',
+    component: Base
+  } ,
+  {
+    path: '/form',
+    name: 'Form',
+    component: FormComp
   } 
 ]
 
