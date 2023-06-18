@@ -94,6 +94,15 @@ const keyupValue = ref("")
 const onCtrlEnter = () => {
     keyupValue.value = keyupValue.value.split('').reverse().join('')
 }
+
+// ref 2
+const funcRefValue = ref("")
+const inputRef = (el: any) => {
+    if (el != undefined && el.value != "") {
+        console.log(el.value)
+    }
+}
+
 </script>
 
 <template>
@@ -147,6 +156,10 @@ const onCtrlEnter = () => {
         <div class="layer">
             <h2>key up</h2>
             <input @keyup.ctrl.enter="onCtrlEnter" v-model="keyupValue" />
+        </div>
+        <div class="layer">
+            <h2>Func Ref</h2>
+            <input :ref="inputRef" v-model="funcRefValue">
         </div>
     </div>
 </template>
