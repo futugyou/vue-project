@@ -85,6 +85,7 @@ watchEffect(async () => {
 
 // child emit
 const childMsg = ref('No child msg yet')
+const childTitle = ref("")
 const childEmit = (msg: string) => {
     childMsg.value = msg
 }
@@ -149,7 +150,8 @@ const inputRef = (el: any) => {
             <pre v-else>{{ todoData1 }}</pre>
         </div>
         <div class="layer">
-            <ChildComp @response="childEmit">
+            <span>Title: {{ childTitle }}</span>
+            <ChildComp @response="childEmit" v-model:title="childTitle">
                 <p>{{ childMsg }}</p>
             </ChildComp>
         </div>
