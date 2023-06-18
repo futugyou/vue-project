@@ -7,10 +7,11 @@ import { ref } from 'vue'
 const currentTab = ref('Base')
 
 const tabs = {
-    Base,
-    ChildComp,
-    HelloWorld
+    "Base": Base,
+    "ChildComp": ChildComp,
+    "HelloWorld": HelloWorld
 }
+
 </script>
 
 <template>
@@ -19,7 +20,7 @@ const tabs = {
             @click="currentTab = tab">
             {{ tab }}
         </button>
-        <component :is="tabs[currentTab]" class="tab"></component>
+        <component :is="tabs[currentTab as keyof typeof tabs]" class="tab"></component>
     </div>
 </template>
 

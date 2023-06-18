@@ -5,6 +5,8 @@ emit('response', 'hello from child')
 </script>
 
 <template>
-    <h2>Child component</h2>
-    <slot>Fallback content</slot>
+    <div>
+        <h2>Child component</h2>
+        <slot>Fallback content</slot>
+    </div>
 </template>

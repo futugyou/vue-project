@@ -10,7 +10,7 @@ const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
 const newTodo = ref("")
 const hideCompleted = ref(false)
-const p = ref(null)
+const refforP = ref<HTMLElement>()
 
 let id = props.id ?? 0
 const todos = ref([
@@ -48,7 +48,7 @@ const filteredTodos = computed(() => {
 })
 
 onMounted(() => {
-    p.value!.innerHTML = "this is test"
+    refforP.value!.innerHTML = "this is test"
 })
 
 // watch
@@ -134,7 +134,7 @@ const inputRef = (el: any) => {
             </button>
         </div>
         <div class="layer">
-            <p ref="p">hello</p>
+            <p ref="refforP">hello</p>
         </div>
         <div class="layer">
             <p>Todo id: {{ todoId }}</p>
