@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted, watch, watchEffect, provide } from 'vue'
+
+import { useFetch } from '../composables/fetch'
 import ChildComp from './ChildComp.vue'
 import MouseComp from './MouseComp.vue'
 
@@ -120,6 +122,9 @@ const inputRef = (el: any) => {
     }
 }
 
+// fetch 
+const url = computed(() => `https://jsonplaceholder.typicode.com/todos/` + todoId1.value)
+const { data: useFetchData, error: useFetchError } = useFetch(url)
 </script>
 
 <template>
@@ -182,6 +187,15 @@ const inputRef = (el: any) => {
         </div>
         <div class="layer">
             <MouseComp></MouseComp>
+        </div>
+        <div class="layer">
+            <div v-if="useFetchError">
+                <p>Oops! Error encountered: {{ useFetchError.message }}</p>
+            </div>
+            <div v-else-if="useFetchData">Data loaded:
+                <pre>{{ useFetchData }}</pre>
+            </div>
+            <div v-else>Loading...</div>
         </div>
     </div>
 </template>
