@@ -11,6 +11,17 @@ const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
 provide('message', message)
 
+const location = ref('North Pole')
+
+function updateLocation() {
+  location.value = 'South Pole'
+}
+
+provide('location', {
+  location,
+  updateLocation
+})
+
 const newTodo = ref("")
 const hideCompleted = ref(false)
 const refforP = ref<HTMLElement>()

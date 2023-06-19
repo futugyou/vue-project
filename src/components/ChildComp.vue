@@ -8,6 +8,7 @@ const props = defineProps({
 
 const message = inject('message')
 const globalMessage = inject('global-message')
+const { location, updateLocation } = inject('location')!
 
 const emit = defineEmits<{
     (e: 'response', msg: string): void
@@ -42,5 +43,6 @@ const nameValue = computed({
         <input v-model="nameValue" />
         <h4>this is inject {{ message }}</h4>
         <h4>this is global inject {{ globalMessage }}</h4>
+        <button @click="updateLocation">{{ location }}</button>
     </div>
 </template>
