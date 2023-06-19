@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted, watch, watchEffect,provide  } from 'vue'
+import { reactive, ref, computed, onMounted, watch, watchEffect, provide } from 'vue'
 import ChildComp from './ChildComp.vue'
+import MouseComp from './MouseComp.vue'
 
 
 const props = defineProps({
@@ -14,12 +15,12 @@ provide('message', message)
 const location = ref('North Pole')
 
 function updateLocation() {
-  location.value = 'South Pole'
+    location.value = 'South Pole'
 }
 
 provide('location', {
-  location,
-  updateLocation
+    location,
+    updateLocation
 })
 
 const newTodo = ref("")
@@ -178,6 +179,9 @@ const inputRef = (el: any) => {
         <div class="layer">
             <h2>Func Ref</h2>
             <input :ref="inputRef" v-model="funcRefValue">
+        </div>
+        <div class="layer">
+            <MouseComp></MouseComp>
         </div>
     </div>
 </template>
