@@ -1,10 +1,14 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 const props = defineProps({
     title: String,
     name: String
 })
+
+const message = inject('message')
+const globalMessage = inject('global-message')
+
 const emit = defineEmits<{
     (e: 'response', msg: string): void
     (e: 'update:title', msg: string): void
@@ -36,5 +40,7 @@ const nameValue = computed({
         <slot>Fallback content</slot>
         <input :value="title" @input="updateTitle" /> <br />
         <input v-model="nameValue" />
+        <h4>this is inject {{ message }}</h4>
+        <h4>this is global inject {{ globalMessage }}</h4>
     </div>
 </template>

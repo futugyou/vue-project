@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted, watch, watchEffect } from 'vue'
+import { reactive, ref, computed, onMounted, watch, watchEffect,provide  } from 'vue'
 import ChildComp from './ChildComp.vue'
+
 
 const props = defineProps({
     id: Number
@@ -8,6 +9,8 @@ const props = defineProps({
 
 const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
+provide('message', message)
+
 const newTodo = ref("")
 const hideCompleted = ref(false)
 const refforP = ref<HTMLElement>()

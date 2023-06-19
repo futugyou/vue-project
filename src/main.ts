@@ -45,6 +45,7 @@ function mount() {
 
   // @ts-ignore
   app = createApp(App)
+  app.provide( 'global-message', 'hello!')
   app.use(router)
   app.mount('#app')
 
