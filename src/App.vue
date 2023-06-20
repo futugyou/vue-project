@@ -5,7 +5,8 @@
       <router-link to="/" page-path=''>Home</router-link> |
       <router-link to="/base" page-path=''>Base</router-link> |
       <router-link to="/form" page-path=''>Form</router-link> |
-      <router-link to="/dynamic" page-path=''>Dynamic</router-link>
+      <router-link to="/dynamic" page-path=''>Dynamic</router-link> |
+      <router-link to="/built-ins" page-path=''>built-ins</router-link>
     </div>
     <router-view />
   </div>
