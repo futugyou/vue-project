@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted, watch, watchEffect, provide } from 'vue'
+import { reactive, ref, computed, onMounted, watch, watchEffect, provide ,inject} from 'vue'
 
 import { useFetch } from '../composables/fetch'
 import ChildComp from './ChildComp.vue'
@@ -152,6 +152,8 @@ const vFocus = {
     }
 }
 
+// plugins
+const i18n = inject('i18n')
 </script>
 
 <template>
@@ -231,6 +233,7 @@ const vFocus = {
         <div class="layer">
             <h2>Plugins</h2>
             <h1>{{ $translate('greetings.hello') }}</h1>
+            <h1>{{ i18n.greetings.hello }}</h1>
         </div>
     </div>
 </template>
