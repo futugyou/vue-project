@@ -228,6 +228,10 @@ const vFocus = {
             <h2>Directives</h2>
             <input v-focus />
         </div>
+        <div class="layer">
+            <h2>Plugins</h2>
+            <h1>{{ $translate('greetings.hello') }}</h1>
+        </div>
     </div>
 </template>
 

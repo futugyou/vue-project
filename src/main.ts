@@ -5,6 +5,7 @@ import { createRouter, createWebHistory, Router, RouterHistory, RouterOptions } 
 
 import routes from './router'
 import App from './App.vue'
+import i18nPlugin from './plugins/i18n'
 
 declare global {
   interface Window {
@@ -46,6 +47,11 @@ function mount() {
   // @ts-ignore
   app = createApp(App)
   app.provide( 'global-message', 'hello!')
+  app.use(i18nPlugin, {
+    greetings: {
+      hello: 'Bonjour!'
+    }
+  })
   app.use(router)
   app.mount('#app')
 
