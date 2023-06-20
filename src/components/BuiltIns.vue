@@ -1,16 +1,33 @@
 <script lang="ts" setup>
+import { shuffle as _shuffle } from 'lodash-es'
 import { ref } from 'vue'
 
 const show = ref(false)
 const show1 = ref(false)
 const show2 = ref(false)
 
+const items = ref([1, 2, 3, 4])
+let id = items.value.length + 1
+const AddItem = () => {
+    const i = Math.round(Math.random() * items.value.length)
+    items.value.splice(i, 0, id++)
+}
+
+const RemoveItem = () => {
+    const index = Math.round(Math.random() * items.value.length)
+    items.value.splice(index, 1)
+}
+
+const Shuffle=()=>{
+    items.value = _shuffle(items.value)
+}
+
 </script>
 
 <template>
     <div class="container">
         <div class="layer">
-            <button @click="show = !show">Toggle</button>
+            <button @click="show = !show">Toggle Transition</button>
             <Transition>
                 <p v-if="show">hello</p>
             </Transition>
@@ -19,18 +36,28 @@ const show2 = ref(false)
             </Transition>
         </div>
         <div class="layer">
-            <button @click="show1 = !show1">Toggle</button>
+            <button @click="show1 = !show1">Toggle Transition</button>
             <Transition name="slide-fade">
                 <p v-if="show1">hello</p>
             </Transition>
         </div>
         <div class="layer">
-            <button @click="show2 = !show2">Toggle</button>
+            <button @click="show2 = !show2">Toggle Animation</button>
             <Transition name="bounce">
                 <p v-if="show2" style="text-align: center;">
                     Hello here is some bouncy text!
                 </p>
             </Transition>
+        </div>
+        <div class="layer">
+            <button @click="AddItem">Add</button>
+            <button @click="RemoveItem">Remove</button>
+            <button @click="Shuffle">shuffle</button>
+            <TransitionGroup name="list" tag="ul">
+                <li v-for="item in items" :key="item">
+                    {{ item }}
+                </li>
+            </TransitionGroup>
         </div>
     </div>
 </template>
@@ -91,4 +118,23 @@ const show2 = ref(false)
     100% {
         transform: scale(1);
     }
-}</style>
+}
+
+.list-move, /* 对移动中的元素应用的过渡 */
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+/* 确保将离开的元素从布局流中删除
+  以便能够正确地计算移动的动画。 */
+.list-leave-active {
+  position: absolute;
+}
+</style>
