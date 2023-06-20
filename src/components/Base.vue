@@ -125,6 +125,33 @@ const inputRef = (el: any) => {
 // fetch 
 const url = computed(() => `https://jsonplaceholder.typicode.com/todos/` + todoId1.value)
 const { data: useFetchData, error: useFetchError } = useFetch(url)
+
+// directives
+const vFocus = {
+    created: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(1, el, binding, vnode, prevVnode)
+    },
+    beforeMount: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(2, el, binding, vnode, prevVnode)
+    },
+    mounted: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(3, el, binding, vnode, prevVnode)
+        el.focus()
+    },
+    beforeUpdate: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(4, el, binding, vnode, prevVnode)
+    },
+    updated: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(5, el, binding, vnode, prevVnode)
+    },
+    beforeUnmount: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(6, el, binding, vnode, prevVnode)
+    },
+    unmounted: (el: any, binding: any, vnode: any, prevVnode: any) => {
+        console.log(7, el, binding, vnode, prevVnode)
+    }
+}
+
 </script>
 
 <template>
@@ -196,6 +223,10 @@ const { data: useFetchData, error: useFetchError } = useFetch(url)
                 <pre>{{ useFetchData }}</pre>
             </div>
             <div v-else>Loading...</div>
+        </div>
+        <div class="layer">
+            <h2>Directives</h2>
+            <input v-focus />
         </div>
     </div>
 </template>
