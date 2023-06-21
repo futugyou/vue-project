@@ -5,6 +5,7 @@ import gsap from 'gsap'
 
 import CompA from './CompA.vue'
 import CompB from './CompB.vue'
+import MyModal from './MyModal.vue'
 
 const show = ref(false)
 const show1 = ref(false)
@@ -116,6 +117,14 @@ const current = shallowRef(CompA)
             <KeepAlive>
                 <component :is="current"></component>
             </KeepAlive>
+        </div>
+        <div class="layer">
+            <div class="outer">
+                <h3>Tooltips with Vue 3 Teleport</h3>
+                <div>
+                    <MyModal />
+                </div>
+            </div>
         </div>
     </div>
 </template>
