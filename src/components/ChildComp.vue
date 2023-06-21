@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { computed, inject } from 'vue'
+import { globalMessageKey, messageKey, locationKey } from '../tools/injectkey'
 
-const props = defineProps({
-    title: String,
-    name: String
-})
+interface Book {
+    title: string
+    name: string
+}
+const props = defineProps<Book>()
 
-const message = inject('message')
-const globalMessage = inject('global-message')
-const { location, updateLocation } = inject('location')!
+const message = inject<string>(messageKey, "")
+const globalMessage = inject<string>(globalMessageKey, "")
+const { location, updateLocation } = inject(locationKey)!
 
 const emit = defineEmits<{
     (e: 'response', msg: string): void
@@ -18,11 +20,11 @@ const emit = defineEmits<{
 
 emit('response', 'hello from child')
 
-const updateTitle = (e: any) => {
-    emit('update:title', e.target.value)
+const updateTitle = (e: Event) => {
+    emit('update:title', (e.target as HTMLInputElement).value)
 }
 
-const nameValue = computed({
+const nameValue = computed<string>({
     get() {
         return props.name
     },

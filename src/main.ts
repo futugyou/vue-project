@@ -7,6 +7,8 @@ import routes from './router'
 import App from './App.vue'
 import i18nPlugin from './plugins/i18n'
 
+import { globalMessageKey } from './tools/injectkey'
+
 declare global {
   interface Window {
     microApp: any
@@ -37,7 +39,7 @@ let app: AppInstance | null = null
 let router: Router | null = null
 let history: RouterHistory | null = null
 
-function mount() {  
+function mount() {
   history = createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || process.env.BASE_URL)
   router = createRouter({
     history,
@@ -46,7 +48,7 @@ function mount() {
 
   // @ts-ignore
   app = createApp(App)
-  app.provide( 'global-message', 'hello!')
+  app.provide(globalMessageKey, 'hello!')
   app.use(i18nPlugin, {
     greetings: {
       hello: 'Bonjour!'

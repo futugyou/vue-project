@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { reactive, ref, computed, onMounted, watch, watchEffect, provide ,inject} from 'vue'
+import { reactive, ref, computed, onMounted, watch, watchEffect, provide, inject } from 'vue'
 
 import { useFetch } from '../composables/fetch'
 import ChildComp from './ChildComp.vue'
 import MouseComp from './MouseComp.vue'
 
+import { messageKey, locationKey, i18nKey, I18nInject } from '../tools/injectkey'
 
 const props = defineProps({
     id: Number
@@ -12,7 +13,7 @@ const props = defineProps({
 
 const counter = reactive({ count: 0 })
 const message = ref('Hello World!')
-provide('message', message)
+provide(messageKey, message)
 
 const location = ref('North Pole')
 
@@ -20,7 +21,7 @@ function updateLocation() {
     location.value = 'South Pole'
 }
 
-provide('location', {
+provide(locationKey, {
     location,
     updateLocation
 })
@@ -123,7 +124,7 @@ const inputRef = (el: any) => {
 }
 
 // fetch 
-const url = computed(() => `https://jsonplaceholder.typicode.com/todos/` + todoId1.value)
+const url = computed<string>(() => `https://jsonplaceholder.typicode.com/todos/` + todoId1.value)
 const { data: useFetchData, error: useFetchError } = useFetch(url)
 
 // directives
@@ -153,7 +154,7 @@ const vFocus = {
 }
 
 // plugins
-const i18n = inject('i18n')
+const i18n = inject(i18nKey) as I18nInject
 </script>
 
 <template>
