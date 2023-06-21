@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import { ref, computed } from 'vue'
 import { shuffle as _shuffle } from 'lodash-es'
-import { ref } from 'vue'
+import gsap from 'gsap'
 
 const show = ref(false)
 const show1 = ref(false)
@@ -18,10 +19,47 @@ const RemoveItem = () => {
     items.value.splice(index, 1)
 }
 
-const Shuffle=()=>{
+const Shuffle = () => {
     items.value = _shuffle(items.value)
 }
 
+const list = [
+    { msg: 'Bruce Lee' },
+    { msg: 'Jackie Chan' },
+    { msg: 'Chuck Norris' },
+    { msg: 'Jet Li' },
+    { msg: 'Kung Fury' }
+]
+
+
+const query = ref('')
+
+const computedList = computed(() => {
+    return list.filter((item) => item.msg.toLowerCase().includes(query.value))
+})
+
+const onBeforeEnter = (el: any) => {
+    el.style.opacity = 0
+    el.style.height = 0
+}
+
+const onEnter = (el: any, done: any) => {
+    gsap.to(el, {
+        opacity: 1,
+        height: '1.6em',
+        delay: el.dataset.index * 0.15,
+        onComplete: done
+    })
+}
+
+const onLeave = (el: any, done: any) => {
+    gsap.to(el, {
+        opacity: 0,
+        height: 0,
+        delay: el.dataset.index * 0.15,
+        onComplete: done
+    })
+}
 </script>
 
 <template>
@@ -56,6 +94,14 @@ const Shuffle=()=>{
             <TransitionGroup name="list" tag="ul">
                 <li v-for="item in items" :key="item">
                     {{ item }}
+                </li>
+            </TransitionGroup>
+        </div>
+        <div class="layer">
+            <input v-model="query" />
+            <TransitionGroup tag="ul" :css="false" @before-enter="onBeforeEnter" @enter="onEnter" @leave="onLeave">
+                <li v-for="(item, index) in computedList" :key="item.msg" :data-index="index">
+                    {{ item.msg }}
                 </li>
             </TransitionGroup>
         </div>
@@ -120,21 +166,22 @@ const Shuffle=()=>{
     }
 }
 
-.list-move, /* 对移动中的元素应用的过渡 */
+.list-move,
+/* 对移动中的元素应用的过渡 */
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 .list-enter-from,
 .list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
+    opacity: 0;
+    transform: translateX(30px);
 }
 
 /* 确保将离开的元素从布局流中删除
   以便能够正确地计算移动的动画。 */
 .list-leave-active {
-  position: absolute;
+    position: absolute;
 }
 </style>
