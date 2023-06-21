@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, shallowRef } from 'vue'
 import { shuffle as _shuffle } from 'lodash-es'
 import gsap from 'gsap'
+
+import CompA from './CompA.vue'
+import CompB from './CompB.vue'
 
 const show = ref(false)
 const show1 = ref(false)
@@ -60,6 +63,8 @@ const onLeave = (el: any, done: any) => {
         onComplete: done
     })
 }
+
+const current = shallowRef(CompA)
 </script>
 
 <template>
@@ -104,6 +109,13 @@ const onLeave = (el: any, done: any) => {
                     {{ item.msg }}
                 </li>
             </TransitionGroup>
+        </div>
+        <div class="layer">
+            <input type="radio" :value="CompA" v-model="current" />A
+            <input type="radio" :value="CompB" v-model="current" />B
+            <KeepAlive>
+                <component :is="current"></component>
+            </KeepAlive>
         </div>
     </div>
 </template>
