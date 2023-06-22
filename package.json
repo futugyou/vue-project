@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@xstate/vue": "^2.0.0",
     "core-js": "^3.8.3",
     "gsap": "^3.12.1",
     "immer": "^10.0.2",

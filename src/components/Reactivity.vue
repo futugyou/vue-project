@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useImmer } from '../reactivity/immerState'
-import { useMachine } from '../reactivity/machine'
+import { useMachine, useMachine2 } from '../reactivity/machine'
 
 //Immer
 const [items, setItems] = useImmer([
@@ -31,6 +31,9 @@ const [state, send] = useMachine({
     }
 })
 
+// xstate/vue
+const [state2, send2] = useMachine2()
+
 </script>
 
 <template>
@@ -44,9 +47,20 @@ const [state, send] = useMachine({
             </ul>
         </div>
         <div class="layer">
+            <h2>immer</h2>
             <button @click="send('TOGGLE')">
                 {{ state.matches("inactive") ? "Off" : "On" }}
             </button>
+        </div>
+        <div class="layer">
+            <h2>xstate/vue</h2>
+            <button @click="send2('TOGGLE')">
+                Click me ({{ state2.matches("active") ? "✅" : "❌" }})
+            </button>
+            <code>
+              Toggled
+              <strong>{{ state2.context.count }}</strong> times
+            </code>
         </div>
     </div>
 </template>
