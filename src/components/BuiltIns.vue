@@ -76,6 +76,13 @@ const warnDisabled = () => {
         disabled.value = false
     }, 1500)
 }
+
+//
+const x = ref(0)
+const onMousemove = (e: any) => {
+    x.value = e.clientX
+}
+
 </script>
 
 <template>
@@ -141,6 +148,13 @@ const warnDisabled = () => {
             <div :class="{ shake: disabled }">
                 <button @click="warnDisabled">Click me</button>
                 <span v-if="disabled">This feature is disabled!</span>
+            </div>
+        </div>
+        <div class="layer">
+            <h3>hsl() function</h3>
+            <div @mousemove="onMousemove" :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }" class="movearea">
+                <p>Move your mouse across this div...</p>
+                <p>x: {{ x }}</p>
             </div>
         </div>
     </div>
@@ -250,5 +264,9 @@ const warnDisabled = () => {
     60% {
         transform: translate3d(4px, 0, 0);
     }
+}
+
+.movearea {
+    transition: 0.3s background-color ease;
 }
 </style>
