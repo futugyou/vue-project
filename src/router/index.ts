@@ -3,6 +3,7 @@ import Base from '../components/Base.vue'
 import FormComp from '../components/FormComp.vue'
 import Dynamic from '../components/Dynamic.vue'
 import BuiltIns from '../components/BuiltIns.vue'
+import Reactivity from '../components/Reactivity.vue'
 
 const routes = [
   {
@@ -27,8 +28,13 @@ const routes = [
   },
   {
     path: '/built-ins',
-    name: 'built-ins',
+    name: 'Built-ins',
     component: BuiltIns
+  },
+  {
+    path: '/reactivity',
+    name: 'Reactivity',
+    component: Reactivity
   }
 ]
 

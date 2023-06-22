@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, inject } from 'vue'
-import { globalMessageKey, messageKey, locationKey } from '../tools/injectkey'
+import { globalMessageKey, messageKey, locationKey, DefaultLocation } from '../tools/injectkey'
 
 interface Book {
     title: string
@@ -10,7 +10,7 @@ const props = defineProps<Book>()
 
 const message = inject<string>(messageKey, "")
 const globalMessage = inject<string>(globalMessageKey, "")
-const { location, updateLocation } = inject(locationKey)!
+const { location, updateLocation } = inject(locationKey, DefaultLocation)
 
 const emit = defineEmits<{
     (e: 'response', msg: string): void
