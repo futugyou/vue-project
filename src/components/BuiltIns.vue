@@ -66,6 +66,16 @@ const onLeave = (el: any, done: any) => {
 }
 
 const current = shallowRef(CompA)
+
+// shake
+const disabled = ref(false)
+
+const warnDisabled = () => {
+    disabled.value = true
+    setTimeout(() => {
+        disabled.value = false
+    }, 1500)
+}
 </script>
 
 <template>
@@ -124,6 +134,13 @@ const current = shallowRef(CompA)
                 <div>
                     <MyModal />
                 </div>
+            </div>
+        </div>
+        <div class="layer">
+            <h3>shake</h3>
+            <div :class="{ shake: disabled }">
+                <button @click="warnDisabled">Click me</button>
+                <span v-if="disabled">This feature is disabled!</span>
             </div>
         </div>
     </div>
@@ -204,5 +221,34 @@ const current = shallowRef(CompA)
   以便能够正确地计算移动的动画。 */
 .list-leave-active {
     position: absolute;
+}
+
+.shake {
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }
 </style>
