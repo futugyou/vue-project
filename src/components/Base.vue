@@ -4,6 +4,7 @@ import { reactive, ref, computed, onMounted, watch, watchEffect, provide, inject
 import { useFetch } from '../composables/fetch'
 import ChildComp from './ChildComp.vue'
 import MouseComp from './MouseComp.vue'
+import { useImmer } from '../composables/immerState'
 
 import { messageKey, locationKey, i18nKey, I18nInject } from '../tools/injectkey'
 
@@ -155,6 +156,25 @@ const vFocus = {
 
 // plugins
 const i18n = inject(i18nKey) as I18nInject
+
+//Immer
+const [items, setItems] = useImmer([
+    {
+        title: "Learn Vue",
+        done: true
+    },
+    {
+        title: "Use Vue with Immer",
+        done: false
+    }
+])
+
+const toggleItem = (index: string) => {
+    setItems((items: any) => {
+        items[index].done = !items[index].done
+    })
+}
+
 </script>
 
 <template>
@@ -236,6 +256,14 @@ const i18n = inject(i18nKey) as I18nInject
             <h1>{{ $translate('greetings.hello') }}</h1>
             <h1>{{ i18n.greetings.hello }}</h1>
         </div>
+        <div class="layer">
+            <h2>immer</h2>
+            <ul>
+                <li v-for="({ title, done } ) in items" :class="{ done }" @click="toggleItem(title)">
+                    {{ title }}
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -267,4 +295,9 @@ const i18n = inject(i18nKey) as I18nInject
     overflow: hidden;
     white-space: nowrap;
 }
+
+.done {
+  text-decoration: line-through;
+}
+
 </style>
