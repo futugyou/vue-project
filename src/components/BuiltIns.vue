@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, shallowRef } from 'vue'
+import { ref, computed, shallowRef, reactive, watch } from 'vue'
 import { shuffle as _shuffle } from 'lodash-es'
 import gsap from 'gsap'
 
@@ -83,6 +83,19 @@ const onMousemove = (e: any) => {
     x.value = e.clientX
 }
 
+//
+const number = ref(0)
+const tweened = reactive({
+    number: 0
+})
+
+watch(
+    number,
+    (n) => {
+        gsap.to(tweened, { duration: 0.5, number: Number(n) || 0 })
+    }
+)
+
 </script>
 
 <template>
@@ -155,6 +168,13 @@ const onMousemove = (e: any) => {
             <div @mousemove="onMousemove" :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }" class="movearea">
                 <p>Move your mouse across this div...</p>
                 <p>x: {{ x }}</p>
+            </div>
+        </div>
+        <div class="layer">
+            <h3>hsl() function</h3>
+            <div class="demo">
+                Type a number: <input v-model.number="number" />
+                <p class="big-number">{{ tweened.number.toFixed(0) }}</p>
             </div>
         </div>
     </div>
@@ -268,5 +288,10 @@ const onMousemove = (e: any) => {
 
 .movearea {
     transition: 0.3s background-color ease;
+}
+
+.big-number {
+    font-weight: bold;
+    font-size: 2em;
 }
 </style>
