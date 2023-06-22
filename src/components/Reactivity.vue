@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useImmer } from '../reactivity/immerState'
+import { useMachine } from '../reactivity/machine'
 
 //Immer
 const [items, setItems] = useImmer([
@@ -19,6 +20,17 @@ const toggleItem = (index: string) => {
     })
 }
 
+
+// xstate
+const [state, send] = useMachine({
+    id: 'toggle',
+    initial: 'inactive',
+    states: {
+        inactive: { on: { TOGGLE: 'active' } },
+        active: { on: { TOGGLE: 'inactive' } }
+    }
+})
+
 </script>
 
 <template>
@@ -30,6 +42,11 @@ const toggleItem = (index: string) => {
                     {{ title }}
                 </li>
             </ul>
+        </div>
+        <div class="layer">
+            <button @click="send('TOGGLE')">
+                {{ state.matches("inactive") ? "Off" : "On" }}
+            </button>
         </div>
     </div>
 </template>
