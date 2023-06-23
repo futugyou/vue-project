@@ -32,7 +32,7 @@ const close = () => {
     </Teleport>
 </template>
   
-<style>
+<style scoped>
 .modal-mask {
     position: fixed;
     z-index: 9998;

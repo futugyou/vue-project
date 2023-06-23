@@ -37,8 +37,8 @@ const [state2, send2] = useMachine2()
 </script>
 
 <template>
-    <div class="container">
-        <div class="layer">
+    <div class="vueapp-container">
+        <div class="vueapp-layer">
             <h2>immer</h2>
             <ul>
                 <li v-for="({ title, done } ) in items" :class="{ done }" @click="toggleItem(title)">
@@ -46,13 +46,13 @@ const [state2, send2] = useMachine2()
                 </li>
             </ul>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>immer</h2>
             <button @click="send('TOGGLE')">
                 {{ state.matches("inactive") ? "Off" : "On" }}
             </button>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>xstate/vue</h2>
             <button @click="send2('TOGGLE')">
                 Click me ({{ state2.matches("active") ? "✅" : "❌" }})
@@ -65,21 +65,7 @@ const [state2, send2] = useMachine2()
     </div>
 </template>
 
-<style> .container {
-     grid-gap: 5px;
-     display: grid;
-     grid-template-columns: auto auto auto auto;
- }
-
- .layer {
-     text-align: left;
-     border: 1px solid #6acbe3;
-     border-radius: 5px;
-     padding: 20px;
-     overflow: hidden;
-     white-space: nowrap;
- }
-
+<style scoped>
  .done {
      text-decoration: line-through;
  }

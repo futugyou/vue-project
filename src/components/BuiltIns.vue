@@ -35,7 +35,6 @@ const list = [
     { msg: 'Kung Fury' }
 ]
 
-
 const query = ref('')
 
 const computedList = computed(() => {
@@ -99,8 +98,8 @@ watch(
 </script>
 
 <template>
-    <div class="container">
-        <div class="layer">
+    <div class="vueapp-container">
+        <div class="vueapp-layer">
             <button @click="show = !show">Toggle Transition</button>
             <Transition>
                 <p v-if="show">hello</p>
@@ -109,13 +108,13 @@ watch(
                 <p v-if="show">hello</p>
             </Transition>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <button @click="show1 = !show1">Toggle Transition</button>
             <Transition name="slide-fade">
                 <p v-if="show1">hello</p>
             </Transition>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <button @click="show2 = !show2">Toggle Animation</button>
             <Transition name="bounce">
                 <p v-if="show2" style="text-align: center;">
@@ -123,7 +122,7 @@ watch(
                 </p>
             </Transition>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <button @click="AddItem">Add</button>
             <button @click="RemoveItem">Remove</button>
             <button @click="Shuffle">shuffle</button>
@@ -133,7 +132,7 @@ watch(
                 </li>
             </TransitionGroup>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <input v-model="query" />
             <TransitionGroup tag="ul" :css="false" @before-enter="onBeforeEnter" @enter="onEnter" @leave="onLeave">
                 <li v-for="(item, index) in computedList" :key="item.msg" :data-index="index">
@@ -141,14 +140,14 @@ watch(
                 </li>
             </TransitionGroup>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <input type="radio" :value="CompA" v-model="current" />A
             <input type="radio" :value="CompB" v-model="current" />B
             <KeepAlive>
                 <component :is="current"></component>
             </KeepAlive>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <div class="outer">
                 <h3>Tooltips with Vue 3 Teleport</h3>
                 <div>
@@ -156,21 +155,21 @@ watch(
                 </div>
             </div>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h3>shake</h3>
             <div :class="{ shake: disabled }">
                 <button @click="warnDisabled">Click me</button>
                 <span v-if="disabled">This feature is disabled!</span>
             </div>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h3>hsl() function</h3>
             <div @mousemove="onMousemove" :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }" class="movearea">
                 <p>Move your mouse across this div...</p>
                 <p>x: {{ x }}</p>
             </div>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h3>hsl() function</h3>
             <div class="demo">
                 Type a number: <input v-model.number="number" />
@@ -180,7 +179,7 @@ watch(
     </div>
 </template>
 
-<style>
+<style scoped>
 .v-enter-active,
 .v-leave-active {
     transition: opacity 0.5s ease;

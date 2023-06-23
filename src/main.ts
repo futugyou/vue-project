@@ -55,7 +55,7 @@ function mount() {
     }
   })
   app.use(router)
-  app.mount('#app')
+  app.mount('#vu3-app-main')
 
   console.log('micro app vue demo rendered')
 

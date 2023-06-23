@@ -24,7 +24,7 @@ const tabs = {
     </div>
 </template>
 
-<style>
+<style scoped>
 .demo {
     font-family: sans-serif;
     border: 1px solid #eee;

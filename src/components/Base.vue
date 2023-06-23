@@ -160,18 +160,18 @@ const i18n = inject(i18nKey) as I18nInject
 </script>
 
 <template>
-    <div class="container">
-        <div class="layer">
+    <div class="vueapp-container">
+        <div class="vueapp-layer">
             <h1>{{ message }}</h1>
             <p :class="pClass">Count is: {{ counter.count }}</p>
             <button @click="increment">Increment Count</button>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <input :value="message" @input="onInput" placeholder="Hello World!" v-if="counter.count % 2 == 0" />
             <input v-model="message" placeholder="Hello World!" v-if="counter.count % 2 == 1" />
             <h1 v-else>this match last 'v-if'</h1>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <input v-model="newTodo">
             <button @click="addNewTodo">Add Todo</button>
             <ul>
@@ -187,40 +187,40 @@ const i18n = inject(i18nKey) as I18nInject
                 {{ hideCompleted ? 'Show all' : 'Hide completed' }}
             </button>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <p ref="refforP">hello</p>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <p>Todo id: {{ todoId }}</p>
             <button @click="todoId++">Fetch next todo</button>
             <p v-if="!todoData">Loading...</p>
             <pre v-else>{{ todoData }}</pre>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <p>Todo id: {{ todoId1 }}</p>
             <button @click="todoId1++">Fetch1 next todo</button>
             <p v-if="!todoData1">Loading...</p>
             <pre v-else>{{ todoData1 }}</pre>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <span>Title: {{ childTitle }}</span> <br />
             <span>Name: {{ childName }}</span>
             <ChildComp @response="childEmit" v-model:title="childTitle" v-model:name="childName">
                 <p>{{ childMsg }}</p>
             </ChildComp>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>key up</h2>
             <input @keyup.ctrl.enter="onCtrlEnter" v-model="keyupValue" />
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Func Ref</h2>
             <input :ref="inputRef" v-model="funcRefValue">
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <MouseComp></MouseComp>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <div v-if="useFetchError">
                 <p>Oops! Error encountered: {{ useFetchError.message }}</p>
             </div>
@@ -229,11 +229,11 @@ const i18n = inject(i18nKey) as I18nInject
             </div>
             <div v-else>Loading...</div>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Directives</h2>
             <input v-focus />
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Plugins</h2>
             <h1>{{ $translate('greetings.hello') }}</h1>
             <h1>{{ i18n.greetings.hello }}</h1>
@@ -241,37 +241,13 @@ const i18n = inject(i18nKey) as I18nInject
     </div>
 </template>
 
-<style>
+<style scoped>
 .title {
     color: red;
 }
 
 .done {
     text-decoration: line-through;
-}
-
-.container {
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
-    grid-gap: 5px;
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-}
-
-.layer {
-    /* width: 50%; */
-    text-align: left;
-    border: 1px solid #6acbe3;
-    border-radius: 5px;
-    /* margin: 5px 0; */
-    padding: 20px;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.done {
-  text-decoration: line-through;
 }
 
 </style>

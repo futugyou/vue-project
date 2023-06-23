@@ -14,24 +14,24 @@ const options = ref([
 </script>
 
 <template>
-    <div class="container">
-        <div class="layer">
+    <div class="vueapp-container">
+        <div class="vueapp-layer">
             <h2>Text</h2>
             <p>Message is: {{ message }}</p>
             <input v-model="message" placeholder="edit me" />
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Multiline</h2>
             <span>Multiline message is:</span>
             <p style="white-space: pre-line;">{{ message }}</p>
             <textarea v-model="message" placeholder="add multiple lines"></textarea>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Checkbox</h2>
             <input type="checkbox" id="checkbox" v-model="checked" />
             <label for="checkbox">{{ checked }}</label>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Checkbox 2</h2>
             <div>Checked names: {{ checkedNames }}</div>
 
@@ -44,7 +44,7 @@ const options = ref([
             <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
             <label for="mike">Mike</label>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Radio</h2>
             <div>Picked: {{ picked }}</div>
 
@@ -54,7 +54,7 @@ const options = ref([
             <input type="radio" id="two" value="Two" v-model="picked" />
             <label for="two">Two</label>
         </div>
-        <div class="layer">
+        <div class="vueapp-layer">
             <h2>Select</h2>
             <div>Selected: {{ selected }}</div>
 
@@ -75,18 +75,6 @@ const options = ref([
     </div>
 </template>
 
-<style> .container {
-     grid-gap: 5px;
-     display: grid;
-     grid-template-columns: auto auto auto auto;
- }
+<style>
 
- .layer {
-     text-align: left;
-     border: 1px solid #6acbe3;
-     border-radius: 5px;
-     padding: 20px;
-     overflow: hidden;
-     white-space: nowrap;
- }
 </style>
