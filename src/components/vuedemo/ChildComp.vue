@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, inject } from 'vue'
-import { globalMessageKey, messageKey, locationKey, DefaultLocation } from '../tools/injectkey'
+import { globalMessageKey, messageKey, locationKey, DefaultLocation } from '../../tools/injectkey'
 
 interface Book {
     title: string

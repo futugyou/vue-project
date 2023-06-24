@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted, watch, watchEffect, provide, inject } from 'vue'
 
-import { useFetch } from '../composables/fetch'
+import { useFetch } from '../../composables/fetch'
 import ChildComp from './ChildComp.vue'
 import MouseComp from './MouseComp.vue'
 
-import { messageKey, locationKey, i18nKey, I18nInject } from '../tools/injectkey'
+import { messageKey, locationKey, i18nKey, I18nInject } from '../../tools/injectkey'
 
 const props = defineProps({
     id: Number

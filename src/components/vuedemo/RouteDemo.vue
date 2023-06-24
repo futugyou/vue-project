@@ -11,7 +11,7 @@ const route = useRoute()
     <div class="vueapp-container">
         <div class="vueapp-layer">
             <h1>Route Data</h1>
-            <pre>{{ route }}</pre>
+            <code><pre>{{ route }}</pre></code>
         </div>
     </div>
 </template>

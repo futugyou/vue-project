@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useImmer } from '../reactivity/immerState'
-import { useMachine, useMachine2 } from '../reactivity/machine'
+import { useImmer } from '../../reactivity/immerState'
+import { useMachine, useMachine2 } from '../../reactivity/machine'
 
 //Immer
 const [items, setItems] = useImmer([

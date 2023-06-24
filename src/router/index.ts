@@ -1,10 +1,10 @@
-import Home from '../components/HelloWorld.vue'
-import Base from '../components/Base.vue'
-import FormComp from '../components/FormComp.vue'
-import Dynamic from '../components/Dynamic.vue'
-import BuiltIns from '../components/BuiltIns.vue'
-import Reactivity from '../components/Reactivity.vue'
-import RouteDemo from '../components/RouteDemo.vue'
+import Home from '../components/vuedemo/HelloWorld.vue'
+import Base from '../components/vuedemo/Base.vue'
+import FormComp from '../components/vuedemo/FormComp.vue'
+import Dynamic from '../components/vuedemo/Dynamic.vue'
+import BuiltIns from '../components/vuedemo/BuiltIns.vue'
+import Reactivity from '../components/vuedemo/Reactivity.vue'
+import RouteDemo from '../components/vuedemo/RouteDemo.vue'
 
 const routes = [
   {
@@ -38,7 +38,7 @@ const routes = [
     component: Reactivity
   },
   {
-    path: '/route',
+    path: '/route:username(.*)',
     name: 'Route',
     component: RouteDemo
   }

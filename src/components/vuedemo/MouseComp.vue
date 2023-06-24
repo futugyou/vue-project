@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useMouse } from '../composables/mouse'
+import { useMouse } from '../../composables/mouse'
 
 const { x, y } = useMouse()
 </script>
