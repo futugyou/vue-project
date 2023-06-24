@@ -37,8 +37,13 @@ const routes = [
     name: 'Reactivity',
     component: Reactivity
   },
+  // {
+  //   path: '/route:username(.*)',
+  //   name: 'Route',
+  //   component: RouteDemo
+  // },
   {
-    path: '/route:username(.*)',
+    path: '/route/:username*',
     name: 'Route',
     component: RouteDemo
   }
