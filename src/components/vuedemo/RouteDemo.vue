@@ -27,8 +27,15 @@ const route = useRoute()
             </div>
         </div>
         <div class="vueapp-layer">
-            <h1>Route Data</h1>
+            <h1>route data</h1>
             <code><pre>{{ route }}</pre></code>
+        </div>
+        <div class="vueapp-layer">
+            <h1>create route path</h1>
+            <code><pre>{{ router.resolve({ name: 'Route', path: '/route/:username*' }).href }}</pre></code>
+            <code><pre>{{ router.resolve({ name: 'Route', path: '/route/:username*', params: { username: ['a'] } }).href }}</pre></code>
+            <code><pre>{{ router.resolve({ name: 'Route', path: '/route/:username*', params: { username: ['a', 'b', 'c'] } }).href }}</pre></code>
+            <code><pre>{{ router.resolve({ name: 'Route', path: '/route/:username*', params: { username: ['a', 'b', 'c'] } , query: { game: ['d','e'] } }).href }}</pre></code>
         </div>
     </div>
 </template>
