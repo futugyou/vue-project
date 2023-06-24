@@ -20,16 +20,16 @@ declare global {
 
 function handleMicroData(router: Router) {
   if (window.__MICRO_APP_ENVIRONMENT__) {
-    console.log('child-vue3 getData:', window.microApp.getData())
+    console.log(4,'vueawsapp getData:', window.microApp.getData())
     window.microApp.addDataListener((data: Record<string, unknown>) => {
-      console.log('child-vue3 addDataListener:', data)
+      console.log(6,'vueawsapp addDataListener:', data)
       if (data.path && data.path !== router.currentRoute.value.path) {
         router.push(data.path as string)
       }
     })
 
     setTimeout(() => {
-      window.microApp.dispatch({ myname: 'child-vue3' })
+      window.microApp.dispatch({ myname: 'vueawsapp' })
     }, 3000)
   }
 }
@@ -57,7 +57,7 @@ function mount() {
   app.use(router)
   app.mount('#vu3-app-main')
 
-  console.log('micro app vue demo rendered')
+  console.log(3, 'micro app vue demo rendered')
 
   handleMicroData(router)
 
