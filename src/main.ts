@@ -48,11 +48,17 @@ function mount() {
 
   // route guards
   router.beforeEach((to, from) => {
-    // it unable to intercept 'to redirect route'
+    // it will NOT stop redirect
     if (to.name == 'Redirect') {
       return false
     }
 
+    if (to.meta.requiresAuth) {
+      return {
+        path: '/login',
+        query: { redirect: to.fullPath },
+      }
+    }
   })
 
   // @ts-ignore

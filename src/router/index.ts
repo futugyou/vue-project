@@ -4,7 +4,7 @@ import FormComp from '../components/vuedemo/FormComp.vue'
 import Dynamic from '../components/vuedemo/Dynamic.vue'
 import BuiltIns from '../components/vuedemo/BuiltIns.vue'
 import Reactivity from '../components/vuedemo/Reactivity.vue'
-import RouteDemo from '../components/vuedemo/RouteDemo.vue'
+import RouteDemo from '../components/vuedemo/RouteDemo.vue' 
 
 const removeQueryParams = (to: any) => {
   if (Object.keys(to.query).length)
@@ -72,7 +72,8 @@ const routes = [
     path: '/route2/:username*',
     beforeEnter: [removeQueryParams],
     name: 'Route2',
-    component: RouteDemo
+    component: RouteDemo,
+    meta: { requiresAuth: true }
   }
 ]
 
