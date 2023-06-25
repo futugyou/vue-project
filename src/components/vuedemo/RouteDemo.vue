@@ -37,7 +37,7 @@ const link = (r: string) => {
         </div>
         <div class="vueapp-layer">
             <h1>route data</h1>
-            <code><pre>{{ route }}</pre></code>
+            <code><pre>{{ JSON.parse(JSON.stringify(route)) }}</pre></code>
         </div>
         <div class="vueapp-layer">
             <h1>create route path</h1>
