@@ -1,10 +1,11 @@
-import Home from '../components/vuedemo/HelloWorld.vue'
-import Base from '../components/vuedemo/Base.vue'
-import FormComp from '../components/vuedemo/FormComp.vue'
-import Dynamic from '../components/vuedemo/Dynamic.vue'
-import BuiltIns from '../components/vuedemo/BuiltIns.vue'
-import Reactivity from '../components/vuedemo/Reactivity.vue'
-import RouteDemo from '../components/vuedemo/RouteDemo.vue' 
+// webpackChunkName is use for webpack, but i dot not want use it in this project
+const Home = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/HelloWorld.vue')
+const Base = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Base.vue')
+const FormComp = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/FormComp.vue')
+const Dynamic = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Dynamic.vue')
+const BuiltIns = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/BuiltIns.vue')
+const Reactivity = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Reactivity.vue')
+const RouteDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/RouteDemo.vue') 
 
 const removeQueryParams = (to: any) => {
   if (Object.keys(to.query).length)
