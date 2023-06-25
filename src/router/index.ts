@@ -46,7 +46,22 @@ const routes = [
     path: '/route/:username*',
     name: 'Route',
     component: RouteDemo
-  }
+  },
+  {
+    path: '/redirect/:username*',
+    redirect: {
+      name: 'Route'
+    }
+  },
+  {
+    // /search/screens -> /route?q=screens
+    path: '/search/:searchText',
+    redirect: (to: any) => {
+      // 方法接收目标路由作为参数
+      // return 重定向的字符串路径/路径对象
+      return { path: '/route', query: { q: to.params.searchText } }
+    },
+  },
 ]
 
 export default routes
