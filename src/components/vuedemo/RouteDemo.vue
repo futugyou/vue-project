@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted, watch, watchEffect, provide, inject } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
@@ -13,6 +13,31 @@ const demoroute4 = router.resolve({ name: 'Route', path: '/route/:username*', pa
 const link = (r: string) => {
     router.push(r)
 }
+
+// target when leaving this page
+onBeforeRouteLeave((to: any, from: any) => {
+    const answer = window.confirm(
+        'Do you really want to leave? you have unsaved changes!'
+    )
+    // 取消导航并停留在同一页面上
+    if (!answer) return false
+})
+
+const userData = ref()
+
+// this only target when /route/tom => /route/alic
+onBeforeRouteUpdate(async (to: any, from: any) => {
+    //仅当 id 更改时才获取用户，例如仅 query 或 hash 值已更改
+    console.log(to.params.username, from.params.username)
+    if (to.params.username !== from.params.username) {
+        const res = await fetch(
+            `https://jsonplaceholder.typicode.com/todos/1`
+        )
+
+        userData.value = await res.json()
+        console.log(userData.value)
+    }
+})
 
 </script>
 
