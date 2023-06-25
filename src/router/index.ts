@@ -6,6 +6,11 @@ import BuiltIns from '../components/vuedemo/BuiltIns.vue'
 import Reactivity from '../components/vuedemo/Reactivity.vue'
 import RouteDemo from '../components/vuedemo/RouteDemo.vue'
 
+const removeQueryParams = (to: any) => {
+  if (Object.keys(to.query).length)
+    return { path: to.path, query: {}, hash: to.hash }
+}
+
 const routes = [
   {
     path: '/',
@@ -49,6 +54,7 @@ const routes = [
   },
   {
     path: '/redirect/:username*',
+    name: 'Redirect',
     redirect: {
       name: 'Route'
     }
@@ -62,6 +68,12 @@ const routes = [
       return { path: '/route', query: { q: to.params.searchText } }
     },
   },
+  {
+    path: '/route2/:username*',
+    beforeEnter: [removeQueryParams],
+    name: 'Route2',
+    component: RouteDemo
+  }
 ]
 
 export default routes

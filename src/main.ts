@@ -20,9 +20,9 @@ declare global {
 
 function handleMicroData(router: Router) {
   if (window.__MICRO_APP_ENVIRONMENT__) {
-    console.log(4,'vueawsapp getData:', window.microApp.getData())
+    console.log(4, 'vueawsapp getData:', window.microApp.getData())
     window.microApp.addDataListener((data: Record<string, unknown>) => {
-      console.log(6,'vueawsapp addDataListener:', data)
+      console.log(6, 'vueawsapp addDataListener:', data)
       if (data.path && data.path !== router.currentRoute.value.path) {
         router.push(data.path as string)
       }
@@ -45,6 +45,15 @@ function mount() {
     history,
     routes,
   }) as Router
+
+  // route guards
+  router.beforeEach((to, from) => {
+    // it unable to intercept 'to redirect route'
+    if (to.name == 'Redirect') {
+      return false
+    }
+
+  })
 
   // @ts-ignore
   app = createApp(App)
