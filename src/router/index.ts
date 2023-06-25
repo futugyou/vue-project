@@ -15,7 +15,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { transition: 'slide-left' },
   },
   {
     path: '/base',
@@ -25,7 +26,8 @@ const routes = [
   {
     path: '/form',
     name: 'Form',
-    component: FormComp
+    component: FormComp,
+    meta: { transition: 'slide-right' },
   },
   {
     path: '/dynamic',
