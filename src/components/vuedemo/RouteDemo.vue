@@ -70,6 +70,9 @@ const routeData = computed(() => {
             <div class="route-gip">
                 <router-link to="/route?food=eat" page-path=''>Route: /route?food=eat</router-link>
             </div>
+            <div class="route-gip">
+                <router-link to="/route2" page-path=''>Route: /route2</router-link>
+            </div>
         </div>
         <div class="vueapp-layer">
             <h1>route data</h1>

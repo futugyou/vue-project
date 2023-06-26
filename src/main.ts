@@ -54,9 +54,17 @@ function mount() {
     }
 
     if (to.meta.requiresAuth) {
-      return {
-        path: '/login',
-        query: { redirect: to.fullPath },
+      if (window.__MICRO_APP_ENVIRONMENT__) {
+        window.microApp.dispatch({
+          loginRedirect: to.fullPath,
+          crateAt: Date()
+        })
+        return false
+      } else {
+        return {
+          path: '/login',
+          query: { redirect: to.fullPath },
+        }
       }
     }
   })
