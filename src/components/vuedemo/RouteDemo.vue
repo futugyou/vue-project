@@ -39,6 +39,17 @@ onBeforeRouteUpdate(async (to: any, from: any) => {
     }
 })
 
+const routeData = computed(() => {
+    return {
+        path: route.path,
+        name: route.name,
+        params: route.params,
+        query: route.query,
+        hash: route.hash,
+        fullPath: route.fullPath,
+    }
+})
+
 </script>
 
 <template>
@@ -62,7 +73,7 @@ onBeforeRouteUpdate(async (to: any, from: any) => {
         </div>
         <div class="vueapp-layer">
             <h1>route data</h1>
-            <code><pre>{{ JSON.parse(JSON.stringify(route)) }}</pre></code>
+            <code><pre>{{ routeData }}</pre></code>
         </div>
         <div class="vueapp-layer">
             <h1>create route path</h1>
