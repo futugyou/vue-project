@@ -5,7 +5,7 @@ const message = ref("")
 const checked = ref(false)
 const checkedNames = ref<string[]>([])
 const picked = ref("")
-const selected = ref("")
+const selected = ref<string[]>([])
 const options = ref([
     { text: 'One', value: 'A' },
     { text: 'Two', value: 'B' },

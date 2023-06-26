@@ -26,7 +26,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'vue3-app',
+  name: 'vueawsapp',
   methods: {
     onRouteChange() {
       if (window.__MICRO_APP_ENVIRONMENT__) {
