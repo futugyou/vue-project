@@ -53,20 +53,24 @@ function mount() {
       return false
     }
 
-    if (to.meta.requiresAuth) {
+    if (to.meta.requiresAuth){
       if (window.__MICRO_APP_ENVIRONMENT__) {
-        window.microApp.dispatch({
-          loginRedirect: to.fullPath,
-          crateAt: Date()
-        })
-        return false
-      } else {
+        const data = window.microApp?.getData()
+        if (!data?.Authorization) {
+          window.microApp.dispatch({
+            NeedLogin: true,
+            CreateAt: Date()
+          })
+        }
+      }else{
         return {
+          // this is fake
           path: '/login',
           query: { redirect: to.fullPath },
         }
       }
     }
+    
   })
 
   // @ts-ignore
