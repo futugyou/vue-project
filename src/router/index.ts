@@ -8,6 +8,7 @@ const Dynamic = () => import(/* webpackChunkName: "base-vue-demo" */ '../compone
 const BuiltIns = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/BuiltIns.vue')
 const Reactivity = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Reactivity.vue')
 const RouteDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/RouteDemo.vue')
+const PiniaDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/PiniaDemo.vue')
 
 const removeQueryParams = (to: any) => {
   if (Object.keys(to.query).length)
@@ -25,6 +26,11 @@ const routes = [
     path: '/base',
     name: 'Base',
     component: Base
+  },
+  {
+    path: '/pinia',
+    name: 'Pinia',
+    component: PiniaDemo
   },
   {
     path: '/form',

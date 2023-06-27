@@ -2,6 +2,7 @@ import './public-path'
 
 import { createApp, App as AppInstance } from 'vue'
 import { Router } from 'vue-router'
+import { createPinia } from 'pinia'
 
 import { router, clearRouter } from './router'
 import App from './App.vue'
@@ -18,7 +19,7 @@ declare global {
   }
 }
 
-function handleMicroData(router: Router) {
+const handleMicroData = (router: Router) => {
   if (window.__MICRO_APP_ENVIRONMENT__) {
     console.log(4, 'vueawsapp getData:', window.microApp.getData())
     window.microApp.addDataListener((data: Record<string, unknown>) => {
@@ -36,9 +37,11 @@ function handleMicroData(router: Router) {
 
 let app: AppInstance | null = null
 
-function mount() {
+const mount = () => {
   // @ts-ignore
+  const pinia = createPinia()
   app = createApp(App)
+  app.use(pinia)
   app.provide(globalMessageKey, 'hello!')
   app.use(i18nPlugin, {
     greetings: {
@@ -58,7 +61,7 @@ function mount() {
   }
 }
 
-function unmount() {
+const unmount = () => {
   app?.unmount()
   app = null
   clearRouter()

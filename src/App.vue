@@ -10,7 +10,8 @@
     <router-link to="/dynamic" page-path=''>Dynamic</router-link> |
     <router-link to="/built-ins" page-path=''>Built-ins</router-link> |
     <router-link to="/reactivity" page-path=''>Reactivity</router-link> |
-    <router-link to="/route" page-path=''>Route</router-link>
+    <router-link to="/route" page-path=''>Route</router-link> |
+    <router-link to="/pinia" page-path=''>Pinia</router-link>
   </div>
   <div class="vu3-app">
     <router-view v-slot="{ Component, route }">
