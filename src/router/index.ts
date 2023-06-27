@@ -1,3 +1,5 @@
+import { createRouter, createWebHistory, Router, RouterHistory, RouterOptions } from 'vue-router'
+
 // webpackChunkName is use for webpack, but i dot not want use it in this project
 const Home = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/HelloWorld.vue')
 const Base = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Base.vue')
@@ -5,7 +7,7 @@ const FormComp = () => import(/* webpackChunkName: "base-vue-demo" */ '../compon
 const Dynamic = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Dynamic.vue')
 const BuiltIns = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/BuiltIns.vue')
 const Reactivity = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Reactivity.vue')
-const RouteDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/RouteDemo.vue') 
+const RouteDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/RouteDemo.vue')
 
 const removeQueryParams = (to: any) => {
   if (Object.keys(to.query).length)
@@ -80,4 +82,49 @@ const routes = [
   }
 ]
 
-export default routes
+let router: Router | null = null
+let history: RouterHistory | null = null
+
+history = createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || process.env.BASE_URL)
+router = createRouter({
+  history,
+  routes,
+}) as Router
+
+// route guards
+router.beforeEach((to, from) => {
+  // it will NOT stop redirect
+  if (to.name == 'Redirect') {
+    return false
+  }
+
+  if (to.meta.requiresAuth) {
+    if (window.__MICRO_APP_ENVIRONMENT__) {
+      const data = window.microApp?.getData()
+      if (!data?.Authorization) {
+        window.microApp.dispatch({
+          NeedLogin: true,
+          CreateAt: Date()
+        })
+      }
+    } else {
+      return {
+        // this is fake
+        path: '/login',
+        query: { redirect: to.fullPath },
+      }
+    }
+  }
+
+})
+
+const clearRouter = () => {
+  history?.destroy()
+  router = null
+  history = null
+}
+
+export {
+  router,
+  clearRouter,
+}

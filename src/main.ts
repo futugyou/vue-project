@@ -1,9 +1,9 @@
 import './public-path'
 
 import { createApp, App as AppInstance } from 'vue'
-import { createRouter, createWebHistory, Router, RouterHistory, RouterOptions } from 'vue-router'
+import { Router } from 'vue-router'
 
-import routes from './router'
+import { router, clearRouter } from './router'
 import App from './App.vue'
 import i18nPlugin from './plugins/i18n'
 
@@ -34,45 +34,9 @@ function handleMicroData(router: Router) {
   }
 }
 
-
 let app: AppInstance | null = null
-let router: Router | null = null
-let history: RouterHistory | null = null
 
 function mount() {
-  history = createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || process.env.BASE_URL)
-  router = createRouter({
-    history,
-    routes,
-  }) as Router
-
-  // route guards
-  router.beforeEach((to, from) => {
-    // it will NOT stop redirect
-    if (to.name == 'Redirect') {
-      return false
-    }
-
-    if (to.meta.requiresAuth){
-      if (window.__MICRO_APP_ENVIRONMENT__) {
-        const data = window.microApp?.getData()
-        if (!data?.Authorization) {
-          window.microApp.dispatch({
-            NeedLogin: true,
-            CreateAt: Date()
-          })
-        }
-      }else{
-        return {
-          // this is fake
-          path: '/login',
-          query: { redirect: to.fullPath },
-        }
-      }
-    }
-    
-  })
-
   // @ts-ignore
   app = createApp(App)
   app.provide(globalMessageKey, 'hello!')
@@ -81,21 +45,24 @@ function mount() {
       hello: 'Bonjour!'
     }
   })
-  app.use(router)
-  app.mount('#vu3-app-main')
 
+  if (router) {
+    app.use(router)
+  }
+
+  app.mount('#vu3-app-main')
   console.log(3, 'micro app vue demo rendered')
 
-  handleMicroData(router)
-
+  if (router) {
+    handleMicroData(router)
+  }
 }
 
 function unmount() {
   app?.unmount()
-  history?.destroy()
   app = null
-  router = null
-  history = null
+  clearRouter()
+
   console.log('micro app vue demo unmounted')
 }
 
