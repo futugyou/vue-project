@@ -5,6 +5,10 @@ import { storeToRefs } from 'pinia'
 const store = useCounterStore()
 const { count } = storeToRefs(store)
 const { increment } = store
+const incrementClick = () => {
+    store.count++
+}
+
 </script>
 
 
@@ -17,6 +21,10 @@ const { increment } = store
         <div class="vueapp-layer">
             <h3>{{ count }}</h3>
             <button @click="increment">increment</button>
+        </div>
+        <div class="vueapp-layer">
+            <h3>{{ count }}</h3>
+            <button @click="incrementClick">click</button>
         </div>
     </div>
 </template>

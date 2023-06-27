@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { useImmer } from '../../reactivity/immerState'
 import { useMachine, useMachine2 } from '../../reactivity/machine'
+import { useCounterStore } from '../../stores/counter'
 
+const store = useCounterStore()
 //Immer
 const [items, setItems] = useImmer([
     {
@@ -58,15 +60,19 @@ const [state2, send2] = useMachine2()
                 Click me ({{ state2.matches("active") ? "✅" : "❌" }})
             </button>
             <code>
-              Toggled
-              <strong>{{ state2.context.count }}</strong> times
-            </code>
+                  Toggled
+                  <strong>{{ state2.context.count }}</strong> times
+                </code>
+        </div>
+        <div class="vueapp-layer">
+            <h3>{{ store.count }}</h3>
+            <button @click="store.increment">increment</button>
         </div>
     </div>
 </template>
 
 <style scoped>
- .done {
-     text-decoration: line-through;
- }
+.done {
+    text-decoration: line-through;
+}
 </style>
