@@ -1,6 +1,6 @@
 import './public-path'
 
-import { createApp, App as AppInstance } from 'vue'
+import { createApp, App as AppInstance, watch } from 'vue'
 import { Router } from 'vue-router'
 import { createPinia } from 'pinia'
 
@@ -47,6 +47,17 @@ const mount = () => {
       store.$state = JSON.parse(JSON.stringify(initialState));
     }
   })
+
+  watch(
+    pinia.state,
+    (state) => {
+      for (const key in state) {
+        const value = state[key];
+        localStorage.setItem('global_' + key, JSON.stringify(value))
+      }
+    },
+    { deep: true }
+  )
 
   app = createApp(App)
   app.use(pinia)
