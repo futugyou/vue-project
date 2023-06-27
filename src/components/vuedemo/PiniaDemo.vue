@@ -9,6 +9,10 @@ const incrementClick = () => {
     store.count++
 }
 
+const reset=()=>{
+    store.$reset()
+}
+
 </script>
 
 
@@ -25,6 +29,10 @@ const incrementClick = () => {
         <div class="vueapp-layer">
             <h3>{{ count }}</h3>
             <button @click="incrementClick">click</button>
+        </div>
+        <div class="vueapp-layer">
+            <h3>{{ count }}</h3>
+            <button @click="reset">reset</button>
         </div>
     </div>
 </template>

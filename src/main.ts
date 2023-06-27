@@ -40,6 +40,14 @@ let app: AppInstance | null = null
 const mount = () => {
   // @ts-ignore
   const pinia = createPinia()
+  // store is built using the setup syntax and does not implement $reset().
+  pinia.use(({ store }) => {
+    const initialState = JSON.parse(JSON.stringify(store.$state));
+    store.$reset = () => {
+      store.$state = JSON.parse(JSON.stringify(initialState));
+    }
+  })
+
   app = createApp(App)
   app.use(pinia)
   app.provide(globalMessageKey, 'hello!')
