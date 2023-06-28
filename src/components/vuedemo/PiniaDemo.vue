@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useCounterStore } from '../../stores/counter'
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 // 可以在组件中的任意位置访问 `store` 变量 ✨
@@ -30,6 +30,11 @@ store.$subscribe((mutation, state) => {
     localStorage.setItem('counter', JSON.stringify(state))
 })
 
+const count2 = ref(0)
+const countAdd = () => {
+    count2.value = store.countAdd(9)
+}
+
 </script>
 
 <template>
@@ -53,6 +58,10 @@ store.$subscribe((mutation, state) => {
         <div class="vueapp-layer">
             <h3>{{ count }}</h3>
             <button @click="change">change</button>
+        </div>
+        <div class="vueapp-layer">
+            <h3>{{ count2 }}</h3>
+            <button @click="countAdd">countAdd</button>
         </div>
     </div>
 </template>
