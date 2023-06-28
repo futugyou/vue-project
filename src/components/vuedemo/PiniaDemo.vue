@@ -2,6 +2,7 @@
 import { useCounterStore } from '../../stores/counter'
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { State } from 'xstate';
 
 // 可以在组件中的任意位置访问 `store` 变量 ✨
 const store = useCounterStore()
@@ -35,6 +36,11 @@ const countAdd = () => {
     count2.value = store.countAdd(9)
 }
 
+const userData = ref(null)
+const getUserData = async () => {
+    userData.value = await store.getUserDataById(count.value)
+}
+
 </script>
 
 <template>
@@ -62,6 +68,12 @@ const countAdd = () => {
         <div class="vueapp-layer">
             <h3>{{ count2 }}</h3>
             <button @click="countAdd">countAdd</button>
+        </div>
+        <div class="vueapp-layer">
+            <h3>
+                <pre>{{ userData }}</pre>
+            </h3>
+            <button @click="getUserData">get user data</button>
         </div>
     </div>
 </template>

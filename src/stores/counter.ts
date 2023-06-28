@@ -17,7 +17,14 @@ export const useCounterStore = defineStore('counter', () => {
     return (n: number) => count.value + n
   })
 
+  const getUserDataById = async (id: number) => {
+    const res = await fetch(
+      `https://jsonplaceholder.typicode.com/todos/${id}`
+    )
+
+    return await res.json()
+  }
   // i think i can only export 'summary' and 'increment',
   // provides better encapsulation. 
-  return { count, summary, countAdd, increment }
+  return { count, summary, countAdd, increment, getUserDataById }
 })
