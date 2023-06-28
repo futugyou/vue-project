@@ -107,5 +107,12 @@ const getUserData = async () => {
             </h3>
             <button @click="getUserData">get user data</button>
         </div>
+        <div class="vueapp-layer">
+            <h3>
+                plugins
+            </h3>
+            <div>{{ store.secret }}</div>
+            <div>{{ store.hello }}</div>
+        </div>
     </div>
 </template>

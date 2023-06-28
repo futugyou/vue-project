@@ -2,7 +2,7 @@ import './public-path'
 
 import { createApp, App as AppInstance, watch } from 'vue'
 import { Router } from 'vue-router'
-import { createPinia } from 'pinia'
+import { createPinia, PiniaPluginContext } from 'pinia'
 
 import { router, clearRouter } from './router'
 import App from './App.vue'
@@ -35,16 +35,28 @@ const handleMicroData = (router: Router) => {
   }
 }
 
+const SecretPiniaPlugin = (context: PiniaPluginContext) => {
+  context.store.secret = 'the cake is a lie'
+}
+
 let app: AppInstance | null = null
 
 const mount = () => {
   // @ts-ignore
   const pinia = createPinia()
+  pinia.use(SecretPiniaPlugin)
   // store is built using the setup syntax and does not implement $reset().
   pinia.use(({ store }) => {
     const initialState = JSON.parse(JSON.stringify(store.$state));
     store.$reset = () => {
       store.$state = JSON.parse(JSON.stringify(initialState));
+    }
+  })
+  pinia.use(({ store }) => {
+    store.hello = 'world'
+    if (process.env.NODE_ENV === 'development') {
+      // 添加你在 store 中设置的键值
+      store._customProperties.add('hello')
     }
   })
 
