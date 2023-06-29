@@ -10,6 +10,7 @@ declare module 'pinia' {
 
         // 你也可以定义更简单的值
         secret: string
+        auth: string
     }
 
     export interface PiniaCustomStateProperties<S> {
@@ -19,7 +20,7 @@ declare module 'pinia' {
     export interface DefineStoreOptionsBase<S, Store> {
         // 任意 action 都允许定义一个防抖的毫秒数
         debounce?: Partial<Record<keyof StoreActions<Store>, number>>
-      }
+    }
 }
 
 const SecretPiniaPlugin = ({ store }: PiniaPluginContext) => {

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useCounterStore } from '../../stores/counter'
+import { useUserStore } from '../../stores/user'
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { State } from 'xstate';
@@ -71,6 +72,8 @@ const getUserData = async () => {
     userData.value = await store.getUserDataById(count.value)
 }
 
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 </script>
 
 <template>
@@ -111,6 +114,13 @@ const getUserData = async () => {
             </h3>
             <div>{{ store.secret }}</div>
             <div>{{ store.hello }}</div>
+        </div>
+        <div class="vueapp-layer">
+            <h3>
+                User
+            </h3>
+            <div>{{ user.name }}</div>
+            <div>{{ user.age }}</div>
         </div>
     </div>
 </template>
