@@ -1,14 +1,13 @@
-import './public-path'
+import './assets/main.css'
 
-import { createApp, App as AppInstance, watch } from 'vue'
+import { createApp, App as AppInstance } from 'vue'
 import { Router } from 'vue-router'
 
-import { router, clearRouter } from './router'
 import App from './App.vue'
-import i18nPlugin from './plugins/i18n'
-
+import { router, clearRouter } from './router'
 import { globalMessageKey } from './tools/injectkey'
 import { usePinia } from './stores/plugins'
+import i18nPlugin from './plugins/i18n'
 
 declare global {
   interface Window {
@@ -34,7 +33,6 @@ const handleMicroData = (router: Router) => {
     }, 3000)
   }
 }
-
 
 let app: AppInstance | null = null
 

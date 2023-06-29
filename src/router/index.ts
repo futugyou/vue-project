@@ -1,18 +1,16 @@
-import { createRouter, createWebHistory, Router, RouterHistory, RouterOptions } from 'vue-router'
+import { createRouter, createWebHistory, Router, RouterHistory } from 'vue-router'
 
-// webpackChunkName is use for webpack, but i dot not want use it in this project
-const Home = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/HelloWorld.vue')
-const Base = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Base.vue')
-const FormComp = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/FormComp.vue')
-const Dynamic = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Dynamic.vue')
-const BuiltIns = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/BuiltIns.vue')
-const Reactivity = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/Reactivity.vue')
-const RouteDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/RouteDemo.vue')
-const PiniaDemo = () => import(/* webpackChunkName: "base-vue-demo" */ '../components/vuedemo/PiniaDemo.vue')
+const Home = () => import('../components/vuedemo/HelloWorld.vue')
+const Base = () => import('../components/vuedemo/Base.vue')
+const FormComp = () => import('../components/vuedemo/FormComp.vue')
+const Dynamic = () => import('../components/vuedemo/Dynamic.vue')
+const BuiltIns = () => import('../components/vuedemo/BuiltIns.vue')
+const Reactivity = () => import('../components/vuedemo/Reactivity.vue')
+const RouteDemo = () => import('../components/vuedemo/RouteDemo.vue')
+const PiniaDemo = () => import('../components/vuedemo/PiniaDemo.vue')
 
 const removeQueryParams = (to: any) => {
-  if (Object.keys(to.query).length)
-    return { path: to.path, query: {}, hash: to.hash }
+  if (Object.keys(to.query).length) return { path: to.path, query: {}, hash: to.hash }
 }
 
 const routes = [
@@ -20,7 +18,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    meta: { transition: 'slide-left' },
+    meta: { transition: 'slide-left' }
   },
   {
     path: '/base',
@@ -36,7 +34,7 @@ const routes = [
     path: '/form',
     name: 'Form',
     component: FormComp,
-    meta: { transition: 'slide-right' },
+    meta: { transition: 'slide-right' }
   },
   {
     path: '/dynamic',
@@ -77,7 +75,7 @@ const routes = [
       // 方法接收目标路由作为参数
       // return 重定向的字符串路径/路径对象
       return { path: '/route', query: { q: to.params.searchText } }
-    },
+    }
   },
   {
     path: '/route2/:username*',
@@ -85,20 +83,27 @@ const routes = [
     name: 'Route2',
     component: RouteDemo,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/about',
+    name: 'about',
+    // route level code-splitting
+    // this generates a separate chunk (About.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import('../views/AboutView.vue')
   }
 ]
 
 let router: Router | null = null
 let history: RouterHistory | null = null
-
-history = createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || process.env.BASE_URL)
+history = createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || import.meta.env.BASE_URL)
 router = createRouter({
   history,
-  routes,
+  routes
 }) as Router
 
 // route guards
-router.beforeEach((to, from) => {
+router.beforeEach((to: any, from: any) => {
   // it will NOT stop redirect
   if (to.name == 'Redirect') {
     return false
@@ -117,11 +122,10 @@ router.beforeEach((to, from) => {
       return {
         // this is fake
         path: '/login',
-        query: { redirect: to.fullPath },
+        query: { redirect: to.fullPath }
       }
     }
   }
-
 })
 
 const clearRouter = () => {
@@ -130,7 +134,4 @@ const clearRouter = () => {
   history = null
 }
 
-export {
-  router,
-  clearRouter,
-}
+export { router, clearRouter }
