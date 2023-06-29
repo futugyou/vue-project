@@ -22,18 +22,24 @@ const toggleItem = (index: string) => {
   })
 }
 
-// xstate
-const [state, send] = useMachine({
+// xstate/vue
+const { state, send } = useMachine({
   id: 'toggle',
   initial: 'inactive',
+  context: {
+    count: 0
+  },
   states: {
-    inactive: { on: { TOGGLE: 'active' } },
-    active: { on: { TOGGLE: 'inactive' } }
+    inactive: {
+      on: { TOGGLE: 'active' }
+    },
+    active: {
+      on: { TOGGLE: 'inactive' }
+    }
   }
 })
 
-// xstate/vue
-const [state2, send2] = useMachine2()
+const { state: state2, send: send2 } = useMachine2()
 </script>
 
 <template>
@@ -48,7 +54,7 @@ const [state2, send2] = useMachine2()
     </div>
     <div class="vueapp-layer">
       <h2>immer</h2>
-      <button @click="send('TOGGLE')">
+      <button @click="send({ type: 'TOGGLE' })">
         {{ state.matches('inactive') ? 'Off' : 'On' }}
       </button>
     </div>

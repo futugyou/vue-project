@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, Router, RouterHistory } from 'vue-router'
+import { createRouter, createWebHistory, Router, RouterHistory, RouteRecordRaw } from 'vue-router'
 
 const Home = () => import('../components/vuedemo/HelloWorld.vue')
 const Base = () => import('../components/vuedemo/Base.vue')
@@ -92,7 +92,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/AboutView.vue')
   }
-]
+] as RouteRecordRaw[]
 
 let router: Router | null = null
 let history: RouterHistory | null = null

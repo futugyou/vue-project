@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { useCounterStore } from '../../stores/counter'
 import { useUserStore } from '../../stores/user'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { State } from 'xstate'
 
 // 可以在组件中的任意位置访问 `store` 变量 ✨
 const store = useCounterStore()
