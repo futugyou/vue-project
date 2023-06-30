@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import DemoRoute from './components/vuedemo/DemoRoute.vue'
 import AwsRoute from './components/aws/AwsRoute.vue'
+import TabContainer from './components/TabContainer.vue'
 
 const onRouteChange = () => {
   if (window.__MICRO_APP_ENVIRONMENT__) {
     window.microApp.setGlobalData({ name: window.__MICRO_APP_NAME__ })
   }
 }
+
+const components = ref([AwsRoute, DemoRoute])
 </script>
 
 <template>
@@ -15,8 +19,8 @@ const onRouteChange = () => {
   </div>
 
   <div id="public-links" @click="onRouteChange">
-    <AwsRoute></AwsRoute>
-    <DemoRoute></DemoRoute>
+    <TabContainer :components="components">
+    </TabContainer>
   </div>
   <div class="vu3-app">
     <router-view v-slot="{ Component, route }">
