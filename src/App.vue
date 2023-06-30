@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import DemoRoute from './components/vuedemo/DemoRoute.vue'
 import AwsRoute from './components/aws/AwsRoute.vue'
 import TabContainer from './components/TabContainer.vue'
@@ -10,7 +10,7 @@ const onRouteChange = () => {
   }
 }
 
-const components = ref([AwsRoute, DemoRoute])
+const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
 </script>
 
 <template>

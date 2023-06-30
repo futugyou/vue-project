@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 const props = defineProps({
-    components: [] as any[]
+    components: Array
 })
 
-const currentCom = ref(props.components ? props.components[0] : null)
+const currentCom = shallowRef(props.components ? props.components[0] : null)
 
 const changeCurrent = (com: any) => {
     currentCom.value = com
@@ -14,16 +14,30 @@ const changeCurrent = (com: any) => {
 <template>
     <div class="tab-container">
         <div v-for="com in components" class="tab-item">
-            <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)"></div>
-            <div v-else>
-                <component :is="com"></component>
-            </div>
+            <Transition>
+                <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)"></div>
+            </Transition>
 
+            <Transition>
+                <div v-if="com == currentCom">
+                    <component :is="com"></component>
+                </div>
+            </Transition>
         </div>
     </div>
 </template>
 
 <style scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
 .tab-container {
     display: flex;
     justify-content: center;
