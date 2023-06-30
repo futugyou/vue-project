@@ -158,7 +158,7 @@ const i18n = inject(i18nKey) as I18nInject
     <div class="vueapp-layer">
       <h1>{{ message }}</h1>
       <p :class="pClass">Count is: {{ counter.count }}</p>
-      <button @click="increment">Increment Count</button>
+      <button class="btn btn-primary" @click="increment">Increment Count</button>
     </div>
     <div class="vueapp-layer">
       <input
