@@ -14,10 +14,6 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
 </script>
 
 <template>
-  <div class="vue-logo">
-    <img alt="Vue logo" src="./assets/logo.svg" />
-  </div>
-
   <div id="public-links" @click="onRouteChange">
     <TabContainer :components="components"> </TabContainer>
   </div>

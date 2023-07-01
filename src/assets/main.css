@@ -17,12 +17,9 @@ body {
   flex-direction: column;
 }
 
-.vue-logo img {
-  width: 20px;
-}
-
 #public-links {
-  margin-bottom: 20px;
+  padding: 10px 0;
+  font-size: 18px;
 }
 
 .vu3-app {

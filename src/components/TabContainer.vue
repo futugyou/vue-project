@@ -15,7 +15,7 @@ const changeCurrent = (com: any) => {
   <div class="tab-container">
     <div v-for="com in components" class="tab-item">
       <Transition>
-        <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)"></div>
+        <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)">...</div>
       </Transition>
 
       <Transition>
@@ -41,8 +41,13 @@ const changeCurrent = (com: any) => {
 .tab-block {
   width: 20px;
   border-radius: 5px;
-  background-color: #abd3d9;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
   cursor: pointer;
   height: 100%;
+}
+
+.tab-block:hover {
+  background-color: hsl(160deg 70% 80%);
 }
 </style>
