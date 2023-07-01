@@ -1,12 +1,16 @@
 <script lang="ts" setup>
 import { shallowRef } from 'vue'
+import { useTabStore } from '../stores/tab'
+
 const props = defineProps({
   components: Array
 })
 
-const currentCom = shallowRef(props.components ? props.components[0] : null)
-
+const tabState = useTabStore()
+const currentCom = shallowRef(props.components ? props.components[tabState.value] : null)
 const changeCurrent = (com: any) => {
+  const index = props.components?.indexOf(com) ?? 0
+  tabState.value = index
   currentCom.value = com
 }
 </script>

@@ -15,7 +15,9 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
 
 <template>
   <div id="public-links" @click="onRouteChange">
-    <TabContainer :components="components"> </TabContainer>
+    <KeepAlive>
+      <TabContainer :components="components"> </TabContainer>
+    </KeepAlive>
   </div>
   <div class="vu3-app">
     <router-view v-slot="{ Component, route }">
