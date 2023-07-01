@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue'
+import moment from 'moment'
 
 const accounts = ref([])
 const fetchData = async () => {
@@ -7,6 +8,11 @@ const fetchData = async () => {
   accounts.value = await res.json()
 }
 watchEffect(async () => fetchData())
+
+const timeFormat = (timestamp: number): string => {
+  var day = moment(timestamp);
+  return day.format('lll')
+}
 </script>
 
 <template>
@@ -30,7 +36,7 @@ watchEffect(async () => fetchData())
           <td>{{ account.accessKeyId }}</td>
           <td>{{ account.secretAccessKey }}</td>
           <td>{{ account.region }}</td>
-          <td>{{ new Date(account.createdAt) }}</td>
+          <td>{{ timeFormat(account.createdAt) }}</td>
         </tr>
       </tbody>
     </table>
