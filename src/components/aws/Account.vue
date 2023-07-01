@@ -2,15 +2,25 @@
 import { ref, watchEffect } from 'vue'
 import moment from 'moment'
 
-const accounts = ref([])
+interface Account {
+  id: string
+  alias: string
+  accessKeyId: string
+  secretAccessKey: string
+  region: string
+  createdAt: number
+}
+
+const accounts = ref<Account[]>([])
 const fetchData = async () => {
   const res = await fetch(`https://649e5a1f245f077f3e9c4d44.mockapi.io/api/v1/accounts`)
   accounts.value = await res.json()
 }
+
 watchEffect(async () => fetchData())
 
 const timeFormat = (timestamp: number): string => {
-  var day = moment(timestamp);
+  var day = moment(timestamp)
   return day.format('lll')
 }
 </script>
@@ -18,7 +28,8 @@ const timeFormat = (timestamp: number): string => {
 <template>
   <div>
     <h1>account</h1>
-    <table class="table">
+    <div v-if="accounts.length == 0">no data found</div>
+    <table class="table" v-else>
       <thead>
         <tr>
           <th scope="col">#</th>
