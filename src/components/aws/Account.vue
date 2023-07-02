@@ -15,10 +15,11 @@ interface Account {
 
 const accounts = ref<Account[]>([])
 const isLoading = ref(false)
+const accountEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
 
 const fetchData = async () => {
   isLoading.value = true
-  const res = await fetch(`https://649e5a1f245f077f3e9c4d44.mockapi.io/api/v1/accounts`)
+  const res = await fetch(accountEndpoint)
   accounts.value = await res.json()
   // mock delay
   await new Promise((resolve) => setTimeout(resolve, 5000))
