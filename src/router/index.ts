@@ -39,8 +39,9 @@ router.beforeEach((to: any, from: any) => {
   }
 })
 
-const clearRouter = () => {
+const clearRouter = (fn: () => void) => {
   history?.destroy()
+  fn()
   router = null
   history = null
 }

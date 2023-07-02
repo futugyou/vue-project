@@ -50,22 +50,19 @@ const mount = () => {
     }
   })
 
-  if (router) {
-    app.use(router)
-  }
+  app.use(router!)
 
   app.mount('#vu3-app-main')
   console.log(3, 'micro app vue demo rendered')
 
-  if (router) {
-    handleMicroData(router)
-  }
+  handleMicroData(router!)
 }
 
 const unmount = () => {
   app?.unmount()
-  app = null
-  clearRouter()
+  clearRouter(() => {
+    app = null
+  })
 
   console.log('micro app vue demo unmounted')
 }
