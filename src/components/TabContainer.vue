@@ -16,19 +16,14 @@ const changeCurrent = (com: any) => {
 </script>
 
 <template>
-  <div class="tab-container">
-    <div v-for="com in components" class="tab-item">
-      <Transition>
-        <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)">...</div>
-      </Transition>
-
-      <Transition>
-        <div v-if="com == currentCom">
-          <component :is="com"></component>
-        </div>
-      </Transition>
+  <TransitionGroup class="tab-container" tag="div">
+    <div v-for="(com, index) in components" class="tab-item" :key="index" :data-index="index">
+      <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)">...</div>
+      <div v-if="com == currentCom">
+        <component :is="com"></component>
+      </div>
     </div>
-  </div>
+  </TransitionGroup>
 </template>
 
 <style scoped>

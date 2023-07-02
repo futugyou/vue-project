@@ -2,6 +2,8 @@
 import { ref, watchEffect } from 'vue'
 import moment from 'moment'
 
+import Spinners from '../Spinners.vue'
+
 interface Account {
   id: string
   alias: string
@@ -19,7 +21,7 @@ const fetchData = async () => {
   const res = await fetch(`https://649e5a1f245f077f3e9c4d44.mockapi.io/api/v1/accounts`)
   accounts.value = await res.json()
   // mock delay
-  await new Promise(resolve => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   isLoading.value = false
 }
 
@@ -35,9 +37,7 @@ const timeFormat = (timestamp: number): string => {
   <div>
     <h1>account</h1>
     <div v-if="accounts.length == 0">no data found</div>
-    <div v-else-if="isLoading" class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+    <Spinners v-else-if="isLoading"> </Spinners>
     <table class="table" v-else>
       <thead>
         <tr>
