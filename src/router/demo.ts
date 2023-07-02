@@ -18,12 +18,13 @@ export const DemoRoutes = [
     path: '/',
     name: 'Home',
     component: Home,
-    meta: { transition: 'slide-left' }
+    meta: { transition: 'slide-fade' }
   },
   {
     path: '/base',
     name: 'Base',
-    component: Base
+    component: Base,
+    meta: { transition: 'list' }
   },
   {
     path: '/pinia',
@@ -34,7 +35,7 @@ export const DemoRoutes = [
     path: '/form',
     name: 'Form',
     component: FormComp,
-    meta: { transition: 'slide-right' }
+    meta: { transition: 'bounce' }
   },
   {
     path: '/dynamic',
