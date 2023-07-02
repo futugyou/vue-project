@@ -12,9 +12,15 @@ interface Account {
 }
 
 const accounts = ref<Account[]>([])
+const isLoading = ref(false)
+
 const fetchData = async () => {
+  isLoading.value = true
   const res = await fetch(`https://649e5a1f245f077f3e9c4d44.mockapi.io/api/v1/accounts`)
   accounts.value = await res.json()
+  // mock delay
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  isLoading.value = false
 }
 
 watchEffect(async () => fetchData())
@@ -29,6 +35,9 @@ const timeFormat = (timestamp: number): string => {
   <div>
     <h1>account</h1>
     <div v-if="accounts.length == 0">no data found</div>
+    <div v-else-if="isLoading" class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
     <table class="table" v-else>
       <thead>
         <tr>
