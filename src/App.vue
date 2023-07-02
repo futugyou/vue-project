@@ -23,7 +23,9 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
     <router-view v-slot="{ Component, route }">
       <!-- 使用任何自定义过渡和回退到 `fade` -->
       <transition :name="route.meta.transition as string || 'fade'">
-        <component :is="Component" :key="route.path" />
+        <KeepAlive> 
+            <component :is="Component" :key="route.path" /> 
+        </KeepAlive>
       </transition>
     </router-view>
   </div>
