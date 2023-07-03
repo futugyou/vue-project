@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 import moment from 'moment'
 
 import Spinners from '../Spinners.vue'
@@ -15,14 +15,18 @@ interface Account {
 
 const accounts = ref<Account[]>([])
 const isLoading = ref(false)
-const accountEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
+const limit = ref(10)
+const page = ref(1)
+const accountEndpoint = computed(() => {
+  return import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page.value + '&limit=' + limit.value
+})
 
 const fetchData = async () => {
   isLoading.value = true
-  const res = await fetch(accountEndpoint)
+  const res = await fetch(accountEndpoint.value)
   accounts.value = await res.json()
-  // mock delay
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  // // mock delay
+  // await new Promise((resolve) => setTimeout(resolve, 5000))
   isLoading.value = false
 }
 
@@ -31,6 +35,16 @@ watchEffect(async () => fetchData())
 const timeFormat = (timestamp: number): string => {
   var day = moment(timestamp)
   return day.format('lll')
+}
+
+const updatePage = (n: number) => {
+  if (n == -1 && page.value > 2) {
+    page.value = page.value - 1
+  }
+
+  if (n == 1) {
+    page.value = page.value + 1
+  }
 }
 </script>
 
@@ -60,6 +74,9 @@ const timeFormat = (timestamp: number): string => {
           <td>{{ timeFormat(account.createdAt) }}</td>
         </tr>
       </tbody>
+
+      <button @click="updatePage(-1)">page up</button>
+      <button @click="updatePage(1)">page down</button>
     </table>
   </div>
 </template>
