@@ -2,7 +2,7 @@
 import { ref, watchEffect, computed, watch } from 'vue'
 import moment from 'moment'
 import Spinners from '../Spinners.vue'
-import { useFetch } from '@/composables/fetch'
+// import { useFetch } from '@/composables/fetch'
 
 interface Account {
   id: string
@@ -22,32 +22,32 @@ const accountEndpoint = computed(() => {
   return import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page.value + '&limit=' + limit.value
 })
 
-const { data, error } = useFetch(accountEndpoint)
-watchEffect(() => {
-  isLoading.value = true
-  if (data.value) {
-    accounts.value = data.value
-    isLoading.value = false
-  }
-})
-
-watch(error, (d: any) => {
-  if (d) {
-    accounts.value = []
-    placeholder.value = d.value
-    isLoading.value = false
-  }
-})
-// const fetchData = async () => {
+// const { data, error } = useFetch(accountEndpoint)
+// watchEffect(() => {
 //   isLoading.value = true
-//   const res = await fetch(accountEndpoint.value)
-//   accounts.value = await res.json()
-//   // // mock delay
-//   // await new Promise((resolve) => setTimeout(resolve, 5000))
-//   isLoading.value = false
-// }
+//   if (data.value) {
+//     accounts.value = data.value
+//     isLoading.value = false
+//   }
+// })
 
-// watchEffect(async () => fetchData())
+// watch(error, (d: any) => {
+//   if (d) {
+//     accounts.value = []
+//     placeholder.value = d.value
+//     isLoading.value = false
+//   }
+// })
+const fetchData = async () => {
+  isLoading.value = true
+  const res = await fetch(accountEndpoint.value)
+  accounts.value = await res.json()
+  // // mock delay
+  // await new Promise((resolve) => setTimeout(resolve, 5000))
+  isLoading.value = false
+}
+
+watchEffect(async () => fetchData())
 
 const timeFormat = (timestamp: number): string => {
   var day = moment(timestamp)
@@ -59,7 +59,7 @@ const updatePage = (n: number) => {
     page.value = page.value - 1
   }
 
-  if (n == 1) {
+  if (n == 1 && accounts.value.length != 0) {
     page.value = page.value + 1
   }
 }
@@ -68,8 +68,8 @@ const updatePage = (n: number) => {
 <template>
   <div>
     <h1>account</h1>
-    <div v-if="accounts.length == 0"></div>
-    <Spinners v-else-if="isLoading"> {{ placeholder }}</Spinners>
+    <div v-if="accounts.length == 0">{{ placeholder }}</div>
+    <Spinners v-else-if="isLoading"> </Spinners>
     <table class="table table-striped table-hover" v-else>
       <thead>
         <tr class="table-dark">
@@ -91,9 +91,26 @@ const updatePage = (n: number) => {
           <td>{{ timeFormat(account.createdAt) }}</td>
         </tr>
       </tbody>
-
-      <button @click="updatePage(-1)">page up</button>
-      <button @click="updatePage(1)">page down</button>
     </table>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
+        </li>
+        <li class="page-item" v-if="page != 1">
+          <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
+        </li>
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ page }}</span>
+        </li>
+        <li class="page-item" v-if="!(page > 1 && accounts.length == 0)">
+          <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#" @click="updatePage(1)">Next</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
