@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useFetch } from '../composables/fetch'
 
 export const useCounterStore = defineStore('counter', () => {
   const count = ref(0)
@@ -18,9 +19,8 @@ export const useCounterStore = defineStore('counter', () => {
   })
 
   const getUserDataById = async (id: number) => {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
-
-    return await res.json()
+    const { data, error } = await useFetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    return data
   }
   // i think i can only export 'summary' and 'increment',
   // provides better encapsulation.

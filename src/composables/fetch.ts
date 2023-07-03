@@ -1,6 +1,6 @@
-import { ref, isRef, unref, watchEffect } from 'vue'
+import { ref, isRef, unref, watchEffect, Ref } from 'vue'
 
-export const useFetch = (url: any) => {
+export const useFetch = (url: string | Ref<string>) => {
   const data = ref<any>(null)
   const error = ref<any>(null)
 
@@ -12,6 +12,16 @@ export const useFetch = (url: any) => {
 
     try {
       const res = await fetch(urlValue)
+      if (res.status == 401) {
+        throw new Error('user not login or do not have right')
+      }
+      if (res.status == 404) {
+        throw new Error('no data found')
+      }
+      if (!res.ok) {
+        throw new Error(res.statusText)
+      }
+
       data.value = await res.json()
     } catch (e: any) {
       error.value = e
