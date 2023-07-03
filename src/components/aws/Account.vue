@@ -39,9 +39,9 @@ const timeFormat = (timestamp: number): string => {
     <h1>account</h1>
     <div v-if="accounts.length == 0">no data found</div>
     <Spinners v-else-if="isLoading"> </Spinners>
-    <table class="table" v-else>
+    <table class="table table-striped table-hover" v-else>
       <thead>
-        <tr>
+        <tr class="table-dark">
           <th scope="col">#</th>
           <th scope="col">Alias</th>
           <th scope="col">AccessKeyId</th>
@@ -51,8 +51,8 @@ const timeFormat = (timestamp: number): string => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="account in accounts" :key="account.id">
-          <th scope="row">{{ account.id }}</th>
+        <tr v-for="(account, index) in accounts" :key="account.id" class="table-primary">
+          <th scope="row" class="table-info">{{ account.id }}</th>
           <td>{{ account.alias }}</td>
           <td>{{ account.accessKeyId }}</td>
           <td>{{ account.secretAccessKey }}</td>
