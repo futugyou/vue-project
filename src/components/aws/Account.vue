@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect, computed, watch } from 'vue'
 import moment from 'moment'
-
 import Spinners from '../Spinners.vue'
+import { useFetch } from '@/composables/fetch'
 
 interface Account {
   id: string
@@ -14,23 +14,40 @@ interface Account {
 }
 
 const accounts = ref<Account[]>([])
-const isLoading = ref(false)
+const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
+const placeholder = ref('no data found')
 const accountEndpoint = computed(() => {
   return import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page.value + '&limit=' + limit.value
 })
 
-const fetchData = async () => {
+const { data, error } = useFetch(accountEndpoint)
+watchEffect(() => {
   isLoading.value = true
-  const res = await fetch(accountEndpoint.value)
-  accounts.value = await res.json()
-  // // mock delay
-  // await new Promise((resolve) => setTimeout(resolve, 5000))
-  isLoading.value = false
-}
+  if (data.value) {
+    accounts.value = data.value
+    isLoading.value = false
+  }
+})
 
-watchEffect(async () => fetchData())
+watch(error, (d: any) => {
+  if (d) {
+    accounts.value = []
+    placeholder.value = d.value
+    isLoading.value = false
+  }
+})
+// const fetchData = async () => {
+//   isLoading.value = true
+//   const res = await fetch(accountEndpoint.value)
+//   accounts.value = await res.json()
+//   // // mock delay
+//   // await new Promise((resolve) => setTimeout(resolve, 5000))
+//   isLoading.value = false
+// }
+
+// watchEffect(async () => fetchData())
 
 const timeFormat = (timestamp: number): string => {
   var day = moment(timestamp)
@@ -38,7 +55,7 @@ const timeFormat = (timestamp: number): string => {
 }
 
 const updatePage = (n: number) => {
-  if (n == -1 && page.value > 2) {
+  if (n == -1 && page.value >= 2) {
     page.value = page.value - 1
   }
 
@@ -51,8 +68,8 @@ const updatePage = (n: number) => {
 <template>
   <div>
     <h1>account</h1>
-    <div v-if="accounts.length == 0">no data found</div>
-    <Spinners v-else-if="isLoading"> </Spinners>
+    <div v-if="accounts.length == 0"></div>
+    <Spinners v-else-if="isLoading"> {{ placeholder }}</Spinners>
     <table class="table table-striped table-hover" v-else>
       <thead>
         <tr class="table-dark">
