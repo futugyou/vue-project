@@ -66,51 +66,72 @@ const updatePage = (n: number) => {
 </script>
 
 <template>
-  <div>
-    <h1>account</h1>
-    <div v-if="accounts.length == 0">{{ placeholder }}</div>
-    <Spinners v-else-if="isLoading"> </Spinners>
-    <table class="table table-striped table-hover" v-else>
-      <thead>
-        <tr class="table-dark">
-          <th scope="col">#</th>
-          <th scope="col">Alias</th>
-          <th scope="col">AccessKeyId</th>
-          <th scope="col">SecretAccessKey</th>
-          <th scope="col">Region</th>
-          <th scope="col">CreatedAt</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(account, index) in accounts" :key="account.id" class="table-primary">
-          <th scope="row" class="table-info">{{ account.id }}</th>
-          <td>{{ account.alias }}</td>
-          <td>{{ account.accessKeyId }}</td>
-          <td>{{ account.secretAccessKey }}</td>
-          <td>{{ account.region }}</td>
-          <td>{{ timeFormat(account.createdAt) }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
-        </li>
-        <li class="page-item" v-if="page != 1">
-          <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
-        </li>
-        <li class="page-item active" aria-current="page">
-          <span class="page-link">{{ page }}</span>
-        </li>
-        <li class="page-item" v-if="!(page > 1 && accounts.length == 0)">
-          <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#" @click="updatePage(1)">Next</a>
-        </li>
-      </ul>
-    </nav>
+  <div class="full-content">
+    <div class="head-content">
+      <h1>account</h1>
+    </div>
+    <div class="middle-content">
+      <div v-if="accounts.length == 0">{{ placeholder }}</div>
+      <Spinners v-else-if="isLoading"> </Spinners>
+      <table class="table table-striped table-hover" v-else>
+        <thead>
+          <tr class="table-dark">
+            <th scope="col">#</th>
+            <th scope="col">Alias</th>
+            <th scope="col">AccessKeyId</th>
+            <th scope="col">SecretAccessKey</th>
+            <th scope="col">Region</th>
+            <th scope="col">CreatedAt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(account, index) in accounts" :key="account.id" class="table-primary">
+            <th scope="row" class="table-info">{{ account.id }}</th>
+            <td>{{ account.alias }}</td>
+            <td>{{ account.accessKeyId }}</td>
+            <td>{{ account.secretAccessKey }}</td>
+            <td>{{ account.region }}</td>
+            <td>{{ timeFormat(account.createdAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="foot-content">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
+          </li>
+          <li class="page-item" v-if="page != 1">
+            <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
+          </li>
+          <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page }}</span>
+          </li>
+          <li class="page-item" v-if="!(page > 1 && accounts.length == 0)">
+            <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#" @click="updatePage(1)">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.full-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.head-content {}
+
+.middle-content {
+  flex: 1;
+}
+
+.foot-content {}
+</style>
