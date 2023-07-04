@@ -1,6 +1,7 @@
 import './assets/styles.scss'
 import './assets/main.css'
-import * as bootstrap from 'bootstrap'
+import '@popperjs/core'
+import 'bootstrap'
 
 import { createApp, App as AppInstance } from 'vue'
 import { Router } from 'vue-router'

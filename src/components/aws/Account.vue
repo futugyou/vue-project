@@ -63,6 +63,10 @@ const updatePage = (n: number) => {
     page.value = page.value + 1
   }
 }
+
+const changePagesize = (n: number) => {
+  limit.value = n
+}
 </script>
 
 <template>
@@ -97,25 +101,37 @@ const updatePage = (n: number) => {
       </table>
     </div>
     <div class="foot-content">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
-          </li>
-          <li class="page-item" v-if="page != 1">
-            <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
-          </li>
-          <li class="page-item active" aria-current="page">
-            <span class="page-link">{{ page }}</span>
-          </li>
-          <li class="page-item" v-if="!(page > 1 && accounts.length == 0)">
-            <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#" @click="updatePage(1)">Next</a>
-          </li>
+      <div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
+            </li>
+            <li class="page-item" v-if="page != 1">
+              <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
+            </li>
+            <li class="page-item active" aria-current="page">
+              <span class="page-link">{{ page }}</span>
+            </li>
+            <li class="page-item" v-if="!(page > 1 && accounts.length == 0)">
+              <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" @click="updatePage(1)">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="dropdown" style="margin-left: 20px;">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {{ limit }}
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" @click="changePagesize(10)">10</a></li>
+          <li><a class="dropdown-item" href="#" @click="changePagesize(20)">20</a></li>
+          <li><a class="dropdown-item" href="#" @click="changePagesize(30)">30</a></li>
         </ul>
-      </nav>
+      </div>
     </div>
   </div>
 </template>
@@ -131,7 +147,13 @@ const updatePage = (n: number) => {
 
 .middle-content {
   flex: 1;
+  overflow: auto;
+  margin-bottom: 10px;
 }
 
-.foot-content {}
+.foot-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 </style>
