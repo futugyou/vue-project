@@ -1,0 +1,115 @@
+<script lang="ts" setup>
+import { ref, watchEffect, computed, watch } from 'vue'
+import moment from 'moment'
+import Spinners from './Spinners.vue'
+
+const props = defineProps({
+  items: Array,
+  isLoading: Boolean
+})
+
+const emit = defineEmits<{
+  (e: 'updatePage', n: number): void
+  (e: 'changePagesize', n: number): void
+}>()
+
+const pagesize = ref(10)
+const page = ref(1)
+const placeholder = ref('no data found')
+
+const updatePage = (n: number) => {
+  if (n == -1 && page.value >= 2) {
+    page.value = page.value - 1
+  }
+
+  if (n == 1 && props.items!.length != 0) {
+    page.value = page.value + 1
+  }
+
+  emit('updatePage', page.value)
+}
+
+const changePagesize = (n: number) => {
+  pagesize.value = n
+  emit('changePagesize', pagesize.value)
+}
+</script>
+
+<template>
+  <div class="full-content">
+    <div class="middle-content">
+      <div v-if="items!.length == 0">{{ placeholder }}</div>
+      <Spinners v-else-if="isLoading"> </Spinners>
+      <table class="table table-striped table-hover" v-else>
+        <thead>
+          <tr class="table-dark">
+            <slot :pagesize="pagesize" :page="page" name="th" />
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in items" :key="index" class="table-primary">
+            <slot name="td" v-bind="item" />
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="foot-content">
+      <div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
+            </li>
+            <li class="page-item" v-if="page != 1">
+              <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
+            </li>
+            <li class="page-item active" aria-current="page">
+              <span class="page-link">{{ page }}</span>
+            </li>
+            <li class="page-item" v-if="!(page > 1 && items!.length == 0)">
+              <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" @click="updatePage(1)">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="dropdown" style="margin-left: 20px">
+        <button
+          class="btn btn-primary dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ pagesize }}
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" @click="changePagesize(10)">10</a></li>
+          <li><a class="dropdown-item" href="#" @click="changePagesize(20)">20</a></li>
+          <li><a class="dropdown-item" href="#" @click="changePagesize(30)">30</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.full-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.middle-content {
+  flex: 1;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+.foot-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+</style>
