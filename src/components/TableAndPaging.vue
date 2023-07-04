@@ -36,8 +36,8 @@ const changePagesize = (n: number) => {
 </script>
 
 <template>
-  <div class="full-content">
-    <div class="middle-content">
+  <div class="table-paging-container">
+    <div class="table-container">
       <div v-if="items!.length == 0">{{ placeholder }}</div>
       <Spinners v-else-if="isLoading"> </Spinners>
       <table class="table table-striped table-hover" v-else>
@@ -53,7 +53,7 @@ const changePagesize = (n: number) => {
         </tbody>
       </table>
     </div>
-    <div class="foot-content">
+    <div class="paging-container">
       <div>
         <nav aria-label="Page navigation example">
           <ul class="pagination">
@@ -95,19 +95,20 @@ const changePagesize = (n: number) => {
 </template>
 
 <style scoped>
-.full-content {
+.table-paging-container {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.middle-content {
+.table-container {
   flex: 1;
   overflow: auto;
   margin-bottom: 10px;
 }
 
-.foot-content {
+.paging-container {
   display: flex;
   flex-direction: row;
   justify-content: center;

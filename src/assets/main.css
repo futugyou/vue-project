@@ -26,7 +26,6 @@ body {
 .vu3-app {
   height: 100%;
   overflow-y: auto;
-  padding-bottom: 20px;
 }
 
 .vueapp-container {
@@ -35,6 +34,7 @@ body {
   grid-template-columns: auto auto auto auto;
   justify-items: stretch;
   align-items: stretch;
+  padding: 5px;
 }
 
 .vueapp-layer {

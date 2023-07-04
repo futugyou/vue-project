@@ -88,6 +88,7 @@ const changePagesize = (n: number) => {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .head-content {
