@@ -1,11 +1,26 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, PropType, computed } from 'vue'
 import Spinners from './Spinners.vue'
 
+export interface TableField {
+    key: string
+    label: string
+}
+
 const props = defineProps({
-    items: Array,
+    fields: { type: Array as PropType<TableField[]>, default: () => [] },
+    items: { type: Array, default: () => [] },
     isLoading: Boolean
 })
+
+const displayedFieldKeys = computed(() => {
+    return Object.entries(props.fields).map(([_key, value]) => value.key)
+})
+
+const format = (item: any, key: string) => {
+    const field = props.fields.find((f) => f.key === key)
+    return field && item[key]
+}
 
 const emit = defineEmits<{
     (e: 'updatePage', n: number): void
@@ -44,12 +59,16 @@ const changePagesize = (n: number) => {
             <table class="table table-striped table-hover" v-else>
                 <thead>
                     <tr class="table-dark">
-                        <slot :pagesize="pagesize" :page="page" name="th" />
+                        <th scope="col" v-for="field in fields">
+                            {{ field.label }}
+                        </th>
+                        <!-- <slot :pagesize="pagesize" :page="page" name="th" /> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in items" :key="index" class="table-primary">
-                        <slot name="td" v-bind="item" />
+                        <!-- <slot name="td" v-bind="item" /> -->
+                        <td v-for="field in displayedFieldKeys">{{ format(item, field) }}</td>
                     </tr>
                 </tbody>
             </table>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
 import moment from 'moment'
-import TableAndPaging from '../TableAndPaging.vue'
+import TableAndPaging, { TableField } from '../TableAndPaging.vue'
 
 interface Account {
   id: string
@@ -16,6 +16,26 @@ const accounts = ref<Account[]>([])
 const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
+
+const fields: TableField[] = [{
+  key: "id",
+  label: "#"
+}, {
+  key: "alias",
+  label: "Alias"
+}, {
+  key: "accessKeyId",
+  label: "AccessKeyId"
+}, {
+  key: "secretAccessKey",
+  label: "SecretAccessKey"
+}, {
+  key: "region",
+  label: "Region"
+}, {
+  key: "createdAt",
+  label: "CreatedAt"
+}]
 
 const accountEndpoint = computed(() => {
   return (
@@ -57,28 +77,24 @@ const changePagesize = (n: number) => {
     <div class="head-content">
       <h1>account</h1>
     </div>
-    <TableAndPaging
-      :items="accounts"
-      :isLoading="isLoading"
-      @changePagesize="changePagesize"
-      @updatePage="updatePage"
-    >
-      <template v-slot:th>
+    <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
+      @updatePage="updatePage">
+      <!-- <template v-slot:th>
         <th scope="col">#</th>
         <th scope="col">Alias</th>
         <th scope="col">AccessKeyId</th>
         <th scope="col">SecretAccessKey</th>
         <th scope="col">Region</th>
         <th scope="col">CreatedAt</th>
-      </template>
-      <template v-slot:td="account">
+      </template> -->
+      <!-- <template v-slot:td="account">
         <th class="table-info">{{ account.id }}</th>
         <td>{{ account.alias }}</td>
         <td>{{ account.accessKeyId }}</td>
         <td>{{ account.secretAccessKey }}</td>
         <td>{{ account.region }}</td>
         <td>{{ timeFormat(account.createdAt) }}</td>
-      </template>
+      </template> -->
     </TableAndPaging>
   </div>
 </template>
