@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, PropType, computed } from 'vue'
+import { ref, PropType } from 'vue'
 import Spinners from './Spinners.vue'
 
 export interface TableField {
@@ -13,10 +13,6 @@ const props = defineProps({
     fields: { type: Array as PropType<TableField[]>, default: () => [] },
     items: { type: Array, default: () => [] },
     isLoading: Boolean
-})
-
-const displayedFieldKeys = computed(() => {
-    return Object.entries(props.fields).map(([_key, value]) => value.key)
 })
 
 const format = (item: any, key: string) => {
@@ -67,18 +63,20 @@ const changePagesize = (n: number) => {
                 <thead>
                     <tr class="table-dark">
                         <th scope="col" v-for="field in fields">
-                            {{ field.label }}
+                            <slot :name="`header_${field.key}`" v-bind="field">
+                                {{ field.label }}
+                            </slot>
                         </th>
-                        <!-- <slot :pagesize="pagesize" :page="page" name="th" /> -->
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in items" :key="index" class="table-primary">
-                        <!-- <slot name="td" v-bind="item" /> -->
-
-                        <template v-for="field in displayedFieldKeys">
-                            <Component :is="cellElement(field)" :class="{ 'table-info': cellElement(field) == 'th' }">
-                                {{ format(item, field) }}
+                        <template v-for="field in fields">
+                            <Component :is="cellElement(field.key)"
+                                :class="{ 'table-info': cellElement(field.key) == 'th' }">
+                                <slot :name="`body_${field}`" v-bind="item">
+                                    {{ format(item, field.key) }}
+                                </slot>
                             </Component>
                         </template>
                     </tr>

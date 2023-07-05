@@ -22,27 +22,34 @@ const timeFormat = (timestamp: number): string => {
   return day.format('lll')
 }
 
-const fields: TableField[] = [{
-  key: "id",
-  label: "#",
-  header: true,
-}, {
-  key: "alias",
-  label: "Alias"
-}, {
-  key: "accessKeyId",
-  label: "AccessKeyId"
-}, {
-  key: "secretAccessKey",
-  label: "SecretAccessKey"
-}, {
-  key: "region",
-  label: "Region"
-}, {
-  key: "createdAt",
-  label: "CreatedAt",
-  format: timeFormat,
-}]
+const fields: TableField[] = [
+  {
+    key: 'id',
+    label: '#',
+    header: true
+  },
+  {
+    key: 'alias',
+    label: 'Alias'
+  },
+  {
+    key: 'accessKeyId',
+    label: 'AccessKeyId'
+  },
+  {
+    key: 'secretAccessKey',
+    label: 'SecretAccessKey'
+  },
+  {
+    key: 'region',
+    label: 'Region'
+  },
+  {
+    key: 'createdAt',
+    label: 'CreatedAt',
+    format: timeFormat
+  }
+]
 
 const accountEndpoint = computed(() => {
   return (
@@ -79,24 +86,19 @@ const changePagesize = (n: number) => {
     <div class="head-content">
       <h1>account</h1>
     </div>
-    <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
-      @updatePage="updatePage">
-      <!-- <template v-slot:th>
-        <th scope="col">#</th>
-        <th scope="col">Alias</th>
-        <th scope="col">AccessKeyId</th>
-        <th scope="col">SecretAccessKey</th>
-        <th scope="col">Region</th>
-        <th scope="col">CreatedAt</th>
-      </template> -->
-      <!-- <template v-slot:td="account">
-        <th class="table-info">{{ account.id }}</th>
-        <td>{{ account.alias }}</td>
-        <td>{{ account.accessKeyId }}</td>
-        <td>{{ account.secretAccessKey }}</td>
-        <td>{{ account.region }}</td>
-        <td>{{ timeFormat(account.createdAt) }}</td>
-      </template> -->
+    <TableAndPaging
+      :items="accounts"
+      :fields="fields"
+      :isLoading="isLoading"
+      @changePagesize="changePagesize"
+      @updatePage="updatePage"
+    >
+      <template v-slot:header_id="header">
+        <span style="color: red">{{ header.label }}</span>
+      </template>
+      <template v-slot:body_id="body">
+        <span style="color: green">{{ body.id }}</span>
+      </template>
     </TableAndPaging>
   </div>
 </template>
