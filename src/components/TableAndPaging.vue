@@ -6,6 +6,7 @@ export interface TableField {
     key: string
     label: string
     header?: boolean
+    format?: (x: any) => string
 }
 
 const props = defineProps({
@@ -20,7 +21,7 @@ const displayedFieldKeys = computed(() => {
 
 const format = (item: any, key: string) => {
     const field = props.fields.find((f) => f.key === key)
-    return field && item[key]
+    return field && field.format ? field.format(item[key]) : item[key]
 }
 
 const cellElement = (key: string) => {

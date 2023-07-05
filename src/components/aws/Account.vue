@@ -17,6 +17,11 @@ const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
 
+const timeFormat = (timestamp: number): string => {
+  var day = moment(timestamp)
+  return day.format('lll')
+}
+
 const fields: TableField[] = [{
   key: "id",
   label: "#",
@@ -35,7 +40,8 @@ const fields: TableField[] = [{
   label: "Region"
 }, {
   key: "createdAt",
-  label: "CreatedAt"
+  label: "CreatedAt",
+  format: timeFormat,
 }]
 
 const accountEndpoint = computed(() => {
@@ -58,11 +64,6 @@ const fetchData = async () => {
 }
 
 watchEffect(async () => fetchData())
-
-const timeFormat = (timestamp: number): string => {
-  var day = moment(timestamp)
-  return day.format('lll')
-}
 
 const updatePage = (n: number) => {
   page.value = n
