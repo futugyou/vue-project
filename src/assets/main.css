@@ -3,60 +3,60 @@
 
 html,
 body {
-  height: 100%;
-  overflow-y: hidden;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+    height: 100%;
+    overflow-y: hidden;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
 }
 
 #vu3-app-main {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 #public-links {
-  padding: 10px 0;
-  font-size: 18px;
+    padding: 10px 0;
+    font-size: 18px;
 }
 
 .vu3-app {
-  height: 100%;
-  overflow-y: auto;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .vueapp-container {
-  grid-gap: 5px;
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  justify-items: stretch;
-  align-items: stretch;
-  padding: 5px;
+    grid-gap: 5px;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    justify-items: stretch;
+    align-items: stretch;
+    padding: 5px;
 }
 
 .vueapp-layer {
-  text-align: left;
-  border: 1px solid #6acbe3;
-  border-radius: 5px;
-  padding: 20px;
-  overflow: hidden;
-  white-space: nowrap;
+    text-align: left;
+    border: 1px solid #6acbe3;
+    border-radius: 5px;
+    padding: 20px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 a,
 .green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+    text-decoration: none;
+    color: hsla(160, 100%, 37%, 1);
+    transition: 0.4s;
 }
 
 @media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+    a:hover {
+        background-color: hsla(160, 100%, 37%, 0.2);
+    }
 }
 
 @media (min-width: 1024px) {

@@ -7,15 +7,15 @@ export const locationKey = Symbol() as InjectionKey<LocationInject>
 export const i18nKey = Symbol() as InjectionKey<I18nInject>
 
 export interface LocationInject {
-  location: Ref<string>
-  updateLocation: () => void
+    location: Ref<string>
+    updateLocation: () => void
 }
 
 export const DefaultLocation: LocationInject = {
-  location: ref<string>(''),
-  updateLocation: () => {}
+    location: ref<string>(''),
+    updateLocation: () => {}
 }
 
 export interface I18nInject {
-  greetings: { [key: string]: string }
+    greetings: { [key: string]: string }
 }

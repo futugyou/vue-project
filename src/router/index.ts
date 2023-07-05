@@ -9,41 +9,41 @@ let router: Router | null = null
 let history: RouterHistory | null = null
 history = createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || import.meta.env.BASE_URL)
 router = createRouter({
-  history,
-  routes
+    history,
+    routes
 }) as Router
 
 // route guards
 router.beforeEach((to: any, from: any) => {
-  // it will NOT stop redirect
-  if (to.name == 'Redirect') {
-    return false
-  }
-
-  if (to.meta.requiresAuth) {
-    if (window.__MICRO_APP_ENVIRONMENT__) {
-      const data = window.microApp?.getData()
-      if (!data?.Authorization) {
-        window.microApp.dispatch({
-          NeedLogin: true,
-          CreateAt: Date()
-        })
-      }
-    } else {
-      return {
-        // this is fake
-        path: '/login',
-        query: { redirect: to.fullPath }
-      }
+    // it will NOT stop redirect
+    if (to.name == 'Redirect') {
+        return false
     }
-  }
+
+    if (to.meta.requiresAuth) {
+        if (window.__MICRO_APP_ENVIRONMENT__) {
+            const data = window.microApp?.getData()
+            if (!data?.Authorization) {
+                window.microApp.dispatch({
+                    NeedLogin: true,
+                    CreateAt: Date()
+                })
+            }
+        } else {
+            return {
+                // this is fake
+                path: '/login',
+                query: { redirect: to.fullPath }
+            }
+        }
+    }
 })
 
 const clearRouter = (fn: () => void) => {
-  history?.destroy()
-  fn()
-  router = null
-  history = null
+    history?.destroy()
+    fn()
+    router = null
+    history = null
 }
 
 export { router, clearRouter }
