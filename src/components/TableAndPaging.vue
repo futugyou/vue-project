@@ -5,6 +5,7 @@ import Spinners from './Spinners.vue'
 export interface TableField {
     key: string
     label: string
+    header?: boolean
 }
 
 const props = defineProps({
@@ -20,6 +21,11 @@ const displayedFieldKeys = computed(() => {
 const format = (item: any, key: string) => {
     const field = props.fields.find((f) => f.key === key)
     return field && item[key]
+}
+
+const cellElement = (key: string) => {
+    const field = props.fields.find((f) => f.key === key)
+    return field && field.header ? 'th' : 'td'
 }
 
 const emit = defineEmits<{
@@ -68,7 +74,12 @@ const changePagesize = (n: number) => {
                 <tbody>
                     <tr v-for="(item, index) in items" :key="index" class="table-primary">
                         <!-- <slot name="td" v-bind="item" /> -->
-                        <td v-for="field in displayedFieldKeys">{{ format(item, field) }}</td>
+
+                        <template v-for="field in displayedFieldKeys">
+                            <Component :is="cellElement(field)" :class="{ 'table-info': cellElement(field) == 'th' }">
+                                {{ format(item, field) }}
+                            </Component>
+                        </template>
                     </tr>
                 </tbody>
             </table>

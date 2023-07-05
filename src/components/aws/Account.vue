@@ -19,7 +19,8 @@ const page = ref(1)
 
 const fields: TableField[] = [{
   key: "id",
-  label: "#"
+  label: "#",
+  header: true,
 }, {
   key: "alias",
   label: "Alias"
