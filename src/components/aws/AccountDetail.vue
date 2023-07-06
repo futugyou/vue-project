@@ -37,7 +37,30 @@ fetchData()
     <div class="full-content">
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading">
-            this account is {{ account }}
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">ID</label>
+                <label class="col-sm-10 col-form-label">{{ account?.id }}</label>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Region</label>
+                <label class="col-sm-10 col-form-label">{{ account?.region }}</label>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Alias</label>
+                <label class="col-sm-10 col-form-label">{{ account?.alias }}</label>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">AccessKeyId</label>
+                <label class="col-sm-10 col-form-label">{{ account?.accessKeyId }}</label>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">SecretAccessKey</label>
+                <label class="col-sm-10 col-form-label">{{ account?.secretAccessKey }}</label>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">CreatedAt</label>
+                <label class="col-sm-10 col-form-label">{{ account?.createdAt }}</label>
+            </div>
         </div>
 
     </div>
