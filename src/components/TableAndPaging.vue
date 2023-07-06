@@ -123,7 +123,7 @@ const sort = (key: string) => {
                         <template v-for="field in fields">
                             <Component :is="cellElement(field.key)"
                                 :class="{ 'table-info': cellElement(field.key) == 'th' }">
-                                <slot :name="`body_${field}`" v-bind="item">
+                                <slot :name="`body_${field.key}`" v-bind="item">
                                     {{ format(item, field.key) }}
                                 </slot>
                             </Component>

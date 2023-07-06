@@ -86,18 +86,15 @@ const changePagesize = (n: number) => {
         <div class="head-content">
             <h1>account</h1>
         </div>
-        <TableAndPaging
-            :items="accounts"
-            :fields="fields"
-            :isLoading="isLoading"
-            @changePagesize="changePagesize"
-            @updatePage="updatePage"
-        >
+        <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
+            @updatePage="updatePage">
             <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
             </template>
             <template v-slot:body_id="body">
-                <span style="color: green">{{ body.id }}</span>
+                <span style="color: green">
+                    <router-link :to="'/account/' + body.id" page-path="">{{ body.id }}</router-link>
+                </span>
             </template>
         </TableAndPaging>
     </div>
