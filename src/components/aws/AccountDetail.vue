@@ -36,34 +36,82 @@ fetchData()
 <template>
     <div class="full-content">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading">
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">ID</label>
-                <label class="col-sm-10 col-form-label">{{ account?.id }}</label>
+        <div v-if="!isLoading" class="detail-container">
+            <div class="detail-item">
+                <div class="detail-item-lable">ID</div>
+                <div class="detail-item-content">{{ account?.id }}</div>
             </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">Region</label>
-                <label class="col-sm-10 col-form-label">{{ account?.region }}</label>
+            <div class="detail-item">
+                <div class="detail-item-lable">Region</div>
+                <div class="detail-item-content">{{ account?.region }}</div>
             </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">Alias</label>
-                <label class="col-sm-10 col-form-label">{{ account?.alias }}</label>
+            <div class="detail-item">
+                <div class="detail-item-lable">Alias</div>
+                <div class="detail-item-content">{{ account?.alias }}</div>
             </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">AccessKeyId</label>
-                <label class="col-sm-10 col-form-label">{{ account?.accessKeyId }}</label>
+            <div class="detail-item">
+                <div class="detail-item-lable">AccessKeyId</div>
+                <div class="detail-item-content">{{ account?.accessKeyId }}</div>
             </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">SecretAccessKey</label>
-                <label class="col-sm-10 col-form-label">{{ account?.secretAccessKey }}</label>
+            <div class="detail-item">
+                <div class="detail-item-lable">SecretAccessKey</div>
+                <div class="detail-item-content">{{ account?.secretAccessKey }}</div>
             </div>
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">CreatedAt</label>
-                <label class="col-sm-10 col-form-label">{{ account?.createdAt }}</label>
+            <div class="detail-item">
+                <div class="detail-item-lable">CreatedAt</div>
+                <div class="detail-item-content">{{ account?.createdAt }}</div>
             </div>
         </div>
 
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.full-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-align: left;
+    max-width: 600px;
+    width: 100%;
+    font-size: 18px;
+    background-color: aliceblue;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+}
+
+.detail-item-lable {
+    flex: 1;
+    display: flex;
+    line-height: 18px;
+    padding: 5px;
+    margin: 5px;
+    height: 40px;
+    background-color: aquamarine;
+    border-radius: 10px;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+.detail-item-content {
+    flex: 1;
+    display: flex;
+    line-height: 18px;
+    padding: 5px;
+    margin: 5px;
+    height: 40px;
+    border-radius: 10px;
+    align-content: center;
+    flex-wrap: wrap;
+}
+</style>
