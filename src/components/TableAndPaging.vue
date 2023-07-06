@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, PropType, computed } from 'vue'
-import Spinners from './Spinners.vue'
+import Spinners from '@/components/Spinners.vue'
 
 export interface TableField {
     key: string
@@ -113,16 +113,24 @@ const sort = (key: string) => {
                             <slot :name="`header_${field.key}`" v-bind="field">
                                 {{ field.label }}
                             </slot>
-                            <i class="bi bi-arrow-down-short" v-if="sortKey == field.key && sorydir == 'desc'"></i>
-                            <i class="bi bi-arrow-up-short" v-if="sortKey == field.key && sorydir == 'asc'"></i>
+                            <i
+                                class="bi bi-arrow-down-short"
+                                v-if="sortKey == field.key && sorydir == 'desc'"
+                            ></i>
+                            <i
+                                class="bi bi-arrow-up-short"
+                                v-if="sortKey == field.key && sorydir == 'asc'"
+                            ></i>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in sortedItems" :key="index" class="table-primary">
                         <template v-for="field in fields">
-                            <Component :is="cellElement(field.key)"
-                                :class="{ 'table-info': cellElement(field.key) == 'th' }">
+                            <Component
+                                :is="cellElement(field.key)"
+                                :class="{ 'table-info': cellElement(field.key) == 'th' }"
+                            >
                                 <slot :name="`body_${field.key}`" v-bind="item">
                                     {{ format(item, field.key) }}
                                 </slot>
@@ -149,15 +157,24 @@ const sort = (key: string) => {
                             <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="#" @click="updatePage(1)"
-                                v-if="pagesize == sortedItems!.length">Next</a>
+                            <a
+                                class="page-link"
+                                href="#"
+                                @click="updatePage(1)"
+                                v-if="pagesize == sortedItems!.length"
+                                >Next</a
+                            >
                         </li>
                     </ul>
                 </nav>
             </div>
             <div class="dropdown" style="margin-left: 20px">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
+                <button
+                    class="btn btn-primary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
                     {{ pagesize }}
                 </button>
                 <ul class="dropdown-menu">

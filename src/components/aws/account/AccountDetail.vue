@@ -2,7 +2,8 @@
 import { ref, watchEffect, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import Spinners from '../Spinners.vue'
+import Spinners from '@/components/Spinners.vue'
+import { useTimeFormat } from '@/composables/timeFormat'
 
 interface AccountDetail {
     id: string
@@ -30,7 +31,7 @@ const fetchData = async () => {
     isLoading.value = false
 }
 
-fetchData() 
+fetchData()
 </script>
 
 <template>
@@ -59,10 +60,11 @@ fetchData()
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">CreatedAt</div>
-                <div class="detail-item-content">{{ account?.createdAt }}</div>
+                <div class="detail-item-content">
+                    {{ account ? useTimeFormat(account.createdAt) : '' }}
+                </div>
             </div>
         </div>
-
     </div>
 </template>
 

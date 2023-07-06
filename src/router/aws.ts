@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
 
-const Account = () => import('../components/aws/Account.vue')
-const AccountDetail = () => import('../components/aws/AccountDetail.vue')
+const Account = () => import('@/components/aws/account/Account.vue')
+const AccountDetail = () => import('@/components/aws/account/AccountDetail.vue')
 
 export const AwsRoutes = [
     {

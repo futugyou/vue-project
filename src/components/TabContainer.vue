@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { shallowRef } from 'vue'
-import { useTabStore } from '../stores/tab'
+import { useTabStore } from '@/stores/tab'
 
 const props = defineProps({
     components: Array
