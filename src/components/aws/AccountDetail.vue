@@ -14,21 +14,23 @@ interface AccountDetail {
 }
 
 const route = useRoute()
-const isLoading = ref(true)
+const isLoading = ref(false)
 const account = ref<AccountDetail | null>(null)
-
-const accountId = computed(() => route.params.accountId)
-const accountDetailEndpoint = computed(() => import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId.value)
+const accountId = route.params.accountId as string
+const accountDetailEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId
 
 const fetchData = async () => {
+    if (accountId == undefined || isLoading.value) {
+        return
+    }
+
     isLoading.value = true
-    const res = await fetch(accountDetailEndpoint.value)
+    const res = await fetch(accountDetailEndpoint)
     account.value = await res.json()
     isLoading.value = false
 }
 
-watchEffect(async () => fetchData())
-
+fetchData() 
 </script>
 
 <template>
