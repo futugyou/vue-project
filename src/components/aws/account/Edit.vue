@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import type { PropType } from 'vue'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
@@ -14,49 +14,67 @@ interface AccountDetail {
     createdAt: number
 }
 
-const route = useRoute()
-const isLoading = ref(false)
-const account = ref<AccountDetail | null>(null)
-const accountId = route.params.accountId as string
-const accountDetailEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId
-
-const fetchData = async () => {
-    if (accountId == undefined || isLoading.value) {
-        return
-    }
-
-    isLoading.value = true
-    const res = await fetch(accountDetailEndpoint)
-    account.value = await res.json()
-    isLoading.value = false
+const defaultAccount: AccountDetail = {
+    id: '',
+    alias: '',
+    accessKeyId: '',
+    secretAccessKey: '',
+    region: '',
+    createdAt: 0
 }
 
-fetchData()
+const props = defineProps({
+    account: {
+        type: Object as PropType<AccountDetail>,
+        default() {
+            return {
+                id: '',
+                alias: '',
+                accessKeyId: '',
+                secretAccessKey: '',
+                region: '',
+                createdAt: 0
+            }
+        }
+    },
+})
+
+const isLoading = ref(false)
+const account = ref<AccountDetail>(props.account)
+
 </script>
 
 <template>
     <div class="full-content">
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading" class="detail-container">
-            <div class="detail-item">
+            <div class="detail-item" v-if="account?.id">
                 <div class="detail-item-lable">ID</div>
                 <div class="detail-item-content">{{ account?.id }}</div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Region</div>
-                <div class="detail-item-content">{{ account?.region }}</div>
+                <div class="detail-item-content">
+                    <input v-model="account.region" />
+                </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Alias</div>
-                <div class="detail-item-content">{{ account?.alias }}</div>
+                <div class="detail-item-content">
+                    <input v-model="account.alias" />
+                </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">AccessKeyId</div>
-                <div class="detail-item-content">{{ account?.accessKeyId }}</div>
+                <div class="detail-item-content">
+                    <input v-model="account.accessKeyId" />
+                </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">SecretAccessKey</div>
-                <div class="detail-item-content">{{ account?.secretAccessKey }}</div>
+                <div class="detail-item-content">
+                    <input v-model="account.secretAccessKey" />
+                </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">CreatedAt</div>

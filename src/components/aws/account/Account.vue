@@ -4,6 +4,7 @@ import { ref, watchEffect, computed } from 'vue'
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton } from '@/components/Modal.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
+import Edit from './Edit.vue'
 
 interface Account {
     id: string
@@ -85,7 +86,7 @@ const changePagesize = (n: number) => {
 <template>
     <div class="full-content">
         <Modal id="accountModal" title="Create Account">
-            <h1>this is content</h1>
+            <Edit></Edit>
         </Modal>
         <div class="head-content">
             <div class="">
