@@ -99,8 +99,13 @@ const changePagesize = (n: number) => {
                 <ModalButton targetId="#accountModal" title="Create Account"></ModalButton>
             </div>
         </div>
-        <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
-            @updatePage="updatePage">
+        <TableAndPaging
+            :items="accounts"
+            :fields="fields"
+            :isLoading="isLoading"
+            @changePagesize="changePagesize"
+            @updatePage="updatePage"
+        >
             <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
             </template>

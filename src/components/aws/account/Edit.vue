@@ -1,47 +1,14 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
-import type { PropType } from 'vue'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
+import { Account, defaultAccount } from './account'
 
-interface AccountDetail {
-    id: string
-    alias: string
-    accessKeyId: string
-    secretAccessKey: string
-    region: string
-    createdAt: number
-}
-
-const defaultAccount: AccountDetail = {
-    id: '',
-    alias: '',
-    accessKeyId: '',
-    secretAccessKey: '',
-    region: '',
-    createdAt: 0
-}
-
-const props = defineProps({
-    account: {
-        type: Object as PropType<AccountDetail>,
-        default() {
-            return {
-                id: '',
-                alias: '',
-                accessKeyId: '',
-                secretAccessKey: '',
-                region: '',
-                createdAt: 0
-            }
-        }
-    },
-})
+const props = withDefaults(defineProps<{ account?: Account }>(), { account: () => defaultAccount })
 
 const isLoading = ref(false)
-const account = ref<AccountDetail>(props.account)
-
+const account = ref<Account>(props.account)
 </script>
 
 <template>

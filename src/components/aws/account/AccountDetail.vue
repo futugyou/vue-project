@@ -4,19 +4,11 @@ import { useRoute } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
-
-interface AccountDetail {
-    id: string
-    alias: string
-    accessKeyId: string
-    secretAccessKey: string
-    region: string
-    createdAt: number
-}
+import { Account, defaultAccount } from './account'
 
 const route = useRoute()
 const isLoading = ref(false)
-const account = ref<AccountDetail | null>(null)
+const account = ref<Account>(defaultAccount)
 const accountId = route.params.accountId as string
 const accountDetailEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId
 
