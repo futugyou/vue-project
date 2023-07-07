@@ -7,8 +7,36 @@ import { Account, defaultAccount } from './account'
 
 const props = withDefaults(defineProps<{ account?: Account }>(), { account: () => defaultAccount })
 
+const emit = defineEmits<{
+    (e: 'save'): void
+    (e: 'close'): void
+}>()
+
 const isLoading = ref(false)
 const account = ref<Account>(props.account)
+
+const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
+
+const save = () => {
+    fetch(accountCreateEndpoint, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(account.value)
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+        });
+
+    emit('save')
+}
+
+const close = () => {
+    emit('close')
+}
+
 </script>
 
 <template>
@@ -48,6 +76,14 @@ const account = ref<Account>(props.account)
                 <div class="detail-item-content">
                     {{ account ? useTimeFormat(account.createdAt) : '' }}
                 </div>
+            </div>
+            <div class="button-container">
+                <button type="button" class="btn btn-secondary" @click="close">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary" @click="save">
+                    Save changes
+                </button>
             </div>
         </div>
     </div>
@@ -100,5 +136,18 @@ const account = ref<Account>(props.account)
     border-radius: 10px;
     align-content: center;
     flex-wrap: wrap;
+}
+
+.button-container {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.button-container>button {
+    margin: 5px;
 }
 </style>

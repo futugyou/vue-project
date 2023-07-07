@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect, computed, onMounted } from 'vue'
+import { Modal as Modalraw } from 'bootstrap'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton } from '@/components/Modal.vue'
@@ -81,12 +82,17 @@ const updatePage = (n: number) => {
 const changePagesize = (n: number) => {
     limit.value = n
 }
+
+const modalclose = () => {
+    
+}
+
 </script>
 
 <template>
     <div class="full-content">
         <Modal id="accountModal" title="Create Account">
-            <Edit></Edit>
+            <Edit @save="modalclose" @close="modalclose"></Edit>
         </Modal>
         <div class="head-content">
             <div class="">
@@ -99,13 +105,8 @@ const changePagesize = (n: number) => {
                 <ModalButton targetId="#accountModal" title="Create Account"></ModalButton>
             </div>
         </div>
-        <TableAndPaging
-            :items="accounts"
-            :fields="fields"
-            :isLoading="isLoading"
-            @changePagesize="changePagesize"
-            @updatePage="updatePage"
-        >
+        <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
+            @updatePage="updatePage">
             <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
             </template>
