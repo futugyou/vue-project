@@ -1,11 +1,21 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
+import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount } from './account'
 
-const props = withDefaults(defineProps<{ account?: Account }>(), { account: () => defaultAccount })
+const router = useRouter()
+const route = useRoute()
+
+const props = withDefaults(defineProps<{
+    account?: Account,
+    fromModal: boolean
+}>(), {
+    account: () => defaultAccount,
+    fromModal: () => false
+})
 
 const emit = defineEmits<{
     (e: 'save'): void
@@ -27,16 +37,33 @@ const save = () => {
     })
         .then(response => response.text())
         .then(data => {
-            console.log(data);
-        });
+            const elements = document.getElementsByClassName('modal-backdrop fade show')
+            while (elements.length > 0) {
+                elements[0]!.parentNode!.removeChild(elements[0]);
+            }
 
-    emit('save')
+            Array.from(document.querySelectorAll('.modal.fade.show')).forEach(
+                (el) => el.classList.remove('show')
+            )
+            console.log(data);
+            const newdata = JSON.parse(data) as Account
+            const newrouter = router.resolve({
+                name: 'AccountDetail',
+                params: { accountId: newdata.id },
+            }).href
+            router.push(newrouter)
+        });
+    // emit('save')
 }
 
 const close = () => {
-    emit('close')
+    // emit('close')
 }
 
+defineExpose({
+    save,
+    close
+})
 </script>
 
 <template>
@@ -77,7 +104,7 @@ const close = () => {
                     {{ account ? useTimeFormat(account.createdAt) : '' }}
                 </div>
             </div>
-            <div class="button-container">
+            <div class="button-container" v-if="!fromModal">
                 <button type="button" class="btn btn-secondary" @click="close">
                     Close
                 </button>

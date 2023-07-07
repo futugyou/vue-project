@@ -20,6 +20,7 @@ const accounts = ref<Account[]>([])
 const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
+const editref = ref(null)
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -84,15 +85,15 @@ const changePagesize = (n: number) => {
 }
 
 const modalclose = () => {
-    
+    (editref.value! as any).save()
 }
 
 </script>
 
 <template>
     <div class="full-content">
-        <Modal id="accountModal" title="Create Account">
-            <Edit @save="modalclose" @close="modalclose"></Edit>
+        <Modal id="accountModal" title="Create Account" @save="modalclose">
+            <Edit :fromModal="true" ref="editref"></Edit>
         </Modal>
         <div class="head-content">
             <div class="">

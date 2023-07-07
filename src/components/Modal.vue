@@ -10,7 +10,7 @@ export const Modal = defineComponent({
         id: String,
         title: String
     },
-    setup(props, { slots }) {
+    setup(props, { emit, slots }) {
         return () => (
             <div
                 class="modal fade"
@@ -30,14 +30,14 @@ export const Modal = defineComponent({
                             ></button>
                         </div>
                         <div class="modal-body">{slots.default && slots.default()}</div>
-                        {/* <div class="modal-footer">
+                        <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" onClick={() => emit('save')} >
                                 Save changes
                             </button>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             </div>
