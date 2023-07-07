@@ -2,6 +2,7 @@
 import { ref, watchEffect, computed } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
+import { Modal, ModalButton } from '@/components/Modal.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 interface Account {
@@ -83,31 +84,18 @@ const changePagesize = (n: number) => {
 
 <template>
     <div class="full-content">
-        <div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="accountModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Modal id="accountModal" title="Create Account">
+            <h1>this is content</h1>
+        </Modal>
         <div class="head-content">
             <div class="">
                 <h1>account</h1>
             </div>
             <div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#accountModal">
+                <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#accountModal">
                     create account
-                </button>
+                </button> -->
+                <ModalButton targetId="#accountModal" title="Create Account"></ModalButton>
             </div>
         </div>
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
