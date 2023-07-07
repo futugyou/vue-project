@@ -83,16 +83,35 @@ const changePagesize = (n: number) => {
 
 <template>
     <div class="full-content">
-        <div class="head-content">
-            <h1>account</h1>
+        <div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="accountModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <TableAndPaging
-            :items="accounts"
-            :fields="fields"
-            :isLoading="isLoading"
-            @changePagesize="changePagesize"
-            @updatePage="updatePage"
-        >
+        <div class="head-content">
+            <div class="">
+                <h1>account</h1>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#accountModal">
+                    create account
+                </button>
+            </div>
+        </div>
+        <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
+            @updatePage="updatePage">
             <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
             </template>
@@ -117,5 +136,8 @@ const changePagesize = (n: number) => {
 
 .head-content {
     display: flex;
+    align-items: center;
+    padding: 0px 10px;
+    justify-content: space-between;
 }
 </style>
