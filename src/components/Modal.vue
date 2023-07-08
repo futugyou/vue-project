@@ -13,6 +13,11 @@ export const Modal = defineComponent({
         hideFooter: Boolean,
     },
     setup(props, { emit, slots }) {
+        const saveClick = () => {
+            emit('saveChange')
+            closeModal()
+        }
+
         return () => (
             <div
                 class="modal fade"
@@ -36,7 +41,7 @@ export const Modal = defineComponent({
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" class="btn btn-primary" onClick={() => emit('save')} >
+                            <button type="button" class="btn btn-primary" onClick={saveClick} >
                                 Save changes
                             </button>
                         </div>}

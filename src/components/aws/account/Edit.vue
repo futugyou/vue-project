@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
-import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount } from './account'
 
 const router = useRouter()
-const route = useRoute()
 
 const props = withDefaults(defineProps<{
     account?: Account,
@@ -36,11 +35,12 @@ const save = () => {
     })
         .then(response => response.text())
         .then(data => {
-            isLoading.value = false
             const newdata = JSON.parse(data) as Account
             router.push('/account/' + newdata.id)
+            isLoading.value = false
+            emit('save')
         });
-    emit('save')
+
 }
 
 const close = () => {

@@ -92,7 +92,7 @@ const close = () => {
 <template>
     <div class="full-content">
         <Modal id="accountModal" title="Create Account" :hideFooter="true">
-            <Edit ref="editref" @save="close"></Edit>
+            <Edit ref="editref" @save="close" @close="close"></Edit>
         </Modal>
         <div class="head-content">
             <div class="">

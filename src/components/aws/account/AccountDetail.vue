@@ -7,13 +7,13 @@ import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount } from './account'
 
 const route = useRoute()
-const isLoading = ref(false)
+const isLoading = ref(true)
 const account = ref<Account>(defaultAccount)
 const accountId = route.params.accountId as string
 const accountDetailEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId
 
 const fetchData = async () => {
-    if (accountId == undefined || isLoading.value) {
+    if (accountId == undefined) {
         return
     }
 
