@@ -83,8 +83,7 @@ const changePagesize = (n: number) => {
     limit.value = n
 }
 
-const saveAccount = () => {
-    (editref.value! as any).save()
+const close = () => {
     closeModal()
 }
 
@@ -92,8 +91,8 @@ const saveAccount = () => {
 
 <template>
     <div class="full-content">
-        <Modal id="accountModal" title="Create Account" @save="saveAccount">
-            <Edit :fromModal="true" ref="editref"></Edit>
+        <Modal id="accountModal" title="Create Account" :hideFooter="true">
+            <Edit ref="editref" @save="close"></Edit>
         </Modal>
         <div class="head-content">
             <div class="">

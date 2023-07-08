@@ -11,10 +11,8 @@ const route = useRoute()
 
 const props = withDefaults(defineProps<{
     account?: Account,
-    fromModal: boolean
 }>(), {
     account: () => defaultAccount,
-    fromModal: () => false
 })
 
 const emit = defineEmits<{
@@ -28,6 +26,7 @@ const account = ref<Account>(props.account)
 const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
 
 const save = () => {
+    isLoading.value = true
     fetch(accountCreateEndpoint, {
         method: 'post',
         headers: {
@@ -36,20 +35,16 @@ const save = () => {
         body: JSON.stringify(account.value)
     })
         .then(response => response.text())
-        .then(data => {            
-            console.log(data);
+        .then(data => {
+            isLoading.value = false
             const newdata = JSON.parse(data) as Account
-            const newrouter = router.resolve({
-                name: 'AccountDetail',
-                params: { accountId: newdata.id },
-            }).href
-            router.push(newrouter)
+            router.push('/account/' + newdata.id)
         });
-    // emit('save')
+    emit('save')
 }
 
 const close = () => {
-    // emit('close')
+    emit('close')
 }
 
 defineExpose({
@@ -96,7 +91,7 @@ defineExpose({
                     {{ account ? useTimeFormat(account.createdAt) : '' }}
                 </div>
             </div>
-            <div class="button-container" v-if="!fromModal">
+            <div class="button-container">
                 <button type="button" class="btn btn-secondary" @click="close">
                     Close
                 </button>
