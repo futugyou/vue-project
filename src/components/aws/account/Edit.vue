@@ -36,15 +36,7 @@ const save = () => {
         body: JSON.stringify(account.value)
     })
         .then(response => response.text())
-        .then(data => {
-            const elements = document.getElementsByClassName('modal-backdrop fade show')
-            while (elements.length > 0) {
-                elements[0]!.parentNode!.removeChild(elements[0]);
-            }
-
-            Array.from(document.querySelectorAll('.modal.fade.show')).forEach(
-                (el) => el.classList.remove('show')
-            )
+        .then(data => {            
             console.log(data);
             const newdata = JSON.parse(data) as Account
             const newrouter = router.resolve({

@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue'
-import { Modal as Modalraw } from 'bootstrap'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { Modal, ModalButton } from '@/components/Modal.vue'
+import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import Edit from './Edit.vue'
 
@@ -84,15 +83,16 @@ const changePagesize = (n: number) => {
     limit.value = n
 }
 
-const modalclose = () => {
+const saveAccount = () => {
     (editref.value! as any).save()
+    closeModal()
 }
 
 </script>
 
 <template>
     <div class="full-content">
-        <Modal id="accountModal" title="Create Account" @save="modalclose">
+        <Modal id="accountModal" title="Create Account" @save="saveAccount">
             <Edit :fromModal="true" ref="editref"></Edit>
         </Modal>
         <div class="head-content">

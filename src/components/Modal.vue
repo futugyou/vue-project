@@ -64,6 +64,35 @@ export const ModalButton = defineComponent({
         )
     }
 })
+
+export const closeModal = () => {
+    const elements = document.getElementsByClassName('modal-backdrop fade show')
+    while (elements.length > 0) {
+        if (elements[0].parentNode) {
+            elements[0].parentNode.removeChild(elements[0])
+        }
+    }
+
+    Array.from(document.getElementsByClassName('modal-open')).forEach(
+        (el) => {
+            if (el) {
+                el.classList.remove('modal-open')
+                el.removeAttribute('style')
+            }
+        }
+    )
+
+    Array.from(document.querySelectorAll('.modal.fade.show')).forEach(
+        (el) => {
+            if (el) {
+                el.removeAttribute('style')
+                el.removeAttribute('aria-modal')
+                el.removeAttribute('role')
+                el.classList.remove('show')
+            }
+        }
+    )
+}
 </script>
 <!-- 
 <script lang="ts" setup>
