@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue'
+import { Modal as Modalraw } from 'bootstrap'
 
 // vue need default
 export default () => <div></div>
@@ -66,32 +67,10 @@ export const ModalButton = defineComponent({
 })
 
 export const closeModal = () => {
-    const elements = document.getElementsByClassName('modal-backdrop fade show')
-    while (elements.length > 0) {
-        if (elements[0].parentNode) {
-            elements[0].parentNode.removeChild(elements[0])
-        }
+    const alreadyOpen = Element.prototype.querySelector.call(document.documentElement, '.modal.show')
+    if (alreadyOpen) {
+        Modalraw.getInstance(alreadyOpen)?.hide()
     }
-
-    Array.from(document.getElementsByClassName('modal-open')).forEach(
-        (el) => {
-            if (el) {
-                el.classList.remove('modal-open')
-                el.removeAttribute('style')
-            }
-        }
-    )
-
-    Array.from(document.querySelectorAll('.modal.fade.show')).forEach(
-        (el) => {
-            if (el) {
-                el.removeAttribute('style')
-                el.removeAttribute('aria-modal')
-                el.removeAttribute('role')
-                el.classList.remove('show')
-            }
-        }
-    )
 }
 </script>
 <!-- 
