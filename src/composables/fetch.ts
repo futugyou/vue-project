@@ -1,6 +1,7 @@
 import { ref, isRef, unref, watchEffect, Ref } from 'vue'
 
-export const useFetch = (url: string | Ref<string>) => {
+export const useFetch = (url: string | Ref<string>, mothed?: 'get', entity?: null) => {
+    mothed = mothed ?? 'get'
     const data = ref<any>(null)
     const error = ref<any>(null)
 
@@ -11,7 +12,19 @@ export const useFetch = (url: string | Ref<string>) => {
         const urlValue = unref(url)
 
         try {
-            const res = await fetch(urlValue)
+            let res: Response
+            if (entity) {
+                res = await fetch(urlValue, {
+                    method: mothed,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(entity)
+                })
+            } else {
+                res = await fetch(urlValue)
+            }
+
             if (res.status == 401) {
                 throw new Error('user not login or do not have right')
             }
