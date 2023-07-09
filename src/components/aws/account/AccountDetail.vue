@@ -5,9 +5,11 @@ import { useRoute } from 'vue-router'
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount } from './account'
+import Edit from "./Edit.vue"
 
 const route = useRoute()
 const isLoading = ref(true)
+const editModel = ref(false)
 const account = ref<Account>(defaultAccount)
 const accountId = route.params.accountId as string
 const accountDetailEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId
@@ -24,12 +26,16 @@ const fetchData = async () => {
 }
 
 fetchData()
+
+const editAccount = () => {
+    editModel.value = !editModel.value
+}
 </script>
 
 <template>
     <div class="full-content">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading" class="detail-container">
+        <div v-if="!isLoading && !editModel" class="detail-container">
             <div class="detail-item">
                 <div class="detail-item-lable">ID</div>
                 <div class="detail-item-content">{{ account?.id }}</div>
@@ -56,7 +62,15 @@ fetchData()
                     {{ account ? useTimeFormat(account.createdAt) : '' }}
                 </div>
             </div>
+            <div class="detail-item">
+                <div class="detail-item-content">
+                    <button type="button" class="btn btn-secondary" @click="editAccount">
+                        Edit Account
+                    </button>
+                </div>
+            </div>
         </div>
+        <Edit v-if="editModel" @close="editAccount" :account="account" @save="editAccount"></Edit>
     </div>
 </template>
 

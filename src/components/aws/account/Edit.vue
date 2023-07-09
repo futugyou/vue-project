@@ -23,11 +23,14 @@ const isLoading = ref(false)
 const account = ref<Account>(props.account)
 
 const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
+const accounteditEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + props.account.id
 
 const save = () => {
     isLoading.value = true
-    fetch(accountCreateEndpoint, {
-        method: 'post',
+    const endpoinnt = props.account.id != '' ? accounteditEndpoint : accountCreateEndpoint
+    const httpMothed = props.account.id != '' ? 'put' : 'post'
+    fetch(endpoinnt, {
+        method: httpMothed,
         headers: {
             'Content-Type': 'application/json'
         },
