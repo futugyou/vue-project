@@ -5,7 +5,7 @@ import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 import Edit from './Edit.vue'
 
-import { Account, getAccounts } from './account'
+import { Account } from './account'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 const accounts = ref<Account[]>([])

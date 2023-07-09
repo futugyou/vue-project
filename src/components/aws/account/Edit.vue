@@ -25,25 +25,23 @@ const account = ref<Account>(props.account)
 const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
 const accounteditEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + props.account.id
 
-const save = () => {
+const save = async () => {
     isLoading.value = true
     const endpoinnt = props.account.id != '' ? accounteditEndpoint : accountCreateEndpoint
     const httpMothed = props.account.id != '' ? 'put' : 'post'
-    fetch(endpoinnt, {
+    const response = await fetch(endpoinnt, {
         method: httpMothed,
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(account.value)
     })
-        .then(response => response.text())
-        .then(data => {
-            const newdata = JSON.parse(data) as Account
-            router.push('/account/' + newdata.id)
-            isLoading.value = false
-            emit('save')
-        });
 
+    const responseText = await response.text()
+    const newdata = JSON.parse(responseText) as Account
+    router.push('/account/' + newdata.id)
+    isLoading.value = false
+    emit('save')
 }
 
 const close = () => {
