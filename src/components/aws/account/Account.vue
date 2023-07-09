@@ -1,19 +1,12 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onMounted } from 'vue'
+import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
-import { useTimeFormat } from '@/composables/timeFormat'
 import Edit from './Edit.vue'
 
-interface Account {
-    id: string
-    alias: string
-    accessKeyId: string
-    secretAccessKey: string
-    region: string
-    createdAt: number
-}
+import { Account, getAccounts } from './account'
+import { useTimeFormat } from '@/composables/timeFormat'
 
 const accounts = ref<Account[]>([])
 const isLoading = ref(true)

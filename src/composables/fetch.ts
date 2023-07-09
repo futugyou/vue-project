@@ -2,12 +2,16 @@ import { ref, isRef, unref, watchEffect, Ref } from 'vue'
 
 export const useFetch = (url: string | Ref<string>, mothed?: 'get' | 'post' | 'put' | 'delete', entity?: any) => {
     mothed = mothed ?? 'get'
-    const data = ref<any>(null)
-    const error = ref<any>(null)
+    const data: Ref<any> = ref<any>(null)
+    const error: Ref<any> = ref<any>(null)
+    const isReady = ref(false)
+    const isLoading = ref(false)
 
     async function doFetch() {
         data.value = null
         error.value = null
+        isReady.value = false
+        isLoading.value = true
 
         const urlValue = unref(url)
 
@@ -36,9 +40,12 @@ export const useFetch = (url: string | Ref<string>, mothed?: 'get' | 'post' | 'p
             }
 
             data.value = await res.json()
+            isReady.value = true
         } catch (e: any) {
             error.value = e
         }
+
+        isLoading.value = false
     }
 
     if (isRef(url)) {
@@ -47,5 +54,5 @@ export const useFetch = (url: string | Ref<string>, mothed?: 'get' | 'post' | 'p
         doFetch()
     }
 
-    return { data, error }
+    return { data, error, isLoading, isReady }
 }

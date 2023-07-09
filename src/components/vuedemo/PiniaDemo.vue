@@ -63,7 +63,7 @@ const countAdd = () => {
 
 const userData = ref(null)
 const getUserData = async () => {
-    userData.value = await store.getUserDataById(count.value)
+    userData.value = await store.getUserDataById(count.value) as any
 }
 
 const userStore = useUserStore()

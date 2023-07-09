@@ -21,24 +21,20 @@ export const defaultAccount: Account = {
 
 export const editAccount = async (account: Account) => {
     const accountEditEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + account.id
-    const { data, error } = useFetch(accountEditEndpoint, 'put', account)
-    return { data, error }
+    return useFetch(accountEditEndpoint, 'put', account)
 }
 
 export const createAccount = async (account: Account) => {
     const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
-    const { data, error } = useFetch(accountCreateEndpoint, 'post', account)
-    return { data, error }
+    return useFetch(accountCreateEndpoint, 'post', account)
 }
 
 export const getAccounts = async (page: number, limit: number) => {
     const accountGetEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page + '&limit=' + limit
-    const { data, error } = useFetch(accountGetEndpoint)
-    return { data, error }
+    return useFetch(accountGetEndpoint)
 }
 
 export const deleteAccount = async (id: string) => {
     const accountDeleteEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + id
-    const { data, error } = useFetch(accountDeleteEndpoint, 'delete')
-    return { data, error }
+    return useFetch(accountDeleteEndpoint, 'delete')
 }
