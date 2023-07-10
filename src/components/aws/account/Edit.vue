@@ -12,7 +12,7 @@ const router = useRouter()
 const props = withDefaults(defineProps<{
     account?: Account,
 }>(), {
-    account: () => defaultAccount,
+    account: () => { return { ...defaultAccount } },
 })
 
 const emit = defineEmits<{
@@ -41,6 +41,7 @@ const save = async () => {
     router.push('/account/' + newdata.id)
     isLoading.value = false
     emit('save')
+    account.value = { ...defaultAccount }
 }
 
 const close = () => {
@@ -49,10 +50,12 @@ const close = () => {
     } else {
         const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
         // 取消导航并停留在同一页面上
-        if (answer) {
+        if (answer) { 
             emit('close')
         }
     }
+
+    account.value = { ...defaultAccount }
 }
 
 defineExpose({
