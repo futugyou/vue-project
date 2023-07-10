@@ -49,7 +49,6 @@ const close = () => {
         emit('close')
     } else {
         const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
-        // 取消导航并停留在同一页面上
         if (answer) { 
             emit('close')
         }

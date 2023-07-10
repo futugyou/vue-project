@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
-import { Account, defaultAccount } from './account'
+import { Account, defaultAccount, deleteAccount } from './account'
 import Edit from "./Edit.vue"
 
 const route = useRoute()
+const router = useRouter()
+
 const isLoading = ref(true)
 const editModel = ref(false)
 const account = ref<Account>(defaultAccount)
@@ -30,6 +32,15 @@ fetchData()
 const editAccount = () => {
     editModel.value = !editModel.value
 }
+
+const accountDelete = async () => {
+    const answer = window.confirm('Do you really want to delete?')
+    if (answer) {
+        await deleteAccount(account.value.id)
+        router.push('/account')
+    }
+}
+
 </script>
 
 <template>
@@ -66,6 +77,11 @@ const editAccount = () => {
                 <div class="detail-item-content">
                     <button type="button" class="btn btn-secondary" @click="editAccount">
                         Edit Account
+                    </button>
+                </div>
+                <div class="detail-item-content">
+                    <button type="button" class="btn btn-secondary" @click="accountDelete">
+                        Delete Account
                     </button>
                 </div>
             </div>

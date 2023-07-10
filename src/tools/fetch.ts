@@ -14,7 +14,9 @@ export const fetchEx = async (url: string, mothed?: 'get' | 'post' | 'put' | 'de
                 body: JSON.stringify(entity)
             })
         } else {
-            res = await fetch(url)
+            res = await fetch(url, {
+                method: mothed
+            })
         }
 
         if (res.status == 401) {
