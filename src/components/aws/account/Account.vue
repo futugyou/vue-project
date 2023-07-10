@@ -5,7 +5,7 @@ import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 import Edit from './Edit.vue'
 
-import { Account } from './account'
+import { Account, getAccounts } from './account'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 const accounts = ref<Account[]>([])
@@ -59,8 +59,10 @@ const accountEndpoint = computed(() => {
 
 const fetchData = async () => {
     isLoading.value = true
-    const res = await fetch(accountEndpoint.value)
-    accounts.value = await res.json()
+    // const res = await fetch(accountEndpoint.value)
+    // accounts.value = await res.json()
+    const { data, error } = await getAccounts(page.value, limit.value)
+    accounts.value = data
     // // mock delay
     // await new Promise((resolve) => setTimeout(resolve, 5000))
     isLoading.value = false

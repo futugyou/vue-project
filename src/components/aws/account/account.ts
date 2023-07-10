@@ -1,5 +1,6 @@
 
 import { useFetch } from '@/composables/fetch'
+import { fetchEx } from '@/tools/fetch'
 
 export interface Account {
     id: string
@@ -31,7 +32,7 @@ export const createAccount = async (account: Account) => {
 
 export const getAccounts = async (page: number, limit: number) => {
     const accountGetEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page + '&limit=' + limit
-    return useFetch(accountGetEndpoint)
+    return fetchEx(accountGetEndpoint)
 }
 
 export const deleteAccount = async (id: string) => {
