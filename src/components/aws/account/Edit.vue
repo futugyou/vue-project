@@ -4,7 +4,8 @@ import { useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
-import { Account, defaultAccount } from './account'
+import { Account, defaultAccount, editAccount, createAccount } from './account'
+import { isEqual } from 'lodash-es'
 
 const router = useRouter()
 
@@ -20,25 +21,20 @@ const emit = defineEmits<{
 }>()
 
 const isLoading = ref(false)
-const account = ref<Account>(props.account)
 
-const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
-const accounteditEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + props.account.id
+const account = ref<Account>(props.account)
 
 const save = async () => {
     isLoading.value = true
-    const endpoinnt = props.account.id != '' ? accounteditEndpoint : accountCreateEndpoint
-    const httpMothed = props.account.id != '' ? 'put' : 'post'
-    const response = await fetch(endpoinnt, {
-        method: httpMothed,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(account.value)
-    })
+    let newdata: Account
+    if (props.account.id != '') {
+        const { data, error } = await editAccount(account.value)
+        newdata = data as Account
+    } else {
+        const { data, error } = await createAccount(account.value)
+        newdata = data as Account
+    }
 
-    const responseText = await response.text()
-    const newdata = JSON.parse(responseText) as Account
     router.push('/account/' + newdata.id)
     isLoading.value = false
     emit('save')
