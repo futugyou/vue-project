@@ -21,6 +21,9 @@ const emit = defineEmits<{
 }>()
 
 const isLoading = ref(false)
+const orgAccount: Account = {
+    ...props.account,
+}
 
 const account = ref<Account>(props.account)
 
@@ -41,7 +44,15 @@ const save = async () => {
 }
 
 const close = () => {
-    emit('close')
+    if (isEqual(account.value, orgAccount)) {
+        emit('close')
+    } else {
+        const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+        // 取消导航并停留在同一页面上
+        if (answer) {
+            emit('close')
+        }
+    }
 }
 
 defineExpose({
