@@ -4,8 +4,8 @@ import { useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
-import { Account, defaultAccount, editAccount, createAccount } from './account'
-import { isEqual } from 'lodash-es'
+import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
+import { isEqual, join } from 'lodash-es'
 
 const router = useRouter()
 
@@ -28,6 +28,12 @@ const orgAccount: Account = {
 const account = ref<Account>(props.account)
 
 const save = async () => {
+    const { successed, message } = checkAccount(account.value)
+    if (!successed) {
+        window.confirm(join(message, '\n'))
+        return
+    }
+
     isLoading.value = true
     let newdata: Account
     if (props.account.id != '') {
@@ -49,7 +55,7 @@ const close = () => {
         emit('close')
     } else {
         const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
-        if (answer) { 
+        if (answer) {
             emit('close')
         }
     }
