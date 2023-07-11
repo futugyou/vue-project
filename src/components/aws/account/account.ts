@@ -1,4 +1,3 @@
-
 import { fetchEx } from '@/tools/fetch'
 
 export interface Account {
@@ -52,7 +51,8 @@ export const createAccount = async (account: Account) => {
 }
 
 export const getAccounts = async (page: number, limit: number) => {
-    const accountGetEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page + '&limit=' + limit
+    const accountGetEndpoint =
+        import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page + '&limit=' + limit
     return fetchEx(accountGetEndpoint)
 }
 

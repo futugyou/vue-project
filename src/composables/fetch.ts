@@ -1,6 +1,10 @@
 import { ref, isRef, unref, watchEffect, Ref } from 'vue'
 
-export const useFetch = (url: string | Ref<string>, mothed?: 'get' | 'post' | 'put' | 'delete', entity?: any) => {
+export const useFetch = (
+    url: string | Ref<string>,
+    mothed?: 'get' | 'post' | 'put' | 'delete',
+    entity?: any
+) => {
     mothed = mothed ?? 'get'
     const data: Ref<any> = ref<any>(null)
     const error: Ref<any> = ref<any>(null)

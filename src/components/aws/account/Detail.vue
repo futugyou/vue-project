@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, deleteAccount } from './account'
-import Edit from "./Edit.vue"
+import Edit from './Edit.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -41,7 +41,6 @@ const accountDelete = async () => {
         router.go(0)
     }
 }
-
 </script>
 
 <template>

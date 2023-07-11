@@ -10,7 +10,7 @@ export const Modal = defineComponent({
     props: {
         id: String,
         title: String,
-        hideFooter: Boolean,
+        hideFooter: Boolean
     },
     setup(props, { emit, slots }) {
         const saveClick = () => {
@@ -37,14 +37,22 @@ export const Modal = defineComponent({
                             ></button>
                         </div>
                         <div class="modal-body">{slots.default && slots.default()}</div>
-                        {props.hideFooter ? <div></div> : <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                Close
-                            </button>
-                            <button type="button" class="btn btn-primary" onClick={saveClick} >
-                                Save changes
-                            </button>
-                        </div>}
+                        {props.hideFooter ? (
+                            <div></div>
+                        ) : (
+                            <div class="modal-footer">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Close
+                                </button>
+                                <button type="button" class="btn btn-primary" onClick={saveClick}>
+                                    Save changes
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -73,7 +81,10 @@ export const ModalButton = defineComponent({
 })
 
 export const closeModal = () => {
-    const alreadyOpen = Element.prototype.querySelector.call(document.documentElement, '.modal.show')
+    const alreadyOpen = Element.prototype.querySelector.call(
+        document.documentElement,
+        '.modal.show'
+    )
     if (alreadyOpen) {
         Modalraw.getInstance(alreadyOpen)?.hide()
     }

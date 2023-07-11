@@ -3,17 +3,23 @@ import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
+import Alert from '@/components/Alert.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
 import { isEqual, join } from 'lodash-es'
 
 const router = useRouter()
 
-const props = withDefaults(defineProps<{
-    account?: Account,
-}>(), {
-    account: () => { return { ...defaultAccount } },
-})
+const props = withDefaults(
+    defineProps<{
+        account?: Account
+    }>(),
+    {
+        account: () => {
+            return { ...defaultAccount }
+        }
+    }
+)
 
 const emit = defineEmits<{
     (e: 'save'): void
@@ -22,9 +28,8 @@ const emit = defineEmits<{
 
 const isLoading = ref(false)
 const orgAccount: Account = {
-    ...props.account,
+    ...props.account
 }
-
 
 const errorMessages = ref([] as string[])
 
@@ -34,10 +39,6 @@ const save = async () => {
     const { successed, message } = checkAccount(account.value)
     if (!successed) {
         errorMessages.value = message
-        setTimeout(() => {
-            errorMessages.value = []
-        }, 2000)
-        // window.confirm(join(message, '\n'))
         return
     }
 
@@ -78,11 +79,12 @@ defineExpose({
 
 <template>
     <div class="full-content">
-        <div v-if="errorMessages.length > 0">
+        <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
+        <!-- <div v-if="errorMessages.length > 0">
             <div className="alert alert-danger check-message" role="alert" v-for="msg in errorMessages" :key="msg">
                 {{ msg }}
             </div>
-        </div>
+        </div> -->
 
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading" class="detail-container">
@@ -121,12 +123,8 @@ defineExpose({
                 </div>
             </div>
             <div class="button-container">
-                <button type="button" class="btn btn-secondary" @click="close">
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary" @click="save">
-                    Save changes
-                </button>
+                <button type="button" class="btn btn-secondary" @click="close">Close</button>
+                <button type="button" class="btn btn-primary" @click="save">Save changes</button>
             </div>
         </div>
     </div>

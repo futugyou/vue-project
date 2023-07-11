@@ -1,5 +1,8 @@
-
-export const fetchEx = async (url: string, mothed?: 'get' | 'post' | 'put' | 'delete', entity?: any) => {
+export const fetchEx = async (
+    url: string,
+    mothed?: 'get' | 'post' | 'put' | 'delete',
+    entity?: any
+) => {
     mothed = mothed ?? 'get'
     let error: any = null
     let data: any = null

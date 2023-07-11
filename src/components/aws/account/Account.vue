@@ -66,8 +66,6 @@ const accountEndpoint = computed(() => {
 
 const fetchData = async () => {
     isLoading.value = true
-    // const res = await fetch(accountEndpoint.value)
-    // accounts.value = await res.json()
     const { data, error } = await getAccounts(page.value, limit.value)
     accounts.value = data
     // // mock delay
@@ -100,7 +98,6 @@ const accountDelete = async (id: string) => {
         router.go(0)
     }
 }
-
 </script>
 
 <template>
@@ -113,9 +110,6 @@ const accountDelete = async (id: string) => {
                 <h1>account</h1>
             </div>
             <div>
-                <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#accountModal">
-                    create account
-                </button> -->
                 <ModalButton targetId="#accountModal" title="Create Account"></ModalButton>
             </div>
         </div>
@@ -127,16 +121,12 @@ const accountDelete = async (id: string) => {
             <template v-slot:body_id="body">
                 <router-link :to="'/account/' + body.id" page-path="" class="detail-link">
                     <span>
-                        {{
-                            body.id
-                        }}
+                        {{ body.id }}
                     </span>
                 </router-link>
             </template>
             <template v-slot:body_operation="body">
-                <span class="delete-account" @click="accountDelete(body.id)">
-                    Delete Account
-                </span>
+                <span class="delete-account" @click="accountDelete(body.id)"> Delete Account </span>
             </template>
         </TableAndPaging>
     </div>
