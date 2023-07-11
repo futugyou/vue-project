@@ -20,7 +20,7 @@ export const defaultAccount: Account = {
 }
 
 export const checkAccount = (account: Account) => {
-    let message: String[] = []
+    let message: string[] = []
     if (account == null) {
         message.push('fields missing')
     } else {

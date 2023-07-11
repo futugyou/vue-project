@@ -25,12 +25,19 @@ const orgAccount: Account = {
     ...props.account,
 }
 
+
+const errorMessages = ref([] as string[])
+
 const account = ref<Account>(props.account)
 
 const save = async () => {
     const { successed, message } = checkAccount(account.value)
     if (!successed) {
-        window.confirm(join(message, '\n'))
+        errorMessages.value = message
+        setTimeout(() => {
+            errorMessages.value = []
+        }, 2000)
+        // window.confirm(join(message, '\n'))
         return
     }
 
@@ -71,6 +78,12 @@ defineExpose({
 
 <template>
     <div class="full-content">
+        <div v-if="errorMessages.length > 0">
+            <div className="alert alert-danger check-message" role="alert" v-for="msg in errorMessages" :key="msg">
+                {{ msg }}
+            </div>
+        </div>
+
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading" class="detail-container">
             <div class="detail-item" v-if="account?.id">
@@ -124,6 +137,7 @@ defineExpose({
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-direction: column;
 }
 
 .detail-container {
