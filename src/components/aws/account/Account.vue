@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 import Edit from './Edit.vue'
 
-import { Account, getAccounts } from './account'
+import { Account, getAccounts, deleteAccount } from './account'
 import { useTimeFormat } from '@/composables/timeFormat'
+
+const router = useRouter()
 
 const accounts = ref<Account[]>([])
 const isLoading = ref(true)
@@ -44,6 +47,10 @@ const fields: TableField[] = [
         key: 'createdAt',
         label: 'CreatedAt',
         format: timeFormat
+    },
+    {
+        key: 'operation',
+        label: 'Operation'
     }
 ]
 
@@ -82,6 +89,18 @@ const close = () => {
     closeModal()
 }
 
+const accountDelete = async (id: string) => {
+    const answer = window.confirm('Do you really want to delete?')
+    if (answer) {
+        await deleteAccount(id)
+        router.push({
+            force: true,
+            path: '/account'
+        })
+        router.go(0)
+    }
+}
+
 </script>
 
 <template>
@@ -106,10 +125,15 @@ const close = () => {
                 <span style="color: red">{{ header.label }}</span>
             </template>
             <template v-slot:body_id="body">
-                <span style="color: green">
+                <span>
                     <router-link :to="'/account/' + body.id" page-path="">{{
                         body.id
                     }}</router-link>
+                </span>
+            </template>
+            <template v-slot:body_operation="body">
+                <span class="delete-account" @click="accountDelete(body.id)">
+                    Delete Account
                 </span>
             </template>
         </TableAndPaging>
@@ -129,5 +153,14 @@ const close = () => {
     align-items: center;
     padding: 0px 10px;
     justify-content: space-between;
+}
+
+.delete-account {
+    color: #ee267a;
+    cursor: pointer;
+}
+
+.delete-account:hover {
+    color: #e76299;
 }
 </style>
