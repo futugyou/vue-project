@@ -125,11 +125,13 @@ const accountDelete = async (id: string) => {
                 <span style="color: red">{{ header.label }}</span>
             </template>
             <template v-slot:body_id="body">
-                <span>
-                    <router-link :to="'/account/' + body.id" page-path="">{{
-                        body.id
-                    }}</router-link>
-                </span>
+                <router-link :to="'/account/' + body.id" page-path="" class="detail-link">
+                    <span>
+                        {{
+                            body.id
+                        }}
+                    </span>
+                </router-link>
             </template>
             <template v-slot:body_operation="body">
                 <span class="delete-account" @click="accountDelete(body.id)">
@@ -158,6 +160,12 @@ const accountDelete = async (id: string) => {
 .delete-account {
     color: #ee267a;
     cursor: pointer;
+}
+
+.detail-link {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 .delete-account:hover {

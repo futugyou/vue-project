@@ -38,6 +38,7 @@ const accountDelete = async () => {
     if (answer) {
         await deleteAccount(account.value.id)
         router.push('/account')
+        router.go(0)
     }
 }
 
@@ -80,7 +81,7 @@ const accountDelete = async () => {
                     </button>
                 </div>
                 <div class="detail-item-content">
-                    <button type="button" class="btn btn-secondary" @click="accountDelete">
+                    <button type="button" class="btn btn-warning" @click="accountDelete">
                         Delete Account
                     </button>
                 </div>
