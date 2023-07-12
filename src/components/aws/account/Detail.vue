@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
-import { Account, defaultAccount, deleteAccount } from './account'
+import { Account, defaultAccount, getAccount, deleteAccount } from './account'
 import Edit from './Edit.vue'
 
 const route = useRoute()
@@ -14,7 +14,6 @@ const isLoading = ref(true)
 const editModel = ref(false)
 const account = ref<Account>(defaultAccount)
 const accountId = route.params.accountId as string
-const accountDetailEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + accountId
 
 const fetchData = async () => {
     if (accountId == undefined) {
@@ -22,8 +21,8 @@ const fetchData = async () => {
     }
 
     isLoading.value = true
-    const res = await fetch(accountDetailEndpoint)
-    account.value = await res.json()
+    const { data, error } = await getAccount(accountId)
+    account.value = data
     isLoading.value = false
 }
 
