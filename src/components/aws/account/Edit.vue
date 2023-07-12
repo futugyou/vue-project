@@ -120,9 +120,9 @@ defineExpose({
                 <div class="detail-item-lable">Region</div>
                 <div class="detail-item-content">
                     <!-- <input v-model="account.region" /> -->
-                    <div class="dropdown-center">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" data-bs-display="static" >
+                    <div class="dropdown-center" style="width: 100%;">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" data-bs-display="static" style="width: 100%;">
                             {{ account.region.length > 0 ? account.region : '--choose a region--' }}
                         </button>
                         <ul class="dropdown-menu">
@@ -216,6 +216,11 @@ defineExpose({
     border-radius: 10px;
     align-content: center;
     flex-wrap: wrap;
+}
+
+.detail-item-content input,
+.detail-item-content ul {
+    width: 100%;
 }
 
 .button-container {
