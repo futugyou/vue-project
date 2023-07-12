@@ -120,14 +120,18 @@ defineExpose({
                 <div class="detail-item-lable">Region</div>
                 <div class="detail-item-content">
                     <!-- <input v-model="account.region" /> -->
-                    <div class="dropdown">
+                    <div class="dropdown-center">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ account.region ?? '--choose a region--' }}
+                            aria-expanded="false" data-bs-display="static" >
+                            {{ account.region.length > 0 ? account.region : '--choose a region--' }}
                         </button>
                         <ul class="dropdown-menu">
-                            <li v-for="item in regionList"><a class="dropdown-item" href="#"
-                                    @click="changeRegion(item.key)">{{ item.value }}</a></li>
+                            <li v-for="item in regionList">
+                                <a class="dropdown-item" href="#" @click="changeRegion(item.key)"
+                                    :class="{ active: item.key == account.region }">
+                                    {{ item.value }}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
