@@ -35,6 +35,30 @@ const errorMessages = ref([] as string[])
 
 const account = ref<Account>(props.account)
 
+const regionList = [{
+    key: 'region 1',
+    value: 'region 1'
+}, {
+    key: 'region 2',
+    value: 'region 2'
+}, {
+    key: 'region 3',
+    value: 'region 3'
+}, {
+    key: 'region 4',
+    value: 'region 4'
+}, {
+    key: 'region 5',
+    value: 'region 5'
+}, {
+    key: 'region 6',
+    value: 'region 6'
+}]
+
+const changeRegion = (key: string) => {
+    account.value.region = key
+}
+
 const save = async () => {
     const { successed, message } = checkAccount(account.value)
     if (!successed) {
@@ -95,7 +119,17 @@ defineExpose({
             <div class="detail-item">
                 <div class="detail-item-lable">Region</div>
                 <div class="detail-item-content">
-                    <input v-model="account.region" />
+                    <!-- <input v-model="account.region" /> -->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{ account.region ?? '--choose a region--' }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li v-for="item in regionList"><a class="dropdown-item" href="#"
+                                    @click="changeRegion(item.key)">{{ item.value }}</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="detail-item">
