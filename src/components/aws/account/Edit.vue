@@ -33,7 +33,7 @@ const orgAccount: Account = {
 
 const errorMessages = ref([] as string[])
 
-const account = ref<Account>(props.account)
+const account = ref<Account>({ ...props.account })
 
 const regionList = [{
     key: 'region 1',
