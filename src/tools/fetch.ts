@@ -6,14 +6,25 @@ export const fetchEx = async (
     mothed = mothed ?? 'get'
     let error: any = null
     let data: any = null
+    let headers = {
+        'Content-Type': 'application/json',
+        'Account-Id': '', // TODO: 
+        'Authorization': ''
+    }
+
+    if (window.__MICRO_APP_ENVIRONMENT__) {
+        const data = window.microApp?.getData()
+        if (!data?.Authorization) {
+            headers['Authorization'] = data.Authorization
+        }
+    }
+
     try {
         let res: Response
         if (entity) {
             res = await fetch(url, {
                 method: mothed,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: headers,
                 body: JSON.stringify(entity)
             })
         } else {
