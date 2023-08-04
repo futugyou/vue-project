@@ -12,6 +12,7 @@ import { useTimeFormat } from '@/composables/timeFormat'
 const router = useRouter()
 
 const accounts = ref<Account[]>([])
+const defaultAccount = ref<Account>(JSON.parse(localStorage.getItem('defaultAccount') ?? '{}'))
 const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
@@ -91,12 +92,22 @@ const accountDelete = async (id: string) => {
     const answer = window.confirm('Do you really want to delete?')
     if (answer) {
         await deleteAccount(id)
+        if (id == defaultAccount.value.id) {
+            defaultAccount.value = JSON.parse('{}')
+            localStorage.removeItem('defaultAccount')
+        }
+
         router.push({
             force: true,
             path: '/account'
         })
         router.go(0)
     }
+}
+
+const setDefaultAccount = (acc: Account) => {
+    localStorage.setItem('defaultAccount', JSON.stringify(acc))
+    defaultAccount.value = acc
 }
 </script>
 
@@ -108,6 +119,9 @@ const accountDelete = async (id: string) => {
         <div class="head-content">
             <div class="">
                 <h1>account</h1>
+            </div>
+            <div class="">
+                <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
             </div>
             <div>
                 <ModalButton targetId="#accountModal" title="Create Account"></ModalButton>
@@ -126,7 +140,9 @@ const accountDelete = async (id: string) => {
                 </router-link>
             </template>
             <template v-slot:body_operation="body">
-                <span class="delete-account" @click="accountDelete(body.id)"> Delete Account </span>
+                <button type="button" class="btn btn-secondary gap-right-10" @click="setDefaultAccount(body)"> Default
+                </button>
+                <button type="button" class="btn btn-warning" @click="accountDelete(body.id)"> Delete </button>
             </template>
         </TableAndPaging>
     </div>
@@ -147,18 +163,13 @@ const accountDelete = async (id: string) => {
     justify-content: space-between;
 }
 
-.delete-account {
-    color: #ee267a;
-    cursor: pointer;
-}
-
 .detail-link {
     width: 100%;
     height: 100%;
     display: block;
 }
 
-.delete-account:hover {
-    color: #e76299;
+.gap-right-10 {
+    margin-right: 10px;
 }
 </style>
