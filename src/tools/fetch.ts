@@ -1,3 +1,5 @@
+import { getToken } from "./token"
+
 export const fetchEx = async (
     url: string,
     mothed?: 'get' | 'post' | 'put' | 'delete',
@@ -9,16 +11,9 @@ export const fetchEx = async (
     let headers = {
         'Content-Type': 'application/json',
         'Account-Id': '', // TODO: 
-        'Authorization': ''
+        'Authorization': getToken()
     }
-
-    if (window.__MICRO_APP_ENVIRONMENT__) {
-        const data = window.microApp?.getData()
-        if (!data?.Authorization) {
-            headers['Authorization'] = data.Authorization
-        }
-    }
-
+    
     try {
         let res: Response
         if (entity) {
