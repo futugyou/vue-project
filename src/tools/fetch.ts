@@ -1,4 +1,5 @@
 import { getToken } from "./token"
+import { defaultAccountId } from "./accountid"
 
 export const fetchEx = async (
     url: string,
@@ -10,10 +11,10 @@ export const fetchEx = async (
     let data: any = null
     let headers = {
         'Content-Type': 'application/json',
-        'Account-Id': '', // TODO: 
+        'Account-Id': defaultAccountId(),
         'Authorization': getToken()
     }
-    
+
     try {
         let res: Response
         if (entity) {
