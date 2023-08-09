@@ -24,7 +24,8 @@ export const fetchEx = async (
             })
         } else {
             res = await fetch(url, {
-                method: mothed
+                method: mothed,
+                headers: headers
             })
         }
 

@@ -3,7 +3,7 @@ export const getToken = () => {
     
     if (window.__MICRO_APP_ENVIRONMENT__) {
         const data = window.microApp?.getData()
-        if (!data?.Authorization) {
+        if (data?.Authorization) {
             token = data.Authorization
         }
     }else{

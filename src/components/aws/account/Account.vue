@@ -68,7 +68,7 @@ const accountEndpoint = computed(() => {
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getAccounts(page.value, limit.value)
-    accounts.value = data
+    accounts.value = data ?? []
     // // mock delay
     // await new Promise((resolve) => setTimeout(resolve, 5000))
     isLoading.value = false
