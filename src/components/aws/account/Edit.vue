@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { isEqual, join } from 'lodash-es'
 
 import Spinners from '@/components/Spinners.vue'
 import Alert from '@/components/Alert.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
-import { isEqual, join } from 'lodash-es'
+import { getRegions } from '@/tools/regions'
 
 const router = useRouter()
 
@@ -35,25 +36,12 @@ const errorMessages = ref([] as string[])
 
 const account = ref<Account>({ ...props.account })
 
-const regionList = [{
-    key: 'region 1',
-    value: 'region 1'
-}, {
-    key: 'region 2',
-    value: 'region 2'
-}, {
-    key: 'region 3',
-    value: 'region 3'
-}, {
-    key: 'region 4',
-    value: 'region 4'
-}, {
-    key: 'region 5',
-    value: 'region 5'
-}, {
-    key: 'region 6',
-    value: 'region 6'
-}]
+const regionList = getRegions().map((item) => {
+    return {
+        key: item,
+        value: item
+    }
+})
 
 const changeRegion = (key: string) => {
     account.value.region = key
