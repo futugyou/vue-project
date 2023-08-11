@@ -30,11 +30,11 @@ router.beforeEach((to: any, from: any) => {
                 })
             }
         } else {
-            return {
-                // this is fake
-                path: '/login',
-                query: { redirect: to.fullPath }
-            }
+            // return {
+            //     // this is fake
+            //     path: '/login',
+            //     query: { redirect: to.fullPath }
+            // }
         }
     }
 })

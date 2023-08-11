@@ -7,11 +7,13 @@ export const AwsRoutes = [
     {
         path: '/account',
         name: 'Account',
-        component: Account
+        component: Account,        
+        meta: { requiresAuth: true }
     },
     {
         path: '/account/:accountId',
         name: 'AccountDetail',
-        component: AccountDetail
+        component: AccountDetail,
+        meta: { requiresAuth: true }
     }
 ] as RouteRecordRaw[]
