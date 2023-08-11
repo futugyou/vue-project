@@ -48,6 +48,7 @@ const changeRegion = (key: string) => {
 }
 
 const save = async () => {
+    errorMessages.value = []
     const { successed, message } = checkAccount(account.value)
     if (!successed) {
         errorMessages.value = message
@@ -56,14 +57,25 @@ const save = async () => {
 
     isLoading.value = true
     let newdata: Account
+    let rdata: any
+    let rerror: any
     if (props.account.id != '') {
         const { data, error } = await editAccount(account.value)
-        newdata = data as Account
+        rdata = data
+        rerror = error
     } else {
-        const { data, error } = await createAccount(account.value)
-        newdata = data as Account
+        const { data = rdata, error = rerror } = await createAccount(account.value)
+        rdata = data
+        rerror = error
     }
 
+    if (rerror) {
+        errorMessages.value = [rerror.message]
+        isLoading.value = false
+        return
+    }
+
+    newdata = rdata as Account
     router.push('/account/' + newdata.id)
     isLoading.value = false
     emit('save')
@@ -92,12 +104,6 @@ defineExpose({
 <template>
     <div class="edit-full-content">
         <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
-        <!-- <div v-if="errorMessages.length > 0">
-            <div class="alert alert-danger check-message" role="alert" v-for="msg in errorMessages" :key="msg">
-                {{ msg }}
-            </div>
-        </div> -->
-
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading" class="detail-container">
             <div class="detail-item" v-if="account?.id">
@@ -222,5 +228,9 @@ defineExpose({
 
 .button-container>button {
     margin: 5px;
+}
+
+.alert-container {
+    position: relative;
 }
 </style>

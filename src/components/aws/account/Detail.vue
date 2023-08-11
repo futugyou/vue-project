@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import {  join } from 'lodash-es'
 
 import Spinners from '@/components/Spinners.vue'
+import Alert from '@/components/Alert.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, getAccount, deleteAccount } from './account'
 import Edit from './Edit.vue'
@@ -14,6 +16,7 @@ const isLoading = ref(true)
 const editModel = ref(false)
 const account = ref<Account>(defaultAccount)
 const accountId = route.params.accountId as string
+const errorMessages = ref([] as string[])
 
 const fetchData = async () => {
     if (accountId == undefined) {
@@ -21,7 +24,13 @@ const fetchData = async () => {
     }
 
     isLoading.value = true
-    const { data, error } = await getAccount(accountId)
+    const { data, error } = await getAccount(accountId) 
+    if (error) {
+        errorMessages.value = [error.message]
+        isLoading.value = false
+        return
+    }
+
     account.value = data
     isLoading.value = false
 }
@@ -44,6 +53,7 @@ const accountDelete = async () => {
 
 <template>
     <div class="detail-full-content">
+        <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && !editModel" class="detail-container">
             <div class="detail-item">
