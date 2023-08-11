@@ -37,7 +37,8 @@ export const fetchEx = async (
             throw new Error('no data found')
         }
         if (!res.ok) {
-            throw new Error(res.statusText)
+            let text = await res.text()
+            throw new Error(text)
         }
 
         data = await res.json()

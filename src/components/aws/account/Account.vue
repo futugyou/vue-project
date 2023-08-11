@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import {  join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
+import Alert from '@/components/Alert.vue'
 import Edit from './Edit.vue'
 
 import { Account, getAccounts, deleteAccount } from './account'
@@ -17,6 +19,7 @@ const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
 const editref = ref(null)
+const errorMessages = ref([] as string[])
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -68,6 +71,11 @@ const accountEndpoint = computed(() => {
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getAccounts(page.value, limit.value)
+    if (error) {
+        errorMessages.value = [error.message]
+        return
+    }
+
     accounts.value = data ?? []
     // // mock delay
     // await new Promise((resolve) => setTimeout(resolve, 5000))
@@ -112,7 +120,8 @@ const setDefaultAccount = (acc: Account) => {
 </script>
 
 <template>
-    <div class="full-content">
+    <div class="account-full-content">
+        <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
         <Modal id="accountModal" title="Create Account" :hideFooter="true">
             <Edit ref="editref" @save="close" @close="close"></Edit>
         </Modal>
@@ -149,11 +158,12 @@ const setDefaultAccount = (acc: Account) => {
 </template>
 
 <style scoped>
-.full-content {
+.account-full-content {
     height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
 }
 
 .head-content {

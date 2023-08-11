@@ -37,9 +37,17 @@ watch(errorMessages, checkDisplayState)
 </script>
 
 <template>
-    <div v-if="showMessage">
-        <div className="alert alert-danger check-message" role="alert" v-for="msg in errorMessages" :key="msg">
+    <div v-if="showMessage" class="alert-container">
+        <div class="alert alert-danger check-message" role="alert" v-for="msg in errorMessages" :key="msg">
             {{ msg }}
         </div>
     </div>
 </template>
+<style scoped>
+.alert-container {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 1;
+}
+</style>
