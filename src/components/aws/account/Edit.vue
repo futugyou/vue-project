@@ -3,11 +3,15 @@ import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEqual, join } from 'lodash-es'
 
-import Spinners from '@/components/Spinners.vue'
-import Alert from '@/components/Alert.vue'
+import Spinners from '@/components/Spinners.vue' 
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
 import { getRegions } from '@/tools/regions'
+
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
+const store = useMessageStore()
+const { msg } = storeToRefs(store)
 
 const router = useRouter()
 
@@ -32,8 +36,6 @@ const orgAccount: Account = {
     ...props.account
 }
 
-const errorMessages = ref([] as string[])
-
 const account = ref<Account>({ ...props.account })
 
 const regionList = getRegions().map((item) => {
@@ -48,10 +50,12 @@ const changeRegion = (key: string) => {
 }
 
 const save = async () => {
-    errorMessages.value = []
     const { successed, message } = checkAccount(account.value)
     if (!successed) {
-        errorMessages.value = message
+        msg.value = {
+            errorMessages: message,
+            delay: 3000,
+        }
         return
     }
 
@@ -70,7 +74,10 @@ const save = async () => {
     }
 
     if (rerror) {
-        errorMessages.value = [rerror.message]
+        msg.value = {
+            errorMessages: [rerror.message],
+            delay: 3000,
+        }
         isLoading.value = false
         return
     }
@@ -103,7 +110,6 @@ defineExpose({
 
 <template>
     <div class="edit-full-content">
-        <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading" class="detail-container">
             <div class="detail-item" v-if="account?.id">

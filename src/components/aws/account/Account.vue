@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import {  join } from 'lodash-es'
+import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
-import Alert from '@/components/Alert.vue'
 import Edit from './Edit.vue'
 
 import { Account, getAccounts, deleteAccount } from './account'
 import { useTimeFormat } from '@/composables/timeFormat'
+
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
+const store = useMessageStore()
+const { msg } = storeToRefs(store)
 
 const router = useRouter()
 
@@ -19,7 +23,6 @@ const isLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
 const editref = ref(null)
-const errorMessages = ref([] as string[])
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -56,23 +59,16 @@ const fields: TableField[] = [
         key: 'operation',
         label: 'Operation'
     }
-]
-
-const accountEndpoint = computed(() => {
-    return (
-        import.meta.env.REACT_APP_AWS_SERVER +
-        'v1/accounts?page=' +
-        page.value +
-        '&limit=' +
-        limit.value
-    )
-})
+] 
 
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getAccounts(page.value, limit.value)
     if (error) {
-        errorMessages.value = [error.message]
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
         return
     }
 
@@ -121,7 +117,6 @@ const setDefaultAccount = (acc: Account) => {
 
 <template>
     <div class="account-full-content">
-        <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
         <Modal id="accountModal" title="Create Account" :hideFooter="true">
             <Edit ref="editref" @save="close" @close="close"></Edit>
         </Modal>

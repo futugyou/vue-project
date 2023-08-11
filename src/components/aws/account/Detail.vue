@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import {  join } from 'lodash-es'
+import { useRoute, useRouter } from 'vue-router' 
 
-import Spinners from '@/components/Spinners.vue'
-import Alert from '@/components/Alert.vue'
+import Spinners from '@/components/Spinners.vue' 
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, getAccount, deleteAccount } from './account'
 import Edit from './Edit.vue'
+
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
+const store = useMessageStore()
+const { msg } = storeToRefs(store)
 
 const route = useRoute()
 const router = useRouter()
@@ -15,8 +18,7 @@ const router = useRouter()
 const isLoading = ref(true)
 const editModel = ref(false)
 const account = ref<Account>(defaultAccount)
-const accountId = route.params.accountId as string
-const errorMessages = ref([] as string[])
+const accountId = route.params.accountId as string 
 
 const fetchData = async () => {
     if (accountId == undefined) {
@@ -26,7 +28,10 @@ const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getAccount(accountId) 
     if (error) {
-        errorMessages.value = [error.message]
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
         isLoading.value = false
         return
     }
@@ -52,8 +57,7 @@ const accountDelete = async () => {
 </script>
 
 <template>
-    <div class="detail-full-content">
-        <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
+    <div class="detail-full-content"> 
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && !editModel" class="detail-container">
             <div class="detail-item">

@@ -3,6 +3,7 @@ import { shallowRef } from 'vue'
 import DemoRoute from './components/vuedemo/DemoRoute.vue'
 import AwsRoute from './components/aws/AwsRoute.vue'
 import TabContainer from './components/TabContainer.vue'
+import Alert from '@/components/Alert.vue'
 
 const onRouteChange = () => {
     if (window.__MICRO_APP_ENVIRONMENT__) {
@@ -14,6 +15,7 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
 </script>
 
 <template>
+    <Alert></Alert>
     <div id="public-links" @click="onRouteChange">
         <KeepAlive>
             <TabContainer :components="components"> </TabContainer>
