@@ -90,7 +90,7 @@ defineExpose({
 </script>
 
 <template>
-    <div class="full-content">
+    <div class="edit-full-content">
         <Alert :errorMessages="errorMessages" :delay="3000" :key="join(errorMessages)"></Alert>
         <!-- <div v-if="errorMessages.length > 0">
             <div className="alert alert-danger check-message" role="alert" v-for="msg in errorMessages" :key="msg">
@@ -157,7 +157,7 @@ defineExpose({
 </template>
 
 <style scoped>
-.full-content {
+.edit-full-content {
     display: flex;
     justify-content: space-around;
     align-items: center;

@@ -43,7 +43,7 @@ const accountDelete = async () => {
 </script>
 
 <template>
-    <div class="full-content">
+    <div class="detail-full-content">
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && !editModel" class="detail-container">
             <div class="detail-item">
@@ -90,7 +90,7 @@ const accountDelete = async () => {
 </template>
 
 <style scoped>
-.full-content {
+.detail-full-content {
     display: flex;
     justify-content: space-around;
     align-items: center;
