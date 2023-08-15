@@ -28,35 +28,31 @@ const timeFormat = (timestamp: number): string => {
 
 const fields: TableField[] = [
     {
-        key: 'Id',
+        key: 'id',
         label: '#',
         header: true
     },
     {
-        key: 'AccountId',
+        key: 'accountId',
         label: 'AccountId'
     },
     {
-        key: 'Key',
+        key: 'key',
         label: 'Key'
     },
     {
-        key: 'Region',
+        key: 'region',
         label: 'Region'
     },
     {
-        key: 'Version',
+        key: 'version',
         label: 'Version'
     },
     {
-        key: 'OperateAt',
+        key: 'operateAt',
         label: 'OperateAt',
         format: timeFormat
-    },
-    {
-        key: 'operation',
-        label: 'Operation'
-    }
+    } 
 ] 
 
 const fetchData = async () => {
@@ -101,7 +97,7 @@ const changePagesize = (n: number) => {
                 <span style="color: red">{{ header.label }}</span>
             </template>
             <template v-slot:body_id="body">
-                <router-link :to="'/Parameter/' + body.id" page-path="" class="detail-link">
+                <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link">
                     <span>
                         {{ body.id }}
                     </span>
