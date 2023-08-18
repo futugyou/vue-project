@@ -1,4 +1,4 @@
-import { getToken } from "./token"
+import { getToken, logout } from "./token"
 import { defaultAccountId } from "./accountid"
 
 export const fetchEx = async (
@@ -31,6 +31,7 @@ export const fetchEx = async (
         }
 
         if (res.status == 401) {
+            logout()
             throw new Error('user not login or do not have right')
         }
         if (res.status == 404) {

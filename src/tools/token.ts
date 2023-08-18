@@ -13,3 +13,15 @@ export const getToken = () => {
 
     return token
 }
+
+export const logout = () => {
+    if (window.__MICRO_APP_ENVIRONMENT__) {
+        window.microApp.dispatch({
+            Logout: true,
+            CreateAt: Date()
+        })
+    } else {
+        // TODO: no mirco sub app env
+        localStorage.setItem('faketoken', '')
+    }
+}
