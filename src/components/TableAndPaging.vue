@@ -104,7 +104,7 @@ const sort = (key: string) => {
 <template>
     <div class="table-paging-container">
         <div class="table-container">
-            <div v-if="sortedItems!.length == 0">{{ placeholder }}</div>
+            <div v-if="sortedItems!.length == 0 && !isLoading">{{ placeholder }}</div>
             <Spinners v-else-if="isLoading"> </Spinners>
             <table class="table table-striped table-hover" v-else>
                 <thead>
