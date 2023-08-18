@@ -3,7 +3,7 @@ import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { join } from 'lodash-es'
 
-import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue' 
+import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 
 import { Parameter, getParameters } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'
@@ -52,8 +52,22 @@ const fields: TableField[] = [
         key: 'operateAt',
         label: 'OperateAt',
         format: timeFormat
-    } 
-] 
+    },
+    {
+        key: 'operation',
+        label: 'Operation'
+    }
+]
+
+// max compare count is 2
+const checkedParameters = ref<string[]>([])
+const checkedParametersStatus = (id: string) => {
+    if (checkedParameters.value.length >= 2 && checkedParameters.value.findIndex(i => i == id) == -1) {
+        return true
+    }
+
+    return false
+}
 
 const fetchData = async () => {
     isLoading.value = true
@@ -81,15 +95,29 @@ const updatePage = (n: number) => {
 const changePagesize = (n: number) => {
     limit.value = n
 }
-   
+
+const compareParameter = () => {
+    if (checkedParameters.value.length != 2) {
+        return
+    }
+
+    const sourceid = checkedParameters.value[0]
+    const destid = checkedParameters.value[1]
+    console.log(sourceid, destid)
+}
 </script>
 
 <template>
-    <div class="Parameter-full-content"> 
+    <div class="Parameter-full-content">
         <div class="head-content">
             <div class="">
                 <h1>Parameter</h1>
-            </div>  
+            </div>
+            <div class="">
+                <button type="button" class="btn btn-warning" @click="compareParameter"
+                    :disabled="checkedParameters.length != 2"> Compare
+                </button>
+            </div>
         </div>
         <TableAndPaging :items="Parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
@@ -103,7 +131,12 @@ const changePagesize = (n: number) => {
                     </span>
                 </router-link>
             </template>
-            <template v-slot:body_operation="body"> 
+            <template v-slot:body_operation="body">
+                <input class="form-check-input gap-right-10" type="checkbox" :value="body.id" :id="body.id"
+                    v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)">
+                <label class="form-check-label" :for="body.id">
+                    Choose
+                </label>
             </template>
         </TableAndPaging>
     </div>
