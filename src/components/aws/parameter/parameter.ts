@@ -3,6 +3,7 @@ import { fetchEx } from '@/tools/fetch'
 export interface Parameter {
     id: string
     accountId: string
+    alias: string
     region: string
     key: string
     version: string
@@ -12,6 +13,7 @@ export interface Parameter {
 export const defaultParameter: Parameter = {
     id: '',
     accountId: '',
+    alias: '',
     region: '',
     key: '',
     version: '',

@@ -29,11 +29,11 @@ const timeFormat = (timestamp: number): string => {
 }
 
 const fields: TableField[] = [
-    {
-        key: 'id',
-        label: '#',
-        header: true
-    },
+    // {
+    //     key: 'id',
+    //     label: '#',
+    //     header: true
+    // },
     {
         key: 'alias',
         label: 'Alias'
@@ -133,13 +133,13 @@ const setDefaultAccount = (acc: Account) => {
         </div>
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <template v-slot:header_id="header">
+            <!-- <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
-            </template>
-            <template v-slot:body_id="body">
+            </template> -->
+            <template v-slot:body_alias="body">
                 <router-link :to="'/account/' + body.id" page-path="" class="detail-link">
                     <span>
-                        {{ body.id }}
+                        {{ body.alias }}
                     </span>
                 </router-link>
             </template>

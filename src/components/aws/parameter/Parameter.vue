@@ -26,15 +26,10 @@ const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
 }
 
-const fields: TableField[] = [
+const fields: TableField[] = [    
     {
-        key: 'id',
-        label: '#',
-        header: true
-    },
-    {
-        key: 'accountId',
-        label: 'AccountId'
+        key: 'alias',
+        label: 'AccountAlias'
     },
     {
         key: 'key',
@@ -123,13 +118,13 @@ const compareParameter = () => {
         </div>
         <TableAndPaging :items="Parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <template v-slot:header_id="header">
+            <!-- <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
-            </template>
-            <template v-slot:body_id="body">
+            </template> -->
+            <template v-slot:body_key="body">
                 <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link">
                     <span>
-                        {{ body.id }}
+                        {{ body.key }}
                     </span>
                 </router-link>
             </template>

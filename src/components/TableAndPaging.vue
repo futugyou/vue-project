@@ -193,4 +193,8 @@ const sort = (key: string) => {
 .table-primary {
     text-align: left;
 }
+
+.table > tbody {
+    vertical-align: middle;
+}
 </style>
