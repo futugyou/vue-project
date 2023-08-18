@@ -90,10 +90,12 @@ watchEffect(async () => fetchData())
 
 const updatePage = (n: number) => {
     page.value = n
+    checkedParameters.value=[]
 }
 
 const changePagesize = (n: number) => {
     limit.value = n
+    checkedParameters.value=[]
 }
 
 const compareParameter = () => {
