@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, Router, RouterHistory, RouteRecordRaw }
 
 import { AwsRoutes } from './aws'
 import { DemoRoutes } from './demo'
+import { handleRequiresAuth } from '@/tools/baseAppEvent'
 
 const routes = AwsRoutes.concat(DemoRoutes)
 
@@ -20,23 +21,7 @@ router.beforeEach((to: any, from: any) => {
         return false
     }
 
-    if (to.meta.requiresAuth) {
-        if (window.__MICRO_APP_ENVIRONMENT__) {
-            const data = window.microApp?.getData()
-            if (!data?.Authorization) {
-                window.microApp.dispatch({
-                    NeedLogin: true,
-                    CreateAt: Date()
-                })
-            }
-        } else {
-            // return {
-            //     // this is fake
-            //     path: '/login',
-            //     query: { redirect: to.fullPath }
-            // }
-        }
-    }
+    handleRequiresAuth()
 })
 
 const clearRouter = (fn: () => void) => {

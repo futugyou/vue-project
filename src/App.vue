@@ -5,10 +5,10 @@ import AwsRoute from './components/aws/AwsRoute.vue'
 import TabContainer from './components/TabContainer.vue'
 import Alert from '@/components/Alert.vue'
 
+import { handleGlobalData } from '@/tools/baseAppEvent'
+
 const onRouteChange = () => {
-    if (window.__MICRO_APP_ENVIRONMENT__) {
-        window.microApp.setGlobalData({ name: window.__MICRO_APP_NAME__ })
-    }
+    handleGlobalData()
 }
 
 const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])

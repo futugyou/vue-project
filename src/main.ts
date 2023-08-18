@@ -12,30 +12,7 @@ import { globalMessageKey } from './tools/injectkey'
 import { usePinia } from './stores/plugins'
 import i18nPlugin from './plugins/i18n'
 
-declare global {
-    interface Window {
-        microApp: any
-        __MICRO_APP_NAME__: string
-        __MICRO_APP_ENVIRONMENT__: string
-        __MICRO_APP_BASE_ROUTE__: string
-    }
-}
-
-const handleMicroData = (router: Router) => {
-    if (window.__MICRO_APP_ENVIRONMENT__) {
-        console.log(4, 'vueawsapp getData:', window.microApp.getData())
-        window.microApp.addDataListener((data: Record<string, unknown>) => {
-            console.log(6, 'vueawsapp addDataListener:', data)
-            if (data.path && data.path !== router.currentRoute.value.path) {
-                router.push(data.path as string)
-            }
-        })
-
-        setTimeout(() => {
-            window.microApp.dispatch({ myname: 'vueawsapp' })
-        }, 3000)
-    }
-}
+import { handleMicroData } from '@/tools/baseAppEvent' 
 
 let app: AppInstance | null = null
 
