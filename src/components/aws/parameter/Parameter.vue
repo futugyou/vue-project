@@ -5,7 +5,7 @@ import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 
-import { Parameter, getParameters } from './parameter'
+import { Parameter, getParameters, getParameterCompare } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
@@ -26,7 +26,7 @@ const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
 }
 
-const fields: TableField[] = [    
+const fields: TableField[] = [
     {
         key: 'alias',
         label: 'AccountAlias'
@@ -85,22 +85,31 @@ watchEffect(async () => fetchData())
 
 const updatePage = (n: number) => {
     page.value = n
-    checkedParameters.value=[]
+    checkedParameters.value = []
 }
 
 const changePagesize = (n: number) => {
     limit.value = n
-    checkedParameters.value=[]
+    checkedParameters.value = []
 }
 
-const compareParameter = () => {
+const compareParameter = async () => {
     if (checkedParameters.value.length != 2) {
         return
     }
 
     const sourceid = checkedParameters.value[0]
     const destid = checkedParameters.value[1]
-    console.log(sourceid, destid)
+    const { data, error } = await getParameterCompare(sourceid, destid)
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+
+    console.log(data)
 }
 </script>
 

@@ -30,4 +30,10 @@ export const getParameter = async (id: string) => {
     const parameterGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/' + id
     return fetchEx(parameterGetEndpoint)
+}
+
+export const getParameterCompare = async (sourceid: string, destid: string) => {
+    const parameterGetEndpoint =
+        import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/compare?sourceid=' + sourceid + '&destid=' + destid
+    return fetchEx(parameterGetEndpoint)
 } 
