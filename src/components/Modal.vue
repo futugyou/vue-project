@@ -89,6 +89,16 @@ export const closeModal = () => {
         Modalraw.getInstance(alreadyOpen)?.hide()
     }
 }
+
+export const openModal = (id: string) => {
+    const myModal = new Modalraw('#' + id, {
+        keyboard: false
+    })
+    const modalToggle = document.getElementById(id)
+    if (modalToggle) {
+        myModal.show(modalToggle)
+    }
+}
 </script>
 <!-- 
 <script lang="ts" setup>

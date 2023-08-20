@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
+import { Modal, openModal } from '@/components/Modal.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'
@@ -114,13 +114,7 @@ const compareParameter = async () => {
     }
 
     compareParameterDatas.value = data
-    const myModal = new Modalraw('#compareModal', {
-        keyboard: false
-    })
-    const modalToggle = document.getElementById('compareModal')
-    if (modalToggle) {
-        myModal.show(modalToggle)
-    }
+    openModal('compareModal')
 }
 </script>
 
