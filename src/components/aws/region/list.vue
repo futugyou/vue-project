@@ -34,7 +34,7 @@ const changeRegion = (key: string) => {
 
 <template>
     <div class="dropdown-center" style="width: 100%;">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
             data-bs-display="static" style="width: 100%;">
             {{ selected.length > 0 ? selected : '--choose a item--' }}
         </button>

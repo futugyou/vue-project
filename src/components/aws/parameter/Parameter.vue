@@ -5,6 +5,7 @@ import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, openModal } from '@/components/Modal.vue'
+import RegionList from "@/components/aws/region/list.vue"
 import Spinners from '@/components/Spinners.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
@@ -20,6 +21,8 @@ const { msg } = storeToRefs(store)
 const router = useRouter()
 
 const parameters = ref<Parameter[]>([])
+const selectedRegion = ref<string>('')
+const searchKey = ref<string>('')
 const defaultParameter = ref<Parameter>(JSON.parse(localStorage.getItem('defaultParameter') ?? '{}'))
 const isLoading = ref(true)
 const subLoading = ref(true)
@@ -32,6 +35,11 @@ const timeFormat = (timestamp: number): string => {
 }
 
 const fields: TableField[] = [
+    {
+        key: 'id',
+        label: '#',
+        header: true
+    },
     {
         key: 'alias',
         label: 'AccountAlias'
@@ -123,6 +131,11 @@ const compareParameter = async () => {
     compareParameterDatas.value = data
 }
 
+const changeRegion = (key: string) => {
+    selectedRegion.value = key
+}
+
+
 </script>
 
 <template>
@@ -132,11 +145,31 @@ const compareParameter = async () => {
             <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
                 :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"
                 output-format="side-by-side" />
-                <h2 v-if="compareParameterDatas.length != 2">no data found</h2>
+            <h2 v-if="compareParameterDatas.length != 2">no data found</h2>
         </Modal>
         <div class="head-content">
             <div class="">
                 <h1>Parameter</h1>
+            </div>
+            <div class="search-item-contatiner">
+                <div class="search-item-lable">
+                    <label class="form-check-label" for="searchKey">
+                        Key
+                    </label>
+                </div>
+                <div class="search-item-com">
+                    <input id="searchKey" v-model="searchKey" />
+                </div>
+            </div>
+            <div class="search-item-contatiner">
+                <div class="search-item-lable">
+                    <label class="form-check-label" for="region">
+                        Region
+                    </label>
+                </div>
+                <div class="search-item-com">
+                    <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>
+                </div>
             </div>
             <div class="">
                 <button type="button" class="btn btn-warning" @click="compareParameter"
@@ -146,13 +179,13 @@ const compareParameter = async () => {
         </div>
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <!-- <template v-slot:header_id="header">
+            <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
-            </template> -->
-            <template v-slot:body_key="body">
+            </template>
+            <template v-slot:body_id="body">
                 <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link">
                     <span>
-                        {{ body.key }}
+                        {{ body.id }}
                     </span>
                 </router-link>
             </template>
@@ -191,5 +224,20 @@ const compareParameter = async () => {
 
 .gap-right-10 {
     margin-right: 10px;
+}
+
+.search-item-contatiner {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.search-item-lable {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.search-item-com {
+    width: 200px;
 }
 </style>

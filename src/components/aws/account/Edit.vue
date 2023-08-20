@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { isEqual, join } from 'lodash-es'
 
 import Spinners from '@/components/Spinners.vue'
-import RegionList from "../region/list.vue"
+import RegionList from "@/components/aws/region/list.vue"
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
 import { getRegions } from '@/tools/regions'
@@ -120,7 +120,6 @@ defineExpose({
             <div class="detail-item">
                 <div class="detail-item-lable">Region</div>
                 <div class="detail-item-content">
-                    <!-- <input v-model="account.region" /> -->
                     <RegionList :selected="account.region" @changeRegion="changeRegion"></RegionList>
                 </div>
             </div>
