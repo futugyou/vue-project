@@ -5,6 +5,7 @@ import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, openModal } from '@/components/Modal.vue'
+import Spinners from '@/components/Spinners.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'
@@ -21,6 +22,7 @@ const router = useRouter()
 const parameters = ref<Parameter[]>([])
 const defaultParameter = ref<Parameter>(JSON.parse(localStorage.getItem('defaultParameter') ?? '{}'))
 const isLoading = ref(true)
+const subLoading = ref(true)
 const limit = ref(10)
 const page = ref(1)
 const editref = ref(null)
@@ -102,9 +104,14 @@ const compareParameter = async () => {
         return
     }
 
+    openModal('compareModal')
+    subLoading.value = true
+
     const sourceid = checkedParameters.value[0]
     const destid = checkedParameters.value[1]
     const { data, error } = await getParameterCompare(sourceid, destid)
+    subLoading.value = false
+
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -114,15 +121,18 @@ const compareParameter = async () => {
     }
 
     compareParameterDatas.value = data
-    openModal('compareModal')
 }
+
 </script>
 
 <template>
     <div class="Parameter-full-content">
         <Modal id="compareModal" title="Compare Parameter" :hideFooter="true">
-            <code-diff v-if="compareParameterDatas.length == 2" :old-string="compareParameterDatas[0].value"
-                :new-string="compareParameterDatas[1].value" output-format="side-by-side" />
+            <Spinners v-if="subLoading"></Spinners>
+            <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
+                :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"
+                output-format="side-by-side" />
+                <h2 v-if="compareParameterDatas.length != 2">no data found</h2>
         </Modal>
         <div class="head-content">
             <div class="">
