@@ -3,7 +3,8 @@ import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEqual, join } from 'lodash-es'
 
-import Spinners from '@/components/Spinners.vue' 
+import Spinners from '@/components/Spinners.vue'
+import RegionList from "../region/list.vue"
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
 import { getRegions } from '@/tools/regions'
@@ -120,20 +121,7 @@ defineExpose({
                 <div class="detail-item-lable">Region</div>
                 <div class="detail-item-content">
                     <!-- <input v-model="account.region" /> -->
-                    <div class="dropdown-center" style="width: 100%;">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" data-bs-display="static" style="width: 100%;">
-                            {{ account.region.length > 0 ? account.region : '--choose a region--' }}
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li v-for="item in regionList">
-                                <a class="dropdown-item" href="#" @click="changeRegion(item.key)"
-                                    :class="{ active: item.key == account.region }">
-                                    {{ item.value }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <RegionList :selected="account.region" @changeRegion="changeRegion"></RegionList>
                 </div>
             </div>
             <div class="detail-item">
