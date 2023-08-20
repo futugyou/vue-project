@@ -79,7 +79,7 @@ const checkedParametersStatus = (id: string) => {
 
 const fetchData = async () => {
     isLoading.value = true
-    const { data, error } = await getParameters(page.value, limit.value)
+    const { data, error } = await getParameters(page.value, limit.value, selectedRegion.value, searchKey.value)
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -151,26 +151,29 @@ const changeRegion = (key: string) => {
             <div class="">
                 <h1>Parameter</h1>
             </div>
-            <div class="search-item-contatiner">
-                <div class="search-item-lable">
-                    <label class="form-check-label" for="searchKey">
-                        Key
-                    </label>
+            <div class="search-contatiner">
+                <div class="search-item-contatiner">
+                    <div class="search-item-lable">
+                        <label class="form-check-label" for="searchKey">
+                            Key
+                        </label>
+                    </div>
+                    <div class="search-item-com">
+                        <input id="searchKey" v-model="searchKey" />
+                    </div>
                 </div>
-                <div class="search-item-com">
-                    <input id="searchKey" v-model="searchKey" />
+                <div class="search-item-contatiner">
+                    <div class="search-item-lable">
+                        <label class="form-check-label" for="region">
+                            Region
+                        </label>
+                    </div>
+                    <div class="search-item-com">
+                        <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>
+                    </div>
                 </div>
             </div>
-            <div class="search-item-contatiner">
-                <div class="search-item-lable">
-                    <label class="form-check-label" for="region">
-                        Region
-                    </label>
-                </div>
-                <div class="search-item-com">
-                    <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>
-                </div>
-            </div>
+
             <div class="">
                 <button type="button" class="btn btn-warning" @click="compareParameter"
                     :disabled="checkedParameters.length != 2"> Compare
@@ -226,11 +229,23 @@ const changeRegion = (key: string) => {
     margin-right: 10px;
 }
 
+.search-contatiner {
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+}
+
+div.search-contatiner>* {
+    height: 100%;
+}
+
 .search-item-contatiner {
     display: flex;
     flex-direction: row;
     align-items: baseline;
+    margin-right: 20px;
 }
+
 
 .search-item-lable {
     margin-right: 10px;
