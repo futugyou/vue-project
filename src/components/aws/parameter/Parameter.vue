@@ -18,7 +18,7 @@ const { msg } = storeToRefs(store)
 
 const router = useRouter()
 
-const Parameters = ref<Parameter[]>([])
+const parameters = ref<Parameter[]>([])
 const defaultParameter = ref<Parameter>(JSON.parse(localStorage.getItem('defaultParameter') ?? '{}'))
 const isLoading = ref(true)
 const limit = ref(10)
@@ -78,7 +78,7 @@ const fetchData = async () => {
         return
     }
 
-    Parameters.value = data ?? []
+    parameters.value = data ?? []
     // // mock delay
     // await new Promise((resolve) => setTimeout(resolve, 5000))
     isLoading.value = false
@@ -134,7 +134,7 @@ const compareParameter = async () => {
                 </button>
             </div>
         </div>
-        <TableAndPaging :items="Parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
+        <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <!-- <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
