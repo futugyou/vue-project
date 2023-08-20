@@ -4,12 +4,15 @@ import { useRouter } from 'vue-router'
 import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
+import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
+import { Modal as Modalraw } from 'bootstrap'
+
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
@@ -93,6 +96,7 @@ const changePagesize = (n: number) => {
     checkedParameters.value = []
 }
 
+const compareParameterDatas = ref<any[]>([])
 const compareParameter = async () => {
     if (checkedParameters.value.length != 2) {
         return
@@ -109,12 +113,23 @@ const compareParameter = async () => {
         return
     }
 
-    console.log(data)
+    compareParameterDatas.value = data
+    const myModal = new Modalraw('#compareModal', {
+        keyboard: false
+    })
+    const modalToggle = document.getElementById('compareModal')
+    if (modalToggle) {
+        myModal.show(modalToggle)
+    }
 }
 </script>
 
 <template>
     <div class="Parameter-full-content">
+        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true">
+            <code-diff v-if="compareParameterDatas.length == 2" :old-string="compareParameterDatas[0].value"
+                :new-string="compareParameterDatas[1].value" output-format="side-by-side" />
+        </Modal>
         <div class="head-content">
             <div class="">
                 <h1>Parameter</h1>

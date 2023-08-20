@@ -5,6 +5,7 @@ import 'bootstrap'
 
 import { createApp, App as AppInstance } from 'vue'
 import { Router } from 'vue-router'
+import CodeDiff from 'v-code-diff'
 
 import App from './App.vue'
 import { router, clearRouter } from './router'
@@ -29,6 +30,7 @@ const mount = () => {
     })
 
     app.use(router!)
+    app.use(CodeDiff)
 
     app.mount('#vu3-app-main')
     console.log(3, 'micro app vue demo rendered')
