@@ -50,11 +50,18 @@ export const createAccount = async (account: Account) => {
     return fetchEx(accountCreateEndpoint, 'post', account)
 }
 
-export const getAccounts = async (page: number, limit: number) => {
+export const getAccountsWithPaging = async (page: number, limit: number) => {
     const accountGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page + '&limit=' + limit
     return fetchEx(accountGetEndpoint)
 }
+
+export const getAccounts = async ( ) => {
+    const accountGetEndpoint =
+        import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
+    return fetchEx(accountGetEndpoint)
+}
+
 export const getAccount  = async (id: string) => {
     const accountGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + id

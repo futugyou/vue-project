@@ -7,7 +7,7 @@ import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 import Edit from './Edit.vue'
 
-import { Account, getAccounts, deleteAccount } from './account'
+import { Account, getAccountsWithPaging, deleteAccount } from './account'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
@@ -59,11 +59,11 @@ const fields: TableField[] = [
         key: 'operation',
         label: 'Operation'
     }
-] 
+]
 
 const fetchData = async () => {
     isLoading.value = true
-    const { data, error } = await getAccounts(page.value, limit.value)
+    const { data, error } = await getAccountsWithPaging(page.value, limit.value)
     if (error) {
         msg.value = {
             errorMessages: [error.message],
