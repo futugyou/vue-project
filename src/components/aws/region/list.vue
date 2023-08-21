@@ -39,7 +39,12 @@ const changeRegion = (key: string) => {
             {{ selected.length > 0 ? selected : '--choose a item--' }}
         </button>
         <ul class="dropdown-menu">
-            <li v-for="item in regionList">
+            <li>
+                <a class="dropdown-item" href="#" @click="changeRegion('')" :class="{ active: '' == selected }">
+                    --choose a item--
+                </a>
+            </li>
+            <li key="item" v-for="item in regionList">
                 <a class="dropdown-item" href="#" @click="changeRegion(item.key)" :class="{ active: item.key == selected }">
                     {{ item.value }}
                 </a>
