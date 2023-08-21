@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onMounted, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
-import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, openModal } from '@/components/Modal.vue'
 import RegionList from "@/components/aws/region/list.vue"
+import AccountList from "@/components/aws/account/list.vue"
 import Spinners from '@/components/Spinners.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
@@ -13,7 +13,7 @@ import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
-import { Modal as Modalraw } from 'bootstrap'
+import { Account, defaultAccount } from '@/components/aws/account/account'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -22,6 +22,8 @@ const router = useRouter()
 
 const parameters = ref<Parameter[]>([])
 const selectedRegion = ref<string>('')
+const selectedAccount = ref<Account>(defaultAccount)
+
 const searchKey = ref<string>('')
 const defaultParameter = ref<Parameter>(JSON.parse(localStorage.getItem('defaultParameter') ?? '{}'))
 const isLoading = ref(true)
@@ -79,7 +81,7 @@ const checkedParametersStatus = (id: string) => {
 
 const fetchData = async () => {
     isLoading.value = true
-    const { data, error } = await getParameters(page.value, limit.value, selectedRegion.value, searchKey.value)
+    const { data, error } = await getParameters(page.value, limit.value, selectedRegion.value, searchKey.value, selectedAccount.value.alias)
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -143,6 +145,11 @@ const handleKeyworkChange = (e: any) => {
     checkedParameters.value = []
 }
 
+const changeAccount = (acc: Account) => {
+    selectedAccount.value = acc
+    checkedParameters.value = []
+}
+
 </script>
 
 <template>
@@ -162,7 +169,7 @@ const handleKeyworkChange = (e: any) => {
                 <div class="search-item-contatiner">
                     <div class="search-item-lable">
                         <label class="form-check-label" for="searchKey">
-                            Key
+                            Key:
                         </label>
                     </div>
                     <div class="search-item-com">
@@ -172,7 +179,18 @@ const handleKeyworkChange = (e: any) => {
                 <div class="search-item-contatiner">
                     <div class="search-item-lable">
                         <label class="form-check-label" for="region">
-                            Region
+                            Account:
+                        </label>
+                    </div>
+                    <div class="search-item-com">
+                        <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
+                        </AccountList>
+                    </div>
+                </div>
+                <div class="search-item-contatiner">
+                    <div class="search-item-lable">
+                        <label class="form-check-label" for="region">
+                            Region:
                         </label>
                     </div>
                     <div class="search-item-com">
@@ -233,7 +251,7 @@ const handleKeyworkChange = (e: any) => {
 }
 
 .gap-right-10 {
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .search-contatiner {
@@ -250,7 +268,7 @@ div.search-contatiner>* {
     display: flex;
     flex-direction: row;
     align-items: baseline;
-    margin-right: 20px;
+    margin-right: 30px;
 }
 
 

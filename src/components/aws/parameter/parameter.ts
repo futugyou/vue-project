@@ -20,7 +20,7 @@ export const defaultParameter: Parameter = {
     operateAt: 0
 }
 
-export const getParameters = async (page: number, limit: number, region: string, key: string) => {
+export const getParameters = async (page: number, limit: number, region: string, key: string, alias: string) => {
     let parameterGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters?page=' + page + '&limit=' + limit
     if (region) {
@@ -29,6 +29,10 @@ export const getParameters = async (page: number, limit: number, region: string,
 
     if (key) {
         parameterGetEndpoint += '&key=' + key
+    }
+
+    if (alias) {
+        parameterGetEndpoint += '&alias=' + alias
     }
 
     return fetchEx(parameterGetEndpoint)
