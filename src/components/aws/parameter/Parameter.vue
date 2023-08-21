@@ -114,7 +114,7 @@ const compareParameter = async () => {
 
     openModal('compareModal')
     subLoading.value = true
-
+    compareParameterDatas.value = []
     const sourceid = checkedParameters.value[0]
     const destid = checkedParameters.value[1]
     const { data, error } = await getParameterCompare(sourceid, destid)
@@ -133,8 +133,15 @@ const compareParameter = async () => {
 
 const changeRegion = (key: string) => {
     selectedRegion.value = key
+    checkedParameters.value = []
 }
 
+
+const handleKeyworkChange = (e: any) => {
+    const k: string = e.target.value;
+    searchKey.value = k
+    checkedParameters.value = []
+}
 
 </script>
 
@@ -159,7 +166,7 @@ const changeRegion = (key: string) => {
                         </label>
                     </div>
                     <div class="search-item-com">
-                        <input id="searchKey" v-model="searchKey" />
+                        <input id="searchKey" :value="searchKey" @change="handleKeyworkChange" />
                     </div>
                 </div>
                 <div class="search-item-contatiner">
