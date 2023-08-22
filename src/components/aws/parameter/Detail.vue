@@ -44,8 +44,23 @@ fetchData()
 <template>
     <div class="detail-full-content">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading" class="detail-container">
-            {{ parameter.value }}
+        <div v-if="!isLoading && parameter != undefined" class="detail-container">
+            <div class="detail-item">
+                <div class="detail-item-lable">Name:</div>
+                <div> {{ parameter.key }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-item-lable">Version:</div>
+                <div> {{ parameter.version }}</div>
+            </div>
+            <div class="detail-item-textarea">
+                <div class="detail-item-lable">Value:</div>
+                <div class="textarea-container">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
+                        :value="parameter.value"></textarea>
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
@@ -56,6 +71,7 @@ fetchData()
     justify-content: space-around;
     align-items: center;
     width: 100%;
+    height: 100%;
 }
 
 .detail-container {
@@ -63,40 +79,32 @@ fetchData()
     flex-direction: column;
     height: 100%;
     text-align: left;
-    max-width: 600px;
     width: 100%;
     font-size: 18px;
     background-color: aliceblue;
+    padding: 20px
 }
 
 .detail-item {
     display: flex;
     flex-direction: row;
-    height: 60px;
+    margin-bottom: 10px;
+}
+
+.detail-item-textarea {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.textarea-container {
+    flex: 1;
+}
+
+.textarea-container > textarea {
+    height: 100%;
 }
 
 .detail-item-lable {
-    flex: 1;
-    display: flex;
-    line-height: 18px;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
-    background-color: #e2f7f0;
-    border-radius: 10px;
-    align-content: center;
-    flex-wrap: wrap;
-}
-
-.detail-item-content {
-    flex: 1;
-    display: flex;
-    line-height: 18px;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
-    border-radius: 10px;
-    align-content: center;
-    flex-wrap: wrap;
-}
-</style>
+    margin-right: 10px;
+}</style>
