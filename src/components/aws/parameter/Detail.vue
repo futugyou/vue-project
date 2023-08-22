@@ -17,9 +17,12 @@ const router = useRouter()
 const isLoading = ref(true)
 const parameterId = route.params.parameterId as string
 const parameter = ref()
-const awsparameter = ref() 
+const awsparameter = ref()
+const historys = ref<any[]>([])
 
+const checkedParameters = ref<string[]>([])
 const tabIndex = ref("1")
+
 const fetchData = async () => {
     if (parameterId == undefined) {
         return
@@ -37,7 +40,8 @@ const fetchData = async () => {
     }
 
     parameter.value = data
-    awsparameter.value = data?.current 
+    awsparameter.value = data?.current
+    historys.value = data?.history
     isLoading.value = false
 }
 
@@ -45,6 +49,22 @@ fetchData()
 
 const changeTab = (index: string) => {
     tabIndex.value = index
+}
+
+const checkedParametersStatus = (id: string) => {
+    if (checkedParameters.value.length >= 2 && checkedParameters.value.findIndex(i => i == id) == -1) {
+        return true
+    }
+
+    return false
+}
+
+const compareParameter = () => {
+
+}
+
+const compareWithAWS = () => {
+
 }
 </script>
 
@@ -99,6 +119,39 @@ const changeTab = (index: string) => {
                 </div>
             </div>
         </div>
+        <div v-if="!isLoading && historys != undefined && historys.length > 0 && tabIndex == '3'" class="detail-container">
+            <div class="compare-container">
+                <button type="button" class="btn btn-warning" @click="compareWithAWS"
+                    :disabled="checkedParameters.length != 1"> CompareWithAWS
+                </button>
+                <button type="button" class="btn btn-warning" @click="compareParameter"
+                    :disabled="checkedParameters.length != 2"> Compare
+                </button>
+            </div>
+            <div v-for="(item, idx) in historys" :key="idx" class="history-item">
+                <div class="detail-item">
+                    <div class="detail-item-lable">Name:</div>
+                    <div> {{ item.key }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-lable">Version:</div>
+                    <div> {{ item.version }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-lable">Operate Time:</div>
+                    <div> {{ item.operateAt }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-item-lable"><label class="form-check-label" :for="item.id">
+                            Choose:
+                        </label></div>
+                    <div>
+                        <input class="form-check-input gap-right-10" type="checkbox" :value="item.id" :id="item.id"
+                            v-model="checkedParameters" :disabled="checkedParametersStatus(item.id)">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -145,5 +198,23 @@ const changeTab = (index: string) => {
 
 .detail-item-lable {
     margin-right: 10px;
+}
+
+.history-item {
+    display: flex;
+    flex-direction: ro;
+}
+
+.history-item>.detail-item {
+    margin-right: 20px;
+}
+
+.compare-container {
+    position: fixed;
+    right: 50px;
+}
+
+.compare-container>* {
+    margin-right: 20px;
 }
 </style>
