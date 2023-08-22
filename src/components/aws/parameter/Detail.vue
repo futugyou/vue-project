@@ -17,7 +17,9 @@ const router = useRouter()
 const isLoading = ref(true)
 const parameterId = route.params.parameterId as string
 const parameter = ref()
+const awsparameter = ref() 
 
+const tabIndex = ref("1")
 const fetchData = async () => {
     if (parameterId == undefined) {
         return
@@ -35,16 +37,35 @@ const fetchData = async () => {
     }
 
     parameter.value = data
+    awsparameter.value = data?.current 
     isLoading.value = false
 }
 
-fetchData() 
+fetchData()
+
+const changeTab = (index: string) => {
+    tabIndex.value = index
+}
 </script>
 
 <template>
     <div class="detail-full-content">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading && parameter != undefined" class="detail-container">
+        <div v-if="!isLoading">
+            <ul class="nav nav-tabs">
+                <li class="nav-item" @click="changeTab('1')">
+                    <a class="nav-link" :class="{ active: tabIndex == '1' }" href="#">Latest</a>
+                </li>
+                <li class="nav-item" @click="changeTab('2')">
+                    <a class="nav-link" :class="{ active: tabIndex == '2' }" href="#">AWS
+                        Current</a>
+                </li>
+                <li class="nav-item" @click="changeTab('3')">
+                    <a class="nav-link" :class="{ active: tabIndex == '3' }" href="#">History</a>
+                </li>
+            </ul>
+        </div>
+        <div v-if="!isLoading && parameter != undefined && tabIndex == '1'" class="detail-container">
             <div class="detail-item">
                 <div class="detail-item-lable">Name:</div>
                 <div> {{ parameter.key }}</div>
@@ -60,7 +81,23 @@ fetchData()
                         :value="parameter.value"></textarea>
                 </div>
             </div>
-
+        </div>
+        <div v-if="!isLoading && awsparameter != undefined && tabIndex == '2'" class="detail-container">
+            <div class="detail-item">
+                <div class="detail-item-lable">Name:</div>
+                <div> {{ awsparameter.key }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-item-lable">Version:</div>
+                <div> {{ awsparameter.version }}</div>
+            </div>
+            <div class="detail-item-textarea">
+                <div class="detail-item-lable">Value:</div>
+                <div class="textarea-container">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
+                        :value="awsparameter.value"></textarea>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -68,7 +105,8 @@ fetchData()
 <style scoped>
 .detail-full-content {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    /* justify-content: space-around; */
     align-items: center;
     width: 100%;
     height: 100%;
@@ -101,10 +139,11 @@ fetchData()
     flex: 1;
 }
 
-.textarea-container > textarea {
+.textarea-container>textarea {
     height: 100%;
 }
 
 .detail-item-lable {
     margin-right: 10px;
-}</style>
+}
+</style>
