@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router'
 const Account = () => import('@/components/aws/account/Account.vue')
 const Parameter = () => import('@/components/aws/parameter/Parameter.vue')
 const AccountDetail = () => import('@/components/aws/account/Detail.vue')
+const ParameterDetail = () => import('@/components/aws/parameter/Detail.vue')
 
 export const AwsRoutes = [
     {
@@ -21,6 +22,12 @@ export const AwsRoutes = [
         path: '/parameter',
         name: 'Parameter',
         component: Parameter,        
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/parameter/:parameterId',
+        name: 'ParameterDetail',
+        component: ParameterDetail,        
         meta: { requiresAuth: true }
     }
 ] as RouteRecordRaw[]
