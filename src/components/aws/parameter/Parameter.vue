@@ -154,7 +154,7 @@ const changeAccount = (acc: Account) => {
 
 <template>
     <div class="Parameter-full-content">
-        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true">
+        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true" size="xl">
             <Spinners v-if="subLoading"></Spinners>
             <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
                 :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"

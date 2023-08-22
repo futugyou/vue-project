@@ -10,12 +10,28 @@ export const Modal = defineComponent({
     props: {
         id: String,
         title: String,
+        size: String,
         hideFooter: Boolean
     },
     setup(props, { emit, slots }) {
         const saveClick = () => {
             emit('saveChange')
             closeModal()
+        }
+
+        let size = ''
+        switch (props.size) {
+            case 'xl':
+                size = 'modal-xl'
+                break;
+            case 'lg':
+                size = 'modal-lg'
+                break;
+            case 'sm':
+                size = 'modal-sm'
+                break;
+            default:
+                break;
         }
 
         return () => (
@@ -26,7 +42,7 @@ export const Modal = defineComponent({
                 data-bs-backdrop="static"
                 data-bs-keyboard="false"
             >
-                <div class="modal-dialog">
+                <div class={"modal-dialog " + size}>
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5">{props.title}</h1>
