@@ -20,6 +20,10 @@ export const defaultParameter: Parameter = {
     operateAt: 0
 }
 
+export interface SyncParameter {
+    id: string
+}
+
 export const getParameters = async (page: number, limit: number, region: string, key: string, alias: string) => {
     let parameterGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters?page=' + page + '&limit=' + limit
@@ -36,6 +40,12 @@ export const getParameters = async (page: number, limit: number, region: string,
     }
 
     return fetchEx(parameterGetEndpoint)
+}
+
+export const syncParameter = async (sync: SyncParameter) => {
+    const parameterSyncEndpoint =
+        import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/sync'
+    return fetchEx(parameterSyncEndpoint, 'post', sync)
 }
 
 export const getParameter = async (id: string) => {
