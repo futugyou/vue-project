@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Spinners from '@/components/Spinners.vue'
 import { Modal, openModal } from '@/components/Modal.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
-import { Parameter, getParameter, } from './parameter'
+import { Parameter, getParameter, SyncParameter, syncParameter } from './parameter'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -24,6 +24,15 @@ const historys = ref<any[]>([])
 const checkedParameters = ref<string[]>([])
 const compareParameters = ref<string[]>([])
 const tabIndex = ref("1")
+const displaySync = computed(() => {
+    if (parameter.value
+        && awsparameter.value
+        && parameter.value.version < awsparameter.value.version) {
+        return false
+    }
+
+    return true
+})
 
 const fetchData = async () => {
     if (parameterId == undefined) {
@@ -85,6 +94,28 @@ const compareWithAWS = () => {
 
     compareParameters.value = checkedParameters.value.concat(awsstring)
 }
+
+const syncFromAWS = async () => {
+    isLoading.value = true
+    const p: SyncParameter = {
+        id: parameterId,
+    }
+
+    const { data, error } = await syncParameter(p)
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+
+        isLoading.value = false
+        return
+    }
+
+    router.push('/parameter/' + parameterId)
+    isLoading.value = false
+}
+
 </script>
 
 <template>
@@ -109,6 +140,10 @@ const compareWithAWS = () => {
             </ul>
         </div>
         <div v-if="!isLoading && parameter != undefined && tabIndex == '1'" class="detail-container">
+            <div class="compare-container">
+                <button type="button" class="btn btn-warning" @click="syncFromAWS" :disabled="displaySync"> SyncFromAWS
+                </button>
+            </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Name:</div>
                 <div> {{ parameter.key }}</div>
