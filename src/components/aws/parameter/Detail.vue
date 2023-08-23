@@ -3,6 +3,7 @@ import { ref, watchEffect, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
+import { Modal, openModal } from '@/components/Modal.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Parameter, getParameter, } from './parameter'
 
@@ -21,6 +22,7 @@ const awsparameter = ref()
 const historys = ref<any[]>([])
 
 const checkedParameters = ref<string[]>([])
+const compareParameters = ref<string[]>([])
 const tabIndex = ref("1")
 
 const fetchData = async () => {
@@ -60,16 +62,37 @@ const checkedParametersStatus = (id: string) => {
 }
 
 const compareParameter = () => {
+    if (checkedParameters.value.length != 2) {
+        return
+    }
 
+    compareParameters.value = []
+    openModal('compareModal')
+    compareParameters.value = checkedParameters.value
 }
 
 const compareWithAWS = () => {
+    if (checkedParameters.value.length != 1) {
+        return
+    }
 
+    compareParameters.value = []
+    openModal('compareModal')
+    let awsstring: string = ''
+    if (awsparameter.value) {
+        awsstring = awsparameter.value.value
+    }
+
+    compareParameters.value = checkedParameters.value.concat(awsstring)
 }
 </script>
 
 <template>
     <div class="detail-full-content">
+        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true" size="xl">
+            <code-diff v-if="compareParameters.length == 2" :old-string="compareParameters[0]"
+                :new-string="compareParameters[1]" output-format="side-by-side" />
+        </Modal>
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading">
             <ul class="nav nav-tabs">
@@ -146,8 +169,8 @@ const compareWithAWS = () => {
                             Choose:
                         </label></div>
                     <div>
-                        <input class="form-check-input gap-right-10" type="checkbox" :value="item.id" :id="item.id"
-                            v-model="checkedParameters" :disabled="checkedParametersStatus(item.id)">
+                        <input class="form-check-input gap-right-10" type="checkbox" :value="item.value" :id="item.id"
+                            v-model="checkedParameters" :disabled="checkedParametersStatus(item.value)">
                     </div>
                 </div>
             </div>
