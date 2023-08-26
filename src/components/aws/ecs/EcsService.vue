@@ -89,7 +89,7 @@ const changePagesize = (n: number) => {
                 <span style="color: red">{{ header.label }}</span>
             </template>
             <template v-slot:body_id="body">
-                <router-link :to="'/ecsservice/' + body.id" page-path="" class="detail-link">
+                <router-link :to="'/ecs/' + body.id" page-path="" class="detail-link">
                     <span>
                         {{ body.id }}
                     </span>

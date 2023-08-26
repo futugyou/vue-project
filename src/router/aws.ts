@@ -2,6 +2,8 @@ import { RouteRecordRaw } from 'vue-router'
 
 const Account = () => import('@/components/aws/account/Account.vue')
 const Parameter = () => import('@/components/aws/parameter/Parameter.vue')
+const EcsService = () => import('@/components/aws/ecs/EcsService.vue')
+
 const AccountDetail = () => import('@/components/aws/account/Detail.vue')
 const ParameterDetail = () => import('@/components/aws/parameter/Detail.vue')
 
@@ -28,6 +30,12 @@ export const AwsRoutes = [
         path: '/parameter/:parameterId',
         name: 'ParameterDetail',
         component: ParameterDetail,        
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/ecs',
+        name: 'EcsService',
+        component: EcsService,        
         meta: { requiresAuth: true }
     }
 ] as RouteRecordRaw[]
