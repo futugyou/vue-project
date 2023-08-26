@@ -28,7 +28,7 @@ const searchKey = ref<string>('')
 const defaultParameter = ref<Parameter>(JSON.parse(localStorage.getItem('defaultParameter') ?? '{}'))
 const isLoading = ref(true)
 const subLoading = ref(true)
-const limit = ref(10)
+const limit = ref(30)
 const page = ref(1)
 const editref = ref(null)
 

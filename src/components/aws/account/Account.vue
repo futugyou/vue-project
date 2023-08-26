@@ -20,7 +20,7 @@ const router = useRouter()
 const accounts = ref<Account[]>([])
 const defaultAccount = ref<Account>(JSON.parse(localStorage.getItem('defaultAccount') ?? '{}'))
 const isLoading = ref(true)
-const limit = ref(10)
+const limit = ref(30)
 const page = ref(1)
 const editref = ref(null)
 

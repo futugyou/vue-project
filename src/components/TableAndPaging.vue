@@ -30,7 +30,7 @@ const emit = defineEmits<{
     (e: 'changePagesize', n: number): void
 }>()
 
-const pagesize = ref(10)
+const pagesize = ref(30)
 const page = ref(1)
 const placeholder = ref('no data found')
 
@@ -164,6 +164,7 @@ const sort = (key: string) => {
                     <li><a class="dropdown-item" href="#" @click="changePagesize(10)">10</a></li>
                     <li><a class="dropdown-item" href="#" @click="changePagesize(20)">20</a></li>
                     <li><a class="dropdown-item" href="#" @click="changePagesize(30)">30</a></li>
+                    <li><a class="dropdown-item" href="#" @click="changePagesize(50)">50</a></li>
                 </ul>
             </div>
         </div>
