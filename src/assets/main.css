@@ -85,8 +85,8 @@ a,
 .detail-item {
     display: flex;
     flex-direction: row;
-    margin-bottom: 10px;
-    height: 60px;
+    margin: 10px;
+    min-height: 40px;
 }
 
 .detail-item-lable {

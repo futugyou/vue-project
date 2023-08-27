@@ -82,29 +82,68 @@ watchEffect(async () => fetchData())
             <div class="detail-item">
                 <div class="detail-item-lable">Security Groups</div>
                 <div class="detail-item-content">
-                    {{ ecsServiceDetail.security_groups }}
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" v-for="sg in ecsServiceDetail.security_groups">
+                            {{ sg }}
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">VPC Subnets</div>
                 <div class="detail-item-content">
-                    {{ ecsServiceDetail.subnets }}
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" v-for="net in ecsServiceDetail.subnets">
+                            {{ net }}
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Service Registries</div>
                 <div class="detail-item-content">
-                    {{ ecsServiceDetail.service_registries }}
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" v-for="sr in ecsServiceDetail.service_registries">
+                            {{ sr }}
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Latest 10 Task Definitions</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.task_definitions }}
+                <div class="detail-item-content content-scroll">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" v-for="td in ecsServiceDetail.task_definitions">
+                            {{ td }}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.detail-item {
+    height: auto;
+}
+
+.detail-item-lable {
+    align-content: flex-start;
+    flex: 1;
+}
+
+.detail-item-content {
+    flex: 3;
+}
+
+.list-group-item {
+    background-color: inherit;
+    padding-left: 0px;
+}
+
+.content-scroll {
+    flex-wrap: nowrap;
+    overflow-y: scroll;
+}
+</style>

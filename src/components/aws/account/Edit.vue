@@ -163,6 +163,8 @@ defineExpose({
 
 .detail-item-lable {
     flex: 1;
+    padding: 5px;
+    margin: 5px;
     background-color: #e2f7f0;
 }
 
