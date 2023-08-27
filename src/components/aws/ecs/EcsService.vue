@@ -3,7 +3,7 @@ import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { EcsService, getEcsServices } from "./ecs";
+import { EcsService, getEcsServices } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -17,8 +17,6 @@ const page = ref(1)
 const ecsServices = ref<EcsService[]>([])
 
 const account = ref('')
-
-
 
 const fields: TableField[] = [
     {

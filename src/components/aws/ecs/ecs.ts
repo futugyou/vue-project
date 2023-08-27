@@ -17,11 +17,17 @@ export const defaultEcsService: EcsService = {
 }
 
 export const getEcsServices = async (page: number, limit: number, account_id: string) => {
-    let accountGetEndpoint =
+    let ecsEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/ecsservices?page=' + page + '&limit=' + limit
     if (account_id) {
-        accountGetEndpoint += '&account_id=' + account_id
+        ecsEndpoint += '&account_id=' + account_id
     }
 
-    return fetchEx(accountGetEndpoint)
+    return fetchEx(ecsEndpoint)
+}
+
+export const getEcsServiceDetail  = async (id: string) => {
+    const ecsEndpoint =
+        import.meta.env.REACT_APP_AWS_SERVER + 'v1/ecsservices/' + id
+    return fetchEx(ecsEndpoint)
 }
