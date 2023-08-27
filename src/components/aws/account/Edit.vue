@@ -110,7 +110,7 @@ defineExpose({
 </script>
 
 <template>
-    <div class="edit-full-content">
+    <div class="detail-full-content">
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading" class="detail-container">
             <div class="detail-item" v-if="account?.id">
@@ -156,53 +156,21 @@ defineExpose({
 </template>
 
 <style scoped>
-.edit-full-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-}
-
 .detail-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-align: left;
     max-width: 600px;
-    width: 100%;
-    font-size: 18px;
-    background-color: aliceblue;
-}
-
-.detail-item {
-    display: flex;
-    flex-direction: row;
-    height: 60px;
+    height: auto;
 }
 
 .detail-item-lable {
     flex: 1;
-    display: flex;
-    line-height: 18px;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
     background-color: #e2f7f0;
-    border-radius: 10px;
-    align-content: center;
-    flex-wrap: wrap;
 }
 
 .detail-item-content {
     flex: 1;
-    display: flex;
-    line-height: 18px;
     padding: 5px;
     margin: 5px;
     height: 40px;
-    border-radius: 10px;
-    align-content: center;
-    flex-wrap: wrap;
 }
 
 .detail-item-content input,

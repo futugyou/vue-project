@@ -146,11 +146,11 @@ const syncFromAWS = async () => {
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Name:</div>
-                <div> {{ parameter.key }}</div>
+                <div class="detail-item-content"> {{ parameter.key }}</div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Version:</div>
-                <div> {{ parameter.version }}</div>
+                <div class="detail-item-content"> {{ parameter.version }}</div>
             </div>
             <div class="detail-item-textarea">
                 <div class="detail-item-lable">Value:</div>
@@ -163,11 +163,11 @@ const syncFromAWS = async () => {
         <div v-if="!isLoading && awsparameter != undefined && tabIndex == '2'" class="detail-container">
             <div class="detail-item">
                 <div class="detail-item-lable">Name:</div>
-                <div> {{ awsparameter.key }}</div>
+                <div class="detail-item-content"> {{ awsparameter.key }}</div>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Version:</div>
-                <div> {{ awsparameter.version }}</div>
+                <div class="detail-item-content"> {{ awsparameter.version }}</div>
             </div>
             <div class="detail-item-textarea">
                 <div class="detail-item-lable">Value:</div>
@@ -189,21 +189,23 @@ const syncFromAWS = async () => {
             <div v-for="(item, idx) in historys" :key="idx" class="history-item">
                 <div class="detail-item">
                     <div class="detail-item-lable">Name:</div>
-                    <div> {{ item.key }}</div>
+                    <div class="detail-item-content"> {{ item.key }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-item-lable">Version:</div>
-                    <div> {{ item.version }}</div>
+                    <div class="detail-item-content"> {{ item.version }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-item-lable">Operate Time:</div>
-                    <div> {{ item.operateAt }}</div>
+                    <div class="detail-item-content"> {{ item.operateAt }}</div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-item-lable"><label class="form-check-label" :for="item.id">
+                    <div class="detail-item-lable">
+                        <label class="form-check-label" :for="item.id">
                             Choose:
-                        </label></div>
-                    <div>
+                        </label>
+                    </div>
+                    <div class="detail-item-content">
                         <input class="form-check-input gap-right-10" type="checkbox" :value="item.value" :id="item.id"
                             v-model="checkedParameters" :disabled="checkedParametersStatus(item.value)">
                     </div>
@@ -215,29 +217,15 @@ const syncFromAWS = async () => {
 
 <style scoped>
 .detail-full-content {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: space-around; */
-    align-items: center;
-    width: 100%;
-    height: 100%;
+    justify-content: normal;
 }
 
 .detail-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-align: left;
-    width: 100%;
-    font-size: 18px;
-    background-color: aliceblue;
     padding: 20px
 }
 
 .detail-item {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 10px;
+    height: auto;
 }
 
 .detail-item-textarea {
@@ -260,7 +248,7 @@ const syncFromAWS = async () => {
 
 .history-item {
     display: flex;
-    flex-direction: ro;
+    flex-direction: row;
 }
 
 .history-item>.detail-item {

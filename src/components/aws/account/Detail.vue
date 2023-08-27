@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router' 
+import { useRoute, useRouter } from 'vue-router'
 
-import Spinners from '@/components/Spinners.vue' 
+import Spinners from '@/components/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, getAccount, deleteAccount } from './account'
 import Edit from './Edit.vue'
@@ -18,7 +18,7 @@ const router = useRouter()
 const isLoading = ref(true)
 const editModel = ref(false)
 const account = ref<Account>(defaultAccount)
-const accountId = route.params.accountId as string 
+const accountId = route.params.accountId as string
 
 const fetchData = async () => {
     if (accountId == undefined) {
@@ -26,7 +26,7 @@ const fetchData = async () => {
     }
 
     isLoading.value = true
-    const { data, error } = await getAccount(accountId) 
+    const { data, error } = await getAccount(accountId)
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -57,7 +57,7 @@ const accountDelete = async () => {
 </script>
 
 <template>
-    <div class="detail-full-content"> 
+    <div class="detail-full-content">
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && !editModel" class="detail-container">
             <div class="detail-item">
@@ -103,53 +103,23 @@ const accountDelete = async () => {
     </div>
 </template>
 
-<style scoped>
-.detail-full-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-}
+<style scoped> .detail-container {
+     max-width: 600px;
+     height: auto;
+ }
 
-.detail-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-align: left;
-    max-width: 600px;
-    width: 100%;
-    font-size: 18px;
-    background-color: aliceblue;
-}
+ .detail-item-lable {
+     flex: 1;
+     padding: 5px;
+     margin: 5px;
+     height: 40px;
+     background-color: #e2f7f0;
+ }
 
-.detail-item {
-    display: flex;
-    flex-direction: row;
-    height: 60px;
-}
-
-.detail-item-lable {
-    flex: 1;
-    display: flex;
-    line-height: 18px;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
-    background-color: #e2f7f0;
-    border-radius: 10px;
-    align-content: center;
-    flex-wrap: wrap;
-}
-
-.detail-item-content {
-    flex: 1;
-    display: flex;
-    line-height: 18px;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
-    border-radius: 10px;
-    align-content: center;
-    flex-wrap: wrap;
-}
+ .detail-item-content {
+     flex: 1;
+     padding: 5px;
+     margin: 5px;
+     height: 40px;
+ }
 </style>

@@ -60,5 +60,47 @@ a,
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px) {}
+
+/* detail page */
+.detail-full-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-align: left;
+    width: 100%;
+    font-size: 18px;
+    background-color: aliceblue;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    height: 60px;
+}
+
+.detail-item-lable {
+    display: flex;
+    border-radius: 10px;
+    align-content: center;
+    flex-wrap: wrap;
+    line-height: 18px;
+}
+
+.detail-item-content {
+    display: flex;
+    line-height: 18px;
+    border-radius: 10px;
+    align-content: center;
+    flex-wrap: wrap;
 }

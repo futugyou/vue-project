@@ -42,22 +42,6 @@ watchEffect(async () => fetchData())
     </div>
 </template>
 
-<style scoped>
-.detail-full-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-}
-
-.detail-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    text-align: left;
-    max-width: 600px;
-    width: 100%;
-    font-size: 18px;
-    background-color: aliceblue;
-}
+<style scoped> 
+ 
 </style>
