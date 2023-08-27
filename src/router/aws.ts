@@ -6,6 +6,7 @@ const EcsService = () => import('@/components/aws/ecs/EcsService.vue')
 
 const AccountDetail = () => import('@/components/aws/account/Detail.vue')
 const ParameterDetail = () => import('@/components/aws/parameter/Detail.vue')
+const EcsServiceDetail = () => import('@/components/aws/ecs/Detail.vue')
 
 export const AwsRoutes = [
     {
@@ -36,6 +37,12 @@ export const AwsRoutes = [
         path: '/ecs',
         name: 'EcsService',
         component: EcsService,        
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/ecs/:id',
+        name: 'EcsServiceDetail',
+        component: EcsServiceDetail,        
         meta: { requiresAuth: true }
     }
 ] as RouteRecordRaw[]
