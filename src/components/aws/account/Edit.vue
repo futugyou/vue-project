@@ -74,18 +74,18 @@ const save = async () => {
         rerror = error
     }
 
+    isLoading.value = false
+    
     if (rerror) {
         msg.value = {
             errorMessages: [rerror.message],
             delay: 3000,
-        }
-        isLoading.value = false
+        } 
         return
     }
 
     newdata = rdata as Account
     router.push('/account/' + newdata.id)
-    isLoading.value = false
     emit('save')
     account.value = { ...defaultAccount }
 }

@@ -41,19 +41,19 @@ const fetchData = async () => {
 
     isLoading.value = true
     const { data, error } = await getParameter(parameterId)
+    isLoading.value = false
     if (error) {
         msg.value = {
             errorMessages: [error.message],
             delay: 3000,
         }
-        isLoading.value = false
+
         return
     }
 
     parameter.value = data
     awsparameter.value = data?.current
     historys.value = data?.history
-    isLoading.value = false
 }
 
 fetchData()
@@ -102,18 +102,17 @@ const syncFromAWS = async () => {
     }
 
     const { data, error } = await syncParameter(p)
+    isLoading.value = false
     if (error) {
         msg.value = {
             errorMessages: [error.message],
             delay: 3000,
         }
 
-        isLoading.value = false
         return
     }
 
     router.push('/parameter/' + parameterId)
-    isLoading.value = false
 }
 
 </script>

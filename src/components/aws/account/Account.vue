@@ -64,6 +64,7 @@ const fields: TableField[] = [
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getAccountsWithPaging(page.value, limit.value)
+    isLoading.value = false
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -75,7 +76,6 @@ const fetchData = async () => {
     accounts.value = data ?? []
     // // mock delay
     // await new Promise((resolve) => setTimeout(resolve, 5000))
-    isLoading.value = false
 }
 
 watchEffect(async () => fetchData())

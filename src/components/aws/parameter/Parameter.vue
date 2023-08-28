@@ -82,6 +82,7 @@ const checkedParametersStatus = (id: string) => {
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getParameters(page.value, limit.value, selectedRegion.value, searchKey.value, selectedAccount.value.alias)
+    isLoading.value = false
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -92,8 +93,7 @@ const fetchData = async () => {
 
     parameters.value = data ?? []
     // // mock delay
-    // await new Promise((resolve) => setTimeout(resolve, 5000))
-    isLoading.value = false
+    // await new Promise((resolve) => setTimeout(resolve, 5000)) 
 }
 
 watchEffect(async () => fetchData())

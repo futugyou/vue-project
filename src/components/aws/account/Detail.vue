@@ -27,17 +27,17 @@ const fetchData = async () => {
 
     isLoading.value = true
     const { data, error } = await getAccount(accountId)
+    isLoading.value = false
+    
     if (error) {
         msg.value = {
             errorMessages: [error.message],
             delay: 3000,
         }
-        isLoading.value = false
         return
     }
 
     account.value = data
-    isLoading.value = false
 }
 
 fetchData()
@@ -111,7 +111,7 @@ const accountDelete = async () => {
  .detail-item-lable {
      flex: 1;
      padding: 5px;
-     margin: 5px; 
+     margin: 5px;
      background-color: #e2f7f0;
  }
 

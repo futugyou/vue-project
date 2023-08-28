@@ -20,6 +20,7 @@ const ecsserviceId = route.params.id as string
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getEcsServiceDetail(ecsserviceId)
+    isLoading.value = false
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -29,7 +30,6 @@ const fetchData = async () => {
     }
 
     ecsServiceDetail.value = data ?? []
-    isLoading.value = false
 }
 
 watchEffect(async () => fetchData())
