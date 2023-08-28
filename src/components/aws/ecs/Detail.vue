@@ -3,7 +3,8 @@ import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import Spinners from '@/components/Spinners.vue'
-import { EcsService, getEcsServiceDetail } from "./ecs"
+import { Modal, openModal } from '@/components/Modal.vue'
+import { EcsService, getEcsServiceDetail, compareEcsTaskDefinition, EcsTaskCompare } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -11,6 +12,7 @@ const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
 const isLoading = ref(true)
+const subLoading = ref(true)
 const ecsServiceDetail = ref()
 const route = useRoute()
 const ecsserviceId = route.params.id as string
@@ -31,12 +33,60 @@ const fetchData = async () => {
 }
 
 watchEffect(async () => fetchData())
+
+
+// max compare count is 2
+const checkedTaskDefinitions = ref<string[]>([])
+const compareTaskDefinitions = ref<string[]>([])
+const checkedTaskDefinitionsStatus = (id: string) => {
+    if (checkedTaskDefinitions.value.length >= 2 && checkedTaskDefinitions.value.findIndex(i => i == id) == -1) {
+        return true
+    }
+
+    return false
+}
+
+const compareDefinitions = async () => {
+    compareTaskDefinitions.value = []
+    let model: EcsTaskCompare = {
+        Id: ecsServiceDetail.value.id,
+        source_task_arn: checkedTaskDefinitions.value[0],
+        dest_task_arn: checkedTaskDefinitions.value[1]
+    }
+
+    openModal('compareModal')
+    subLoading.value = true
+    const { data, error } = await compareEcsTaskDefinition(model)
+    subLoading.value = false
+
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+
+    compareTaskDefinitions.value = data
+}
 </script>
 
 <template>
     <div class="detail-full-content">
+        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true" size="xl">
+            <Spinners v-if="subLoading"></Spinners>
+            <code-diff v-if="compareTaskDefinitions.length == 2 && subLoading == false" language="json"
+                :old-string="compareTaskDefinitions[0]" :new-string="compareTaskDefinitions[1]"
+                output-format="side-by-side" />
+        </Modal>
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && ecsServiceDetail" class="detail-container">
+            <div class="compare-container">
+                <button type="button" class="btn btn-warning" @click="compareDefinitions"
+                    :disabled="checkedTaskDefinitions.length != 2">
+                    CompareDefinitions
+                </button>
+            </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Account Alias</div>
                 <div class="detail-item-content">
@@ -114,7 +164,11 @@ watchEffect(async () => fetchData())
                 <div class="detail-item-content content-scroll">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" v-for="td in ecsServiceDetail.task_definitions">
-                            {{ td }}
+                            <label class="form-check-label" :for="td">
+                                {{ td }}
+                            </label>
+                            <input class="form-check-input" type="checkbox" :value="td" :id="td"
+                                v-model="checkedTaskDefinitions" :disabled="checkedTaskDefinitionsStatus(td)">
                         </li>
                     </ul>
                 </div>
@@ -145,5 +199,16 @@ watchEffect(async () => fetchData())
 .content-scroll {
     flex-wrap: nowrap;
     overflow-y: scroll;
+}
+
+.form-check-input {
+    margin-left: 20px;
+    vertical-align: bottom;
+}
+
+.compare-container {
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
 </style>
