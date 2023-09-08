@@ -77,7 +77,13 @@ const compareParameter = () => {
 
     compareParameters.value = []
     openModal('compareModal')
-    compareParameters.value = checkedParameters.value
+    let selectedValues: any[] = []
+    historys.value.map(p => {
+        if (checkedParameters.value.includes(p.id)) {
+            selectedValues.push(p.value)
+        }
+    })
+    compareParameters.value = selectedValues
 }
 
 const compareWithAWS = () => {
@@ -92,7 +98,9 @@ const compareWithAWS = () => {
         awsstring = awsparameter.value.value
     }
 
-    compareParameters.value = checkedParameters.value.concat(awsstring)
+    let selectedId = checkedParameters.value[0]
+    let selectedValue = historys.value.find(p => p.id == selectedId).value
+    compareParameters.value = [selectedValue, awsstring]
 }
 
 const syncFromAWS = async () => {
@@ -205,8 +213,8 @@ const syncFromAWS = async () => {
                         </label>
                     </div>
                     <div class="detail-item-content">
-                        <input class="form-check-input gap-right-10" type="checkbox" :value="item.value" :id="item.id"
-                            v-model="checkedParameters" :disabled="checkedParametersStatus(item.value)">
+                        <input class="form-check-input gap-right-10" type="checkbox" :value="item.id" :id="item.id"
+                            v-model="checkedParameters" :disabled="checkedParametersStatus(item.id)">
                     </div>
                 </div>
             </div>
