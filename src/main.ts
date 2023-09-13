@@ -32,7 +32,7 @@ const mount = () => {
     app.use(router!)
     app.use(CodeDiff)
 
-    app.mount('#vu3-app-main')
+    app.mount('#vue3-app-main')
     console.log(3, 'micro app vue demo rendered')
 
     handleMicroData(router!)

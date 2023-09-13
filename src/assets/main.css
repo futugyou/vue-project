@@ -13,7 +13,7 @@ body {
     position: relative;
 }
 
-#vu3-app-main {
+#vue3-app-main {
     height: 100%;
     display: flex;
     flex-direction: column;
