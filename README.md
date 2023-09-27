@@ -63,3 +63,9 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+
+### update all package
+```
+npx npm-check-updates -u
+npm install 
+```
