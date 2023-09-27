@@ -62,7 +62,7 @@ const sortedItems = computed(() => {
     }
 
     return props.items.sort((a: any, b: any) => {
-        if (isNaN(Number(a[sortKey.value]))) {
+        if (isNaN(a[sortKey.value])) {
             if (sorydir.value == 'asc') {
                 if (a[sortKey.value] >= b[sortKey.value]) {
                     return 1
