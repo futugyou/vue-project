@@ -62,7 +62,7 @@ const sortedItems = computed(() => {
     }
 
     return props.items.sort((a: any, b: any) => {
-        if (isNaN(parseFloat(a[sortKey.value]))) {
+        if (isNaN(Number(a[sortKey.value]))) {
             if (sorydir.value == 'asc') {
                 if (a[sortKey.value] >= b[sortKey.value]) {
                     return 1
@@ -195,7 +195,7 @@ const sort = (key: string) => {
     text-align: left;
 }
 
-.table > tbody {
+.table>tbody {
     vertical-align: middle;
 }
 </style>
