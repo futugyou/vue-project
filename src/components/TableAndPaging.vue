@@ -56,7 +56,7 @@ const changePagesize = (n: number) => {
     emit('updatePage', 1)
 }
 
-const sortedItems = computed(() => {
+const sortedItems = computed<any[]>(() => {
     if (sortKey.value == '') {
         return props.items
     }
