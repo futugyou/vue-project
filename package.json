@@ -31,7 +31,7 @@
     "@playwright/test": "^1.39.0",
     "@rushstack/eslint-patch": "^1.5.1",
     "@tsconfig/node18": "^18.2.2",
-    "@types/bootstrap": "^5.2.8",
+    "@types/bootstrap": "^5.2.9",
     "@types/lodash-es": "^4.17.10",
     "@types/node": "^20.8.10",
     "@vitejs/plugin-vue": "^4.4.0",
