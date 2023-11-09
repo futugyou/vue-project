@@ -32,7 +32,7 @@
     "@rushstack/eslint-patch": "^1.5.1",
     "@tsconfig/node18": "^18.2.2",
     "@types/bootstrap": "^5.2.9",
-    "@types/lodash-es": "^4.17.10",
+    "@types/lodash-es": "^4.17.11",
     "@types/node": "^20.9.0",
     "@vitejs/plugin-vue": "^4.4.0",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
