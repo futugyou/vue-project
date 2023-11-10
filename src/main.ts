@@ -1,5 +1,6 @@
 import './assets/styles.scss'
 import './assets/main.css'
+import 'the-new-css-reset/css/reset.css'
 import '@popperjs/core'
 import 'bootstrap'
 

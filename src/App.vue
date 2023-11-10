@@ -4,6 +4,7 @@ import DemoRoute from './components/vuedemo/DemoRoute.vue'
 import AwsRoute from './components/aws/AwsRoute.vue'
 import TabContainer from './components/TabContainer.vue'
 import Alert from '@/components/Alert.vue'
+import SidebarMenu from '@/components/SidebarMenu.vue'
 
 import { handleGlobalData } from '@/tools/baseAppEvent'
 const rootContainer = ref("nomalRootContainer")
@@ -12,7 +13,7 @@ const onRouteChange = () => {
 }
 
 watchEffect(() => {
-    if (window.__MICRO_APP_ENVIRONMENT__) {
+    if (!window.__MICRO_APP_ENVIRONMENT__) {
         rootContainer.value = "subAppRootContainer"
     } else {
         rootContainer.value = "nomalRootContainer"
@@ -28,7 +29,9 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
         <div id="public-links" @click="onRouteChange">
             <KeepAlive>
                 <TabContainer :components="components" v-if="rootContainer == 'nomalRootContainer'"> </TabContainer>
+                
             </KeepAlive>
+            <SidebarMenu class="subappsidebar" v-if="rootContainer == 'subAppRootContainer'" />
         </div>
         <div class="vu3-app">
             <router-view v-slot="{ Component, route }">
@@ -44,16 +47,20 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
 </template>
 
 <style scoped>
-
 #public-links {
     padding: 10px 0;
     font-size: 18px;
 }
+
 .vu3-app {
     flex-grow: 1;
     height: 100%;
     width: 100%;
     overflow-y: auto;
+}
+
+.subappsidebar {
+    grid-area: 'sidebar';
 }
 
 .nomalRootContainer {

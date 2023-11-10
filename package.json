@@ -22,6 +22,7 @@
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
     "pinia": "^2.1.7",
+    "the-new-css-reset": "^1.11.1",
     "v-code-diff": "^1.7.2",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5",
