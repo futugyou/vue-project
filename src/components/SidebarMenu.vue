@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue';
-import { RouterLink } from 'vue-router';
-import IconAngle from './SidebarIcon/IconAngle.vue';
-import IconEmail from './SidebarIcon/IconEmail.vue';
-import IconEmployeeGroup from './SidebarIcon/IconEmployeeGroup.vue';
-import IconExclamation from './SidebarIcon/IconExclamation.vue';
-import IconHome from './SidebarIcon/IconHome.vue';
+
+import { shallowRef } from 'vue'
+import { RouterLink } from 'vue-router'
+import IconAngle from './SidebarIcon/IconAngle.vue'
+import IconECSService from './SidebarIcon/IconECSService.vue'
+import IconSSM from './SidebarIcon/IconSSM.vue'
+import IconIAMUser from './SidebarIcon/IconIAMUser.vue'
+import IconHome from './SidebarIcon/IconHome.vue'
+import IOther from './SidebarIcon/IOther.vue'
 
 const isSidebarOpen = shallowRef<Boolean>(false)
 
 function toggleSidebar() {
-    isSidebarOpen.value = !isSidebarOpen.value;
+    isSidebarOpen.value = !isSidebarOpen.value
 }
 
 </script>
@@ -41,26 +43,82 @@ function toggleSidebar() {
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/about">
-                        <IconExclamation />
+                    <router-link to="/account">
+                        <IconIAMUser />
                         <Transition name="fade">
-                            <span v-show="isSidebarOpen">About</span>
+                            <span v-show="isSidebarOpen">Account</span>
                         </Transition>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/team">
-                        <IconEmployeeGroup />
+                    <router-link to="/parameter">
+                        <IconSSM />
                         <Transition name="fade">
-                            <span v-show="isSidebarOpen">Team</span>
+                            <span v-show="isSidebarOpen">Parameter</span>
                         </Transition>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/contact">
-                        <IconEmail />
+                    <router-link to="/ecs">
+                        <IconECSService />
                         <Transition name="fade">
-                            <span v-show="isSidebarOpen">Contact</span>
+                            <span v-show="isSidebarOpen">Ecs Service</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/base">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Base</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/form">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Form</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/dynamic">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Dynamic</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/built-ins">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Built-ins</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/reactivity">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Reactivity</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/route">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Route</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/pinia">
+                        <IOther />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">Pinia</span>
                         </Transition>
                     </router-link>
                 </li>

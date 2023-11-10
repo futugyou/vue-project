@@ -36,6 +36,7 @@ const changeCurrent = (com: any) => {
 .tab-container {
     display: flex;
     justify-content: center;
+    padding: 10px 0;
 }
 
 .tab-item {

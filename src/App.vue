@@ -13,7 +13,7 @@ const onRouteChange = () => {
 }
 
 watchEffect(() => {
-    if (!window.__MICRO_APP_ENVIRONMENT__) {
+    if (window.__MICRO_APP_ENVIRONMENT__) {
         rootContainer.value = "subAppRootContainer"
     } else {
         rootContainer.value = "nomalRootContainer"
@@ -29,7 +29,6 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
         <div id="public-links" @click="onRouteChange">
             <KeepAlive>
                 <TabContainer :components="components" v-if="rootContainer == 'nomalRootContainer'"> </TabContainer>
-                
             </KeepAlive>
             <SidebarMenu class="subappsidebar" v-if="rootContainer == 'subAppRootContainer'" />
         </div>
@@ -48,7 +47,7 @@ const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
 
 <style scoped>
 #public-links {
-    padding: 10px 0;
+    padding: 0;
     font-size: 18px;
 }
 
