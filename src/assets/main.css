@@ -19,16 +19,6 @@ body {
     flex-direction: column;
 }
 
-#public-links {
-    padding: 10px 0;
-    font-size: 18px;
-}
-
-.vu3-app {
-    height: 100%;
-    overflow-y: auto;
-}
-
 .vueapp-container {
     grid-gap: 5px;
     display: grid;
