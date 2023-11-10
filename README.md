@@ -1,7 +1,7 @@
 # Vue Project State
 
 [![CodeQL](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml)
-[![Dependabot](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml/badge.svg?branch=master)](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml)
+[![Dependabot](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml/badge.svg)](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml)
 
 ### Run End-to-End Tests with [Playwright](https://playwright.dev)
 

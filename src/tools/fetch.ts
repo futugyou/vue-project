@@ -11,9 +11,9 @@ export const fetchEx = async (
     let error: any = null
     let data: any = null
     const authorization = getToken()
-    
+
     if (needAuth && authorization == "") {
-        throw new Error('user not login or do not have right')
+        return { data, error: new Error('user not login or do not have right') }
     }
 
     let headers = {
