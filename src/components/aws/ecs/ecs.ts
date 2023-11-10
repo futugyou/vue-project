@@ -29,17 +29,17 @@ export const getEcsServices = async (page: number, limit: number, account_id: st
         ecsEndpoint += '&account_id=' + account_id
     }
 
-    return fetchEx(ecsEndpoint)
+    return fetchEx(ecsEndpoint, ...[, ,], true)
 }
 
 export const getEcsServiceDetail = async (id: string) => {
     const ecsEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/ecsservices/' + id
-    return fetchEx(ecsEndpoint)
+    return fetchEx(ecsEndpoint, ...[, ,], true)
 }
 
 export const compareEcsTaskDefinition = async (com: EcsTaskCompare) => {
     const ecsEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/ecsservices/compare'
-    return fetchEx(ecsEndpoint, 'post', com)
+    return fetchEx(ecsEndpoint, 'post', com, true)
 }

@@ -39,23 +39,23 @@ export const getParameters = async (page: number, limit: number, region: string,
         parameterGetEndpoint += '&alias=' + alias
     }
 
-    return fetchEx(parameterGetEndpoint)
+    return fetchEx(parameterGetEndpoint, ...[, ,], true)
 }
 
 export const syncParameter = async (sync: SyncParameter) => {
     const parameterSyncEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/sync'
-    return fetchEx(parameterSyncEndpoint, 'post', sync)
+    return fetchEx(parameterSyncEndpoint, 'post', sync, true)
 }
 
 export const getParameter = async (id: string) => {
     const parameterGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/' + id
-    return fetchEx(parameterGetEndpoint)
+    return fetchEx(parameterGetEndpoint, ...[, ,], true)
 }
 
 export const getParameterCompare = async (sourceid: string, destid: string) => {
     const parameterGetEndpoint =
         import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/compare?sourceid=' + sourceid + '&destid=' + destid
-    return fetchEx(parameterGetEndpoint)
+    return fetchEx(parameterGetEndpoint, ...[, ,], true)
 } 

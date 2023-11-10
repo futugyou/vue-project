@@ -4,11 +4,18 @@ import { defaultAccountId } from "./accountid"
 export const fetchEx = async (
     url: string,
     mothed?: 'get' | 'post' | 'put' | 'delete',
-    entity?: any
+    entity?: any,
+    needAuth?: boolean,
 ) => {
     mothed = mothed ?? 'get'
     let error: any = null
     let data: any = null
+    const authorization = getToken()
+    
+    if (needAuth && authorization == "") {
+        throw new Error('user not login or do not have right')
+    }
+
     let headers = {
         'Content-Type': 'application/json',
         'Account-Id': defaultAccountId(),
