@@ -19,6 +19,11 @@ export const Modal = defineComponent({
             closeModal()
         }
 
+        const closeClick = () => {
+            emit('close')
+            closeModal()
+        }
+
         let size = ''
         switch (props.size) {
             case 'xl':
@@ -50,6 +55,7 @@ export const Modal = defineComponent({
                                 type="button"
                                 class="btn-close"
                                 data-bs-dismiss="modal"
+                                onClick={closeClick}
                             ></button>
                         </div>
                         <div class="modal-body">{slots.default && slots.default()}</div>
@@ -61,6 +67,7 @@ export const Modal = defineComponent({
                                     type="button"
                                     class="btn btn-secondary"
                                     data-bs-dismiss="modal"
+                                    onClick={closeClick}
                                 >
                                     Close
                                 </button>
