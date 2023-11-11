@@ -33,11 +33,20 @@ const emit = defineEmits<{
 }>()
 
 const isLoading = ref(false)
-const orgAccount: Account = {
+let orgAccount: Account = {
     ...props.account
 }
 
 const account = ref<Account>({ ...props.account })
+
+watchEffect(() => {
+    let a = props.account
+    if (a.id == "") {
+        a.createdAt = new Date().getTime()
+    }
+    account.value = a
+    orgAccount = a
+})
 
 const regionList = getRegions().map((item) => {
     return {
@@ -75,12 +84,12 @@ const save = async () => {
     }
 
     isLoading.value = false
-    
+
     if (rerror) {
         msg.value = {
             errorMessages: [rerror.message],
             delay: 3000,
-        } 
+        }
         return
     }
 
@@ -157,12 +166,12 @@ defineExpose({
 
 <style scoped>
 .detail-container {
-    max-width: 600px;
+    /* max-width: 600px; */
     height: auto;
 }
 
 .detail-item-lable {
-    flex: 1;
+    flex: 0.5;
     padding: 5px;
     margin: 5px;
     background-color: #e2f7f0;
@@ -175,7 +184,20 @@ defineExpose({
     height: 40px;
 }
 
-.detail-item-content input,
+.detail-item-content input {
+    width: 100%;
+    height: 100%;
+    line-height: 100%;
+    border: 1px solid turquoise;
+    cursor: pointer;
+}
+
+.detail-item-content input:hover {
+    height: 110%;
+    line-height: 110%;
+    border: 1px solid rgb(91, 242, 227);
+}
+
 .detail-item-content ul {
     width: 100%;
 }

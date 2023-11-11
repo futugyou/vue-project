@@ -28,7 +28,7 @@ const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getAccount(accountId)
     isLoading.value = false
-    
+
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -104,12 +104,11 @@ const accountDelete = async () => {
 </template>
 
 <style scoped> .detail-container {
-     max-width: 600px;
      height: auto;
  }
 
  .detail-item-lable {
-     flex: 1;
+     flex: 0.5;
      padding: 5px;
      margin: 5px;
      background-color: #e2f7f0;
