@@ -7,7 +7,7 @@ import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
 import Edit from './Edit.vue'
 
-import { Account, getAccountsWithPaging, deleteAccount } from './account'
+import { Account, getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
 import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
@@ -23,6 +23,7 @@ const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const editref = ref(null)
+const selecedAccount = ref<Account>(defaultAccountraw)
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -90,6 +91,7 @@ const changePagesize = (n: number) => {
 
 const close = () => {
     closeModal()
+    selecedAccount.value = defaultAccountraw
 }
 
 const accountDelete = async (id: string) => {
@@ -109,16 +111,32 @@ const accountDelete = async (id: string) => {
     }
 }
 
+const setAccount = (alias: string) => {
+    const account = accounts.value.find(p => p.alias == alias)
+    if (account) {
+        selecedAccount.value = account
+    } else {
+        selecedAccount.value = defaultAccountraw
+    }
+}
+
 const setDefaultAccount = (acc: Account) => {
     localStorage.setItem('defaultAccount', JSON.stringify(acc))
     defaultAccount.value = acc
 }
+
+watchEffect(() => {
+    if (selecedAccount.value != defaultAccountraw && document.getElementById("account-modal")) {
+        document.getElementById("account-modal")!.click()
+    }
+})
+
 </script>
 
 <template>
     <div class="account-full-content">
-        <Modal id="accountModal" title="Create Account" :hideFooter="true">
-            <Edit ref="editref" @save="close" @close="close"></Edit>
+        <Modal id="accountModal" title="Create Account" @close="close" :hideFooter="true" size="lg">
+            <Edit ref="editref" @save="close" @close="close" :account="selecedAccount"></Edit>
         </Modal>
         <div class="head-content">
             <div class="">
@@ -128,20 +146,15 @@ const setDefaultAccount = (acc: Account) => {
                 <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
             </div>
             <div>
-                <ModalButton targetId="#accountModal" title="Create Account"></ModalButton>
+                <ModalButton id="account-modal" targetId="#accountModal" title="Create Account"></ModalButton>
             </div>
         </div>
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <!-- <template v-slot:header_id="header">
-                <span style="color: red">{{ header.label }}</span>
-            </template> -->
             <template v-slot:body_alias="body">
-                <router-link :to="'/account/' + body.id" page-path="" class="detail-link">
-                    <span>
-                        {{ body.alias }}
-                    </span>
-                </router-link>
+                <span @click="setAccount(body.alias)" class="detail-link">
+                    {{ body.alias }}
+                </span>
             </template>
             <template v-slot:body_operation="body">
                 <button type="button" class="btn btn-secondary gap-right-10" @click="setDefaultAccount(body)"> Default
@@ -172,6 +185,14 @@ const setDefaultAccount = (acc: Account) => {
     width: 100%;
     height: 100%;
     display: block;
+    text-decoration: none;
+    color: hsla(160, 100%, 37%, 1);
+    transition: 0.4s;
+    cursor: pointer;
+}
+
+.detail-link:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
 }
 
 .gap-right-10 {
