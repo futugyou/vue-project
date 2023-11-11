@@ -44,7 +44,7 @@ watch(msg, checkDisplayState)
 </template>
 <style scoped>
 .alert-container {
-    top: 100px;
+    top: 50px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0%);

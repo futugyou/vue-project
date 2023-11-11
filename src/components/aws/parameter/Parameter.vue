@@ -279,5 +279,10 @@ div.search-contatiner>* {
 
 .search-item-com {
     width: 200px;
+    text-align: left;
+}
+
+#searchKey {
+    border: 1px solid turquoise;
 }
 </style>

@@ -127,12 +127,15 @@ function toggleSidebar() {
     </div>
 </template>
 
-<style scoped lang="scss"> $sidebar-width: 4rem;
+<style scoped lang="scss"> $primary-color: #ffa;
+ $minor-color: #f5a;
+ $sidebar-width: 4rem;
+ $sidebar-width: 4rem;
  $toggle-duration: 300ms;
  $sidebar-padding-inline-start: 1rem;
 
  aside {
-     color: #ffa !important;
+     color: $primary-color !important;
      background: #120;
      display: flex;
      flex-direction: column;
@@ -166,14 +169,14 @@ function toggleSidebar() {
      padding-inline-start: $sidebar-padding-inline-start;
 
      &:hover {
-         color: #f5a;
+         color: $minor-color;
          background-color: lighten($color: #120, $amount: 5);
      }
 
      & a {
          // border-right: 0.25rem solid white;
          display: flex;
-         color: #ffa;
+         color: $primary-color;
          align-items: center;
          column-gap: 0.75rem;
          position: relative;
@@ -190,7 +193,7 @@ function toggleSidebar() {
          right: 0;
          width: 0.25rem;
          height: 100%;
-         background-color: #f5a;
+         background-color: $minor-color;
      }
  }
 
