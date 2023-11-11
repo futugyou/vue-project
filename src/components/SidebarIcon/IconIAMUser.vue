@@ -1,7 +1,7 @@
 <template>
   <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 75 75">
     <title>
-      User
+      IAM User
     </title>
     <g id="Working" transform="scale(1.5)">
       <path class="cls-1" fill="currentColor"

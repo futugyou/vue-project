@@ -1,6 +1,7 @@
 <template>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2rem" height="2rem"
         viewBox="0 0 36 36">
+        <title>Home</title>
         <path fill="currentColor"
             d="M33 19a1 1 0 0 1-.71-.29L18 4.41L3.71 18.71A1 1 0 0 1 2.3 17.3l15-15a1 1 0 0 1 1.41 0l15 15A1 1 0 0 1 33 19Z"
             class="clr-i-solid clr-i-solid-path-1"></path>
@@ -10,4 +11,6 @@
     </svg>
 </template>
   
-<style scoped lang="scss">// .clr-i-solid {}</style>
+<style scoped lang="scss">
+// .clr-i-solid {}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <svg width="2rem" height="2rem" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Icon-Resource/Managment-Governance/Res_AWS-System-Manager_Parameter-Store</title>
+    <title>Parameter Store</title>
     <g id="Icon-Resource/Managment-Governance/Res_AWS-System-Manager_Parameter" stroke="none" stroke-width="1" fill="none"
       fill-rule="evenodd">
       <path

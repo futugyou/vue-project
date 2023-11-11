@@ -1,6 +1,6 @@
 <template>
   <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 75 75">
-    <title>Amazon-Elastic-Container-Service</title>
+    <title>Elastic Container Service</title>
     <g id="Art" transform="scale(1.5)">
       <path
         d="M43.15,48.5h-27a1,1,0,0,1-1-1v-36a1,1,0,0,1,1-1h27a1,1,0,0,1,1,1v36A1,1,0,0,1,43.15,48.5Zm-26-2h25v-34h-25Z"
