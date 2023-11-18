@@ -67,3 +67,20 @@ export const getS3BucketItems = async (page: number, limit: number, bucketName: 
 
     return fetchEx(parameterGetEndpoint, ...[, ,], true)
 }
+
+export const getS3Download = async (page: number, limit: number, bucketName: string, accountId: string, fileName: string) => {
+    let parameterGetEndpoint =
+        import.meta.env.REACT_APP_AWS_SERVER + 'v1/s3/download?page=' + page + '&limit=' + limit
+    if (bucketName) {
+        parameterGetEndpoint += '&bucketName=' + bucketName
+    }
+    if (accountId) {
+        parameterGetEndpoint += '&accountId=' + accountId
+    }
+    if (fileName) {
+        parameterGetEndpoint += '&fileName=' + fileName
+    }
+
+    //TODO: maybe need other method
+    return fetchEx(parameterGetEndpoint, ...[, ,], true)
+}
