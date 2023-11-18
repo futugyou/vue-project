@@ -3,7 +3,7 @@
 [![CodeQL](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml)
 [![Dependabot](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml/badge.svg)](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml)
 
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
+## Run End-to-End Tests with [Playwright](https://playwright.dev)
 
 ```sh
 # Install browsers for the first run
@@ -22,15 +22,17 @@ npm run test:e2e -- tests/example.spec.ts
 npm run test:e2e -- --debug
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Lint with [ESLint](https://eslint.org/)
 
 ```sh
 npm run lint
 ```
 
-### update all package
+## update all package
+
 ```
 npx npm-check-updates -u
 npm install 
 ```
+
 [lodashjs](https://www.lodashjs.com/)
