@@ -2,6 +2,7 @@
 
 [![CodeQL](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml)
 [![Dependabot](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml/badge.svg)](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml)
+[![Markdownlint](https://github.com/futugyou/vue-project/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/futugyou/vue-project/actions/workflows/markdownlint.yml)
 
 ## Run End-to-End Tests with [Playwright](https://playwright.dev)
 
@@ -30,7 +31,7 @@ npm run lint
 
 ## update all package
 
-```
+```sh
 npx npm-check-updates -u
 npm install 
 ```
