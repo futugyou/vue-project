@@ -1,22 +1,34 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { Modal, openModal } from '@/components/Modal.vue'
-import Detail from './Detail.vue'
 
-import { S3Bucket, defaultS3Bucket, getS3Buckets } from './s3bucket'
+import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
 
+const props = withDefaults(
+    defineProps<{
+        s3Bucket?: S3Bucket
+    }>(),
+    {
+        s3Bucket: () => {
+            return { ...defaultS3Bucket }
+        }
+    }
+)
+
+const bucket = computed(() => {
+    return props.s3Bucket
+})
+
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const buckets = ref<S3Bucket[]>([])
-const selecedBucket = ref<S3Bucket>(defaultS3Bucket)
+const bucketItems = ref<S3BucketItem[]>([])
+const selecedBucketItem = ref<S3BucketItem>(defaultS3BucketItem)
 
-const searchKey = ref<string>('')
 const isLoading = ref(true)
 
 const limit = ref(30)
@@ -24,21 +36,21 @@ const page = ref(1)
 
 const fields: TableField[] = [
     {
-        key: 'name',
-        label: 'BucketName',
+        key: 'key',
+        label: 'Key',
         header: true
     },
     {
-        key: 'accountName',
-        label: 'AccountName'
+        key: 'bucketName',
+        label: 'BucketName',
     },
     {
-        key: 'region',
-        label: 'Region'
+        key: 'isDirectory',
+        label: 'IsDirectory'
     },
     {
-        key: 'isPublic',
-        label: 'IsPublic'
+        key: 'size',
+        label: 'Size'
     },
     {
         key: 'creationDate',
@@ -49,7 +61,8 @@ const fields: TableField[] = [
 
 const fetchData = async () => {
     isLoading.value = true
-    const { data, error } = await getS3Buckets(page.value, limit.value, searchKey.value)
+    const { data, error } = await getS3BucketItems(page.value,
+        limit.value, bucket.value.name, bucket.value.accountId, "")
     isLoading.value = false
     if (error) {
         msg.value = {
@@ -59,7 +72,7 @@ const fetchData = async () => {
         return
     }
 
-    buckets.value = data ?? []
+    bucketItems.value = data ?? []
 }
 
 watchEffect(async () => fetchData())
@@ -72,49 +85,17 @@ const changePagesize = (n: number) => {
     limit.value = n
 }
 
-const handleKeyworkChange = (e: any) => {
-    const k: string = e.target.value;
-    searchKey.value = k
-}
-
-const showS2Resource = (r: S3Bucket) => {
-    selecedBucket.value = r
-    openModal('s3resourceModal')
-}
- 
-
 </script>
 
 <template>
     <div class="full-content">
-        <Modal id="s3resourceModal" title="s3 resource" :hideFooter="true" size="xl">
-            <Detail :s3Bucket="selecedBucket"> </Detail>
-        </Modal>
-
         <div class="head-content">
             <div class="">
                 <h1>S3 Bucket</h1>
             </div>
-            <div class="search-contatiner">
-                <div class="search-item-contatiner">
-                    <div class="search-item-lable">
-                        <label class="form-check-label" for="searchKey">
-                            BucketName:
-                        </label>
-                    </div>
-                    <div class="search-item-com">
-                        <input id="searchKey" :value="searchKey" @change="handleKeyworkChange" />
-                    </div>
-                </div>
-            </div>
         </div>
-        <TableAndPaging :items="buckets" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
+        <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <template v-slot:body_name="body">
-                <span className="detail-link" @click="showS2Resource(body)">
-                    {{ body.name }}
-                </span>
-            </template>
         </TableAndPaging>
     </div>
 </template>
@@ -175,6 +156,7 @@ div.search-contatiner>* {
     flex-direction: row;
     align-items: center;
 }
+
 
 .search-item-lable {
     margin-right: 10px;
