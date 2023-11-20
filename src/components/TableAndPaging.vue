@@ -183,6 +183,7 @@ const sort = (key: string) => {
     flex: 1;
     overflow: auto;
     margin-bottom: 10px;
+    min-height: 100px;
 }
 
 .paging-container {

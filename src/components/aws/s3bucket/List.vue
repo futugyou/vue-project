@@ -88,7 +88,7 @@ const showS2Resource = (r: S3Bucket) => {
 <template>
     <div class="full-content">
         <Modal id="s3resourceModal" title="s3 resource" :hideFooter="true" size="xl">
-            <Detail :s3Bucket="selecedBucket"> </Detail>
+            <Detail :s3Bucket="selecedBucket" perfix=""> </Detail>
         </Modal>
 
         <div class="head-content">

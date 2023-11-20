@@ -3,7 +3,7 @@ import { ref, watchEffect, computed } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 
-import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems } from './s3bucket'
+import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -11,10 +11,14 @@ import { storeToRefs } from 'pinia'
 const props = withDefaults(
     defineProps<{
         s3Bucket?: S3Bucket
+        perfix: string
     }>(),
     {
         s3Bucket: () => {
             return { ...defaultS3Bucket }
+        },
+        perfix: () => {
+            return ""
         }
     }
 )
@@ -23,11 +27,13 @@ const bucket = computed(() => {
     return props.s3Bucket
 })
 
+const itemPerfix = ref<string[]>(["S3 buckets"])
+const perfix = ref<string>(props.perfix)
+
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
 const bucketItems = ref<S3BucketItem[]>([])
-const selecedBucketItem = ref<S3BucketItem>(defaultS3BucketItem)
 
 const isLoading = ref(true)
 
@@ -62,7 +68,7 @@ const fields: TableField[] = [
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getS3BucketItems(page.value,
-        limit.value, bucket.value.name, bucket.value.accountId, "")
+        limit.value, bucket.value.name, bucket.value.accountId, perfix.value)
     isLoading.value = false
     if (error) {
         msg.value = {
@@ -85,17 +91,33 @@ const changePagesize = (n: number) => {
     limit.value = n
 }
 
+const showS2Resource = async (r: S3BucketItem) => {
+
+    if (r.isDirectory) {
+        itemPerfix.value.push(r.key)
+        perfix.value = r.key
+    } else {
+        const { data, error } = await getS3ItemUrl(bucket.value.name, bucket.value.accountId, r.key)
+        window.open(data.url, '_blank')
+    }
+}
+
 </script>
 
 <template>
     <div class="full-content">
         <div class="head-content">
             <div class="">
-                <h1>S3 Bucket</h1>
+                <h4>{{ itemPerfix.join(" > ") }}</h4>
             </div>
         </div>
         <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
+            <template v-slot:body_key="body">
+                <span className="detail-link" @click="showS2Resource(body)">
+                    {{ body.key }}
+                </span>
+            </template>
         </TableAndPaging>
     </div>
 </template>
@@ -117,7 +139,7 @@ const changePagesize = (n: number) => {
     grid-gap: 50px;
 }
 
-.head-content h1 {
+.head-content h4 {
     margin: 0;
 }
 
