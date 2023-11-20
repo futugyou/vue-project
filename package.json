@@ -23,7 +23,7 @@
     "moment": "^2.29.4",
     "pinia": "^2.1.7",
     "the-new-css-reset": "^1.11.2",
-    "v-code-diff": "^1.7.2",
+    "v-code-diff": "^1.8.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5",
     "xstate": "^4.38.3"
