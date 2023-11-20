@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router'
 const Account = () => import('@/components/aws/account/Account.vue')
 const Parameter = () => import('@/components/aws/parameter/Parameter.vue')
 const EcsService = () => import('@/components/aws/ecs/EcsService.vue')
+const S3List = () => import('@/components/aws/s3bucket/List.vue')
 
 const AccountDetail = () => import('@/components/aws/account/Detail.vue')
 const ParameterDetail = () => import('@/components/aws/parameter/Detail.vue')
@@ -43,6 +44,12 @@ export const AwsRoutes = [
         path: '/ecs/:id',
         name: 'EcsServiceDetail',
         component: EcsServiceDetail,        
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/s3',
+        name: 'S3Bucket',
+        component: S3List,        
         meta: { requiresAuth: true }
     }
 ] as RouteRecordRaw[]

@@ -6,6 +6,7 @@ import IconAngle from './SidebarIcon/IconAngle.vue'
 import IconECSService from './SidebarIcon/IconECSService.vue'
 import IconSSM from './SidebarIcon/IconSSM.vue'
 import IconIAMUser from './SidebarIcon/IconIAMUser.vue'
+import IconS3Bucket from './SidebarIcon/IconS3Bucket.vue'
 import IconHome from './SidebarIcon/IconHome.vue'
 import IOther from './SidebarIcon/IOther.vue'
 
@@ -63,6 +64,14 @@ function toggleSidebar() {
                         <IconECSService />
                         <Transition name="fade">
                             <span v-show="isSidebarOpen">Ecs Service</span>
+                        </Transition>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/s3">
+                        <IconS3Bucket />
+                        <Transition name="fade">
+                            <span v-show="isSidebarOpen">S3Bucket</span>
                         </Transition>
                     </router-link>
                 </li>
