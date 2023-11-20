@@ -2,9 +2,9 @@
 import { ref, watchEffect } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
+import { Modal, openModal } from '@/components/Modal.vue'
 
 import { S3Bucket, getS3Buckets } from './s3bucket'
-import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -75,10 +75,17 @@ const handleKeyworkChange = (e: any) => {
     searchKey.value = k
 }
 
+const showS2Resource = (r: S3Bucket) => {
+    openModal('s3resourceModal')
+}
 </script>
 
 <template>
     <div class="full-content">
+        <Modal id="s3resourceModal" title="s3 resource" :hideFooter="true" size="xl">
+            <div>ok</div>
+        </Modal>
+
         <div class="head-content">
             <div class="">
                 <h1>S3 Bucket</h1>
@@ -98,6 +105,11 @@ const handleKeyworkChange = (e: any) => {
         </div>
         <TableAndPaging :items="buckets" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
+            <template v-slot:body_name="body">
+                <span className="detail-link" @click="showS2Resource(body)">
+                    {{ body.name }}
+                </span>
+            </template>
         </TableAndPaging>
     </div>
 </template>
@@ -127,6 +139,16 @@ const handleKeyworkChange = (e: any) => {
     width: 100%;
     height: 100%;
     display: block;
+    color: var(--color-text-link-default, #0972d3);
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+}
+
+.detail-link:hover {
+    text-decoration-line: underline;
+    text-decoration-color: initial;
+    cursor: pointer;
+    color: var(--color-text-link-hover, #033160);
 }
 
 .gap-right-10 {
