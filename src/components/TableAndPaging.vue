@@ -12,7 +12,9 @@ export interface TableField {
 const props = defineProps({
     fields: { type: Array as PropType<TableField[]>, default: () => [] },
     items: { type: Array, default: () => [] },
-    isLoading: Boolean
+    isLoading: Boolean,
+    pagesize: { type: Number, default: () => 30 },
+    canChangePageSize: { type: Boolean, default: () => true },
 })
 
 const format = (item: any, key: string) => {
@@ -30,7 +32,7 @@ const emit = defineEmits<{
     (e: 'changePagesize', n: number): void
 }>()
 
-const pagesize = ref(30)
+const pagesize = ref(props.pagesize)
 const page = ref(1)
 const placeholder = ref('no data found')
 
@@ -155,7 +157,7 @@ const sort = (key: string) => {
                     </ul>
                 </nav>
             </div>
-            <div class="dropdown" style="margin-left: 20px">
+            <div class="dropdown" style="margin-left: 20px" v-if="canChangePageSize">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     {{ pagesize }}
@@ -176,14 +178,14 @@ const sort = (key: string) => {
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .table-container {
     flex: 1;
     overflow: auto;
     margin-bottom: 10px;
-    min-height: 100px;
+    min-height: 40vh;
 }
 
 .paging-container {
@@ -193,6 +195,10 @@ const sort = (key: string) => {
 }
 
 .table-primary {
+    text-align: left;
+}
+
+.table {
     text-align: left;
 }
 
