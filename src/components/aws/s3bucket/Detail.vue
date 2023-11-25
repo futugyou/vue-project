@@ -2,33 +2,24 @@
 import { ref, watchEffect, computed } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
+import Spinners from '@/components/Spinners.vue'
 
 import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
 
-const props = withDefaults(
-    defineProps<{
-        s3Bucket?: S3Bucket
-        perfix: string
-    }>(),
-    {
-        s3Bucket: () => {
-            return { ...defaultS3Bucket }
-        },
-        perfix: () => {
-            return ""
-        }
-    }
-)
+const props = defineProps<{
+    s3Bucket: S3Bucket
+}>()
+
 
 const bucket = computed(() => {
     return props.s3Bucket
 })
 
 const itemPerfix = ref<string[]>(["S3 buckets"])
-const perfix = ref<string>(props.perfix)
+const perfix = ref<string>()
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -36,6 +27,7 @@ const { msg } = storeToRefs(store)
 const bucketItems = ref<S3BucketItem[]>([])
 
 const isLoading = ref(true)
+const isSubLoading = ref(false)
 
 const limit = ref(30)
 const page = ref(1)
@@ -64,12 +56,13 @@ const fields: TableField[] = [
     }
 ]
 
-
 const fetchData = async () => {
     isLoading.value = true
     const { data, error } = await getS3BucketItems(page.value,
-        limit.value, bucket.value.name, bucket.value.accountId, perfix.value)
+        limit.value, bucket.value.name, bucket.value.accountId, perfix.value ?? "")
+
     isLoading.value = false
+
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -92,12 +85,21 @@ const changePagesize = (n: number) => {
 }
 
 const showS2Resource = async (r: S3BucketItem) => {
-
     if (r.isDirectory) {
         itemPerfix.value.push(r.key)
         perfix.value = r.key
     } else {
+        isSubLoading.value = true
         const { data, error } = await getS3ItemUrl(bucket.value.name, bucket.value.accountId, r.key)
+        isSubLoading.value = false
+        if (error) {
+            msg.value = {
+                errorMessages: [error.message],
+                delay: 3000,
+            }
+            return
+        }
+
         window.open(data.url, '_blank')
     }
 }
@@ -105,14 +107,16 @@ const showS2Resource = async (r: S3BucketItem) => {
 </script>
 
 <template>
+    <Spinners v-if="isSubLoading"></Spinners>
     <div class="full-content">
         <div class="head-content">
             <div class="">
                 <h4>{{ itemPerfix.join(" > ") }}</h4>
             </div>
         </div>
-        <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
-            @updatePage="updatePage">
+
+        <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" :canChangePageSize=(false)
+            :pagesize=(100) @changePagesize="changePagesize">
             <template v-slot:body_key="body">
                 <span className="detail-link" @click="showS2Resource(body)">
                     {{ body.key }}
