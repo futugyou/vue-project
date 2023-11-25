@@ -14,7 +14,7 @@ const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
 const buckets = ref<S3Bucket[]>([])
-const selecedBucket = ref<S3Bucket>(defaultS3Bucket)
+const selecedBucket = ref<S3Bucket>()
 
 const searchKey = ref<string>('')
 const isLoading = ref(true)
@@ -81,14 +81,13 @@ const showS2Resource = (r: S3Bucket) => {
     selecedBucket.value = r
     openModal('s3resourceModal')
 }
- 
 
 </script>
 
 <template>
     <div class="full-content">
         <Modal id="s3resourceModal" title="s3 resource" :hideFooter="true" size="xl">
-            <Detail :s3Bucket="selecedBucket" perfix=""> </Detail>
+            <Detail :s3Bucket="selecedBucket" perfix="" v-if="selecedBucket"> </Detail>
         </Modal>
 
         <div class="head-content">
