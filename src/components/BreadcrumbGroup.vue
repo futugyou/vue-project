@@ -23,9 +23,10 @@ const props = defineProps<{
 <style scoped >
 .crumbContainer {
     display: flex;
-    grid-gap: 20px;
+    grid-gap: 25px;
     padding: 5px;
     padding-left: 0px;
+    line-height: 30px;
 }
 
 .link {
@@ -35,10 +36,16 @@ const props = defineProps<{
     text-decoration-line: underline;
     text-decoration-color: initial;
     cursor: pointer;
+    position: relative;
 }
 
 .link::after {
     content: " >";
+    position: absolute;
+    right: -20px;
+    font-size: 20px;
+    cursor: default;
+    pointer-events: none;
 }
 
 .link:last-child {
