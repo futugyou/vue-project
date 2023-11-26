@@ -1,21 +1,32 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router'
 
 export interface BreadcrumbItem {
-    text: string
     key: string
+    text: string
 }
+
+const router = useRouter()
 
 const props = defineProps<{
     items: BreadcrumbItem[],
-    action?: () => void,
+    action?: (key: string) => void,
 }>()
+
+const handlerClick = (key: string) => {
+    if (props.action) {
+        props.action(key)
+    } else {
+        router.push(key)
+    }
+}
 
 </script>
 
 <template>
     <div class="crumbContainer">
         <div class="link" v-for="field in props.items">
-            {{ field.text }}
+            <span @click="handlerClick(field.key)">{{ field.text }}</span>
         </div>
     </div>
 </template>
@@ -23,7 +34,7 @@ const props = defineProps<{
 <style scoped >
 .crumbContainer {
     display: flex;
-    grid-gap: 25px;
+    grid-gap: 35px;
     padding: 5px;
     padding-left: 0px;
     line-height: 30px;
@@ -42,10 +53,11 @@ const props = defineProps<{
 .link::after {
     content: " >";
     position: absolute;
-    right: -20px;
+    right: -25px;
     font-size: 20px;
     cursor: default;
     pointer-events: none;
+    color: var(--color-text-breadcrumb-spilt, #5f6b7a);
 }
 
 .link:last-child {
