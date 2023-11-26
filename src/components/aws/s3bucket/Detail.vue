@@ -142,7 +142,12 @@ const handleBreadcrumbClick = (key: string) => {
         <div class="head-content">
             <BreadcrumbGroup :items="crumbItems" :action="handleBreadcrumbClick"></BreadcrumbGroup>
         </div>
-
+        <div class="head-content2">
+            <div class="bucketItemCount">Objects({{ bucketItems.length }}) </div>
+            <div class="bucketItemReload">
+                <button @click="async () => fetchData()">Reload</button>
+            </div>
+        </div>
         <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" :canChangePageSize=(false)
             :pagesize=(100) @changePagesize="changePagesize">
             <template v-slot:body_key="body">
@@ -155,6 +160,23 @@ const handleBreadcrumbClick = (key: string) => {
 </template>
 
 <style scoped>
+.head-content2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 40px;
+}
+
+.bucketItemCount {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.bucketItemReload {
+    font-size: 16px;
+    font-weight: 600;
+}
+
 .full-content {
     height: 100%;
     display: flex;
@@ -166,9 +188,8 @@ const handleBreadcrumbClick = (key: string) => {
 .head-content {
     display: flex;
     align-items: center;
-    padding: 0px 10px;
     justify-content: flex-start;
-    grid-gap: 50px;
+    line-height: 40px;
 }
 
 .head-content h4 {
