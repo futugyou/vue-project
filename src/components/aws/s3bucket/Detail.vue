@@ -2,6 +2,7 @@
 import { ref, watchEffect, computed } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
+import BreadcrumbGroup, { BreadcrumbItem } from '@/components/BreadcrumbGroup.vue'
 import Spinners from '@/components/Spinners.vue'
 
 import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
@@ -18,7 +19,7 @@ const bucket = computed(() => {
     return props.s3Bucket
 })
 
-const itemPerfix = ref<string[]>(["S3 buckets"])
+const itemPerfix = ref<BreadcrumbItem[]>([{ key: "", text: "S3 buckets" }])
 const perfix = ref<string>()
 
 const store = useMessageStore()
@@ -76,17 +77,30 @@ const fetchData = async () => {
 
 watchEffect(async () => fetchData())
 
-const updatePage = (n: number) => {
-    page.value = n
-}
+const crumbItems = computed(() => {
+    return itemPerfix.value
+})
 
 const changePagesize = (n: number) => {
     limit.value = n
 }
 
+const getBreadcrumbText = (key: string) => {
+    const s = key.match(/[^/ ]+/g)
+    if (s == null || s.length < 1) {
+        return ""
+    }
+
+    return s[s.length - 1]
+}
+
 const showS2Resource = async (r: S3BucketItem) => {
     if (r.isDirectory) {
-        itemPerfix.value.push(r.key)
+        const bitem: BreadcrumbItem = {
+            key: r.key,
+            text: getBreadcrumbText(r.key)
+        }
+        itemPerfix.value.push(bitem)
         perfix.value = r.key
     } else {
         isSubLoading.value = true
@@ -104,15 +118,29 @@ const showS2Resource = async (r: S3BucketItem) => {
     }
 }
 
+const handleBreadcrumbClick = (key: string) => {
+    let tmp: BreadcrumbItem[] = []
+    for (let index = 0; index < itemPerfix.value.length; index++) {
+        const element = itemPerfix.value[index]
+        tmp.push(element)
+        if (element.key == key) {
+            break
+        }
+    }
+    if (tmp.length == 0) {
+        tmp.push({ key: "", text: "S3 buckets" })
+    }
+    itemPerfix.value = tmp
+    perfix.value = key
+}
+
 </script>
 
 <template>
     <Spinners v-if="isSubLoading"></Spinners>
     <div class="full-content">
         <div class="head-content">
-            <div class="">
-                <h4>{{ itemPerfix.join(" > ") }}</h4>
-            </div>
+            <BreadcrumbGroup :items="crumbItems" :action="handleBreadcrumbClick"></BreadcrumbGroup>
         </div>
 
         <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" :canChangePageSize=(false)
