@@ -147,7 +147,7 @@ const handleBreadcrumbClick = (key: string) => {
 </script>
 
 <template>
-    <Spinners v-if="isSubLoading"></Spinners>
+    <!-- <Spinners v-if="isSubLoading"></Spinners> -->
     <div class="full-content">
         <div class="head-content">
             <BreadcrumbGroup :items="crumbItems" :action="handleBreadcrumbClick"></BreadcrumbGroup>
@@ -170,7 +170,7 @@ const handleBreadcrumbClick = (key: string) => {
             </template>
             <template v-slot:body_operation="body">
                 <div v-if="!body.isDirectory">
-                    <Button Text="view" @click="openFile(body)">
+                    <Button Text="view" @click="openFile(body)" :IsLoading="isSubLoading">
                         <OpenIcon></OpenIcon>
                     </Button>
                 </div>

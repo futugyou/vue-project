@@ -116,11 +116,12 @@ a,
 }
 
 .icon-base {
-    height: 16px;
+    height: 20px;
     line-height: 20px;
     margin-left: 10px;
     position: relative;
-    width: 16px !important;
+    width: 20px !important;
+    margin: 0px 10px;
 }
 
 .icon-base>svg {

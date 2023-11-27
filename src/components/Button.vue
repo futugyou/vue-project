@@ -1,25 +1,35 @@
 <script lang="ts" setup>
 import { ref, shallowRef, watchEffect } from 'vue'
+import Spinners from '@/components/Spinners.vue'
+
 const emit = defineEmits<{
     (e: 'click'): void
 }>()
+
 const props = defineProps<{
     Text: string
     Position?: "Left" | "Right"
+    IsLoading?: boolean
 }>()
 
 const HandleClick = () => {
-    emit('click')
+    if (!props.IsLoading) {
+        emit('click')
+    }
 }
 
 </script>
 
-<template>
+<template v-if="!IsLoading">
     <button class="button-base variant-normal" @click="HandleClick">
-        <slot v-if="Position == 'Left'"></slot>
-        <span class="button-label">{{ Text }}</span>
-        <slot v-if="Position != 'Left'"></slot>
+        <template v-if="!IsLoading">
+            <slot v-if="Position == 'Left'"></slot>
+            <span class="button-label">{{ Text }}</span>
+            <slot v-if="Position != 'Left'"></slot>
+        </template>
+        <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
     </button>
+    <template v-if="!IsLoading"></template>
 </template>
 
 <style scoped >
