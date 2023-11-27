@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ref, shallowRef, watchEffect } from 'vue'
 import Spinners from '@/components/Spinners.vue'
 
 const emit = defineEmits<{
@@ -7,7 +6,7 @@ const emit = defineEmits<{
 }>()
 
 const props = defineProps<{
-    Text: string
+    Text?: string
     Position?: "Left" | "Right"
     IsLoading?: boolean
 }>()
@@ -24,7 +23,7 @@ const HandleClick = () => {
     <button class="button-base variant-normal" @click="HandleClick">
         <template v-if="!IsLoading">
             <slot v-if="Position == 'Left'"></slot>
-            <span class="button-label">{{ Text }}</span>
+            <span class="button-label" v-if="Text">{{ Text }}</span>
             <slot v-if="Position != 'Left'"></slot>
         </template>
         <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
@@ -88,7 +87,7 @@ const HandleClick = () => {
     -webkit-hyphens: none;
 }
 
-.button-ex:hover {
+.button-base:hover {
     background: var(--color-background-button-normal-hover);
     color: var(--color-text-button-normal-hover);
     border-color: var(--color-border-button-normal-hover);
