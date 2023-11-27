@@ -169,8 +169,8 @@ const handleBreadcrumbClick = (key: string) => {
                 </span>
             </template>
             <template v-slot:body_operation="body">
-                <div v-if="!body.isDirectory" @click="openFile(body)">
-                    <Button Text="view">
+                <div v-if="!body.isDirectory">
+                    <Button Text="view" @click="openFile(body)">
                         <OpenIcon></OpenIcon>
                     </Button>
                 </div>

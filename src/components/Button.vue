@@ -1,16 +1,21 @@
 <script lang="ts" setup>
 import { ref, shallowRef, watchEffect } from 'vue'
-
+const emit = defineEmits<{
+    (e: 'click'): void
+}>()
 const props = defineProps<{
     Text: string
     Position?: "Left" | "Right"
 }>()
 
+const HandleClick = () => {
+    emit('click')
+}
 
 </script>
 
 <template>
-    <button class="button-base variant-normal">
+    <button class="button-base variant-normal" @click="HandleClick">
         <slot v-if="Position == 'Left'"></slot>
         <span class="button-label">{{ Text }}</span>
         <slot v-if="Position != 'Left'"></slot>
