@@ -1,0 +1,94 @@
+<script lang="ts" setup>
+import { ref, shallowRef, watchEffect } from 'vue'
+
+const props = defineProps<{
+    Text: string
+    Position?: "Left" | "Right"
+}>()
+
+
+</script>
+
+<template>
+    <button class="button-base variant-normal">
+        <slot v-if="Position == 'Left'"></slot>
+        <span class="button-label">{{ Text }}</span>
+        <slot v-if="Position != 'Left'"></slot>
+    </button>
+</template>
+
+<style scoped >
+.button-base {
+    border-start-start-radius: var(--border-radius-button);
+    border-start-end-radius: var(--border-radius-button);
+    border-end-start-radius: var(--border-radius-button);
+    border-end-end-radius: var(--border-radius-button);
+    border-block: var(--border-field-width) solid;
+    border-inline: var(--border-field-width) solid;
+    border-collapse: initial;
+    border-spacing: 0;
+    box-sizing: border-box;
+
+    color: var(--color-text-body-default);
+    caption-side: top;
+    cursor: pointer;
+    direction: ltr;
+    display: flex;
+    empty-cells: show;
+
+    font-family: var(--font-family-base);
+    font-feature-settings: normal;
+    font-style: normal;
+    font-stretch: normal;
+    font-size: var(--font-size-body-m);
+    font-variant: normal;
+    font-weight: var(--font-button-weight);
+
+    hyphens: none;
+    line-height: normal;
+    line-height: var(--line-height-body-m);
+    list-style: disc none outside;
+    letter-spacing: var(--font-button-letter-spacing);
+    min-width: 0;
+
+    tab-size: 8;
+    text-align: left;
+    text-align-last: auto;
+    text-decoration: none;
+    text-indent: 0;
+    text-shadow: none;
+    text-transform: none;
+
+    visibility: visible;
+    white-space: normal;
+    widows: 2;
+    word-spacing: normal;
+    word-break: break-word;
+
+    padding-block: var(--space-scaled-xxs);
+    padding-inline: var(--space-button-horizontal);
+
+    -webkit-font-smoothing: var(--font-smoothing-webkit);
+    -moz-osx-font-smoothing: var(--font-smoothing-moz-osx);
+    -webkit-hyphens: none;
+}
+
+.button-ex:hover {
+    background: var(--color-background-button-normal-hover);
+    color: var(--color-text-button-normal-hover);
+    border-color: var(--color-border-button-normal-hover);
+    text-decoration: none;
+}
+
+.variant-normal {
+    background: var(--color-background-button-normal-default);
+    color: var(--color-text-button-normal-default);
+    border-color: var(--color-border-button-normal-default);
+    position: relative;
+    text-decoration: none;
+}
+
+.button-label {
+    margin: 0px 10px;
+}
+</style>

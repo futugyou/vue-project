@@ -4,6 +4,8 @@ import { ref, watchEffect, computed } from 'vue'
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import BreadcrumbGroup, { BreadcrumbItem } from '@/components/BreadcrumbGroup.vue'
 import Spinners from '@/components/Spinners.vue'
+import Button from '@/components/Button.vue'
+import OpenIcon from '@/components/icons/Open.vue'
 
 import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
 
@@ -167,7 +169,11 @@ const handleBreadcrumbClick = (key: string) => {
                 </span>
             </template>
             <template v-slot:body_operation="body">
-                <div v-if="!body.isDirectory" @click="openFile(body)">open</div>
+                <div v-if="!body.isDirectory" @click="openFile(body)">
+                    <Button Text="view">
+                        <OpenIcon></OpenIcon>
+                    </Button>
+                </div>
             </template>
         </TableAndPaging>
     </div>
