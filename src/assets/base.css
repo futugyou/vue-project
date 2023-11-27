@@ -19,10 +19,29 @@
     --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
     --vt-c-text-dark-1: var(--vt-c-white);
     --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+
+    --font-size-body-m: 14px;
+    --line-height-body-m: 20px;
+    --font-family-base: "Open Sans", "Helvetica Neue", "Roboto", "Arial", "sans-serif";
+    --font-button-weight: 700;
+    --font-smoothing-webkit: antialiased;
+    --font-smoothing-moz-osx: grayscale;
+    --font-button-letter-spacing: .005em;
+    --border-radius-button: 20px;
+    --border-field-width: 2px;
+    --space-scaled-xxs: 4px;
+    --space-button-horizontal: 20px;
+    --color-text-body-default: #000716;
+    --color-background-button-normal-hover: #f2f8fd;
+    --color-text-button-normal-hover: #033160;
+    --color-border-button-normal-hover: #033160;
     --color-text-link-default: #0972d3;
     --color-text-link-hover: #033160;
-    --color-text-breadcrumb-current-bnqeha: #5f6b7a;
+    --color-text-breadcrumb-current: #5f6b7a;
     --color-text-breadcrumb-spilt: #5f6b7a;
+    --color-background-button-normal-default: #fff;
+    --color-text-button-normal-default: #0972d3;
+    --color-border-button-normal-default: #0972d3;
 }
 
 /* semantic color variables for this project */

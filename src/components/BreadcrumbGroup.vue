@@ -64,7 +64,7 @@ const handlerClick = (key: string) => {
     text-decoration-line: none;
     cursor: default;
     font-weight: 700;
-    color: var(--color-text-breadcrumb-current-bnqeha, #5f6b7a);
+    color: var(--color-text-breadcrumb-current, #5f6b7a);
 }
 
 .link:last-child::after {
