@@ -3,11 +3,11 @@ import { ref, watchEffect, computed } from 'vue'
 
 import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
 import BreadcrumbGroup, { BreadcrumbItem } from '@/components/BreadcrumbGroup.vue'
-import Spinners from '@/components/Spinners.vue'
 import Button from '@/components/Button.vue'
 import OpenIcon from '@/components/icons/Open.vue'
+import ReloadIcon from '@/components/icons/Reload.vue'
 
-import { S3Bucket, defaultS3Bucket, S3BucketItem, defaultS3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
+import { S3Bucket, S3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -155,7 +155,9 @@ const handleBreadcrumbClick = (key: string) => {
         <div class="head-content2">
             <div class="bucketItemCount">Objects ({{ bucketItems.length }}) </div>
             <div class="bucketItemReload">
-                <button @click="async () => fetchData()">Reload</button>
+                <Button   @click="fetchData()" :IsLoading="isLoading">
+                    <ReloadIcon></ReloadIcon>
+                </Button>
             </div>
         </div>
         <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" :canChangePageSize=(false)
