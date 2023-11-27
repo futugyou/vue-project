@@ -54,6 +54,10 @@ const fields: TableField[] = [
     {
         key: 'creationDate',
         label: 'CreationDate',
+    },
+    {
+        key: 'operation',
+        label: 'Operation'
     }
 ]
 
@@ -94,7 +98,7 @@ const getBreadcrumbText = (key: string) => {
     return s[s.length - 1]
 }
 
-const showS2Resource = async (r: S3BucketItem) => {
+const showSubResource = async (r: S3BucketItem) => {
     if (r.isDirectory) {
         const bitem: BreadcrumbItem = {
             key: r.key,
@@ -102,7 +106,11 @@ const showS2Resource = async (r: S3BucketItem) => {
         }
         itemPerfix.value.push(bitem)
         perfix.value = r.key
-    } else {
+    }
+}
+
+const openFile = async (r: S3BucketItem) => {
+    if (!r.isDirectory) {
         isSubLoading.value = true
         const { data, error } = await getS3ItemUrl(bucket.value.name, bucket.value.accountId, r.key)
         isSubLoading.value = false
@@ -143,7 +151,7 @@ const handleBreadcrumbClick = (key: string) => {
             <BreadcrumbGroup :items="crumbItems" :action="handleBreadcrumbClick"></BreadcrumbGroup>
         </div>
         <div class="head-content2">
-            <div class="bucketItemCount">Objects({{ bucketItems.length }}) </div>
+            <div class="bucketItemCount">Objects ({{ bucketItems.length }}) </div>
             <div class="bucketItemReload">
                 <button @click="async () => fetchData()">Reload</button>
             </div>
@@ -151,9 +159,15 @@ const handleBreadcrumbClick = (key: string) => {
         <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" :canChangePageSize=(false)
             :pagesize=(100) @changePagesize="changePagesize">
             <template v-slot:body_key="body">
-                <span className="detail-link" @click="showS2Resource(body)">
+                <span className="detail-label" v-if="!body.isDirectory">
                     {{ body.key }}
                 </span>
+                <span className="detail-link" @click="showSubResource(body)" v-if="body.isDirectory">
+                    {{ body.key }}
+                </span>
+            </template>
+            <template v-slot:body_operation="body">
+                <div v-if="!body.isDirectory" @click="openFile(body)">open</div>
             </template>
         </TableAndPaging>
     </div>
@@ -194,6 +208,13 @@ const handleBreadcrumbClick = (key: string) => {
 
 .head-content h4 {
     margin: 0;
+}
+
+.detail-label {
+    width: 100%;
+    height: 100%;
+    display: block;
+    color: var(--vt-c-black);
 }
 
 .detail-link {
