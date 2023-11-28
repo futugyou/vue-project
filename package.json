@@ -2,6 +2,7 @@
   "name": "aws-resource-project",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
@@ -21,6 +22,7 @@
     "immer": "^10.0.3",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
+    "pdfjs-dist": "^4.0.269",
     "pinia": "^2.1.7",
     "the-new-css-reset": "^1.11.2",
     "v-code-diff": "^1.8.0",
