@@ -1,11 +1,13 @@
 import { getToken, logout } from "./token"
 import { defaultAccountId } from "./accountid"
+import { forEach } from "lodash-es"
 
 export const fetchEx = async (
     url: string,
     mothed?: 'get' | 'post' | 'put' | 'delete',
     entity?: any,
     needAuth?: boolean,
+    headers?: Record<string, string>,
 ) => {
     mothed = mothed ?? 'get'
     let error: any = null
@@ -16,24 +18,29 @@ export const fetchEx = async (
         return { data, error: new Error('user not login or do not have right') }
     }
 
-    let headers = {
+    let h: Record<string, string> = {
         'Content-Type': 'application/json',
         'Account-Id': defaultAccountId(),
         'Authorization': getToken()
     }
 
+    if (headers) {
+        forEach(headers, (value, key) => {
+            h[key] = value
+        })
+    }
     try {
         let res: Response
         if (entity) {
             res = await fetch(url, {
                 method: mothed,
-                headers: headers,
+                headers: h,
                 body: JSON.stringify(entity)
             })
         } else {
             res = await fetch(url, {
                 method: mothed,
-                headers: headers
+                headers: h
             })
         }
 
