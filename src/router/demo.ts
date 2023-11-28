@@ -9,6 +9,7 @@ const Reactivity = () => import('@/components/vuedemo/Reactivity.vue')
 const RouteDemo = () => import('@/components/vuedemo/RouteDemo.vue')
 const PiniaDemo = () => import('@/components/vuedemo/PiniaDemo.vue')
 // const DPFViewerDemo = () => import('@/components/vuedemo/DPFViewerDemo.vue')
+const TranslateDemo = () => import('@/components/vuedemo/translate/Translate.vue')
 
 const removeQueryParams = (to: any) => {
     if (Object.keys(to.query).length) return { path: to.path, query: {}, hash: to.hash }
@@ -20,6 +21,11 @@ export const DemoRoutes = [
         name: 'Home',
         component: Home,
         meta: { transition: 'slide-fade' }
+    },
+    {
+        path: '/translate',
+        name: 'Translate',
+        component: TranslateDemo, 
     },
     // {
     //     path: '/pdf',
