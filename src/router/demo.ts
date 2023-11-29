@@ -8,7 +8,7 @@ const BuiltIns = () => import('@/components/vuedemo/BuiltIns.vue')
 const Reactivity = () => import('@/components/vuedemo/Reactivity.vue')
 const RouteDemo = () => import('@/components/vuedemo/RouteDemo.vue')
 const PiniaDemo = () => import('@/components/vuedemo/PiniaDemo.vue')
-// const DPFViewerDemo = () => import('@/components/vuedemo/DPFViewerDemo.vue')
+const DPFViewerDemo = () => import('@/components/vuedemo/DPFViewerDemo.vue')
 const TranslateDemo = () => import('@/components/vuedemo/translate/Translate.vue')
 
 const removeQueryParams = (to: any) => {
@@ -27,11 +27,11 @@ export const DemoRoutes = [
         name: 'Translate',
         component: TranslateDemo, 
     },
-    // {
-    //     path: '/pdf',
-    //     name: 'PDF',
-    //     component: DPFViewerDemo, 
-    // },
+    {
+        path: '/pdf',
+        name: 'PDF',
+        component: DPFViewerDemo, 
+    },
     {
         path: '/base',
         name: 'Base',

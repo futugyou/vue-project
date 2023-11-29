@@ -1,7 +1,8 @@
 
 <script lang="ts" setup>
 import { ref, PropType, computed } from 'vue'
-import pdfjsLib from 'pdfjs-dist'
+import * as pdfjsLib from 'pdfjs-dist'
+pdfjsLib.GlobalWorkerOptions.workerSrc = '../../../node_modules/pdfjs-dist/build/pdf.worker.mjs'
 
 const extractedText = ref("")
 const loading = ref(false)
