@@ -116,14 +116,45 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
 </script>
 
 <template>
-    <div>
-        <form>
-            <input type="file" ref="pdfFile" @change="onFileChange">
-        </form>
-        <Spinners v-if="loading"></Spinners>
-        <pre v-if="!loading" v-html="extractedText"></pre>
-        <!-- <div id="area"> </div> -->
+    <div class="full-content">
+        <div>
+            <form>
+                <input type="file" ref="pdfFile" @change="onFileChange">
+            </form>
+        </div>
+        <div class="pdf-page-container">
+            <Spinners v-if="loading"></Spinners>
+            <div class="pdf-page">
+                <pre v-if="!loading" v-html="extractedText"></pre>
+            </div>
+            <div class="pdf-page">
+                <pre v-if="!loading" v-html="extractedText"></pre>
+            </div>
+        </div>
     </div>
 </template>
   
-<style></style>
+<style>
+.full-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.pdf-page-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    grid-gap: 10px;
+}
+
+.pdf-page {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--color-border-text-normal-default);
+    border-radius: 10px;
+}
+</style>
