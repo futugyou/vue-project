@@ -35,6 +35,28 @@ const onFileChange = (event: any) => {
     reader.readAsDataURL(file)
 }
 
+const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTMLCanvasElement> => {
+    // Create an offscreen canvas
+    const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
+    const offscreenContext = canvas.getContext('2d')
+
+    // Draw the ImageBitmap onto the offscreen canvas
+    offscreenContext?.drawImage(imageBitmap, 0, 0)
+
+    // Create a visible canvas
+    const visibleCanvas = document.createElement('canvas')
+    visibleCanvas.width = imageBitmap.width;
+    visibleCanvas.height = imageBitmap.height;
+
+    // Get the rendering context for the visible canvas
+    const visibleContext = visibleCanvas.getContext('2d')!
+
+    visibleContext.drawImage(canvas, 0, 0)
+
+    return visibleCanvas
+}
+
+
 const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
     const pdf = await pdfTask.promise
@@ -50,34 +72,25 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     const args = operatorList.argsArray
     console.log(args)
     args.forEach((arg, i) => {
-        if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return; }
+        if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return }
 
         console.log('loading', i, arg)
 
         const imgKey = arg[0]
 
         page.objs.get(imgKey, async (img: any) => {
-            console.log('image', img)
-            // const viewport = page.getViewport({ scale: 1.0, rotation: 0 })
-            let canvas = document.createElement(imgKey);
-            canvas.id = imgKey;
+            const canvas = await imageBitmapToCanvas(img.bitmap)
+            const rootElement = document.getElementById('area') as HTMLElement
+            rootElement.appendChild(canvas)
 
-            canvas.width = img.width;
-            canvas.height = img.height;
-
-            const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-            ctx.drawImage(img.bitmap, 0, 0)
-            // await page.render({
-            //     canvasContext: ctx,
-            //     viewport
-            // }).promise;
-            const rootElement = document.getElementById('area') as HTMLElement;
-            rootElement.appendChild(canvas);
-            const doc = new jsPDF();
-
-            doc.text("Hello world!", 10, 10);
-            doc.addImage({ imageData: canvas, x: 0, y: 0, width: img.width, height: img.height })
-            doc.save("a4.pdf");
+            const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"], format: "a4", orientation: "portrait" })
+            const pageWidth = doc.internal.pageSize.getWidth()
+            console.log(pageWidth, img.width)
+            const a = pageWidth * 0.88
+            const b = pageWidth * 0.88 / img.width * img.height
+            doc.text("Hello world!", 10, 10)
+            doc.addImage({ imageData: canvas, x: pageWidth * 0.06, y: 20, width: a, height:b})
+            doc.save("a4.pdf")
         })
     })
 
