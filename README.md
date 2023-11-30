@@ -37,3 +37,8 @@ npm install
 ```
 
 [lodashjs](https://www.lodashjs.com/)
+
+[jspdf](https://github.com/parallax/jsPDF)
+[jspdfDoc](https://rawgit.com/MrRio/jsPDF/master/docs/index.html)
+
+[pdf.js](https://github.com/mozilla/pdf.js)

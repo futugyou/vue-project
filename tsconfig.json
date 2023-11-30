@@ -15,7 +15,8 @@
     "jsxImportSource": "vue",
     "noImplicitThis": true,
     "types": [
-      "node"
+      "node",
+      "offscreencanvas"
     ],
     "baseUrl": ".",
     "paths": {
