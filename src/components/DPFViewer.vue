@@ -2,12 +2,17 @@
 <script lang="ts" setup>
 import { ref, PropType, computed } from 'vue'
 import * as pdfjsLib from 'pdfjs-dist'
+
 import { jsPDF } from 'jspdf'
+import { imageBitmapToCanvas } from '@/tools/util'
+
+import Spinners from '@/components/Spinners.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
-const extractedText = ref("")
 const loading = ref(false)
+const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
+const currentPage = ref(34)
 
 const onFileChange = (event: any) => {
     const file = event.target.files[0]
@@ -24,10 +29,7 @@ const onFileChange = (event: any) => {
         const dataUrl = reader.result
         if (dataUrl) {
             loading.value = true
-
-            const text = await extractTextFromPdf(dataUrl)
-            extractedText.value = text
-
+            await extractTextFromPdf(dataUrl)
             loading.value = false
         }
     }
@@ -35,71 +37,80 @@ const onFileChange = (event: any) => {
     reader.readAsDataURL(file)
 }
 
-const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTMLCanvasElement> => {
-    // Create an offscreen canvas
-    const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
-    const offscreenContext = canvas.getContext('2d')
+const extractedText = computed(async () => {
+    if (!pdfRaw.value) {
+        return ""
+    }
+    const pdf = await pdfRaw.value.promise
+    return await readTextContent(pdf, currentPage.value)
+})
 
-    // Draw the ImageBitmap onto the offscreen canvas
-    offscreenContext?.drawImage(imageBitmap, 0, 0)
+const readTextContent = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
+    const maxPages = pdf.numPages
+    if (pageNumber > maxPages) {
+        pageNumber = maxPages
+    }
+    if (pageNumber < 1) {
+        pageNumber = 1
+    }
 
-    // Create a visible canvas
-    const visibleCanvas = document.createElement('canvas')
-    visibleCanvas.width = imageBitmap.width;
-    visibleCanvas.height = imageBitmap.height;
+    const page = await pdf.getPage(pageNumber)
+    const content = await page.getTextContent()
 
-    // Get the rendering context for the visible canvas
-    const visibleContext = visibleCanvas.getContext('2d')!
+    let pageTextContent = ""
+    for (let ii = 0; ii < content.items.length; ii++) {
+        const element = content.items[ii]
+        if ('str' in element) {
+            pageTextContent += element.str
+            // if (element.hasEOL) {
+            //     pageTextContent += "\n"
+            // }
+        } else {
+            console.log(element)
+        }
+    }
 
-    visibleContext.drawImage(canvas, 0, 0)
+    const m = pageTextContent.match(/[^.]+/g)
+    if (m) {
+        return m.join('\n')
+    }
 
-    return visibleCanvas
+    return pageTextContent
 }
-
 
 const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
-    const pdf = await pdfTask.promise
-    const maxPages = pdf.numPages
-    let textContent = []
+    pdfRaw.value = pdfTask
 
-    // for (let i = 1 i <= maxPages i++) {
-    const page = await pdf.getPage(34)
-    const ann = page._pageInfo
-    console.log(ann)
-    const operatorList = await page.getOperatorList()
-    const fns = operatorList.fnArray
-    const args = operatorList.argsArray
-    console.log(args)
-    args.forEach((arg, i) => {
-        if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return }
+    // const pdfTask = pdfjsLib.getDocument(url)
+    // const pdf = await pdfTask.promise
+    // let textContent = []
+    // const maxPages = pdf.numPages
+    // for (let i = 1; i <= maxPages; i++) {
+    //     const page = await pdf.getPage(i)
+    //     const operatorList = await page.getOperatorList()
+    //     const fns = operatorList.fnArray
+    //     const args = operatorList.argsArray
+    //     args.forEach((arg, i) => {
+    //         if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return }
+    //         const imgKey = arg[0]
 
-        console.log('loading', i, arg)
+    //         page.objs.get(imgKey, async (img: any) => {
+    //             const canvas = await imageBitmapToCanvas(img.bitmap)
+    //             const rootElement = document.getElementById('area') as HTMLElement
+    //             rootElement.replaceChildren(canvas)
 
-        const imgKey = arg[0]
-
-        page.objs.get(imgKey, async (img: any) => {
-            const canvas = await imageBitmapToCanvas(img.bitmap)
-            const rootElement = document.getElementById('area') as HTMLElement
-            rootElement.appendChild(canvas)
-
-            const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"], format: "a4", orientation: "portrait" })
-            const pageWidth = doc.internal.pageSize.getWidth()
-            console.log(pageWidth, img.width)
-            const a = pageWidth * 0.88
-            const b = pageWidth * 0.88 / img.width * img.height
-            doc.text("Hello world!", 10, 10)
-            doc.addImage({ imageData: canvas, x: pageWidth * 0.06, y: 20, width: a, height:b})
-            doc.save("a4.pdf")
-        })
-    })
-
-    const content = await page.getTextContent()
-    const pageTextContent = content.items.map((item: any) => item.str ?? "").join('').match(/[^.]+/g)!.join('\n')
-    textContent.push(pageTextContent)
+    //             const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"], format: "a4", orientation: "portrait" })
+    //             const pageWidth = doc.internal.pageSize.getWidth()
+    //             console.log(pageWidth, img.width)
+    //             const a = pageWidth * 0.88
+    //             const b = pageWidth * 0.88 / img.width * img.height
+    //             doc.text("Hello world!", 10, 10)
+    //             doc.addImage({ imageData: canvas, x: pageWidth * 0.06, y: 20, width: a, height: b })
+    //             doc.save("a4.pdf")
+    //         })
+    //     })
     // }
-
-    return textContent.join('\n')
 }
 </script>
 
@@ -108,9 +119,9 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
         <form>
             <input type="file" ref="pdfFile" @change="onFileChange">
         </form>
+        <Spinners v-if="loading"></Spinners>
         <pre v-if="!loading" v-html="extractedText"></pre>
-        <div v-if="loading">Processing PDF...</div>
-        <div id="area"> </div>
+        <!-- <div id="area"> </div> -->
     </div>
 </template>
   
