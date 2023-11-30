@@ -1,6 +1,7 @@
 
 <script lang="ts" setup>
 import { ref, PropType, computed } from 'vue'
+import { computedAsync } from '@vueuse/core'
 import * as pdfjsLib from 'pdfjs-dist'
 
 import { jsPDF } from 'jspdf'
@@ -37,7 +38,7 @@ const onFileChange = (event: any) => {
     reader.readAsDataURL(file)
 }
 
-const extractedText = computed(async () => {
+const extractedText = computedAsync(async () => {
     if (!pdfRaw.value) {
         return ""
     }
