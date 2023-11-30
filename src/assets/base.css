@@ -20,6 +20,7 @@
     --vt-c-text-dark-1: var(--vt-c-white);
     --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
+    --textarea-font-size: 18px;
     --font-size-body: 15px;
     --font-size-body-m: 14px;
     --line-height-body-m: 20px;

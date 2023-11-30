@@ -42,9 +42,40 @@ const extractedText = computedAsync(async () => {
     if (!pdfRaw.value) {
         return ""
     }
+
     const pdf = await pdfRaw.value.promise
+    await readPDFRawPage(pdf, currentPage.value)
     return await readTextContent(pdf, currentPage.value)
 })
+
+const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
+    const maxPages = pdf.numPages
+    if (pageNumber > maxPages) {
+        pageNumber = maxPages
+    }
+    if (pageNumber < 1) {
+        pageNumber = 1
+    }
+
+    const page = await pdf.getPage(pageNumber)
+    const viewport = page.getViewport({ scale: 1.0, rotation: 0 })
+    const visibleCanvas = document.createElement('canvas')
+    const view = page.view
+    visibleCanvas.id = page.pageNumber + ""
+    visibleCanvas.width = Math.floor(viewport.width)
+    visibleCanvas.height = Math.floor(viewport.height)
+    // visibleCanvas.style.width = "100%"
+    visibleCanvas.style.height = "100%"
+    const ctx = visibleCanvas.getContext("2d") as CanvasRenderingContext2D
+
+    await page.render({
+        canvasContext: ctx,
+        viewport
+    }).promise
+
+    const rootElement = document.getElementById('area') as HTMLElement
+    rootElement.replaceChildren(visibleCanvas)
+}
 
 const readTextContent = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
     const maxPages = pdf.numPages
@@ -125,10 +156,10 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
         <div class="pdf-page-container">
             <Spinners v-if="loading"></Spinners>
             <div class="pdf-page">
-                <pre v-if="!loading" v-html="extractedText"></pre>
+                <div id="area" style="width: 100%;height: 100%;"></div>
             </div>
             <div class="pdf-page">
-                <pre v-if="!loading" v-html="extractedText"></pre>
+                <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
             </div>
         </div>
     </div>
@@ -156,5 +187,11 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     padding: 10px;
     border: 1px solid var(--color-border-text-normal-default);
     border-radius: 10px;
+}
+
+.text-input {
+    border: none;
+    border-radius: 0;
+    padding: 0;
 }
 </style>

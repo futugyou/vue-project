@@ -52,14 +52,14 @@ const translate = async () => {
 <template>
     <div class="full-content">
         <div class="text-container">
-            <textarea v-model="left" placeholder="input your text" class="text-input"></textarea>
+            <textarea v-model="left" placeholder="input your text"></textarea>
         </div>
         <div class="trans-but-container">
             <Button Text="Translate" @click="translate" :IsLoading="isLoading">
             </Button>
         </div>
         <div class="text-container">
-            <textarea v-model="right" placeholder="" class="text-input"></textarea>
+            <textarea v-model="right" placeholder=""></textarea>
         </div>
     </div>
 </template>
@@ -73,6 +73,7 @@ const translate = async () => {
     padding: 0;
     margin: 0;
     overflow: hidden;
+    flex-direction: row;
 }
 
 .text-container {
@@ -87,14 +88,4 @@ const translate = async () => {
     width: 130px;
     justify-content: space-around;
 }
-
-.text-input {
-    width: 100%;
-    height: 100%;
-    font-size: 18px;
-    border: 1px solid var(--color-border-text-normal-default);
-    border-radius: 20px;
-    line-height: 24px;
-    text-align: left;
-    padding: 10px;
-}</style>
+</style>
