@@ -77,7 +77,7 @@ const translate = async () => {
 }
 
 .text-container {
-    flex-grow: 1;
+    flex: 1;
     padding: 10px;
     margin: 10px;
 }

@@ -14,10 +14,17 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN 
 const loading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(34)
+let pagePrefix = ""
+const pageContent = ref<Record<string, string>>({})
 
 const onFileChange = (event: any) => {
+    if (event.target.files == null && event.target.files.length == 0) {
+        pageContent.value = {}
+        return
+    }
     const file = event.target.files[0]
-    const extension = file.name.split('.').pop()
+    const extension = file.name.split('.')[1]
+    pagePrefix = file.name.split('.')[0]
 
     if (extension !== 'pdf') {
         alert('Please select a PDF file')
@@ -39,13 +46,17 @@ const onFileChange = (event: any) => {
 }
 
 const extractedText = computedAsync(async () => {
-    if (!pdfRaw.value) {
+    if (!pdfRaw.value || loading.value) {
         return ""
     }
 
     const pdf = await pdfRaw.value.promise
     await readPDFRawPage(pdf, currentPage.value)
-    return await readTextContent(pdf, currentPage.value)
+    const text = pageContent.value[pagePrefix + currentPage.value]
+    if (text) {
+        return text
+    }
+    return ""
 })
 
 const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
@@ -65,7 +76,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     visibleCanvas.width = Math.floor(viewport.width)
     visibleCanvas.height = Math.floor(viewport.height)
     // visibleCanvas.style.width = "100%"
-    visibleCanvas.style.height = "100%"
+    // visibleCanvas.style.height = "100%"
     const ctx = visibleCanvas.getContext("2d") as CanvasRenderingContext2D
 
     await page.render({
@@ -77,43 +88,40 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     rootElement.replaceChildren(visibleCanvas)
 }
 
-const readTextContent = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
+const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
     const maxPages = pdf.numPages
-    if (pageNumber > maxPages) {
-        pageNumber = maxPages
-    }
-    if (pageNumber < 1) {
-        pageNumber = 1
-    }
+    pageContent.value = {}
+    for (let i = 1; i <= maxPages; i++) {
+        const page = await pdf.getPage(i)
+        const content = await page.getTextContent()
 
-    const page = await pdf.getPage(pageNumber)
-    const content = await page.getTextContent()
-
-    let pageTextContent = ""
-    for (let ii = 0; ii < content.items.length; ii++) {
-        const element = content.items[ii]
-        if ('str' in element) {
-            pageTextContent += element.str
-            // if (element.hasEOL) {
-            //     pageTextContent += "\n"
-            // }
-        } else {
-            console.log(element)
+        let pageTextContent = ""
+        // console.log(content.items[0])
+        for (let ii = 0; ii < content.items.length; ii++) {
+            const element = content.items[ii]
+            if ('str' in element) {
+                pageTextContent += element.str
+                // if (element.hasEOL) {
+                //     pageTextContent += "\n"
+                // }
+            } else {
+                console.log(element)
+            }
         }
-    }
 
-    const m = pageTextContent.match(/[^.]+/g)
-    if (m) {
-        return m.join('\n')
+        const m = pageTextContent.match(/[^.]+/g)
+        if (m) {
+            pageTextContent = m.join(".\n")
+        }
+        pageContent.value[pagePrefix + i] = pageTextContent
     }
-
-    return pageTextContent
 }
 
 const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
     pdfRaw.value = pdfTask
-
+    const pdf = await pdfTask.promise
+    await readAllTextContent(pdf)
     // const pdfTask = pdfjsLib.getDocument(url)
     // const pdf = await pdfTask.promise
     // let textContent = []
@@ -165,7 +173,7 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     </div>
 </template>
   
-<style>
+<style scoped>
 .full-content {
     height: 100%;
     width: 100%;
