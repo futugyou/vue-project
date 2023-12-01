@@ -1,6 +1,6 @@
 
 <script lang="ts" setup>
-import { ref, PropType, computed } from 'vue'
+import { ref, PropType, computed, watchEffect, watch } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import * as pdfjsLib from 'pdfjs-dist'
 
@@ -8,12 +8,14 @@ import { jsPDF } from 'jspdf'
 import { imageBitmapToCanvas } from '@/tools/util'
 
 import Spinners from '@/components/Spinners.vue'
+import Button from '@/components/Button.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
 const loading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
-const currentPage = ref(34)
+const currentPage = ref(0)
+const totlePages = ref(1)
 let pagePrefix = ""
 const pageContent = ref<Record<string, string>>({})
 
@@ -45,19 +47,35 @@ const onFileChange = (event: any) => {
     reader.readAsDataURL(file)
 }
 
-const extractedText = computedAsync(async () => {
-    if (!pdfRaw.value || loading.value) {
-        return ""
+const extractedText = ref("")
+
+watchEffect(async () => {
+    if (loading.value) {
+        return
     }
 
-    const pdf = await pdfRaw.value.promise
-    await readPDFRawPage(pdf, currentPage.value)
     const text = pageContent.value[pagePrefix + currentPage.value]
     if (text) {
-        return text
+        extractedText.value = text
+    } else {
+        extractedText
     }
-    return ""
 })
+
+watch(
+    currentPage,
+    async () => {
+        if (!pdfRaw.value) {
+            return
+        }
+
+        const pdf = await pdfRaw.value.promise
+        await readPDFRawPage(pdf, currentPage.value)
+
+    },
+    { immediate: true }
+)
+
 
 const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
     const maxPages = pdf.numPages
@@ -117,10 +135,24 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
     }
 }
 
+const changePage = (i: number) => {
+    const maxPages = totlePages.value
+    let pageNumber = currentPage.value + i
+    if (pageNumber > maxPages) {
+        pageNumber = maxPages
+    }
+    if (pageNumber < 1) {
+        pageNumber = 1
+    }
+    currentPage.value = pageNumber
+}
+
 const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
     pdfRaw.value = pdfTask
     const pdf = await pdfTask.promise
+    totlePages.value = pdf.numPages
+    currentPage.value = 1
     await readAllTextContent(pdf)
     // const pdfTask = pdfjsLib.getDocument(url)
     // const pdf = await pdfTask.promise
@@ -156,10 +188,32 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
 
 <template>
     <div class="full-content">
-        <div>
-            <form>
-                <input type="file" ref="pdfFile" @change="onFileChange">
-            </form>
+        <div class="header">
+            <div class="header-option-group">
+                <form>
+                    <input type="file" ref="pdfFile" @change="onFileChange">
+                </form>
+            </div>
+            <div class="header-option-group">
+                <div>
+                    <Button Text="Zoom" :IsLoading="loading">
+                    </Button>
+                </div>
+                <div>
+                    <Button Text="Shrink" :IsLoading="loading">
+                    </Button>
+                </div>
+            </div>
+            <div class="header-option-group">
+                <div>
+                    <Button Text="Prev" :IsLoading="loading" @click="changePage(-1)">
+                    </Button>
+                </div>
+                <div>
+                    <Button Text="Next" :IsLoading="loading" @click="changePage(1)">
+                    </Button>
+                </div>
+            </div>
         </div>
         <div class="pdf-page-container">
             <Spinners v-if="loading"></Spinners>
@@ -180,6 +234,21 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    grid-gap: 10px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    grid-gap: 10px;
+}
+
+.header-option-group {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    grid-gap: 10px;
 }
 
 .pdf-page-container {
