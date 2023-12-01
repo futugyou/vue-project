@@ -13,6 +13,7 @@ import Button from '@/components/Button.vue'
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
 const loading = ref(false)
+const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totlePages = ref(1)
@@ -20,10 +21,11 @@ let pagePrefix = ""
 const pageContent = ref<Record<string, string>>({})
 
 const onFileChange = (event: any) => {
-    if (event.target.files == null && event.target.files.length == 0) {
+    if (event.target.files == null || event.target.files.length == 0 || !event.target.files[0]) {
         pageContent.value = {}
         return
     }
+
     const file = event.target.files[0]
     const extension = file.name.split('.')[1]
     pagePrefix = file.name.split('.')[0]
@@ -54,12 +56,15 @@ watchEffect(async () => {
         return
     }
 
+    subloading.value = true
     const text = pageContent.value[pagePrefix + currentPage.value]
     if (text) {
         extractedText.value = text
     } else {
-        extractedText
+        extractedText.value = ""
     }
+
+    subloading.value = false
 })
 
 watch(
@@ -89,12 +94,11 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     const page = await pdf.getPage(pageNumber)
     const viewport = page.getViewport({ scale: 1.0, rotation: 0 })
     const visibleCanvas = document.createElement('canvas')
-    const view = page.view
     visibleCanvas.id = page.pageNumber + ""
     visibleCanvas.width = Math.floor(viewport.width)
     visibleCanvas.height = Math.floor(viewport.height)
     // visibleCanvas.style.width = "100%"
-    // visibleCanvas.style.height = "100%"
+    visibleCanvas.style.height = "100%"
     const ctx = visibleCanvas.getContext("2d") as CanvasRenderingContext2D
 
     await page.render({
@@ -119,18 +123,18 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
             const element = content.items[ii]
             if ('str' in element) {
                 pageTextContent += element.str
-                // if (element.hasEOL) {
-                //     pageTextContent += "\n"
-                // }
+                if (element.hasEOL) {
+                    pageTextContent += "\n"
+                }
             } else {
                 console.log(element)
             }
         }
 
-        const m = pageTextContent.match(/[^.]+/g)
-        if (m) {
-            pageTextContent = m.join(".\n")
-        }
+        // const m = pageTextContent.match(/[^.]+/g)
+        // if (m) {
+        //     pageTextContent = m.join(".\n")
+        // }
         pageContent.value[pagePrefix + i] = pageTextContent
     }
 }
@@ -190,35 +194,38 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     <div class="full-content">
         <div class="header">
             <div class="header-option-group">
-                <form>
-                    <input type="file" ref="pdfFile" @change="onFileChange">
-                </form>
-            </div>
-            <div class="header-option-group">
-                <div>
-                    <Button Text="Zoom" :IsLoading="loading">
-                    </Button>
+                <div style="flex:1">
+                    <form>
+                        <input type="file" @change="onFileChange" />
+                    </form>
                 </div>
-                <div>
-                    <Button Text="Shrink" :IsLoading="loading">
-                    </Button>
+                <div style="display: flex;align-items: center;">
+                    <Spinners v-if="loading" width="20px" height="20px"></Spinners>
                 </div>
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Prev" :IsLoading="loading" @click="changePage(-1)">
+                    <Button Text="Zoom">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Next" :IsLoading="loading" @click="changePage(1)">
+                    <Button Text="Shrink">
+                    </Button>
+                </div>
+            </div>
+            <div class="header-option-group">
+                <div>
+                    <Button Text="Prev" :IsLoading="subloading" @click="changePage(-1)">
+                    </Button>
+                </div>
+                <div>
+                    <Button Text="Next" :IsLoading="subloading" @click="changePage(1)">
                     </Button>
                 </div>
             </div>
         </div>
         <div class="pdf-page-container">
-            <Spinners v-if="loading"></Spinners>
-            <div class="pdf-page">
-                <div id="area" style="width: 100%;height: 100%;"></div>
+            <div class="pdf-page" id="area">
             </div>
             <div class="pdf-page">
                 <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
@@ -242,6 +249,9 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     flex-direction: row;
     width: 100%;
     grid-gap: 10px;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
 }
 
 .header-option-group {
@@ -249,6 +259,15 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
     flex-direction: row;
     flex: 1;
     grid-gap: 10px;
+}
+
+.header-option-group div form {
+    width: 100%;
+}
+
+.header-option-group div form input {
+    width: 100%;
+    margin-left: 10px;
 }
 
 .pdf-page-container {
