@@ -14,6 +14,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN 
 
 const loading = ref(false)
 const subloading = ref(false)
+const zoomloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totlePages = ref(1)
@@ -22,7 +23,6 @@ const pageContent = ref<Record<string, string>>({})
 
 const onFileChange = (event: any) => {
     if (event.target.files == null || event.target.files.length == 0 || !event.target.files[0]) {
-        pageContent.value = {}
         return
     }
 
@@ -41,7 +41,7 @@ const onFileChange = (event: any) => {
         const dataUrl = reader.result
         if (dataUrl) {
             loading.value = true
-            await extractTextFromPdf(dataUrl)
+            await extractDataFromPdf(dataUrl)
             loading.value = false
         }
     }
@@ -68,17 +68,18 @@ watchEffect(async () => {
 })
 
 watch(
-    currentPage,
+    () => [currentPage, pdfRaw],
     async () => {
         if (!pdfRaw.value) {
             return
         }
 
+        zoomloading.value = true
         const pdf = await pdfRaw.value.promise
         await readPDFRawPage(pdf, currentPage.value)
-
+        zoomloading.value = false
     },
-    { immediate: true }
+    { immediate: true, deep: true }
 )
 
 
@@ -111,7 +112,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
-    const maxPages = pdf.numPages
+    const maxPages = totlePages.value
     pageContent.value = {}
     for (let i = 1; i <= maxPages; i++) {
         const page = await pdf.getPage(i)
@@ -151,7 +152,7 @@ const changePage = (i: number) => {
     currentPage.value = pageNumber
 }
 
-const extractTextFromPdf = async (url: string | ArrayBuffer) => {
+const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
     pdfRaw.value = pdfTask
     const pdf = await pdfTask.promise
@@ -196,7 +197,7 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
             <div class="header-option-group">
                 <div style="flex:1">
                     <form>
-                        <input type="file" @change="onFileChange" />
+                        <input type="file" @change="onFileChange" :disabled="loading" />
                     </form>
                 </div>
                 <div style="display: flex;align-items: center;">
@@ -205,21 +206,21 @@ const extractTextFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Zoom">
+                    <Button Text="Zoom" :Disabled="zoomloading">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Shrink">
+                    <Button Text="Shrink" :Disabled="zoomloading">
                     </Button>
                 </div>
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Prev" :IsLoading="subloading" @click="changePage(-1)">
+                    <Button Text="Prev" :IsLoading="subloading" @click="changePage(-1)" :Disabled="loading">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Next" :IsLoading="subloading" @click="changePage(1)">
+                    <Button Text="Next" :IsLoading="subloading" @click="changePage(1)" :Disabled="loading">
                     </Button>
                 </div>
             </div>

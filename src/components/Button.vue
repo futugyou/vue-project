@@ -9,6 +9,7 @@ const props = defineProps<{
     Text?: string
     Position?: "Left" | "Right"
     IsLoading?: boolean
+    Disabled?: boolean
 }>()
 
 const HandleClick = () => {
@@ -20,7 +21,7 @@ const HandleClick = () => {
 </script>
 
 <template v-if="!IsLoading">
-    <button class="button-base variant-normal" @click="HandleClick">
+    <button class="button-base variant-normal" @click="HandleClick" :disabled=Disabled>
         <template v-if="!IsLoading">
             <slot v-if="Position == 'Left'"></slot>
             <span class="button-label" v-if="Text">{{ Text }}</span>
@@ -85,6 +86,10 @@ const HandleClick = () => {
     -webkit-font-smoothing: var(--font-smoothing-webkit);
     -moz-osx-font-smoothing: var(--font-smoothing-moz-osx);
     -webkit-hyphens: none;
+}
+
+.button-base[disabled] {
+    opacity: 0.3;
 }
 
 .button-base:hover {
