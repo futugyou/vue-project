@@ -29,16 +29,17 @@
     "v-code-diff": "^1.8.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5",
+    "vue3-moveable": "^0.27.0",
     "xstate": "^4.38.3"
   },
   "devDependencies": {
-    "@types/offscreencanvas": "^2019.7.3",
     "@playwright/test": "^1.40.1",
     "@rushstack/eslint-patch": "^1.6.0",
     "@tsconfig/node18": "^18.2.2",
     "@types/bootstrap": "^5.2.10",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.10.1",
+    "@types/offscreencanvas": "^2019.7.3",
     "@vitejs/plugin-vue": "^4.5.1",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/eslint-config-prettier": "^8.0.0",

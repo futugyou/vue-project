@@ -3,12 +3,14 @@
 import { ref, PropType, computed, watchEffect, watch } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import * as pdfjsLib from 'pdfjs-dist'
+import Moveable from "vue3-moveable"
 
 import { jsPDF } from 'jspdf'
 import { imageBitmapToCanvas } from '@/tools/util'
 
 import Spinners from '@/components/Spinners.vue'
 import Button from '@/components/Button.vue'
+import Draggable from '@/components/Draggable.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
@@ -20,7 +22,7 @@ const currentPage = ref(0)
 const totlePages = ref(1)
 let outputScale = ref(window.devicePixelRatio || 1)
 const pageContent = ref<Record<string, string>>({})
-
+const targetRef = ref(null)
 let pagePrefix = ""
 
 const onFileChange = (event: any) => {
@@ -196,6 +198,9 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     //     })
     // }
 }
+const onDrag = (e: any) => {
+    e.target.style.transform = e.transform;
+}
 </script>
 
 <template>
@@ -234,7 +239,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
         </div>
         <div class="pdf-page-container">
             <div class="pdf-page" id="area">
-                <canvas id="canvas"></canvas>
+                <div class="target" ref="targetRef">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <Moveable :target="targetRef" :draggable="true" :throttleDrag="1" :edgeDraggable="false"
+                    :startDragRotate="0" :throttleDragRotate="0" @drag="onDrag" />
             </div>
             <div class="pdf-page">
                 <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
@@ -270,6 +279,14 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     grid-gap: 10px;
 }
 
+div[data-able-draggable] {
+    --moveable-color: transparent;
+}
+
+div[data-able-draggable] div.moveable-control  {
+    border-color: transparent !important;
+}
+
 .header-option-group div form {
     width: 100%;
 }
@@ -292,6 +309,8 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     padding: 10px;
     border: 1px solid var(--color-border-text-normal-default);
     border-radius: 10px;
+    overflow: hidden;
+    position: relative;
 }
 
 .text-input {
