@@ -42,3 +42,5 @@ npm install
 [jspdfDoc](https://rawgit.com/MrRio/jsPDF/master/docs/index.html)
 
 [pdf.js](https://github.com/mozilla/pdf.js)
+
+[moveable](https://github.com/daybrush/moveable)

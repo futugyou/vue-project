@@ -23,13 +23,15 @@ const totlePages = ref(1)
 let outputScale = ref(window.devicePixelRatio || 1)
 const pageContent = ref<Record<string, string>>({})
 let pagePrefix = ""
+const zoomStep = 0.07
 
-const onFileChange = (event: any) => {
-    if (event.target.files == null || event.target.files.length == 0 || !event.target.files[0]) {
+const onFileChange = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
         return
     }
 
-    const file = event.target.files[0]
+    const file = target.files[0]
     const extension = file.name.split('.')[1]
     pagePrefix = file.name.split('.')[0]
 
@@ -85,6 +87,13 @@ watch(
     { immediate: true, deep: true }
 )
 
+const onPdfViewWheel = async (e: WheelEvent) => {
+    if (e.deltaY < 0) {
+        await changeSize(zoomStep)
+    } else {
+        await changeSize(-zoomStep)
+    }
+}
 
 const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
     const maxPages = pdf.numPages
@@ -208,11 +217,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Zoom" :Disabled="zoomloading" @click="changeSize(0.05)">
+                    <Button Text="Zoom" :Disabled="zoomloading" @click="changeSize(zoomStep)">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Shrink" :Disabled="zoomloading" @click="changeSize(-0.05)">
+                    <Button Text="Shrink" :Disabled="zoomloading" @click="changeSize(-zoomStep)">
                     </Button>
                 </div>
             </div>
@@ -230,7 +239,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
         <div class="pdf-page-container">
             <div class="pdf-page" id="area">
                 <div class="target">
-                    <canvas id="canvas"></canvas>
+                    <canvas id="canvas" @wheel="onPdfViewWheel"></canvas>
                 </div>
                 <Draggable selector=".target"></Draggable>
             </div>
