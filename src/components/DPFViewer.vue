@@ -18,8 +18,10 @@ const zoomloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totlePages = ref(1)
-let pagePrefix = ""
+let outputScale = ref(window.devicePixelRatio || 1)
 const pageContent = ref<Record<string, string>>({})
+
+let pagePrefix = ""
 
 const onFileChange = (event: any) => {
     if (event.target.files == null || event.target.files.length == 0 || !event.target.files[0]) {
@@ -68,9 +70,9 @@ watchEffect(async () => {
 })
 
 watch(
-    () => [currentPage, pdfRaw],
+    () => [currentPage, pdfRaw, outputScale],
     async () => {
-        if (!pdfRaw.value) {
+        if (!pdfRaw.value || zoomloading.value) {
             return
         }
 
@@ -93,22 +95,19 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     }
 
     const page = await pdf.getPage(pageNumber)
-    const viewport = page.getViewport({ scale: 1.0, rotation: 0 })
-    const visibleCanvas = document.createElement('canvas')
-    visibleCanvas.id = page.pageNumber + ""
-    visibleCanvas.width = Math.floor(viewport.width)
-    visibleCanvas.height = Math.floor(viewport.height)
-    // visibleCanvas.style.width = "100%"
-    visibleCanvas.style.height = "100%"
-    const ctx = visibleCanvas.getContext("2d") as CanvasRenderingContext2D
-
+    const viewport = page.getViewport({ scale: outputScale.value, rotation: 0 })
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement
+    canvas.width = Math.floor(viewport.width * outputScale.value)
+    canvas.height = Math.floor(viewport.height * outputScale.value)
+    canvas.style.width = Math.floor(viewport.width) + "px"
+    canvas.style.height = Math.floor(viewport.height) + "px"
+    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
+    const transform = outputScale.value !== 1 ? [outputScale.value, 0, 0, outputScale.value, 0, 0] as any[] : undefined
     await page.render({
         canvasContext: ctx,
-        viewport
+        transform,
+        viewport,
     }).promise
-
-    const rootElement = document.getElementById('area') as HTMLElement
-    rootElement.replaceChildren(visibleCanvas)
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
@@ -150,6 +149,14 @@ const changePage = (i: number) => {
         pageNumber = 1
     }
     currentPage.value = pageNumber
+}
+
+const changeSize = async (i: number) => {
+    if (!pdfRaw.value || zoomloading.value) {
+        return
+    }
+
+    outputScale.value += i
 }
 
 const extractDataFromPdf = async (url: string | ArrayBuffer) => {
@@ -206,11 +213,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Zoom" :Disabled="zoomloading">
+                    <Button Text="Zoom" :Disabled="zoomloading" @click="changeSize(0.05)">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Shrink" :Disabled="zoomloading">
+                    <Button Text="Shrink" :Disabled="zoomloading" @click="changeSize(-0.05)">
                     </Button>
                 </div>
             </div>
@@ -227,6 +234,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
         </div>
         <div class="pdf-page-container">
             <div class="pdf-page" id="area">
+                <canvas id="canvas"></canvas>
             </div>
             <div class="pdf-page">
                 <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
