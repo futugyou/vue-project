@@ -22,14 +22,8 @@ const onRotate = (e: OnRotate) => {
     
 <template>
     <Moveable :target="[selector]" :draggable="true" :throttleDrag="1" :edgeDraggable="false" :startDragRotate="0"
-        :throttleDragRotate="0" @drag="onDrag" @rotate="onRotate" @scale="onScale" />
+        :hideDefaultLines="true" :throttleDragRotate="0" @drag="onDrag" @rotate="onRotate" @scale="onScale"
+        :origin="false" />
 </template>
   
-<style scoped>  div[data-able-draggable] {
-      --moveable-color: transparent;
-  }
-
-  div[data-able-draggable] div.moveable-control {
-      border-color: transparent !important;
-  }
-</style>
+<style scoped></style>
