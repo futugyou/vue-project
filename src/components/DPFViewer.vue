@@ -22,7 +22,6 @@ const currentPage = ref(0)
 const totlePages = ref(1)
 let outputScale = ref(window.devicePixelRatio || 1)
 const pageContent = ref<Record<string, string>>({})
-const targetRef = ref(null)
 let pagePrefix = ""
 
 const onFileChange = (event: any) => {
@@ -105,11 +104,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     canvas.style.height = Math.floor(viewport.height) + "px"
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
     const transform = outputScale.value !== 1 ? [outputScale.value, 0, 0, outputScale.value, 0, 0] as any[] : undefined
-    await page.render({
-        canvasContext: ctx,
-        transform,
-        viewport,
-    }).promise
+    await page.render({ canvasContext: ctx, transform, viewport, }).promise
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
@@ -120,7 +115,6 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
         const content = await page.getTextContent()
 
         let pageTextContent = ""
-        // console.log(content.items[0])
         for (let ii = 0; ii < content.items.length; ii++) {
             const element = content.items[ii]
             if ('str' in element) {
@@ -133,10 +127,6 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
             }
         }
 
-        // const m = pageTextContent.match(/[^.]+/g)
-        // if (m) {
-        //     pageTextContent = m.join(".\n")
-        // }
         pageContent.value[pagePrefix + i] = pageTextContent
     }
 }
@@ -168,6 +158,8 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     totlePages.value = pdf.numPages
     currentPage.value = 1
     await readAllTextContent(pdf)
+}
+
     // const pdfTask = pdfjsLib.getDocument(url)
     // const pdf = await pdfTask.promise
     // let textContent = []
@@ -197,10 +189,8 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     //         })
     //     })
     // }
-}
-const onDrag = (e: any) => {
-    e.target.style.transform = e.transform;
-}
+// }
+
 </script>
 
 <template>
@@ -239,11 +229,10 @@ const onDrag = (e: any) => {
         </div>
         <div class="pdf-page-container">
             <div class="pdf-page" id="area">
-                <div class="target" ref="targetRef">
+                <div class="target">
                     <canvas id="canvas"></canvas>
                 </div>
-                <Moveable :target="targetRef" :draggable="true" :throttleDrag="1" :edgeDraggable="false"
-                    :startDragRotate="0" :throttleDragRotate="0" @drag="onDrag" />
+                <Draggable selector=".target"></Draggable>
             </div>
             <div class="pdf-page">
                 <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
@@ -279,14 +268,6 @@ const onDrag = (e: any) => {
     grid-gap: 10px;
 }
 
-div[data-able-draggable] {
-    --moveable-color: transparent;
-}
-
-div[data-able-draggable] div.moveable-control  {
-    border-color: transparent !important;
-}
-
 .header-option-group div form {
     width: 100%;
 }
@@ -311,6 +292,16 @@ div[data-able-draggable] div.moveable-control  {
     border-radius: 10px;
     overflow: hidden;
     position: relative;
+}
+
+.target {
+    height: 100%;
+    width: 100%;
+}
+
+#canvas {
+    height: 100%;
+    width: 100%;
 }
 
 .text-input {
