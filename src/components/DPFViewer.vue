@@ -18,7 +18,7 @@ const loading = ref(false)
 const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
-const totlePages = ref(1)
+const totalPages = ref(1)
 let outputScale = ref(window.devicePixelRatio || 1)
 const pageContent = ref<Record<string, string>>({})
 let pagePrefix = ""
@@ -117,7 +117,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
-    const maxPages = totlePages.value
+    const maxPages = totalPages.value
     pageContent.value = {}
     for (let i = 1; i <= maxPages; i++) {
         const page = await pdf.getPage(i)
@@ -141,8 +141,25 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
 }
 
 const changePage = (i: number) => {
-    const maxPages = totlePages.value
+    const maxPages = totalPages.value
     let pageNumber = currentPage.value + i
+    if (pageNumber > maxPages) {
+        pageNumber = maxPages
+    }
+    if (pageNumber < 1) {
+        pageNumber = 1
+    }
+    currentPage.value = pageNumber
+}
+
+const onCurrentPageChange = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target == null) {
+        return
+    }
+
+    const maxPages = totalPages.value
+    let pageNumber = parseInt(target.value)
     if (pageNumber > maxPages) {
         pageNumber = maxPages
     }
@@ -170,7 +187,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
     pdfRaw.value = pdfTask
     const pdf = await pdfTask.promise
-    totlePages.value = pdf.numPages
+    totalPages.value = pdf.numPages
     await readAllTextContent(pdf)
 }
 
@@ -220,14 +237,13 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
                     <Spinners v-if="loading" width="20px" height="20px"></Spinners>
                 </div>
             </div>
-            <div class="header-option-group">
+            <div class="header-option-group" style="justify-content: center;">
                 <div>
-                    <Button Text="Zoom" :Disabled="subloading" @click="changeSize(zoomStep)">
-                    </Button>
+                    <input class="number-input" type="number" min="1" :max="totalPages" :value="currentPage"
+                        @input="onCurrentPageChange" :disabled="loading" /> /
                 </div>
                 <div>
-                    <Button Text="Shrink" :Disabled="subloading" @click="changeSize(-zoomStep)">
-                    </Button>
+                    <label>totals : {{ totalPages }}</label>
                 </div>
             </div>
             <div class="header-option-group">
@@ -237,6 +253,16 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
                 </div>
                 <div>
                     <Button Text="Next" :IsLoading="subloading" @click="changePage(1)" :Disabled="loading">
+                    </Button>
+                </div>
+            </div>
+            <div class="header-option-group">
+                <div>
+                    <Button Text="Zoom" :Disabled="subloading" @click="changeSize(zoomStep)">
+                    </Button>
+                </div>
+                <div>
+                    <Button Text="Shrink" :Disabled="subloading" @click="changeSize(-zoomStep)">
                     </Button>
                 </div>
             </div>
@@ -289,6 +315,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
 .header-option-group div form input {
     width: 100%;
     margin-left: 10px;
+    white-space: nowrap;
 }
 
 .pdf-page-container {
