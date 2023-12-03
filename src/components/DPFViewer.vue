@@ -19,6 +19,7 @@ const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totalPages = ref(1)
+const showText = ref(false)
 
 let outputScale = ref(3)
 let viewerScale = ref(1)
@@ -113,9 +114,9 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     // init value
     let canvas = document.getElementById("canvas") as HTMLCanvasElement
     if (viewerScale.value == 1) {
-        const clientWidth = canvas.clientWidth
         const clientHeight = canvas.clientHeight
-        const scaleWidth = viewport.width * clientWidth / viewport.height
+        console.log(viewport.width, viewport.height)
+        const scaleWidth = viewport.width * clientHeight / viewport.height
         canvas.style.width = Math.floor(scaleWidth) + "px"
         canvas.style.height = Math.floor(clientHeight) + "px"
         // canvas.style.width = Math.floor(viewport.width) + "px"
@@ -285,6 +286,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
                     <Button Text="ZoomIn" :Disabled="subloading" @click="changeSize(-zoomStep)">
                     </Button>
                 </div>
+                <div>
+                    <Button :Text="!showText ? 'ShowText' : 'HideText'" :Disabled="subloading"
+                        @click="() => showText = !showText">
+                    </Button>
+                </div>
             </div>
         </div>
         <div class="pdf-page-container">
@@ -294,7 +300,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
                 </div>
                 <Draggable selector=".target"></Draggable>
             </div>
-            <div class="pdf-page">
+            <div class="pdf-page" v-if="showText">
                 <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
             </div>
         </div>
