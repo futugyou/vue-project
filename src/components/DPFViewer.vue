@@ -19,10 +19,13 @@ const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totalPages = ref(1)
-let outputScale = ref(window.devicePixelRatio || 1)
+
+let outputScale = ref(3)
+let viewerScale = ref(1)
+
 const pageContent = ref<Record<string, string>>({})
 let pagePrefix = ""
-const zoomStep = 10
+const zoomStep = 0.1
 
 const onFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement
@@ -73,9 +76,9 @@ watchEffect(async () => {
 })
 
 watch(
-    () => [currentPage, pdfRaw, outputScale],
+    () => [currentPage, pdfRaw],
     async () => {
-        if (!pdfRaw.value || subloading.value) {
+        if (!pdfRaw.value || subloading.value || loading.value) {
             return
         }
 
@@ -106,11 +109,24 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 
     const page = await pdf.getPage(pageNumber)
     const viewport = page.getViewport({ scale: outputScale.value, rotation: 0 })
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement
+
+    // init value
+    let canvas = document.getElementById("canvas") as HTMLCanvasElement
+    if (viewerScale.value == 1) {
+        const clientWidth = canvas.clientWidth
+        const clientHeight = canvas.clientHeight
+        const scaleWidth = viewport.width * clientWidth / viewport.height
+        canvas.style.width = Math.floor(scaleWidth) + "px"
+        canvas.style.height = Math.floor(clientHeight) + "px"
+        // canvas.style.width = Math.floor(viewport.width) + "px"
+        // canvas.style.height = Math.floor(viewport.height) + "px"
+    } else {
+        canvas = scalePdfViewer()
+    }
+
     canvas.width = Math.floor(viewport.width * outputScale.value)
     canvas.height = Math.floor(viewport.height * outputScale.value)
-    canvas.style.width = Math.floor(viewport.width) + "px"
-    canvas.style.height = Math.floor(viewport.height) + "px"
+
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
     const transform = outputScale.value !== 1 ? [outputScale.value, 0, 0, outputScale.value, 0, 0] as any[] : undefined
     await page.render({ canvasContext: ctx, transform, viewport, }).promise
@@ -174,13 +190,17 @@ const changeSize = async (i: number) => {
         return
     }
 
-    // outputScale.value += i
+    viewerScale.value = 1 + i
+    scalePdfViewer()
+}
 
+const scalePdfViewer = () => {
     const canvas = document.getElementById("canvas") as HTMLCanvasElement
-    let width = parseFloat(canvas.style.width)
-    let height = parseFloat(canvas.style.height)
-    canvas.style.width = (width + i) + "px"
-    canvas.style.height = (height + i) + "px"
+    let width = parseFloat(canvas.style.width) * viewerScale.value
+    let height = parseFloat(canvas.style.height) * viewerScale.value
+    canvas.style.width = (width) + "px"
+    canvas.style.height = (height) + "px"
+    return canvas
 }
 
 const extractDataFromPdf = async (url: string | ArrayBuffer) => {
@@ -239,8 +259,8 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>
-                    <input type="number" min="1" :max="totalPages" :value="currentPage"
-                        @input="onCurrentPageChange" :disabled="loading" /> 
+                    <input type="number" min="1" :max="totalPages" :value="currentPage" @input="onCurrentPageChange"
+                        :disabled="loading" />
                 </div>
                 <div>
                     <label style="line-height: 32px;">/ totals : {{ totalPages }}</label>
@@ -258,11 +278,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Zoom" :Disabled="subloading" @click="changeSize(zoomStep)">
+                    <Button Text="ZoomOut" :Disabled="subloading" @click="changeSize(zoomStep)">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Shrink" :Disabled="subloading" @click="changeSize(-zoomStep)">
+                    <Button Text="ZoomIn" :Disabled="subloading" @click="changeSize(-zoomStep)">
                     </Button>
                 </div>
             </div>
