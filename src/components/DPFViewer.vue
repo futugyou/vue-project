@@ -15,7 +15,7 @@ import Draggable from '@/components/Draggable.vue'
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
 const loading = ref(false)
-const subloading = ref(false) 
+const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totlePages = ref(1)
@@ -47,6 +47,7 @@ const onFileChange = (event: Event) => {
             loading.value = true
             await extractDataFromPdf(dataUrl)
             loading.value = false
+            currentPage.value = 1
         }
     }
 
@@ -170,7 +171,6 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     pdfRaw.value = pdfTask
     const pdf = await pdfTask.promise
     totlePages.value = pdf.numPages
-    currentPage.value = 1
     await readAllTextContent(pdf)
 }
 
@@ -242,9 +242,9 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
         </div>
         <div class="pdf-page-container">
-            <div class="pdf-page" id="area">
+            <div class="pdf-page" id="area" @wheel="onPdfViewWheel">
                 <div class="target">
-                    <canvas id="canvas" @wheel="onPdfViewWheel"></canvas>
+                    <canvas id="canvas"></canvas>
                 </div>
                 <Draggable selector=".target"></Draggable>
             </div>
