@@ -15,15 +15,14 @@ import Draggable from '@/components/Draggable.vue'
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
 const loading = ref(false)
-const subloading = ref(false)
-const zoomloading = ref(false)
+const subloading = ref(false) 
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totlePages = ref(1)
 let outputScale = ref(window.devicePixelRatio || 1)
 const pageContent = ref<Record<string, string>>({})
 let pagePrefix = ""
-const zoomStep = 0.07
+const zoomStep = 10
 
 const onFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement
@@ -75,16 +74,16 @@ watchEffect(async () => {
 watch(
     () => [currentPage, pdfRaw, outputScale],
     async () => {
-        if (!pdfRaw.value || zoomloading.value) {
+        if (!pdfRaw.value || subloading.value) {
             return
         }
 
-        zoomloading.value = true
+        // subloading.value = true
         const pdf = await pdfRaw.value.promise
         await readPDFRawPage(pdf, currentPage.value)
-        zoomloading.value = false
+        // subloading.value = false
     },
-    { immediate: true, deep: true }
+    { deep: true }
 )
 
 const onPdfViewWheel = async (e: WheelEvent) => {
@@ -153,11 +152,17 @@ const changePage = (i: number) => {
 }
 
 const changeSize = async (i: number) => {
-    if (!pdfRaw.value || zoomloading.value) {
+    if (!pdfRaw.value || subloading.value) {
         return
     }
 
-    outputScale.value += i
+    // outputScale.value += i
+
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement
+    let width = parseFloat(canvas.style.width)
+    let height = parseFloat(canvas.style.height)
+    canvas.style.width = (width + i) + "px"
+    canvas.style.height = (height + i) + "px"
 }
 
 const extractDataFromPdf = async (url: string | ArrayBuffer) => {
@@ -217,11 +222,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Zoom" :Disabled="zoomloading" @click="changeSize(zoomStep)">
+                    <Button Text="Zoom" :Disabled="subloading" @click="changeSize(zoomStep)">
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Shrink" :Disabled="zoomloading" @click="changeSize(-zoomStep)">
+                    <Button Text="Shrink" :Disabled="subloading" @click="changeSize(-zoomStep)">
                     </Button>
                 </div>
             </div>
