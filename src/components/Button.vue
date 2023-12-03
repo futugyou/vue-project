@@ -59,8 +59,7 @@ const HandleClick = () => {
     font-variant: normal;
     font-weight: var(--font-button-weight);
 
-    hyphens: none;
-    line-height: normal;
+    hyphens: none; 
     line-height: var(--line-height-body-m);
     list-style: disc none outside;
     letter-spacing: var(--font-button-letter-spacing);

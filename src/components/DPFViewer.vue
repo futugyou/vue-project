@@ -233,17 +233,17 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
                         <input type="file" @change="onFileChange" :disabled="loading" />
                     </form>
                 </div>
-                <div style="display: flex;align-items: center;">
+                <div style="display: flex;align-items: center;padding-left: 10px;">
                     <Spinners v-if="loading" width="20px" height="20px"></Spinners>
                 </div>
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>
-                    <input class="number-input" type="number" min="1" :max="totalPages" :value="currentPage"
-                        @input="onCurrentPageChange" :disabled="loading" /> /
+                    <input type="number" min="1" :max="totalPages" :value="currentPage"
+                        @input="onCurrentPageChange" :disabled="loading" /> 
                 </div>
                 <div>
-                    <label>totals : {{ totalPages }}</label>
+                    <label style="line-height: 32px;">/ totals : {{ totalPages }}</label>
                 </div>
             </div>
             <div class="header-option-group">
