@@ -1,6 +1,7 @@
 
 <script lang="ts" setup>
 import { ref, PropType, computed, watchEffect, watch } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import { computedAsync } from '@vueuse/core'
 import * as pdfjsLib from 'pdfjs-dist'
 import Moveable from "vue3-moveable"
@@ -14,13 +15,19 @@ import Draggable from '@/components/Draggable.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
+interface dpfinfo {
+    name: string
+    page: number
+}
+
 const loading = ref(false)
 const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
-const totalPages = ref(1)
+let totalPages: number = 1
 const showText = ref(false)
 const fillHeight = ref(true)
+const dpfinfo = useLocalStorage<dpfinfo[]>('dpfinfo', [])
 
 let outputScale = ref(3)
 let viewerScale = ref(1)
@@ -52,7 +59,13 @@ const onFileChange = (event: Event) => {
             loading.value = true
             await extractDataFromPdf(dataUrl)
             loading.value = false
-            currentPage.value = 1
+            let storagePdf = dpfinfo.value.find(p => p.name == pagePrefix)
+            if (storagePdf) {
+                currentPage.value = storagePdf.page
+            } else {
+                dpfinfo.value.push({ name: pagePrefix, page: 1 })
+                currentPage.value = 1
+            }
         }
     }
 
@@ -156,9 +169,8 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
-    const maxPages = totalPages.value
     pageContent.value = {}
-    for (let i = 1; i <= maxPages; i++) {
+    for (let i = 1; i <= totalPages; i++) {
         const page = await pdf.getPage(i)
         const content = await page.getTextContent()
 
@@ -180,15 +192,21 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
 }
 
 const changePage = (i: number) => {
-    const maxPages = totalPages.value
     let pageNumber = currentPage.value + i
-    if (pageNumber > maxPages) {
-        pageNumber = maxPages
+    if (pageNumber > totalPages) {
+        pageNumber = totalPages
     }
     if (pageNumber < 1) {
         pageNumber = 1
     }
     currentPage.value = pageNumber
+
+    let storagePdf = dpfinfo.value.find(p => p.name == pagePrefix)
+    if (storagePdf) {
+        storagePdf.page = pageNumber
+    } else {
+        dpfinfo.value.push({ name: pagePrefix, page: 1 })
+    }
 }
 
 const onCurrentPageChange = (event: Event) => {
@@ -197,10 +215,9 @@ const onCurrentPageChange = (event: Event) => {
         return
     }
 
-    const maxPages = totalPages.value
     let pageNumber = parseInt(target.value)
-    if (pageNumber > maxPages) {
-        pageNumber = maxPages
+    if (pageNumber > totalPages) {
+        pageNumber = totalPages
     }
     if (pageNumber < 1) {
         pageNumber = 1
@@ -230,7 +247,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     const pdfTask = pdfjsLib.getDocument(url)
     pdfRaw.value = pdfTask
     const pdf = await pdfTask.promise
-    totalPages.value = pdf.numPages
+    totalPages = pdf.numPages
     await readAllTextContent(pdf)
 }
 
