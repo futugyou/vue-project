@@ -251,6 +251,9 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     await readAllTextContent(pdf)
 }
 
+defineExpose({
+    extractedText,
+})
     // const pdfTask = pdfjsLib.getDocument(url)
     // const pdf = await pdfTask.promise
     // let textContent = []
