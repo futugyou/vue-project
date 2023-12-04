@@ -59,7 +59,7 @@ const HandleClick = () => {
     font-variant: normal;
     font-weight: var(--font-button-weight);
 
-    hyphens: none; 
+    hyphens: none;
     line-height: var(--line-height-body-m);
     list-style: disc none outside;
     letter-spacing: var(--font-button-letter-spacing);
@@ -77,7 +77,7 @@ const HandleClick = () => {
     white-space: normal;
     widows: 2;
     word-spacing: normal;
-    word-break: break-word;
+    word-break: keep-all;
 
     padding-block: var(--space-scaled-xxs);
     padding-inline: var(--space-button-horizontal);

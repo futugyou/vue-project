@@ -20,6 +20,7 @@ const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
 const currentPage = ref(0)
 const totalPages = ref(1)
 const showText = ref(false)
+const fillHeight = ref(true)
 
 let outputScale = ref(3)
 let viewerScale = ref(1)
@@ -83,13 +84,30 @@ watch(
             return
         }
 
-        // subloading.value = true
+        subloading.value = true
         const pdf = await pdfRaw.value.promise
         await readPDFRawPage(pdf, currentPage.value)
-        // subloading.value = false
+        subloading.value = false
     },
     { deep: true }
 )
+
+watch(fillHeight, () => {
+    viewerScale.value = 1
+    let canvas = document.getElementById("canvas") as HTMLCanvasElement
+    const parentNode = canvas.parentElement!
+    if (fillHeight.value) {
+        const clientHeight = parentNode.clientHeight
+        const scaleWidth = canvas.width / canvas.height * clientHeight
+        canvas.style.width = Math.floor(scaleWidth) + "px"
+        canvas.style.height = Math.floor(clientHeight) + "px"
+    } else {
+        const clientWidth = parentNode.clientWidth
+        const scaleHeight = canvas.height / canvas.width * clientWidth
+        canvas.style.width = Math.floor(clientWidth) + "px"
+        canvas.style.height = Math.floor(scaleHeight) + "px"
+    }
+})
 
 const onPdfViewWheel = async (e: WheelEvent) => {
     if (e.deltaY < 0) {
@@ -114,13 +132,17 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
     // init value
     let canvas = document.getElementById("canvas") as HTMLCanvasElement
     if (viewerScale.value == 1) {
-        const clientHeight = canvas.clientHeight
-        console.log(viewport.width, viewport.height)
-        const scaleWidth = viewport.width * clientHeight / viewport.height
-        canvas.style.width = Math.floor(scaleWidth) + "px"
-        canvas.style.height = Math.floor(clientHeight) + "px"
-        // canvas.style.width = Math.floor(viewport.width) + "px"
-        // canvas.style.height = Math.floor(viewport.height) + "px"
+        if (fillHeight.value) {
+            const clientHeight = canvas.clientHeight
+            const scaleWidth = viewport.width / viewport.height * clientHeight
+            canvas.style.width = Math.floor(scaleWidth) + "px"
+            canvas.style.height = Math.floor(clientHeight) + "px"
+        } else {
+            const clientWidth = canvas.clientWidth
+            const scaleHeight = viewport.height / viewport.width * clientWidth
+            canvas.style.width = Math.floor(clientWidth) + "px"
+            canvas.style.height = Math.floor(scaleHeight) + "px"
+        }
     } else {
         canvas = scalePdfViewer()
     }
@@ -260,7 +282,7 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>
-                    <input type="number" min="1" :max="totalPages" :value="currentPage" @input="onCurrentPageChange"
+                    <input type="number" min="1" :max="totalPages" :value="currentPage" @change="onCurrentPageChange"
                         :disabled="loading" />
                 </div>
                 <div>
@@ -274,6 +296,11 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
                 </div>
                 <div>
                     <Button Text="Next" :IsLoading="subloading" @click="changePage(1)" :Disabled="loading">
+                    </Button>
+                </div>
+                <div>
+                    <Button :Text="fillHeight ? 'FillWidth' : 'FillHeight'" :Disabled="subloading"
+                        @click="() => fillHeight = !fillHeight">
                     </Button>
                 </div>
             </div>
