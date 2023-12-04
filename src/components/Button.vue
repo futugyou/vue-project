@@ -21,15 +21,19 @@ const HandleClick = () => {
 </script>
 
 <template v-if="!IsLoading">
-    <button class="button-base variant-normal" @click="HandleClick" :disabled=Disabled>
+    <button v-if="Text" class="button-base variant-normal" @click="HandleClick" :disabled=Disabled>
         <template v-if="!IsLoading">
             <slot v-if="Position == 'Left'"></slot>
-            <span class="button-label" v-if="Text">{{ Text }}</span>
+            <span class="button-label">{{ Text }}</span>
             <slot v-if="Position != 'Left'"></slot>
         </template>
         <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
     </button>
-    <template v-if="!IsLoading"></template>
+    <button v-if="!Text" class="variant-normal" @click="HandleClick" :disabled=Disabled>
+        <template v-if="!IsLoading">
+            <slot :disabled="IsLoading"></slot>
+        </template>
+    </button>
 </template>
 
 <style scoped >
@@ -59,7 +63,7 @@ const HandleClick = () => {
     font-variant: normal;
     font-weight: var(--font-button-weight);
 
-    hyphens: none; 
+    hyphens: none;
     line-height: var(--line-height-body-m);
     list-style: disc none outside;
     letter-spacing: var(--font-button-letter-spacing);
@@ -77,7 +81,7 @@ const HandleClick = () => {
     white-space: normal;
     widows: 2;
     word-spacing: normal;
-    word-break: break-word;
+    word-break: keep-all;
 
     padding-block: var(--space-scaled-xxs);
     padding-inline: var(--space-button-horizontal);
