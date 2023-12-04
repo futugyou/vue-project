@@ -1,6 +1,6 @@
 
 <script lang="ts" setup>
-import { ref, PropType, computed } from 'vue'
+import { ref, PropType, computed, watch } from 'vue'
 
 import DPFViewer from '@/components/DPFViewer.vue'
 import Button from '@/components/Button.vue'
@@ -54,6 +54,16 @@ const translate = async () => {
         }
     }
 }
+watch(
+    () => [pdf.value?.extractedText, showTranslate],
+    async () => {
+        if (!showTranslate.value || !pdf.value || !pdf.value.extractedText) {
+            return
+        }
+        await translate()
+    },
+    { deep: true }
+)
 </script>
 
 <template>
