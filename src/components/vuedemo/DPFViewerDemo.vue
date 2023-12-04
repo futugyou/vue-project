@@ -4,6 +4,7 @@ import { ref, PropType, computed } from 'vue'
 
 import DPFViewer from '@/components/DPFViewer.vue'
 import Button from '@/components/Button.vue'
+import Operate from '@/components/icons/Operate.vue'
 
 const right = ref("")
 const showTranslate = ref(false)
@@ -16,7 +17,9 @@ const showTranslate = ref(false)
             </DPFViewer>
         </div>
         <div class="tran-contr">
-            <Button Text="O" @click="showTranslate = !showTranslate"> </Button>
+            <Button @click="showTranslate = !showTranslate">
+                <Operate></Operate>
+            </Button>
         </div>
         <div class="translate-container" v-if="showTranslate">
             <div>
@@ -51,6 +54,7 @@ const showTranslate = ref(false)
     position: absolute;
     right: 10px;
     top: 0;
+    top: 6px;
 }
 
 .translate-container {
