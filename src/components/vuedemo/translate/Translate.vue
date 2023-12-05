@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted, watch } from 'vue'
-import Button from '@/components/Button.vue'
+import Button from '@/common/Button.vue'
 
 import { translateText, TranslateModel } from './Translate'
 

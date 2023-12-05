@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import Spinners from '@/components/Spinners.vue'
+import Spinners from '@/common/Spinners.vue'
 
 const buttonref = ref<HTMLButtonElement>()
 const tipClass = ref("bottom-left")

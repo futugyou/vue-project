@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 
-import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { Modal, openModal } from '@/components/Modal.vue'
+import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import { Modal, openModal } from '@/common/Modal.vue'
 import Detail from './Detail.vue'
 
 import { S3Bucket, defaultS3Bucket, getS3Buckets } from './s3bucket'

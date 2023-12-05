@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
-import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
+import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { EcsService, getEcsServices } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'

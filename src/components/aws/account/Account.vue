@@ -3,8 +3,8 @@ import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { join } from 'lodash-es'
 
-import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { Modal, ModalButton, closeModal } from '@/components/Modal.vue'
+import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import { Modal, ModalButton, closeModal } from '@/common/Modal.vue'
 import Edit from './Edit.vue'
 
 import { Account, getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'

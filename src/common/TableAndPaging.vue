@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, PropType, computed } from 'vue'
-import Spinners from '@/components/Spinners.vue'
+import Spinners from '@/common/Spinners.vue'
 
 export interface TableField {
     key: string

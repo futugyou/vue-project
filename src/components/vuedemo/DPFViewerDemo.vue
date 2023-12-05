@@ -2,9 +2,9 @@
 <script lang="ts" setup>
 import { ref, PropType, computed, watch } from 'vue'
 
-import DPFViewer from '@/components/DPFViewer.vue'
-import Button from '@/components/Button.vue'
-import Operate from '@/components/icons/Operate.vue'
+import DPFViewer from '@/common/DPFViewer.vue'
+import Button from '@/common/Button.vue'
+import Operate from '@/icons/Operate.vue'
 import { translateText, TranslateModel } from '@/components/vuedemo/translate/Translate'
 
 import { useMessageStore } from '@/stores/message'

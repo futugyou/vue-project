@@ -2,7 +2,7 @@
 import { ref, watchEffect, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import Spinners from '@/components/Spinners.vue'
+import Spinners from '@/common/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, getAccount, deleteAccount } from './account'
 import Edit from './Edit.vue'

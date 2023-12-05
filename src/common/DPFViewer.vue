@@ -9,9 +9,9 @@ import Moveable from "vue3-moveable"
 import { jsPDF } from 'jspdf'
 import { imageBitmapToCanvas } from '@/tools/util'
 
-import Spinners from '@/components/Spinners.vue'
-import Button from '@/components/Button.vue'
-import Draggable from '@/components/Draggable.vue'
+import Spinners from '@/common/Spinners.vue'
+import Button from '@/common/Button.vue'
+import Draggable from '@/common/Draggable.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 

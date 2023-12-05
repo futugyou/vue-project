@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed } from 'vue'
 
-import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import BreadcrumbGroup, { BreadcrumbItem } from '@/components/BreadcrumbGroup.vue'
-import Button from '@/components/Button.vue'
-import OpenIcon from '@/components/icons/Open.vue'
-import ReloadIcon from '@/components/icons/Reload.vue'
+import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import BreadcrumbGroup, { BreadcrumbItem } from '@/common/BreadcrumbGroup.vue'
+import Button from '@/common/Button.vue'
+import OpenIcon from '@/icons/Open.vue'
+import ReloadIcon from '@/icons/Reload.vue'
 
 import { S3Bucket, S3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
 

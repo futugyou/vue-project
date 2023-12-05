@@ -3,7 +3,7 @@ import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEqual, join } from 'lodash-es'
 
-import Spinners from '@/components/Spinners.vue'
+import Spinners from '@/common/Spinners.vue'
 import RegionList from "@/components/aws/region/list.vue"
 import { useTimeFormat } from '@/composables/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'

@@ -2,11 +2,11 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
-import TableAndPaging, { TableField } from '@/components/TableAndPaging.vue'
-import { Modal, openModal } from '@/components/Modal.vue'
+import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import { Modal, openModal } from '@/common/Modal.vue'
 import RegionList from "@/components/aws/region/list.vue"
 import AccountList from "@/components/aws/account/list.vue"
-import Spinners from '@/components/Spinners.vue'
+import Spinners from '@/common/Spinners.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'

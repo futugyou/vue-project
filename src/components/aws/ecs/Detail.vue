@@ -2,8 +2,8 @@
 import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
-import Spinners from '@/components/Spinners.vue'
-import { Modal, openModal } from '@/components/Modal.vue'
+import Spinners from '@/common/Spinners.vue'
+import { Modal, openModal } from '@/common/Modal.vue'
 import { EcsService, getEcsServiceDetail, compareEcsTaskDefinition, EcsTaskCompare } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'

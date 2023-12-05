@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, shallowRef, watchEffect } from 'vue'
-import DemoRoute from './components/vuedemo/DemoRoute.vue'
-import AwsRoute from './components/aws/AwsRoute.vue'
-import TabContainer from './components/TabContainer.vue'
-import Alert from '@/components/Alert.vue'
-import SidebarMenu from '@/components/SidebarMenu.vue'
+import DemoRoute from '@/components/vuedemo/DemoRoute.vue'
+import AwsRoute from '@/components/aws/AwsRoute.vue'
+import TabContainer from '@/common/TabContainer.vue'
+import Alert from '@/common/Alert.vue'
+import SidebarMenu from '@/common/SidebarMenu.vue'
 
 import { handleGlobalData } from '@/tools/baseAppEvent'
 const rootContainer = ref("nomalRootContainer")

@@ -2,13 +2,13 @@
 
 import { shallowRef } from 'vue'
 import { RouterLink } from 'vue-router'
-import IconAngle from './SidebarIcon/IconAngle.vue'
-import IconECSService from './SidebarIcon/IconECSService.vue'
-import IconSSM from './SidebarIcon/IconSSM.vue'
-import IconIAMUser from './SidebarIcon/IconIAMUser.vue'
-import IconS3Bucket from './SidebarIcon/IconS3Bucket.vue'
-import IconHome from './SidebarIcon/IconHome.vue'
-import IOther from './SidebarIcon/IOther.vue'
+import IconAngle from '@/icons/Angle.vue'
+import IconECSService from '@/icons/ECSService.vue'
+import IconSSM from '@/icons/SSM.vue'
+import IconIAMUser from '@/icons/IAMUser.vue'
+import IconS3Bucket from '@/icons/S3Bucket.vue'
+import IconHome from '@/icons/Home.vue'
+import IOther from '@/icons/Other.vue'
 
 const isSidebarOpen = shallowRef<Boolean>(false)
 
