@@ -1,15 +1,15 @@
-import { createMachine, interpret, assign } from 'xstate'
+import { createMachine, createActor, assign } from 'xstate'
 import { shallowRef } from 'vue'
 import { useMachine as rawUseMachine } from '@xstate/vue'
 
 // @ts-ignore
 export const useMachine = (options) => {
     options.predictableActionArguments = true
-    const machine = createMachine<CountContext, CountEvent>(options)
-    const state = shallowRef(machine.initialState)
-    const service = interpret(machine)
-        .onTransition((newState) => (state.value = newState))
-        .start()
+    const machine = createMachine(options)
+    const state = shallowRef(machine.states)
+    const service = createActor(machine)
+    service.subscribe((newState: any) => (state.value = newState))
+    service.start()
 
     const send = (event: CountEvent) => service.send(event)
 
@@ -23,7 +23,7 @@ interface CountContext {
 }
 
 export const useMachine2 = () => {
-    const toggleMachine = createMachine<CountContext, CountEvent>({
+    const toggleMachine = createMachine({
         id: 'toggle',
         initial: 'inactive',
         context: {
@@ -34,14 +34,12 @@ export const useMachine2 = () => {
                 on: { TOGGLE: 'active' }
             },
             active: {
-                entry: assign({ count: (ctx) => ctx.count + 1 }),
+                entry: assign({ count: (ctx: any) => ctx.count + 1 }),
                 on: { TOGGLE: 'inactive' }
             }
         },
-        predictableActionArguments: true
     })
+    const { snapshot, send } = rawUseMachine(toggleMachine)
 
-    const { state, send } = rawUseMachine(toggleMachine)
-
-    return { state, send }
+    return { state: snapshot, send }
 }

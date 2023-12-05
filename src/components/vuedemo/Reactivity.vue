@@ -17,13 +17,16 @@ const [items, setItems] = useImmer([
 ])
 
 const toggleItem = (index: string) => {
-    setItems((items: any) => {
-        items[index].done = !items[index].done
-    })
+    const call = setItems as (updater: any) => void
+    if (call) {
+        call((items: any) => {
+            items[index].done = !items[index].done
+        })
+    }
 }
 
 // xstate/vue
-const { state, send } = useMachine({
+const { state, send }: any = useMachine({
     id: 'toggle',
     initial: 'inactive',
     context: {
@@ -39,7 +42,7 @@ const { state, send } = useMachine({
     }
 })
 
-const { state: state2, send: send2 } = useMachine2()
+const { state: state2, send: send2 }: any = useMachine2()
 </script>
 
 <template>
@@ -60,13 +63,13 @@ const { state: state2, send: send2 } = useMachine2()
         </div>
         <div class="vueapp-layer">
             <h2>xstate/vue</h2>
-            <button @click="send2('TOGGLE')">
+            <button @click="send2({ type: 'TOGGLE' })">
                 Click me ({{ state2.matches('active') ? '✅' : '❌' }})
             </button>
             <code>
-                Toggled
-                <strong>{{ state2.context.count }}</strong> times
-            </code>
+                            Toggled
+                            <strong>{{ state2.context.count }}</strong> times
+                        </code>
         </div>
         <div class="vueapp-layer">
             <h3>{{ store.count }}</h3>
