@@ -23,8 +23,9 @@ const translate = async () => {
     }
 
     let text: string = pdf.value.extractedText
-    text = text.replaceAll("\n", "").replaceAll("\r", "")
-    if (!text) {
+    let reg = text.match(/[^\n]+/g)
+
+    if (!reg) {
         return
     }
 
@@ -32,7 +33,10 @@ const translate = async () => {
     isLoading.value = true
 
     let model: TranslateModel[] = []
-    model.push({ Text: text })
+    for (let i = 0; i < reg.length; i++) {
+        model.push({ Text: reg[i] })
+    }
+
     const { data, error } = await translateText("en", "zh-Hans", model)
     isLoading.value = false
 
@@ -49,7 +53,7 @@ const translate = async () => {
             const ele = data[i];
             for (let j = 0; j < ele.translations.length; j++) {
                 const element = ele.translations[j];
-                right.value += element.text
+                right.value += element.text + "\n"
             }
         }
     }
