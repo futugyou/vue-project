@@ -15,6 +15,7 @@ const { msg } = storeToRefs(store)
 const pdf = ref()
 const right = ref("")
 const showTranslate = ref(false)
+let currentText = ""
 
 const isLoading = ref(false)
 const translate = async () => {
@@ -61,10 +62,11 @@ const translate = async () => {
 watch(
     () => [pdf.value?.extractedText, showTranslate],
     async () => {
-        if (!showTranslate.value || !pdf.value || !pdf.value.extractedText) {
+        if (!showTranslate.value || !pdf.value || !pdf.value.extractedText || pdf.value.extractedText == currentText) {
             return
         }
         await translate()
+        currentText = pdf.value.extractedText
     },
     { deep: true }
 )
