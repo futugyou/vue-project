@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue'
 import Spinners from '@/components/Spinners.vue'
 
+const buttonref = ref<HTMLButtonElement>()
+const tipClass = ref("bottom-left")
 const emit = defineEmits<{
     (e: 'click'): void
 }>()
@@ -10,6 +13,7 @@ const props = defineProps<{
     Position?: "Left" | "Right"
     IsLoading?: boolean
     Disabled?: boolean
+    Tip?: boolean
 }>()
 
 const HandleClick = () => {
@@ -18,20 +22,29 @@ const HandleClick = () => {
     }
 }
 
+onMounted(() => {
+    if (buttonref.value) {
+        var rect = buttonref.value.getBoundingClientRect()
+        // console.log(rect.top, rect.right, rect.bottom, rect.left)
+    }
+})
 </script>
 
 <template v-if="!IsLoading">
-    <button v-if="Text" class="button-base variant-normal" @click="HandleClick" :disabled=Disabled>
+    <button ref="buttonref" v-if="Text" class="button-base variant-normal" @click="HandleClick" :disabled=Disabled>
         <template v-if="!IsLoading">
             <slot v-if="Position == 'Left'"></slot>
             <span class="button-label">{{ Text }}</span>
             <slot v-if="Position != 'Left'"></slot>
         </template>
         <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
+        <span class="tooltiptext" v-if="Tip">{{ Tip }}</span>
+        <span class="tooltiptext" :class="tipClass"> v-if="Tip"</span>
     </button>
-    <button v-if="!Text" class="variant-normal" @click="HandleClick" :disabled=Disabled>
+    <button ref="buttonref" v-if="!Text" class="variant-normal" @click="HandleClick" :disabled=Disabled>
         <template v-if="!IsLoading">
             <slot :disabled="IsLoading"></slot>
+            <span class="tooltiptext" v-if="Tip" :class="tipClass">{{ Tip }}</span>
         </template>
     </button>
 </template>
@@ -108,6 +121,42 @@ const HandleClick = () => {
     border-color: var(--color-border-button-normal-default);
     position: relative;
     text-decoration: none;
+}
+
+.variant-normal .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background: var(--color-background-button-normal-default);
+    color: var(--color-text-button-normal-default);
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.variant-normal:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltiptext.top-left {
+    top: -35px;
+    left: -50%;
+}
+
+.tooltiptext.top-right {
+    top: -35px;
+    left: 50%;
+}
+
+.tooltiptext.bottom-left {
+    top: calc(100% + 5px);
+    left: -50%;
+}
+
+.tooltiptext.bottom-right {
+    top: calc(100% + 5px);
+    left: 50%;
 }
 
 .button-label {
