@@ -13,7 +13,7 @@ const props = defineProps<{
     Position?: "Left" | "Right"
     IsLoading?: boolean
     Disabled?: boolean
-    Tip?: boolean
+    Tip?: string
 }>()
 
 const HandleClick = () => {
@@ -39,9 +39,8 @@ onMounted(() => {
         </template>
         <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
         <span class="tooltiptext" v-if="Tip">{{ Tip }}</span>
-        <span class="tooltiptext" :class="tipClass"> v-if="Tip"</span>
     </button>
-    <button ref="buttonref" v-if="!Text" class="variant-normal" @click="HandleClick" :disabled=Disabled>
+    <button ref="buttonref" v-if="!Text" class="pure-icon variant-normal" @click="HandleClick" :disabled=Disabled>
         <template v-if="!IsLoading">
             <slot :disabled="IsLoading"></slot>
             <span class="tooltiptext" v-if="Tip" :class="tipClass">{{ Tip }}</span>
@@ -115,6 +114,17 @@ onMounted(() => {
     text-decoration: none;
 }
 
+.pure-icon {
+    display: flex;
+}
+
+.pure-icon:hover {
+    background: var(--color-background-button-normal-hover);
+    color: var(--color-text-button-normal-hover);
+    border-color: var(--color-border-button-normal-hover);
+    text-decoration: none;
+}
+
 .variant-normal {
     background: var(--color-background-button-normal-default);
     color: var(--color-text-button-normal-default);
@@ -125,7 +135,6 @@ onMounted(() => {
 
 .variant-normal .tooltiptext {
     visibility: hidden;
-    width: 120px;
     background: var(--color-background-button-normal-default);
     color: var(--color-text-button-normal-default);
     text-align: center;
@@ -133,6 +142,7 @@ onMounted(() => {
     padding: 5px 0;
     position: absolute;
     z-index: 1;
+    white-space: nowrap;
 }
 
 .variant-normal:hover .tooltiptext {
@@ -142,21 +152,25 @@ onMounted(() => {
 .tooltiptext.top-left {
     top: -35px;
     left: -50%;
+    text-align: left;
 }
 
 .tooltiptext.top-right {
     top: -35px;
     left: 50%;
+    text-align: right;
 }
 
 .tooltiptext.bottom-left {
     top: calc(100% + 5px);
     left: -50%;
+    text-align: left;
 }
 
 .tooltiptext.bottom-right {
     top: calc(100% + 5px);
     left: 50%;
+    text-align: right;
 }
 
 .button-label {

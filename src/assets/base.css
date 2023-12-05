@@ -29,6 +29,8 @@
     --font-smoothing-webkit: antialiased;
     --font-smoothing-moz-osx: grayscale;
     --font-button-letter-spacing: .005em;
+    --border-radius-container: 10px;
+    --border-radius-input: 10px;
     --border-radius-button: 20px;
     --border-field-width: 2px;
     --space-scaled-xxs: 4px;

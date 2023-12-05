@@ -145,7 +145,7 @@ textarea {
     height: 100%;
     font-size: var(--textarea-font-size);
     border: 1px solid var(--color-border-text-normal-default);
-    border-radius: 20px;
+    border-radius: var(--border-radius-input);
     line-height: 24px;
     text-align: left;
     padding: 10px;
@@ -154,7 +154,7 @@ textarea {
 input {
     font-size: var(--font-size-body-m);
     border: 1px solid var(--color-border-text-normal-default);
-    border-radius: 20px;
+    border-radius: var(--border-radius-input);
 }
 
 input[type="number"] {

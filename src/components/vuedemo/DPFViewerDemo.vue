@@ -5,6 +5,8 @@ import { ref, PropType, computed, watch } from 'vue'
 import DPFViewer from '@/common/DPFViewer.vue'
 import Button from '@/common/Button.vue'
 import Operate from '@/icons/Operate.vue'
+import TranslateBtn from '@/icons/Translate.vue'
+
 import { translateText, TranslateModel } from '@/components/vuedemo/translate/Translate'
 
 import { useMessageStore } from '@/stores/message'
@@ -18,6 +20,7 @@ const showTranslate = ref(false)
 let currentText = ""
 
 const isLoading = ref(false)
+
 const translate = async () => {
     if (!pdf.value || !pdf.value.extractedText) {
         return
@@ -59,6 +62,7 @@ const translate = async () => {
         }
     }
 }
+
 watch(
     () => [pdf.value?.extractedText, showTranslate],
     async () => {
@@ -84,8 +88,9 @@ watch(
             </Button>
         </div>
         <div class="translate-container" v-if="showTranslate">
-            <div>
-                <Button Text="Translate" @click="translate" :IsLoading="isLoading">
+            <div class="header">
+                <Button Tip="do translate" @click="translate" :IsLoading="isLoading">
+                    <TranslateBtn></TranslateBtn>
                 </Button>
             </div>
             <div class="text-container">
@@ -110,6 +115,7 @@ watch(
 
 .viewer-container {
     flex: 2;
+    padding: 5px;
 }
 
 .tran-contr {
@@ -123,9 +129,21 @@ watch(
     flex-direction: column;
     grid-gap: 10px;
     flex: 1;
+    padding: 5px;
 }
 
 .text-container {
     flex-grow: 1;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    grid-gap: 10px;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    height: 32px;
 }
 </style>

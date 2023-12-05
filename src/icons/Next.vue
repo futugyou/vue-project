@@ -5,8 +5,7 @@
 <template>
     <div class="icon-base">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-            <line x1="8" y1="1" x2="8" y2="15" />
-            <line x1="15" y1="8" x2="1" y2="8" />
+            <polyline points="8,1 15,8 8,15" />
         </svg>
     </div>
 </template>

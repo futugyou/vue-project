@@ -11,6 +11,12 @@ import { imageBitmapToCanvas } from '@/tools/util'
 
 import Spinners from '@/common/Spinners.vue'
 import Button from '@/common/Button.vue'
+import ZoomOut from '@/icons/ZoomOut.vue'
+import ZoomIn from '@/icons/ZoomIn.vue'
+import ZoomFit from '@/icons/ZoomFit.vue'
+import Prev from '@/icons/Prev.vue'
+import Next from '@/icons/Next.vue'
+import Contact from '@/icons/Contact.vue'
 import Draggable from '@/common/Draggable.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
@@ -311,31 +317,37 @@ defineExpose({
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="Prev" :IsLoading="subloading" @click="changePage(-1)" :Disabled="loading">
+                    <Button Tip="Prev" :IsLoading="subloading" @click="changePage(-1)" :Disabled="loading">
+                        <Prev></Prev>
                     </Button>
                 </div>
                 <div>
-                    <Button Text="Next" :IsLoading="subloading" @click="changePage(1)" :Disabled="loading">
+                    <Button Tip="Next" :IsLoading="subloading" @click="changePage(1)" :Disabled="loading">
+                        <Next></Next>
                     </Button>
                 </div>
                 <div>
-                    <Button :Text="fillHeight ? 'FillWidth' : 'FillHeight'" :Disabled="subloading"
+                    <Button :Tip="fillHeight ? 'FillWidth' : 'FillHeight'" :Disabled="subloading"
                         @click="() => fillHeight = !fillHeight">
+                        <ZoomFit></ZoomFit>
                     </Button>
                 </div>
             </div>
             <div class="header-option-group">
                 <div>
-                    <Button Text="ZoomOut" :Disabled="subloading" @click="changeSize(zoomStep)">
+                    <Button Tip="ZoomIn" :Disabled="subloading" @click="changeSize(zoomStep)">
+                        <ZoomIn></ZoomIn>
                     </Button>
                 </div>
                 <div>
-                    <Button Text="ZoomIn" :Disabled="subloading" @click="changeSize(-zoomStep)">
+                    <Button Tip="ZoomOut" :Disabled="subloading" @click="changeSize(-zoomStep)">
+                        <ZoomOut></ZoomOut>
                     </Button>
                 </div>
                 <div>
-                    <Button :Text="!showText ? 'ShowText' : 'HideText'" :Disabled="subloading"
+                    <Button :Tip="!showText ? 'ShowText' : 'HideText'" :Disabled="subloading"
                         @click="() => showText = !showText">
+                        <Contact> </Contact>
                     </Button>
                 </div>
             </div>
@@ -403,7 +415,7 @@ defineExpose({
     flex: 1;
     padding: 10px;
     border: 1px solid var(--color-border-text-normal-default);
-    border-radius: 10px;
+    border-radius: var(--border-radius-container);
     overflow: hidden;
     position: relative;
 }
