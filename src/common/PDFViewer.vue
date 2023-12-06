@@ -26,6 +26,12 @@ interface pdfinfo {
     page: number
 }
 
+interface pagecontextinfo {
+    page: number
+    rawText: string
+    text: string
+}
+
 const loading = ref(false)
 const subloading = ref(false)
 const pdfRaw = ref<pdfjsLib.PDFDocumentLoadingTask>()
@@ -38,7 +44,6 @@ const pdfinfo = useLocalStorage<pdfinfo[]>('pdfinfo', [])
 let outputScale = ref(3)
 let viewerScale = ref(1)
 
-const pageContent = ref<Record<string, string>>({})
 let pagePrefix = ""
 const zoomStep = 0.1
 
@@ -86,9 +91,11 @@ watchEffect(async () => {
     }
 
     subloading.value = true
-    const text = pageContent.value[pagePrefix + currentPage.value]
-    if (text) {
-        extractedText.value = text
+
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix, [])
+    const pagecontextinfo = pagecontextinfos.value.find(p => p.page == currentPage.value)
+    if (pagecontextinfo) {
+        extractedText.value = pagecontextinfo.text
     } else {
         extractedText.value = ""
     }
@@ -150,7 +157,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 
     // init value
     let canvas = document.getElementById("canvas") as HTMLCanvasElement
-    if (viewerScale.value == 1) {
+    if (!canvas.style.width) {
         if (fillHeight.value) {
             const clientHeight = canvas.clientHeight
             const scaleWidth = viewport.width / viewport.height * clientHeight
@@ -175,7 +182,13 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
-    pageContent.value = {}
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix, [])
+
+    if (pagecontextinfos.value.length == totalPages) {
+        return
+    }
+
+    const pages: pagecontextinfo[] = []
     for (let i = 1; i <= totalPages; i++) {
         const page = await pdf.getPage(i)
         const content = await page.getTextContent()
@@ -193,8 +206,10 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
             }
         }
 
-        pageContent.value[pagePrefix + i] = pageTextContent
+        pages.push({ page: i, rawText: pageTextContent, text: pageTextContent })
     }
+
+    pagecontextinfos.value = pages
 }
 
 const changePage = (i: number) => {
