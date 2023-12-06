@@ -106,7 +106,7 @@ watch(
     height: 100%;
     width: 100%;
     display: flex;
-    grid-gap: 5px;
+    grid-gap: var(--grid-gap-5);
     padding: 0;
     margin: 0;
     overflow: hidden;
@@ -117,6 +117,8 @@ watch(
 .viewer-container {
     flex: 2;
     padding: 5px;
+    width: 100%;
+    height: 100%;
 }
 
 .tran-contr {
@@ -128,7 +130,7 @@ watch(
 .translate-container {
     display: flex;
     flex-direction: column;
-    grid-gap: 10px;
+    grid-gap: var(--grid-gap-10);
     flex: 1;
     padding: 5px;
 }
@@ -141,7 +143,7 @@ watch(
     display: flex;
     flex-direction: row;
     width: 100%;
-    grid-gap: 10px;
+    grid-gap: var(--grid-gap-10);
     align-items: center;
     align-content: center;
     flex-wrap: wrap;

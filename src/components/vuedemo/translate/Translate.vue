@@ -69,7 +69,7 @@ const translate = async () => {
     height: 100%;
     width: 100%;
     display: flex;
-    grid-gap: 5px;
+    grid-gap: var(--grid-gap-5);
     padding: 0;
     margin: 0;
     overflow: hidden;

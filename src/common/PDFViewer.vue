@@ -272,7 +272,22 @@ const extractDataFromPdf = async (url: string | ArrayBuffer) => {
     await readAllTextContent(pdf)
 }
 
+const changePdfText = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target == null) {
+        return
+    }
+
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix, [])
+    const pagecontextinfo = pagecontextinfos.value.find(p => p.page == currentPage.value)
+    if (pagecontextinfo) {
+        pagecontextinfo.text = target.value
+    }
+}
+
 defineExpose({
+    pagecontextkey: pagePrefix,
+    currentPage: currentPage,
     extractedText,
 })
     // const pdfTask = pdfjsLib.getDocument(url)
@@ -375,7 +390,8 @@ defineExpose({
                 <Draggable selector=".target"></Draggable>
             </div>
             <div class="pdf-page" v-if="showText">
-                <textarea v-model="extractedText" placeholder="" v-if="!loading" class="text-input"></textarea>
+                <textarea :value="extractedText" @input="changePdfText" placeholder="" v-if="!loading"
+                    class="text-input"></textarea>
             </div>
         </div>
     </div>
@@ -388,14 +404,14 @@ defineExpose({
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    grid-gap: 10px;
+    grid-gap: var(--grid-gap-10);
 }
 
 .header {
     display: flex;
     flex-direction: row;
     width: 100%;
-    grid-gap: 10px;
+    grid-gap: var(--grid-gap-10);
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
@@ -405,7 +421,7 @@ defineExpose({
     display: flex;
     flex-direction: row;
     flex: 1;
-    grid-gap: 10px;
+    grid-gap: var(--grid-gap-10);
 }
 
 .header-option-group div form {
@@ -419,11 +435,11 @@ defineExpose({
 }
 
 .pdf-page-container {
-    height: 100%;
+    height: calc(100% - 32px - 10px);
     width: 100%;
     display: flex;
     flex-direction: row;
-    grid-gap: 10px;
+    grid-gap: var(--grid-gap-10);
 }
 
 .pdf-page {

@@ -47,6 +47,9 @@
     --color-text-button-normal-default: #0972d3;
     --color-border-button-normal-default: #0972d3;
     --color-border-text-normal-default: #0972d3;
+
+    --grid-gap-5: 5px;
+    --grid-gap-10: 10px;
 }
 
 /* semantic color variables for this project */
