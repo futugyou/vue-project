@@ -21,7 +21,7 @@ import Draggable from '@/common/Draggable.vue'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
-interface dpfinfo {
+interface pdfinfo {
     name: string
     page: number
 }
@@ -33,7 +33,7 @@ const currentPage = ref(0)
 let totalPages: number = 1
 const showText = ref(false)
 const fillHeight = ref(true)
-const dpfinfo = useLocalStorage<dpfinfo[]>('dpfinfo', [])
+const pdfinfo = useLocalStorage<pdfinfo[]>('pdfinfo', [])
 
 let outputScale = ref(3)
 let viewerScale = ref(1)
@@ -65,11 +65,11 @@ const onFileChange = (event: Event) => {
             loading.value = true
             await extractDataFromPdf(dataUrl)
             loading.value = false
-            let storagePdf = dpfinfo.value.find(p => p.name == pagePrefix)
+            let storagePdf = pdfinfo.value.find(p => p.name == pagePrefix)
             if (storagePdf) {
                 currentPage.value = storagePdf.page
             } else {
-                dpfinfo.value.push({ name: pagePrefix, page: 1 })
+                pdfinfo.value.push({ name: pagePrefix, page: 1 })
                 currentPage.value = 1
             }
         }
@@ -207,11 +207,11 @@ const changePage = (i: number) => {
     }
     currentPage.value = pageNumber
 
-    let storagePdf = dpfinfo.value.find(p => p.name == pagePrefix)
+    let storagePdf = pdfinfo.value.find(p => p.name == pagePrefix)
     if (storagePdf) {
         storagePdf.page = pageNumber
     } else {
-        dpfinfo.value.push({ name: pagePrefix, page: 1 })
+        pdfinfo.value.push({ name: pagePrefix, page: 1 })
     }
 }
 

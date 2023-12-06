@@ -2,7 +2,7 @@
 <script lang="ts" setup>
 import { ref, PropType, computed, watch } from 'vue'
 
-import DPFViewer from '@/common/DPFViewer.vue'
+import PDFViewer from '@/common/PDFViewer.vue'
 import Button from '@/common/Button.vue'
 import Operate from '@/icons/Operate.vue'
 import TranslateBtn from '@/icons/Translate.vue'
@@ -14,7 +14,8 @@ import { storeToRefs } from 'pinia'
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const pdf = ref()
+const pdf = ref<InstanceType<typeof PDFViewer> | null>(null)
+
 const right = ref("")
 const showTranslate = ref(false)
 let currentText = ""
@@ -79,8 +80,8 @@ watch(
 <template>
     <div class="viewer-content">
         <div class="viewer-container">
-            <DPFViewer ref="pdf">
-            </DPFViewer>
+            <PDFViewer ref="pdf">
+            </PDFViewer>
         </div>
         <div class="tran-contr">
             <Button @click="showTranslate = !showTranslate">
