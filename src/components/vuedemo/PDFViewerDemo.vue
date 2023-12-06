@@ -24,7 +24,7 @@ interface pagecontextinfo {
     translateText: string
 }
 
-const right = ref("")
+const translatedText = ref("")
 const showTranslate = ref(false)
 const isLoading = ref(false)
 
@@ -46,7 +46,7 @@ const translate = async () => {
         return
     }
 
-    right.value = ""
+    translatedText.value = ""
     isLoading.value = true
 
     let model: TranslateModel[] = []
@@ -75,8 +75,24 @@ const translate = async () => {
             }
         }
         page.translateText = translateText
-        right.value = translateText
+        translatedText.value = translateText
     }
+}
+
+const changeTranslatedText = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target == null) {
+        return
+    }
+
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pdf.value?.pagecontextkey ?? "", [])
+    const pagecontextinfo = pagecontextinfos.value.find(p => p.page == pdf.value?.currentPage)
+
+    if (!pagecontextinfo) {
+        return
+    }
+
+    pagecontextinfo.translateText = target.value
 }
 
 watch(
@@ -90,12 +106,12 @@ watch(
         const page = pagecontextinfos.value.find(p => p.page == pdf.value?.currentPage)
         if (page) {
             if (page.translateText) {
-                right.value = page.translateText
+                translatedText.value = page.translateText
             } else {
                 await translate()
             }
         } else {
-            right.value = ""
+            translatedText.value = ""
         }
     },
     { deep: true }
@@ -120,7 +136,7 @@ watch(
                 </Button>
             </div>
             <div class="text-container">
-                <textarea v-model="right" placeholder=""></textarea>
+                <textarea :value="translatedText" @input="changeTranslatedText" placeholder=""></textarea>
             </div>
         </div>
     </div>
