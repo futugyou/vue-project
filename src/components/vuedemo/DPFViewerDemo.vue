@@ -89,7 +89,7 @@ watch(
         </div>
         <div class="translate-container" v-if="showTranslate">
             <div class="header">
-                <Button Tip="do translate" @click="translate" :IsLoading="isLoading">
+                <Button Tip="do translate" @click="translate" :Disabled="isLoading">
                     <TranslateBtn></TranslateBtn>
                 </Button>
             </div>
@@ -121,7 +121,7 @@ watch(
 .tran-contr {
     position: absolute;
     right: 10px;
-    top: 2px;
+    top: 8px;
 }
 
 .translate-container {
