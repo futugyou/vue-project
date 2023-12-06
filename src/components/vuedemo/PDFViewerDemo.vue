@@ -1,6 +1,7 @@
 
 <script lang="ts" setup>
 import { ref, PropType, computed, watch } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 
 import PDFViewer from '@/common/PDFViewer.vue'
 import Button from '@/common/Button.vue'
@@ -16,18 +17,29 @@ const { msg } = storeToRefs(store)
 
 const pdf = ref<InstanceType<typeof PDFViewer> | null>(null)
 
+interface pagecontextinfo {
+    page: number
+    rawText: string
+    text: string
+    translateText: string
+}
+
 const right = ref("")
 const showTranslate = ref(false)
-let currentText = ""
-
 const isLoading = ref(false)
 
 const translate = async () => {
-    if (!pdf.value || !pdf.value.extractedText) {
+    if (!pdf.value) {
         return
     }
 
-    let text: string = pdf.value.extractedText
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pdf.value?.pagecontextkey ?? "", [])
+    const page = pagecontextinfos.value.find(p => p.page == pdf.value?.currentPage)
+    if (!page) {
+        return
+    }
+
+    let text: string = page.text
     let reg = text.match(/[^\n]+/g)
 
     if (!reg) {
@@ -54,24 +66,37 @@ const translate = async () => {
     }
 
     if (data) {
+        let translateText = ""
         for (let i = 0; i < data.length; i++) {
             const ele = data[i];
             for (let j = 0; j < ele.translations.length; j++) {
                 const element = ele.translations[j];
-                right.value += element.text + "\n"
+                translateText += element.text + "\n"
             }
         }
+        page.translateText = translateText
+        right.value = translateText
     }
 }
 
 watch(
-    () => [pdf.value?.extractedText, showTranslate],
+    () => [pdf.value?.currentPage, pdf.value?.pagecontextkey, showTranslate],
     async () => {
-        if (!showTranslate.value || !pdf.value || !pdf.value.extractedText || pdf.value.extractedText == currentText) {
+        if (!pdf.value || !showTranslate.value) {
             return
         }
-        await translate()
-        currentText = pdf.value.extractedText
+
+        const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pdf.value?.pagecontextkey ?? "", [])
+        const page = pagecontextinfos.value.find(p => p.page == pdf.value?.currentPage)
+        if (page) {
+            if (page.translateText) {
+                right.value = page.translateText
+            } else {
+                await translate()
+            }
+        } else {
+            right.value = ""
+        }
     },
     { deep: true }
 )

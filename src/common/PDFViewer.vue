@@ -44,7 +44,7 @@ const pdfinfo = useLocalStorage<pdfinfo[]>('pdfinfo', [])
 let outputScale = ref(3)
 let viewerScale = ref(1)
 
-let pagePrefix = ""
+let pagePrefix = ref("")
 const zoomStep = 0.1
 
 const onFileChange = (event: Event) => {
@@ -55,7 +55,7 @@ const onFileChange = (event: Event) => {
 
     const file = target.files[0]
     const extension = file.name.split('.')[1]
-    pagePrefix = file.name.split('.')[0]
+    pagePrefix.value = file.name.split('.')[0]
 
     if (extension !== 'pdf') {
         alert('Please select a PDF file')
@@ -70,11 +70,11 @@ const onFileChange = (event: Event) => {
             loading.value = true
             await extractDataFromPdf(dataUrl)
             loading.value = false
-            let storagePdf = pdfinfo.value.find(p => p.name == pagePrefix)
+            let storagePdf = pdfinfo.value.find(p => p.name == pagePrefix.value)
             if (storagePdf) {
                 currentPage.value = storagePdf.page
             } else {
-                pdfinfo.value.push({ name: pagePrefix, page: 1 })
+                pdfinfo.value.push({ name: pagePrefix.value, page: 1 })
                 currentPage.value = 1
             }
         }
@@ -92,7 +92,7 @@ watchEffect(async () => {
 
     subloading.value = true
 
-    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix, [])
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix.value, [])
     const pagecontextinfo = pagecontextinfos.value.find(p => p.page == currentPage.value)
     if (pagecontextinfo) {
         extractedText.value = pagecontextinfo.text
@@ -182,7 +182,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
-    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix, [])
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix.value, [])
 
     if (pagecontextinfos.value.length == totalPages) {
         return
@@ -222,11 +222,11 @@ const changePage = (i: number) => {
     }
     currentPage.value = pageNumber
 
-    let storagePdf = pdfinfo.value.find(p => p.name == pagePrefix)
+    let storagePdf = pdfinfo.value.find(p => p.name == pagePrefix.value)
     if (storagePdf) {
         storagePdf.page = pageNumber
     } else {
-        pdfinfo.value.push({ name: pagePrefix, page: 1 })
+        pdfinfo.value.push({ name: pagePrefix.value, page: 1 })
     }
 }
 
@@ -278,7 +278,7 @@ const changePdfText = (event: Event) => {
         return
     }
 
-    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix, [])
+    const pagecontextinfos = useLocalStorage<pagecontextinfo[]>(pagePrefix.value, [])
     const pagecontextinfo = pagecontextinfos.value.find(p => p.page == currentPage.value)
     if (pagecontextinfo) {
         pagecontextinfo.text = target.value
