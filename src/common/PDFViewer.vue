@@ -11,6 +11,7 @@ import { imageBitmapToCanvas } from '@/tools/util'
 
 import Spinners from '@/common/Spinners.vue'
 import Button from '@/common/Button.vue'
+import FileInput from '@/common/FileInput.vue'
 import ZoomOut from '@/icons/ZoomOut.vue'
 import ZoomIn from '@/icons/ZoomIn.vue'
 import ZoomFit from '@/icons/ZoomFit.vue'
@@ -47,13 +48,17 @@ let viewerScale = ref(1)
 let pagePrefix = ref("")
 const zoomStep = 0.1
 
-const onFileChange = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
+const onFileChange = (file: File) => {
+    // const target = event.target as HTMLInputElement
+    // if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
+    //     return
+    // }
+
+    // const file = target.files[0]
+    if (!file) {
         return
     }
-
-    const file = target.files[0]
+    
     const extension = file.name.split('.')[1]
     pagePrefix.value = file.name.split('.')[0]
 
@@ -329,7 +334,8 @@ defineExpose({
             <div class="header-option-group">
                 <div style="flex:1">
                     <form>
-                        <input type="file" @change="onFileChange" :disabled="loading" />
+                        <FileInput @fileLoad="onFileChange" :disabled="loading"></FileInput>
+                        <!-- <input type="file" @change="onFileChange" :disabled="loading" /> -->
                     </form>
                 </div>
                 <div style="display: flex;align-items: center;padding-left: 10px;">

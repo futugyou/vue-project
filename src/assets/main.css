@@ -165,4 +165,5 @@ input[type="file"] {
     padding-block: var(--space-scaled-xxs);
     padding-inline: var(--space-button-horizontal);
     line-height: 16px;
+    white-space: nowrap;
 }
