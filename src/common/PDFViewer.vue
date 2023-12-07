@@ -49,12 +49,6 @@ let pagePrefix = ref("")
 const zoomStep = 0.1
 
 const onFileChange = (file: File) => {
-    // const target = event.target as HTMLInputElement
-    // if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
-    //     return
-    // }
-
-    // const file = target.files[0]
     if (!file) {
         return
     }
