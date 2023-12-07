@@ -10,6 +10,7 @@ const RouteDemo = () => import('@/components/vuedemo/RouteDemo.vue')
 const PiniaDemo = () => import('@/components/vuedemo/PiniaDemo.vue')
 const PDFViewerDemo = () => import('@/components/vuedemo/PDFViewerDemo.vue')
 const TranslateDemo = () => import('@/components/vuedemo/translate/Translate.vue')
+const OCRDemo = () => import('@/components/vuedemo/OCRDemo.vue')
 
 const removeQueryParams = (to: any) => {
     if (Object.keys(to.query).length) return { path: to.path, query: {}, hash: to.hash }
@@ -21,6 +22,11 @@ export const DemoRoutes = [
         name: 'Home',
         component: Home,
         meta: { transition: 'slide-fade' }
+    },
+    {
+        path: '/ocr',
+        name: 'Ocr',
+        component: OCRDemo,
     },
     {
         path: '/translate',
