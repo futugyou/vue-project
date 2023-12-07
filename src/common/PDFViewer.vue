@@ -58,7 +58,7 @@ const onFileChange = (file: File) => {
     if (!file) {
         return
     }
-    
+
     const extension = file.name.split('.')[1]
     pagePrefix.value = file.name.split('.')[0]
 
@@ -332,15 +332,7 @@ defineExpose({
     <div class="full-content">
         <div class="header">
             <div class="header-option-group">
-                <div style="flex:1">
-                    <form>
-                        <FileInput @fileLoad="onFileChange" :disabled="loading"></FileInput>
-                        <!-- <input type="file" @change="onFileChange" :disabled="loading" /> -->
-                    </form>
-                </div>
-                <div style="display: flex;align-items: center;padding-left: 10px;">
-                    <Spinners v-if="loading" width="20px" height="20px"></Spinners>
-                </div>
+                <FileInput @fileLoad="onFileChange" :loading=loading></FileInput>
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>
@@ -428,16 +420,6 @@ defineExpose({
     flex-direction: row;
     flex: 1;
     grid-gap: var(--grid-gap-10);
-}
-
-.header-option-group div form {
-    width: 100%;
-}
-
-.header-option-group div form input {
-    width: 100%;
-    margin-left: 10px;
-    white-space: nowrap;
 }
 
 .pdf-page-container {

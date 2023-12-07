@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 
+import Spinners from '@/common/Spinners.vue'
+
 const props = defineProps<{
-    loading?: false
+    loading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -22,11 +24,23 @@ const onFileChange = (event: Event) => {
 </script>
 
 <template>
-    <input type="file" @change="onFileChange" :disabled="loading" />
+    <div class="file-container">
+        <div style="flex:1">
+            <form style="width: 100%;">
+                <input type="file" @change="onFileChange" :disabled="loading" />
+            </form>
+        </div>
+        <div style="display: flex;align-items: center;padding-left: 10px;">
+            <Spinners v-if="loading" width="20px" height="20px"></Spinners>
+        </div>
+    </div>
 </template>
 
 <style scoped >
-input[type="file"] {
+.file-container {
+    display: flex;
+    flex-direction: row;
     width: 100%;
+    grid-gap: var(--grid-gap-10);
 }
 </style>
