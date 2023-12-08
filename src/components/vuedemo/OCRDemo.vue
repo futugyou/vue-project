@@ -37,13 +37,13 @@ const transform = async () => {
         return
     }
 
+    loading.value = true
     const { data: { text, confidence } } = await ocrWorker.recognize(fileref.value, {
         rotateAuto: true,
     })
-    loading.value = true
+
     extractedText.value = text
     extractedConfidence.value = confidence
-    await ocrWorker.terminate()
     loading.value = false
 }
 
@@ -59,6 +59,11 @@ onMounted(async () => {
     ocrWorker = await createWorker(undefined, undefined)
 })
 
+onUnmounted(async () => {
+    if (ocrWorker) {
+        await ocrWorker.terminate()
+    }
+})
 </script>
 
 <template>
