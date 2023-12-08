@@ -8,6 +8,7 @@ const props = defineProps<{
 }>()
 
 const labeltext = ref("choose file")
+const isOver = ref(false)
 const emit = defineEmits<{
     (e: 'fileLoad', f: File): void
 }>()
@@ -15,7 +16,7 @@ const emit = defineEmits<{
 const onFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement
     if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
-        labeltext.value = "choose file"
+        labeltext.value = "choose or drag a file"
         return
     }
 
@@ -24,15 +25,35 @@ const onFileChange = (event: Event) => {
     emit('fileLoad', file)
 }
 
+const onFileDrop = (event: DragEvent) => {
+    if (!event.dataTransfer) {
+        labeltext.value = "choose or drag a file"
+        return
+    }
+
+    const file = event.dataTransfer.files[0]
+    labeltext.value = file.name
+    emit('fileLoad', file)
+}
+
+const onFileDropover = () => {
+    isOver.value = true
+}
+
+const onFileDropleave = () => {
+    isOver.value = false
+}
+
 onMounted(() => {
-    labeltext.value = "choose file"
+    labeltext.value = "choose or drag a file"
 })
 
 </script>
 
 <template>
     <div class="file-container">
-        <div style="flex:1">
+        <div style="flex:1" @dragover.prevent="onFileDropover" @dragleave.prevent="onFileDropleave"
+            @drop.prevent="onFileDrop" :class="{ over: isOver }">
             <form style="width: 100%;">
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
                 <input id="file-reader" type="file" name="file-reader" class="file-reader-input" @change="onFileChange"
@@ -82,5 +103,9 @@ onMounted(() => {
     position: absolute;
     width: 0.1px;
     z-index: -1;
+}
+
+.over {
+    background-color: var(--color-background-mute);
 }
 </style>
