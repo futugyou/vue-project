@@ -326,7 +326,7 @@ defineExpose({
     <div class="full-content">
         <div class="header">
             <div class="header-option-group">
-                <FileInput @fileLoad="onFileChange" :loading=loading></FileInput>
+                <FileInput @fileLoad="onFileChange" :IsLoading=loading Accept="application/pdf,.pdf"></FileInput>
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>

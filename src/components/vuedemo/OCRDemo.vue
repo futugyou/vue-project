@@ -3,7 +3,7 @@ import { createWorker } from 'tesseract.js'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 import FileInput from '@/common/FileInput.vue'
-import Operate from '@/icons/Operate.vue'
+import Scan from '@/icons/Scan.vue'
 import Button from '@/common/Button.vue'
 
 let ocrWorker: Tesseract.Worker | undefined
@@ -14,6 +14,7 @@ const imagescr = ref("")
 const loading = ref(false)
 const hasImage = ref(false)
 const fileref = ref<File>()
+const supportedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/pbm']
 
 const onFileChange = async (file: File) => {
     hasImage.value = false
@@ -71,15 +72,16 @@ onUnmounted(async () => {
         <div class="image-container">
             <div class="ocr-header">
                 <div style="flex: 2;">
-                    <FileInput @fileLoad="onFileChange" :loading="loading" @clear="clear"></FileInput>
+                    <FileInput @fileLoad="onFileChange" :IsLoading="loading" @clear="clear"
+                        :Accept='supportedImageTypes.join(",")'></FileInput>
                 </div>
                 <div style="flex: 1;display: flex;justify-content: center;">
                     <Button @click="transform" v-if="fileref" :Disabled="loading" Tip="transform">
-                        <Operate></Operate>
+                        <Scan></Scan>
                     </Button>
                 </div>
             </div>
-            <div>
+            <div style="overflow: hidden; padding: 5px;">
                 <img :src="imagescr">
             </div>
         </div>

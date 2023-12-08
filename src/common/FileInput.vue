@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 import Spinners from '@/common/Spinners.vue'
 import Close from '@/icons/Close.vue'
 import Button from '@/common/Button.vue'
 
 const props = defineProps<{
-    loading?: boolean
+    IsLoading?: boolean
+    Accept?: string
 }>()
 
 const labeltext = ref("choose file")
@@ -42,6 +43,13 @@ const onFileDrop = (event: DragEvent) => {
 }
 
 const handlerFile = (file: File) => {
+    if (Accept.value && Accept.value != "*") {
+        const supportedMimeTypes = Accept.value.split(",")
+        if (!supportedMimeTypes.includes(file.type)) {
+            return
+        }
+    }
+    
     labeltext.value = file.name
     emit('fileLoad', file)
     hasFile.value = true
@@ -64,6 +72,14 @@ const clearFile = () => {
     }
 }
 
+const Accept = computed(() => {
+    if (!props.Accept) {
+        return "*"
+    }
+
+    return props.Accept
+})
+
 onMounted(() => {
     labeltext.value = "choose or drag a file"
     hasFile.value = false
@@ -78,14 +94,14 @@ onMounted(() => {
             <form style="width: 100%;">
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
                 <input id="file-reader" type="file" name="file-reader" class="file-reader-input" @change="onFileChange"
-                    :disabled="loading" ref="fileref" />
+                    :disabled="IsLoading" ref="fileref" :accept="Accept" />
             </form>
         </div>
         <div style="display: flex;align-items: center;padding-left: 10px;">
-            <Spinners v-if="loading" width="20px" height="20px"></Spinners>
+            <Spinners v-if="IsLoading" width="20px" height="20px"></Spinners>
         </div>
         <div style="display: flex;align-items: center;padding-left: 10px;">
-            <Button @click="clearFile" v-if="hasFile && !loading" Tip="clear file" :Disabled="loading">
+            <Button @click="clearFile" v-if="hasFile && !IsLoading" Tip="clear file" :Disabled="IsLoading">
                 <Close></Close>
             </Button>
         </div>
