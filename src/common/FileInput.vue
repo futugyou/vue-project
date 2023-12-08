@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 
 import Spinners from '@/common/Spinners.vue'
+import Close from '@/icons/Close.vue'
+import Button from '@/common/Button.vue'
 
 const props = defineProps<{
     loading?: boolean
@@ -9,20 +11,24 @@ const props = defineProps<{
 
 const labeltext = ref("choose file")
 const isOver = ref(false)
+const hasFile = ref(false)
+const fileref = ref<HTMLInputElement>()
+
 const emit = defineEmits<{
     (e: 'fileLoad', f: File): void
+    (e: 'clear'): void
 }>()
 
 const onFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement
     if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
         labeltext.value = "choose or drag a file"
+        hasFile.value = false
         return
     }
 
     const file = target.files[0]
-    labeltext.value = file.name
-    emit('fileLoad', file)
+    handlerFile(file)
 }
 
 const onFileDrop = (event: DragEvent) => {
@@ -32,8 +38,13 @@ const onFileDrop = (event: DragEvent) => {
     }
 
     const file = event.dataTransfer.files[0]
+    handlerFile(file)
+}
+
+const handlerFile = (file: File) => {
     labeltext.value = file.name
     emit('fileLoad', file)
+    hasFile.value = true
 }
 
 const onFileDropover = () => {
@@ -44,8 +55,18 @@ const onFileDropleave = () => {
     isOver.value = false
 }
 
+const clearFile = () => {
+    if (fileref.value) {
+        fileref.value.files = null
+        labeltext.value = "choose or drag a file"
+        hasFile.value = false
+        emit('clear')
+    }
+}
+
 onMounted(() => {
     labeltext.value = "choose or drag a file"
+    hasFile.value = false
 })
 
 </script>
@@ -57,11 +78,16 @@ onMounted(() => {
             <form style="width: 100%;">
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
                 <input id="file-reader" type="file" name="file-reader" class="file-reader-input" @change="onFileChange"
-                    :disabled="loading" />
+                    :disabled="loading" ref="fileref" />
             </form>
         </div>
         <div style="display: flex;align-items: center;padding-left: 10px;">
             <Spinners v-if="loading" width="20px" height="20px"></Spinners>
+        </div>
+        <div style="display: flex;align-items: center;padding-left: 10px;">
+            <Button @click="clearFile" v-if="hasFile && !loading">
+                <Close></Close>
+            </Button>
         </div>
     </div>
 </template>
