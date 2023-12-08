@@ -5,6 +5,11 @@ import Spinners from '@/common/Spinners.vue'
 import Close from '@/icons/Close.vue'
 import Button from '@/common/Button.vue'
 
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
+const store = useMessageStore()
+const { msg } = storeToRefs(store)
+
 const props = defineProps<{
     IsLoading?: boolean
     Accept?: string
@@ -46,10 +51,14 @@ const handlerFile = (file: File) => {
     if (Accept.value && Accept.value != "*") {
         const supportedMimeTypes = Accept.value.split(",")
         if (!supportedMimeTypes.includes(file.type)) {
+            msg.value = {
+                errorMessages: ["file type Must " + Accept.value],
+                delay: 3000,
+            }
             return
         }
     }
-    
+
     labeltext.value = file.name
     emit('fileLoad', file)
     hasFile.value = true
