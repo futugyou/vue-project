@@ -85,7 +85,7 @@ onMounted(() => {
             <Spinners v-if="loading" width="20px" height="20px"></Spinners>
         </div>
         <div style="display: flex;align-items: center;padding-left: 10px;">
-            <Button @click="clearFile" v-if="hasFile && !loading">
+            <Button @click="clearFile" v-if="hasFile && !loading" Tip="clear file" :Disabled="loading">
                 <Close></Close>
             </Button>
         </div>

@@ -137,7 +137,7 @@ onMounted(() => {
     color: var(--color-text-button-normal-default);
     text-align: center;
     border-radius: 6px;
-    padding: 5px 0;
+    padding: 5px;
     position: absolute;
     z-index: 1;
     white-space: nowrap;
