@@ -43,11 +43,11 @@ const onFileChange = async (fileList: FileList) => {
     }
 
     loading.value = true
-    for (let i = 0; i < fileList.length; i++) {
-        const file = fileList[i]
+
+    Array.from(fileList).map((file) => {
         const objectUrl = URL.createObjectURL(file)
         imageList.value.push(objectUrl)
-    }
+    })
 
     fileref.value = fileList
     loading.value = false
@@ -58,7 +58,9 @@ const workerGen = async () => {
     if (!scheduler) {
         return
     }
-    const worker = await createWorker(undefined, undefined)
+    const worker = await createWorker(undefined, undefined, {
+        // logger: (m) => { console.log(m) }
+    })
     scheduler.addWorker(worker)
 }
 
@@ -69,19 +71,12 @@ const transform = async () => {
     }
 
     loading.value = true
-    const resArr = Array(fileref.value.length)
-    for (let i = 0; i < fileref.value.length; i++) {
-        resArr[i] = workerGen()
-    }
 
+    const resArr = Array(imageList.value.length)
+    Array.from(imageList.value).map((_, i) => { resArr[i] = workerGen() })
     await Promise.all(resArr)
 
-    let files: File[] = []
-    for (let i = 0; i < fileref.value.length; i++) {
-        files.push(fileref.value[i])
-    }
-
-    await Promise.all(files.map((file) => {
+    await Promise.all(Array.from(fileref.value).map((file) => {
         if (!scheduler) {
             return
         }
