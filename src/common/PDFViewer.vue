@@ -48,11 +48,12 @@ let viewerScale = ref(1)
 let pagePrefix = ref("")
 const zoomStep = 0.1
 
-const onFileChange = (file: File) => {
-    if (!file) {
+const onFileChange = (fileList: FileList) => {
+    if (!fileList || fileList.length == 0) {
         return
     }
-
+    
+    const file = fileList[0]
     const extension = file.name.split('.')[1]
     pagePrefix.value = file.name.split('.')[0]
 

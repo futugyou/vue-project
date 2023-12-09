@@ -16,15 +16,15 @@ const hasImage = ref(false)
 const fileref = ref<File>()
 const supportedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/pbm']
 
-const onFileChange = async (file: File) => {
+const onFileChange = async (fileList: FileList) => {
     hasImage.value = false
     fileref.value = undefined
-    if (!file || !ocrWorker) {
+    if (!fileList || !ocrWorker || fileList.length == 0) {
         return
     }
 
     //extension check 
-
+    const file = fileList[0]
     loading.value = true
     const objectUrl = URL.createObjectURL(file)
     imagescr.value = objectUrl

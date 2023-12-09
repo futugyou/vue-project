@@ -13,6 +13,7 @@ const { msg } = storeToRefs(store)
 const props = defineProps<{
     IsLoading?: boolean
     Accept?: string
+    Multiple?: boolean
 }>()
 
 const labeltext = ref("choose file")
@@ -21,20 +22,19 @@ const hasFile = ref(false)
 const fileref = ref<HTMLInputElement>()
 
 const emit = defineEmits<{
-    (e: 'fileLoad', f: File): void
+    (e: 'fileLoad', f: FileList): void
     (e: 'clear'): void
 }>()
 
 const onFileChange = (event: Event) => {
     const target = event.target as HTMLInputElement
-    if (target == null || target.files == null || target.files.length == 0 || !target.files[0]) {
+    if (target == null || target.files == null || target.files.length == 0) {
         labeltext.value = "choose or drag a file"
         hasFile.value = false
         return
     }
 
-    const file = target.files[0]
-    handlerFile(file)
+    handlerFile(target.files)
 }
 
 const onFileDrop = (event: DragEvent) => {
@@ -43,24 +43,28 @@ const onFileDrop = (event: DragEvent) => {
         return
     }
 
-    const file = event.dataTransfer.files[0]
-    handlerFile(file)
+    handlerFile(event.dataTransfer.files)
 }
 
-const handlerFile = (file: File) => {
+const handlerFile = (fileList: FileList) => {
+    let labels: string[] = []
     if (Accept.value && Accept.value != "*") {
         const supportedMimeTypes = Accept.value.split(",")
-        if (!supportedMimeTypes.includes(file.type)) {
-            msg.value = {
-                errorMessages: ["file type Must " + Accept.value],
-                delay: 3000,
+        for (let i = 0; i < fileList.length; i++) {
+            const file = fileList[i]
+            if (!supportedMimeTypes.includes(file.type)) {
+                msg.value = {
+                    errorMessages: ["file type Must " + Accept.value],
+                    delay: 3000,
+                }
+                return
             }
-            return
+            labels.push(file.name)
         }
     }
 
-    labeltext.value = file.name
-    emit('fileLoad', file)
+    labeltext.value = labels.join(",")
+    emit('fileLoad', fileList)
     hasFile.value = true
 }
 
@@ -102,8 +106,8 @@ onMounted(() => {
             @drop.prevent="onFileDrop" :class="{ over: isOver }">
             <form style="width: 100%;">
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
-                <input id="file-reader" type="file" name="file-reader" class="file-reader-input" @change="onFileChange"
-                    :disabled="IsLoading" ref="fileref" :accept="Accept" />
+                <input id="file-reader" type="file" name="file-reader" :multiple="Multiple" class="file-reader-input"
+                    @change="onFileChange" :disabled="IsLoading" ref="fileref" :accept="Accept" />
             </form>
         </div>
         <div style="display: flex;align-items: center;padding-left: 10px;">
