@@ -7,53 +7,56 @@ import Scan from '@/icons/Scan.vue'
 import Button from '@/common/Button.vue'
 
 let ocrWorker: Tesseract.Worker | undefined
-const extractedText = ref("")
-const extractedConfidence = ref(0)
 
-const imagescr = ref("")
+const textList = ref<string[]>([])
+const imageList = ref<string[]>([])
 const loading = ref(false)
 const hasImage = ref(false)
-const fileref = ref<File>()
+const fileref = ref<FileList>()
+
 const supportedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/pbm']
 
 const onFileChange = async (fileList: FileList) => {
-    hasImage.value = false
-    fileref.value = undefined
+    clear()
     if (!fileList || !ocrWorker || fileList.length == 0) {
         return
     }
 
-    //extension check 
-    const file = fileList[0]
     loading.value = true
-    const objectUrl = URL.createObjectURL(file)
-    imagescr.value = objectUrl
+    for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i]
+        const objectUrl = URL.createObjectURL(file)
+        imageList.value.push(objectUrl)
+    }
+
+    fileref.value = fileList
     loading.value = false
     hasImage.value = true
-    fileref.value = file
 }
 
 const transform = async () => {
+    textList.value = []
     if (!fileref.value || !ocrWorker) {
         return
     }
 
     loading.value = true
-    const { data: { text, confidence } } = await ocrWorker.recognize(fileref.value, {
-        rotateAuto: true,
-    })
+    for (let i = 0; i < fileref.value.length; i++) {
+        const file = fileref.value[i]
+        const { data: { text } } = await ocrWorker.recognize(file, {
+            rotateAuto: true,
+        })
+        textList.value.push(text)
+    }
 
-    extractedText.value = text
-    extractedConfidence.value = confidence
     loading.value = false
 }
 
 const clear = () => {
     hasImage.value = false
     fileref.value = undefined
-    imagescr.value = ""
-    extractedText.value = ""
-    extractedConfidence.value = 0
+    imageList.value = []
+    textList.value = []
 }
 
 onMounted(async () => {
@@ -68,35 +71,39 @@ onUnmounted(async () => {
 </script>
 
 <template>
-    <div class="ocr-content">
-        <div class="image-container">
-            <div class="ocr-header">
-                <div style="flex: 2;">
-                    <FileInput @fileLoad="onFileChange" :IsLoading="loading" @clear="clear"
-                        :Accept='supportedImageTypes.join(",")'></FileInput>
-                </div>
-                <div style="flex: 1;display: flex;justify-content: center;">
-                    <Button @click="transform" v-if="fileref" :Disabled="loading" Tip="transform">
-                        <Scan></Scan>
-                    </Button>
-                </div>
+    <div class="ocr-container">
+        <div class="ocr-header">
+            <div style="flex: 2;">
+                <FileInput @fileLoad="onFileChange" :IsLoading="loading" @clear="clear"
+                    :Accept='supportedImageTypes.join(",")'></FileInput>
             </div>
-            <div style="overflow: hidden; padding: 5px;">
-                <img :src="imagescr">
+            <div style="flex: 1;display: flex;justify-content: center;">
+                <Button @click="transform" v-if="fileref" :Disabled="loading" Tip="transform">
+                    <Scan></Scan>
+                </Button>
             </div>
         </div>
-        <div class="text-container">
-            <textarea v-model="extractedText" placeholder=""></textarea>
-            <span>{{ extractedConfidence }}</span>
+        <div class="ocr-body">
+            <div class="image-container">
+                <div v-for="img in imageList" :key="img" style="overflow:hidden ;">
+                    <img :src="img">
+                </div>
+            </div>
+            <div class="text-container">
+                <div v-for="text in textList" :key="text" style="overflow:hidden ;">
+                    <textarea :value="text" placeholder=""></textarea>
+                </div>
+            </div>
         </div>
     </div>
 </template>
+
 <style scoped>
-.ocr-content {
+.ocr-container {
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     overflow: hidden;
     grid-gap: var(--grid-gap-10);
 }
@@ -108,15 +115,30 @@ onUnmounted(async () => {
     grid-gap: var(--grid-gap-10);
 }
 
-.image-container {
+.ocr-body {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    grid-gap: var(--grid-gap-10);
+    overflow: hidden;
+}
+
+.image-container {
+    flex: 1;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: var(--grid-gap-10);
 }
 
 .text-container {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: var(--grid-gap-10);
 }
 </style>  
