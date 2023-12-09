@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { createWorker } from 'tesseract.js'
 import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
+import { createScheduler, createWorker } from 'tesseract.js'
 
 import FileInput from '@/common/FileInput.vue'
 import Scan from '@/icons/Scan.vue'
@@ -8,10 +8,11 @@ import Button from '@/common/Button.vue'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
+
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-let ocrWorker: Tesseract.Worker | undefined
+let scheduler: Tesseract.Scheduler | undefined
 
 const textList = ref<string[]>([])
 const imageList = ref<string[]>([])
@@ -23,7 +24,7 @@ const supportedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp
 
 const onFileChange = async (fileList: FileList) => {
     clear()
-    if (!fileList || !ocrWorker || fileList.length == 0) {
+    if (!fileList || fileList.length == 0) {
         return
     }
 
@@ -53,20 +54,42 @@ const onFileChange = async (fileList: FileList) => {
     hasImage.value = true
 }
 
+const workerGen = async () => {
+    if (!scheduler) {
+        return
+    }
+    const worker = await createWorker(undefined, undefined)
+    scheduler.addWorker(worker)
+}
+
 const transform = async () => {
     textList.value = []
-    if (!fileref.value || !ocrWorker) {
+    if (!fileref.value || !scheduler) {
         return
     }
 
     loading.value = true
+    const resArr = Array(fileref.value.length)
     for (let i = 0; i < fileref.value.length; i++) {
-        const file = fileref.value[i]
-        const { data: { text } } = await ocrWorker.recognize(file, {
-            rotateAuto: true,
-        })
-        textList.value.push(text)
+        resArr[i] = workerGen()
     }
+
+    await Promise.all(resArr)
+
+    let files: File[] = []
+    for (let i = 0; i < fileref.value.length; i++) {
+        files.push(fileref.value[i])
+    }
+
+    await Promise.all(files.map((file) => {
+        if (!scheduler) {
+            return
+        }
+        scheduler.addJob('recognize', file, { rotateAuto: true, })
+            .then((x) => {
+                textList.value.push(x.data.text)
+            })
+    }))
 
     loading.value = false
 }
@@ -83,12 +106,12 @@ const clear = () => {
 }
 
 onMounted(async () => {
-    ocrWorker = await createWorker(undefined, undefined)
+    scheduler = createScheduler()
 })
 
 onUnmounted(async () => {
-    if (ocrWorker) {
-        await ocrWorker.terminate()
+    if (scheduler) {
+        await scheduler.terminate()
     }
 })
 </script>
