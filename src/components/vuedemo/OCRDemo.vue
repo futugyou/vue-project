@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { createWorker } from 'tesseract.js'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, reactive } from 'vue'
 
 import FileInput from '@/common/FileInput.vue'
 import Scan from '@/icons/Scan.vue'
 import Button from '@/common/Button.vue'
+
+import { useMessageStore } from '@/stores/message'
+import { storeToRefs } from 'pinia'
+const store = useMessageStore()
+const { msg } = storeToRefs(store)
 
 let ocrWorker: Tesseract.Worker | undefined
 
@@ -20,6 +25,20 @@ const onFileChange = async (fileList: FileList) => {
     clear()
     if (!fileList || !ocrWorker || fileList.length == 0) {
         return
+    }
+
+    if (fileList.length > 4) {
+        msg.value = {
+            errorMessages: ["No more than 4 files."],
+            delay: 3000,
+        }
+        return
+    }
+
+    if (fileList.length > 1) {
+        theme.columns = 'repeat(2, 1fr)'
+    } else {
+        theme.columns = 'repeat(1, 1fr)'
     }
 
     loading.value = true
@@ -51,6 +70,10 @@ const transform = async () => {
 
     loading.value = false
 }
+
+const theme = reactive({
+    columns: 'repeat(1, 1fr)',
+})
 
 const clear = () => {
     hasImage.value = false
@@ -129,7 +152,7 @@ onUnmounted(async () => {
     display: grid;
     height: 100%;
     width: 100%;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: v-bind('theme.columns');
     grid-gap: var(--grid-gap-10);
 }
 
@@ -138,7 +161,7 @@ onUnmounted(async () => {
     display: grid;
     height: 100%;
     width: 100%;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: v-bind('theme.columns');
     grid-gap: var(--grid-gap-10);
 }
 </style>  
