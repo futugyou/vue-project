@@ -8,7 +8,7 @@ import Button from '@/common/Button.vue'
 import Operate from '@/icons/Operate.vue'
 import TranslateBtn from '@/icons/Translate.vue'
 
-import { translateText, TranslateModel } from '@/components/vuedemo/translate/Translate'
+import { translateText, TranslateModel } from '@/components/tools/translate/Translate'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
