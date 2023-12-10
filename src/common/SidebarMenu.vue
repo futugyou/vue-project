@@ -145,7 +145,7 @@ function toggleSidebar() {
 
  aside {
      color: $primary-color !important;
-     background: #120;
+     background: var(--color-background-menu-default);
      display: flex;
      flex-direction: column;
      min-height: 100vh;
