@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { ref, shallowRef, watchEffect } from 'vue'
-import DemoRoute from '@/components/vuedemo/DemoRoute.vue'
-import AwsRoute from '@/components/aws/AwsRoute.vue'
+import type { Component } from 'vue'
+
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
 import SidebarMenu from '@/common/SidebarMenu.vue'
 
 import { handleGlobalData } from '@/tools/baseAppEvent'
+
+import DemoRoute from '@/components/vuedemo/DemoRoute.vue'
+import AwsRoute from '@/components/aws/AwsRoute.vue'
+import ToolsRoute from '@/components/tools/ToolsRoute.vue'
+
 const rootContainer = ref("nomalRootContainer")
 const onRouteChange = () => {
     handleGlobalData()
@@ -20,7 +25,13 @@ watchEffect(() => {
     }
 })
 
-const components = shallowRef([AwsRoute, DemoRoute] as unknown as [])
+const componentDic: Record<string, Component> = {
+    'demo': DemoRoute,
+    'aws': AwsRoute,
+    'tools': ToolsRoute,
+}
+
+const components = shallowRef(componentDic)
 </script>
 
 <template>

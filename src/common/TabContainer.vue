@@ -1,26 +1,30 @@
 <script lang="ts" setup>
 import { shallowRef } from 'vue'
+import type { Component } from 'vue'
 import { useTabStore } from '@/stores/tab'
 
-const props = defineProps({
-    components: Array
-})
+export interface ITabContainerProps {
+    components: Record<string, Component>
+}
+
+const props = defineProps<ITabContainerProps>()
 
 const tabState = useTabStore()
 const currentCom = shallowRef(props.components ? props.components[tabState.value] : null)
-const changeCurrent = (com: any) => {
-    const index = props.components?.indexOf(com) ?? 0
-    tabState.value = index
+
+const changeCurrent = (name: string) => {
+    const com = props.components[name]
+    tabState.value = name
     currentCom.value = com
 }
 </script>
 
 <template>
     <div class="tab-container" tag="div">
-        <div v-for="(com, index) in components" class="tab-item" :key="index" :data-index="index">
+        <div v-for="(com, name) in components" class="tab-item" :key="name" :data-index="name">
             <Transition name="bounce">
-                <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(com)">
-                    ...
+                <div v-if="com != currentCom" class="tab-block" @click="changeCurrent(name)">
+                    {{ name }}...
                 </div>
             </Transition>
             <Transition name="bounce">
@@ -45,9 +49,8 @@ const changeCurrent = (com: any) => {
 }
 
 .tab-block {
-    width: 20px;
     border-radius: 5px;
-    color: hsla(160, 100%, 37%, 1);
+    color: hsl(84deg, 100%, 37%, 1);
     transition: 0.4s;
     cursor: pointer;
     height: 100%;

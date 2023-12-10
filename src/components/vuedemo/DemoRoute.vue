@@ -8,8 +8,5 @@
     <router-link to="/built-ins" page-path="">Built-ins</router-link> |
     <router-link to="/reactivity" page-path="">Reactivity</router-link> |
     <router-link to="/route" page-path="">Route</router-link> |
-    <router-link to="/pinia" page-path="">Pinia</router-link> |
-    <router-link to="/translate" page-path="">Translate</router-link> |
-    <router-link to="/pdf" page-path="">PDF</router-link> |
-    <router-link to="/ocr" page-path="">OCR</router-link>
+    <router-link to="/pinia" page-path="">Pinia</router-link>
 </template>
