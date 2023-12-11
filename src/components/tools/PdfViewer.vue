@@ -165,7 +165,7 @@ watch(
 .tran-contr {
     position: absolute;
     right: 10px;
-    top: 8px;
+    top: 12px;
 }
 
 .translate-container {

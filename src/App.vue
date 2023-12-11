@@ -11,6 +11,9 @@ import IconSSM from '@/icons/SSM.vue'
 import IconIAMUser from '@/icons/IAMUser.vue'
 import IconS3Bucket from '@/icons/S3Bucket.vue'
 import IconHome from '@/icons/Home.vue'
+import IconPdf from '@/icons/Pdf.vue'
+import IconOrc from '@/icons/Scan.vue'
+import IconTranslate from '@/icons/Translate.vue'
 
 import { handleGlobalData } from '@/tools/baseAppEvent'
 
@@ -28,6 +31,18 @@ const SidebarMenuItems = [{
     label: "Home",
     icon: IconHome,
 }, {
+    route: "/pdf",
+    label: "Pdf",
+    icon: IconPdf,
+}, {
+    route: "/ocr",
+    label: "Ocr",
+    icon: IconOrc,
+}, {
+    route: "/translate",
+    label: "Translate",
+    icon: IconTranslate,
+}, {
     route: "/account",
     label: "Account",
     icon: IconIAMUser,
@@ -43,7 +58,7 @@ const SidebarMenuItems = [{
     route: "/s3",
     label: "S3Bucket",
     icon: IconS3Bucket,
-}
+},
 ]
 
 watchEffect(() => {

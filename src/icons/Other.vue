@@ -4,7 +4,6 @@
       Other
     </title>
     <rect x="5" y="15" width="90" height="70" stroke="currentColor" stroke-width="3" fill="transparent" />
-
   </svg>
 </template>
   
