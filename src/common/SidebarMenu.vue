@@ -136,23 +136,13 @@ function toggleSidebar() {
     </div>
 </template>
 
-<style scoped lang="scss"> $primary-color: #ffa;
- $minor-color: #f5a;
+<style scoped lang="scss"> $primary-color: var(--vt-c-black-soft);
+ $minor-color: var(--vt-c-black-soft);
  $sidebar-width: 4rem;
  $sidebar-width: 4rem;
  $toggle-duration: 300ms;
  $sidebar-padding-inline-start: 1rem;
 
- aside {
-     color: $primary-color !important;
-     background: var(--color-background-menu-default);
-     display: flex;
-     flex-direction: column;
-     min-height: 100vh;
-     padding-block: 1rem;
-     transition: all $toggle-duration;
-     width: $sidebar-width;
- }
 
  aside[vue\:is-open=true] {
      width: 3 * $sidebar-width;
@@ -175,7 +165,6 @@ function toggleSidebar() {
      text-align: left;
      min-width: fit-content;
      cursor: pointer;
-     padding-inline-start: $sidebar-padding-inline-start;
 
      &:hover {
          color: $minor-color;
@@ -190,6 +179,8 @@ function toggleSidebar() {
          column-gap: 0.75rem;
          position: relative;
          padding-block: 0.5rem;
+         padding-inline-start: $sidebar-padding-inline-start;
+         padding-inline-end: $sidebar-padding-inline-start;
      }
 
      & a:hover {
@@ -209,6 +200,10 @@ function toggleSidebar() {
  .sidebar-head {
      position: relative;
      // padding-block-end: 4rem;
+ }
+
+ .sidebar-head li {
+     padding-inline-start: $sidebar-padding-inline-start;
  }
 
  .sidebar-toggle {
@@ -260,5 +255,4 @@ function toggleSidebar() {
  .fade-leave-to {
      opacity: 0;
      transform: translateX(-100%);
- }
-</style>
+ }</style>
