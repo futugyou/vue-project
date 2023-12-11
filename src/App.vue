@@ -6,6 +6,12 @@ import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
 import SidebarMenu from '@/common/SidebarMenu.vue'
 
+import IconECSService from '@/icons/ECSService.vue'
+import IconSSM from '@/icons/SSM.vue'
+import IconIAMUser from '@/icons/IAMUser.vue'
+import IconS3Bucket from '@/icons/S3Bucket.vue'
+import IconHome from '@/icons/Home.vue'
+
 import { handleGlobalData } from '@/tools/baseAppEvent'
 
 import DemoRoute from '@/components/vuedemo/DemoRoute.vue'
@@ -16,6 +22,29 @@ const rootContainer = ref("nomalRootContainer")
 const onRouteChange = () => {
     handleGlobalData()
 }
+
+const SidebarMenuItems = [{
+    route: "/",
+    label: "Home",
+    icon: IconHome,
+}, {
+    route: "/account",
+    label: "Account",
+    icon: IconIAMUser,
+}, {
+    route: "/parameter",
+    label: "Parameter",
+    icon: IconSSM,
+}, {
+    route: "/ecs",
+    label: "Ecs Service",
+    icon: IconECSService,
+}, {
+    route: "/s3",
+    label: "S3Bucket",
+    icon: IconS3Bucket,
+}
+]
 
 watchEffect(() => {
     if (window.__MICRO_APP_ENVIRONMENT__) {
@@ -41,7 +70,7 @@ const components = shallowRef(componentDic)
             <KeepAlive>
                 <TabContainer :components="components" v-if="rootContainer == 'nomalRootContainer'"> </TabContainer>
             </KeepAlive>
-            <SidebarMenu class="subappsidebar" v-if="rootContainer == 'subAppRootContainer'" />
+            <SidebarMenu class="subappsidebar" v-if="rootContainer == 'subAppRootContainer'" :items="SidebarMenuItems" />
         </div>
         <div class="vu3-app">
             <router-view v-slot="{ Component, route }">

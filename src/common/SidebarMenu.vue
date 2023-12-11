@@ -2,13 +2,21 @@
 
 import { shallowRef } from 'vue'
 import { RouterLink } from 'vue-router'
+import type { Component } from 'vue'
+
 import IconAngle from '@/icons/Angle.vue'
-import IconECSService from '@/icons/ECSService.vue'
-import IconSSM from '@/icons/SSM.vue'
-import IconIAMUser from '@/icons/IAMUser.vue'
-import IconS3Bucket from '@/icons/S3Bucket.vue'
-import IconHome from '@/icons/Home.vue'
-import IOther from '@/icons/Other.vue'
+
+export interface SideMenuData {
+    route: string
+    label: string
+    icon?: Component
+}
+
+export interface SideMenuDataList {
+    items: SideMenuData[]
+}
+
+const props = defineProps<SideMenuDataList>()
 
 const isSidebarOpen = shallowRef<Boolean>(false)
 
@@ -35,99 +43,11 @@ function toggleSidebar() {
             <h4 :transparent="!isSidebarOpen">Menu</h4>
 
             <ul>
-                <li>
-                    <router-link to="/">
-                        <IconHome />
+                <li v-for="item in items" :key="item.label">
+                    <router-link :to="item.route">
+                        <component :is="item.icon"></component>
                         <Transition name="fade">
-                            <span v-show="isSidebarOpen">Home</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/account">
-                        <IconIAMUser />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Account</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/parameter">
-                        <IconSSM />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Parameter</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/ecs">
-                        <IconECSService />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Ecs Service</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/s3">
-                        <IconS3Bucket />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">S3Bucket</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/base">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Base</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/form">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Form</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/dynamic">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Dynamic</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/built-ins">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Built-ins</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/reactivity">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Reactivity</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/route">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Route</span>
-                        </Transition>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/pinia">
-                        <IOther />
-                        <Transition name="fade">
-                            <span v-show="isSidebarOpen">Pinia</span>
+                            <span v-show="isSidebarOpen">{{ item.label }}</span>
                         </Transition>
                     </router-link>
                 </li>
@@ -255,4 +175,5 @@ function toggleSidebar() {
  .fade-leave-to {
      opacity: 0;
      transform: translateX(-100%);
- }</style>
+ }
+</style>
