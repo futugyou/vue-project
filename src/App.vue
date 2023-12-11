@@ -60,6 +60,7 @@ const components = shallowRef(componentDic)
 #public-links {
     padding: 0;
     font-size: 18px;
+    background: var(--color-background-menu-default);
 }
 
 .vu3-app {

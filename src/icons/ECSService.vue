@@ -21,15 +21,7 @@
       <path d="M11.35,39.51H6.85a1,1,0,0,1-1-1V2.5a1,1,0,0,1,1-1h27a1,1,0,0,1,1,1V7h-2V3.5h-25v34h3.5Z"
         fill="currentColor" />
     </g>
-
-    <g id="grid_x5F_locked" />
-    <g id="icon">
-      <g transform="translate(59,2)">
-        <path class="st4" d="M8,0C3.6,0,0,3.6,0,8s3.6,8,8,8s8-3.6,8-8S12.4,0,8,0z M8,14c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6
-  			S11.3,14,8,14z" />
-        <polygon class="st4" points="7,8.6 5,6.6 3.6,8 7,11.4 11.9,6.5 10.5,5.1 		" />
-    </g>
-  </g>
-</svg></template>
+  </svg>
+</template>
   
 <style scoped lang="scss">// .clr-i-solid {}</style>

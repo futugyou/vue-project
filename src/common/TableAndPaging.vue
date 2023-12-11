@@ -178,7 +178,7 @@ const sort = (key: string) => {
     height: 100%;
     display: flex;
     flex-direction: column;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .table-container {
