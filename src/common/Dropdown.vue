@@ -69,6 +69,10 @@ const changeSelected = (key: string) => {
     text-align: left;
     line-height: 30px;
     margin-top: 5px;
+    z-index: 1;
+    border-radius: 10px;
+    background: fixed;
+    background-color: rgba(255, 255, 255);
 }
 
 .dropdown-btn {
@@ -93,12 +97,14 @@ const changeSelected = (key: string) => {
 .dropdown-items-container ul {
     border: 1px solid var(--color-border-button-normal-default);
     border-radius: 10px;
-    padding: 0px 10px;
-    z-index: 1;
+    margin: 0;
+    padding: 0;
 }
 
 .dropdown-items-container * li {
     cursor: pointer;
+    padding-left: 10px;
+    border-radius: 10px;
 }
 
 
