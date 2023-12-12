@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import Button from '@/common/Button.vue'
+import Dropdown from '@/common/Dropdown.vue'
 
 import { translateText, TranslateModel } from './Translate'
 
@@ -11,6 +12,8 @@ const { msg } = storeToRefs(store)
 
 const left = ref("")
 const right = ref("")
+const from = ref("")
+const to = ref("")
 
 const isLoading = ref(false)
 const translate = async () => {
@@ -25,7 +28,7 @@ const translate = async () => {
 
     let model: TranslateModel[] = []
     model.push({ Text: text })
-    const { data, error } = await translateText("en", "zh-Hans", model)
+    const { data, error } = await translateText(from.value, to.value, model)
     isLoading.value = false
 
     if (error) {
@@ -47,6 +50,13 @@ const translate = async () => {
     }
 }
 
+const changeFromLang = (lang: string) => {
+    from.value = lang
+}
+const changeToLang = (lang: string) => {
+    to.value = lang
+}
+const langItems = { "en": "English", "zh-Hans": "Chinese" }
 </script>
 
 <template>
@@ -55,8 +65,10 @@ const translate = async () => {
             <textarea v-model="left" placeholder="input your text"></textarea>
         </div>
         <div class="trans-but-container">
+            <Dropdown :items="langItems" @changeSelected="changeFromLang"></Dropdown>
             <Button Text="Translate" @click="translate" :IsLoading="isLoading">
             </Button>
+            <Dropdown :items="langItems" @changeSelected="changeToLang"></Dropdown>
         </div>
         <div class="text-container">
             <textarea v-model="right" placeholder=""></textarea>
@@ -85,7 +97,9 @@ const translate = async () => {
 .trans-but-container {
     display: flex;
     align-items: center;
-    width: 130px;
-    justify-content: space-around;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 200px;
 }
 </style>
