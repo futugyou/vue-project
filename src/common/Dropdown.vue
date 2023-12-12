@@ -14,7 +14,7 @@ const emit = defineEmits<{
     (e: 'changeSelected', n: string): void
 }>()
 
-const selectedValue = ref(props.defaultValue ?? "---")
+const selectedValue = ref(props.items[props.defaultValue ?? ""] ?? "---")
 
 const items = computed(() => {
     if (props.allowEmpty) {
