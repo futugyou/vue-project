@@ -12,14 +12,20 @@ const { msg } = storeToRefs(store)
 
 const left = ref("")
 const right = ref("")
-const from = ref("")
-const to = ref("")
-
+const from = ref("en")
+const to = ref("zh-Hans")
 const isLoading = ref(false)
+
+const langItems: Record<string, string> = { "en": "English", "zh-Hans": "Chinese" }
+
 const translate = async () => {
     let text = left.value ?? ""
     text = text.replaceAll("\n", "").replaceAll("\r", "")
     if (!text) {
+        return
+    }
+
+    if (from.value == to.value || !langItems[from.value] || !langItems[to.value]) {
         return
     }
 
@@ -53,10 +59,11 @@ const translate = async () => {
 const changeFromLang = (lang: string) => {
     from.value = lang
 }
+
 const changeToLang = (lang: string) => {
     to.value = lang
 }
-const langItems = { "en": "English", "zh-Hans": "Chinese" }
+
 </script>
 
 <template>
@@ -65,10 +72,10 @@ const langItems = { "en": "English", "zh-Hans": "Chinese" }
             <textarea v-model="left" placeholder="input your text"></textarea>
         </div>
         <div class="trans-but-container">
-            <Dropdown :items="langItems" @changeSelected="changeFromLang"></Dropdown>
+            <Dropdown :items="langItems" @changeSelected="changeFromLang" :defaultValue="from"></Dropdown>
             <Button Text="Translate" @click="translate" :IsLoading="isLoading">
             </Button>
-            <Dropdown :items="langItems" @changeSelected="changeToLang"></Dropdown>
+            <Dropdown :items="langItems" @changeSelected="changeToLang" :defaultValue="to"></Dropdown>
         </div>
         <div class="text-container">
             <textarea v-model="right" placeholder=""></textarea>
