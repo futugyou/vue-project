@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import Up from '@/icons/Up.vue'
 import Down from '@/icons/Down.vue'
 
 export interface IDropdownProps {
     items: Record<string, string>
     defaultValue?: string
+    allowEmpty?: boolean
 }
 
 const props = defineProps<IDropdownProps>()
@@ -15,10 +16,16 @@ const emit = defineEmits<{
 
 const selectedValue = ref(props.defaultValue ?? "---")
 
+const items = computed(() => {
+    if (props.allowEmpty) {
+        return { "": "---", ...props.items }
+    }
+    return props.items
+})
+
 const showList = ref(false)
 const changeSelected = (key: string) => {
-    emit('changeSelected', key)
-    const selectItem = props.items[key]
+    const selectItem = items.value[key]
     if (selectItem) {
         selectedValue.value = selectItem
     } else {
@@ -26,6 +33,7 @@ const changeSelected = (key: string) => {
     }
 
     showList.value = false
+    emit('changeSelected', key)
 }
 </script>
 
@@ -86,6 +94,7 @@ const changeSelected = (key: string) => {
     border: 1px solid var(--color-border-button-normal-default);
     border-radius: 10px;
     padding: 0px 10px;
+    z-index: 1;
 }
 
 .dropdown-items-container * li {
