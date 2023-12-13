@@ -3,7 +3,12 @@ import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import Button from '@/common/Button.vue'
 import Dropdown from '@/common/Dropdown.vue'
 
-import { translateText, TranslateModel, detectLanguage, DetectLanguageModel } from './Translate'
+import {
+    translateText, TranslateModel,
+    detectLanguage, DetectLanguageModel,
+    lookupDictionary, DictionaryLookupModel,
+    languageList, LanguageListModel,
+} from './Translate'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -15,25 +20,24 @@ const right = ref("")
 const from = ref("en")
 const to = ref("zh-Hans")
 const isLoading = ref(false)
+const isDetectLoading = ref(false)
+const isLookupLoading = ref(false)
 
-const langItems: Record<string, string> = { "en": "English", "zh-Hans": "Chinese" }
+const langItems = ref<Record<string, string>>({ "en": "English", "zh-Hans": "Chinese" })
 
 const translate = async () => {
-    let text = left.value ?? ""
-    text = text.replaceAll("\n", "").replaceAll("\r", "")
-    if (!text || text == "") {
+    if (from.value == to.value || !langItems.value[from.value] || !langItems.value[to.value]) {
         return
     }
 
-    if (from.value == to.value || !langItems[from.value] || !langItems[to.value]) {
+    let model = makeTranslateModel(left.value)
+    if (model.length == 0) {
         return
     }
 
     right.value = ""
     isLoading.value = true
 
-    let model: TranslateModel[] = []
-    model.push({ Text: text })
     const { data, error } = await translateText(from.value, to.value, model)
     isLoading.value = false
 
@@ -66,19 +70,18 @@ const changeToLang = (lang: string) => {
 
 const inputeChange = async (event: Event) => {
     const target = event.target as HTMLInputElement
-    if (target == null) {
+    if (target == null || isDetectLoading.value) {
         return
     }
 
-    let text = target.value ?? ""
-    text = text.replaceAll("\n", "").replaceAll("\r", "")
-    if (!text || text == "") {
+    let model = makeTranslateModel(target.value)
+    if (model.length == 0) {
         return
     }
 
-    let model: TranslateModel[] = []
-    model.push({ Text: text })
+    isDetectLoading.value = true
     const { data, error } = await detectLanguage(from.value, to.value, model)
+    isDetectLoading.value = false
     if (error) {
         return
     }
@@ -93,12 +96,63 @@ const inputeChange = async (event: Event) => {
         from.value = d.language
     }
 }
+
+const selectText = async () => {
+    const selection = window.getSelection()
+    if (!selection || isLookupLoading.value) {
+        return
+    }
+
+    const selectedText = selection.toString()
+    let model = makeTranslateModel(selectedText)
+    if (model.length == 0) {
+        return
+    }
+
+    isLookupLoading.value = true
+    const { data, error } = await lookupDictionary(from.value, to.value, model)
+    isLookupLoading.value = false
+    if (error) {
+        return
+    }
+
+    const r = data as DictionaryLookupModel[]
+    console.log(r)
+}
+
+const makeTranslateModel = (t: string) => {
+    let text = t ?? ""
+    text = text.replaceAll("\n", "").replaceAll("\r", "")
+    let model: TranslateModel[] = []
+    if (!text || text == "") {
+        return model
+    }
+
+    model.push({ Text: text })
+    return model
+}
+
+watchEffect(async () => {
+    const { data, error } = await languageList()
+
+    if (error) {
+        return
+    }
+
+    const r = data as LanguageListModel
+    for (const key in r.translation) {
+        const value = r.translation[key]
+        if (!langItems.value[key]) {
+            langItems.value[key] = value.name
+        }
+    }
+})
 </script>
 
 <template>
     <div class="full-content">
         <div class="text-container">
-            <textarea v-model="left" placeholder="input your text" @change="inputeChange"></textarea>
+            <textarea v-model="left" placeholder="input your text" @change="inputeChange" @mouseup="selectText"></textarea>
         </div>
         <div class="trans-but-container">
             <Dropdown :items="langItems" @changeSelected="changeFromLang" :defaultValue="from" :key="from"></Dropdown>
