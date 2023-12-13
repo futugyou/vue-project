@@ -99,6 +99,8 @@ const changeSelected = (key: string) => {
     border-radius: 10px;
     margin: 0;
     padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .dropdown-items-container * li {
