@@ -33,11 +33,23 @@ export interface BackTranslation {
     frequencyCount: number
 }
 
+export interface LanguageListModel {
+    translation: Record<string, LanguageDetail>
+}
+
+export interface LanguageDetail {
+    name: string
+    nativeName: string
+    dir: string
+    code: string
+}
+
 const api_version = "api-version=" + import.meta.env.REACT_APP_TRANSLATE_VSERION
 const api_endpoint = import.meta.env.REACT_APP_TRANSLATE_SERVER
 const translate_api = api_endpoint + 'translate?' + api_version
 const detect_api = api_endpoint + 'detect?' + api_version
 const lookup_api = api_endpoint + 'dictionary/lookup?' + api_version
+const languages_api = api_endpoint + 'languages?scope=translation&' + api_version
 
 export const translateText = async (from: string, to: string, model: TranslateModel[]) => {
     const translateEndpoint = translate_api + '&from=' + from + '&to=' + to
@@ -67,4 +79,9 @@ export const lookupDictionary = async (from: string, to: string, model: Translat
     }
 
     return fetchEx(lookupEndpoint, 'post', model, false, h)
+}
+
+export const languageList = async () => {
+    const languagesEndpoint = languages_api
+    return fetchEx(languagesEndpoint, 'get')
 }
