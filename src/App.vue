@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, shallowRef, watchEffect } from 'vue'
 import type { Component } from 'vue'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
@@ -79,6 +80,7 @@ const components = shallowRef(componentDic)
 </script>
 
 <template>
+    <SpeedInsights /> 
     <Alert></Alert>
     <div :class="rootContainer">
         <div id="public-links" @click="onRouteChange">

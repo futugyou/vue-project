@@ -16,3 +16,6 @@ updates:
       vue-ex:
         patterns:
         - "@vue*"
+      vercel:
+        patterns:
+        - "@vercel*"

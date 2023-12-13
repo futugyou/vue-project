@@ -6,6 +6,8 @@ import 'bootstrap'
 
 import { createApp, App as AppInstance } from 'vue'
 import { Router } from 'vue-router'
+
+import { inject } from '@vercel/analytics'
 import CodeDiff from 'v-code-diff'
 
 import App from './App.vue'
@@ -37,6 +39,7 @@ const mount = () => {
     console.log(3, 'micro app vue demo rendered')
 
     handleMicroData(router!)
+    inject()
 }
 
 const unmount = () => {
