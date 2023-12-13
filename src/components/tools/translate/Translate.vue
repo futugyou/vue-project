@@ -3,7 +3,7 @@ import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import Button from '@/common/Button.vue'
 import Dropdown from '@/common/Dropdown.vue'
 
-import { translateText, TranslateModel } from './Translate'
+import { translateText, TranslateModel, detectLanguage, DetectLanguageModel } from './Translate'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -21,7 +21,7 @@ const langItems: Record<string, string> = { "en": "English", "zh-Hans": "Chinese
 const translate = async () => {
     let text = left.value ?? ""
     text = text.replaceAll("\n", "").replaceAll("\r", "")
-    if (!text) {
+    if (!text || text == "") {
         return
     }
 
@@ -64,15 +64,44 @@ const changeToLang = (lang: string) => {
     to.value = lang
 }
 
+const inputeChange = async (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target == null) {
+        return
+    }
+
+    let text = target.value ?? ""
+    text = text.replaceAll("\n", "").replaceAll("\r", "")
+    if (!text || text == "") {
+        return
+    }
+
+    let model: TranslateModel[] = []
+    model.push({ Text: text })
+    const { data, error } = await detectLanguage(from.value, to.value, model)
+    if (error) {
+        return
+    }
+
+    const r = data as DetectLanguageModel[]
+    if (!r || r.length == 0) {
+        return
+    }
+
+    const d = r.sort((a, b) => b.score - a.score)[0]
+    if (d.isTranslationSupported) {
+        from.value = d.language
+    }
+}
 </script>
 
 <template>
     <div class="full-content">
         <div class="text-container">
-            <textarea v-model="left" placeholder="input your text"></textarea>
+            <textarea v-model="left" placeholder="input your text" @change="inputeChange"></textarea>
         </div>
         <div class="trans-but-container">
-            <Dropdown :items="langItems" @changeSelected="changeFromLang" :defaultValue="from"></Dropdown>
+            <Dropdown :items="langItems" @changeSelected="changeFromLang" :defaultValue="from" :key="from"></Dropdown>
             <Button Text="Translate" @click="translate" :IsLoading="isLoading">
             </Button>
             <Dropdown :items="langItems" @changeSelected="changeToLang" :defaultValue="to"></Dropdown>
