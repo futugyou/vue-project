@@ -15,7 +15,7 @@ export interface ISpeechProps {
 const props = withDefaults(defineProps<ISpeechProps>(), {
     lang: 'en-US',
     volume: 1,
-    pitch: 1,
+    pitch: 2,
     rate: 0.3,
 })
 

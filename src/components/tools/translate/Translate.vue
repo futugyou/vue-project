@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import Button from '@/common/Button.vue'
+import Speech from '@/common/Speech.vue'
 import Dropdown from '@/common/Dropdown.vue'
 
 import {
@@ -122,9 +123,9 @@ const selectText = async () => {
 
 const makeTranslateModel = (t: string) => {
     let text = t ?? ""
-    text = text.replaceAll("\n", "").replaceAll("\r", "")
+    text = text.replaceAll("\n", "").replaceAll("\r", "").trim()
     let model: TranslateModel[] = []
-    if (!text || text == "") {
+    if (text == "") {
         return model
     }
 
@@ -153,6 +154,9 @@ watchEffect(async () => {
     <div class="full-content">
         <div class="text-container">
             <textarea v-model="left" placeholder="input your text" @change="inputeChange" @mouseup="selectText"></textarea>
+            <div class="speech-btn">
+                <Speech :lang="from" :text="left"></Speech>
+            </div>
         </div>
         <div class="trans-but-container">
             <Dropdown :items="langItems" @changeSelected="changeFromLang" :defaultValue="from" :key="from"></Dropdown>
@@ -162,6 +166,9 @@ watchEffect(async () => {
         </div>
         <div class="text-container">
             <textarea v-model="right" placeholder=""></textarea>
+            <div class="speech-btn">
+                <Speech :lang="to" :text="right"></Speech>
+            </div>
         </div>
     </div>
 </template>
@@ -182,6 +189,7 @@ watchEffect(async () => {
     flex: 1;
     padding: 10px;
     margin: 10px;
+    position: relative;
 }
 
 .trans-but-container {
@@ -191,5 +199,17 @@ watchEffect(async () => {
     flex-direction: column;
     gap: 10px;
     width: 200px;
+    position: relative;
+}
+
+.speech-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    display: none;
+}
+
+.text-container:hover .speech-btn {
+    display: block;
 }
 </style>
