@@ -19,3 +19,12 @@ export const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTM
 
     return visibleCanvas
 }
+
+export const ArrayChunks = <T>(items: T[], n: number) => {
+    let chunks = []
+
+    for (let i = 0; i < items.length; i += n) {
+        chunks.push(items.slice(i, i + n))
+    }
+    return chunks
+}
