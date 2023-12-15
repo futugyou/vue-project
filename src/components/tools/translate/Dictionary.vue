@@ -2,10 +2,12 @@
 import { ref, watch } from 'vue'
 
 import {
-    TranslateModel,
+    TranslateModel, lookupDictionaryExamples,
     lookupDictionary, DictionaryLookupModel,
+    DictionaryExampleModel,
 } from './Translate'
 
+import { ArrayChunks } from '@/tools/util'
 
 export interface IDictionaryProps {
     text: string,
@@ -19,9 +21,6 @@ const props = withDefaults(defineProps<IDictionaryProps>(), {
     to: 'zh-Hans',
 })
 
-// const text = ref(props.text)
-// const from = ref(props.from)
-// const to = ref(props.to)
 const dictionary = ref<DictionaryLookupModel[]>([])
 
 const isLoading = ref(false)
@@ -34,7 +33,10 @@ const makeTranslateModel = (t: string) => {
         return model
     }
 
-    model.push({ Text: text })
+    model.push({
+        Text: text,
+        Translation: ''
+    })
     return model
 }
 
@@ -59,7 +61,61 @@ watch(
             return
         }
 
-        dictionary.value = data
+        let d = data as DictionaryLookupModel[]
+        let modelExamples: TranslateModel[] = []
+        for (let i = 0; i < d.length; i++) {
+            const dic = d[i]
+            for (let j = 0; j < dic.translations.length; j++) {
+                const trans = dic.translations[j]
+                let subExamples: TranslateModel[] = []
+                for (let l = 0; l < trans.backTranslations.length; l++) {
+                    const back = trans.backTranslations[l]
+                    subExamples.push({
+                        "Text": back.normalizedText,
+                        "Translation": trans.normalizedTarget,
+                    })
+                }
+
+                if (subExamples.length == 0) {
+                    subExamples.push({
+                        "Text": dic.normalizedSource,
+                        "Translation": trans.normalizedTarget,
+                    })
+                }
+
+                modelExamples.push(...subExamples)
+            }
+        }
+
+        const { data: examples, error: err } = await lookupDictionaryExamples(props.from, props.to, modelExamples)
+        if (err) {
+            dictionary.value = d
+            return
+        }
+
+        for (let i = 0; i < d.length; i++) {
+            const dic = d[i]
+            for (let j = 0; j < dic.translations.length; j++) {
+                const trans = dic.translations[j]
+                for (let l = 0; l < trans.backTranslations.length; l++) {
+                    const back = trans.backTranslations[l]
+                    const subexamples = (examples as DictionaryExampleModel[])
+                        .filter(p => p.normalizedSource == back.normalizedText
+                            && p.normalizedTarget == trans.normalizedTarget)
+                    if (subexamples.length == 0) {
+                        continue
+                    }
+
+                    const exampleChunks = ArrayChunks(subexamples[0].examples, 3)
+                    if (exampleChunks.length == 0) {
+                        continue
+                    }
+
+                    back.examples = exampleChunks[0]
+                }
+            }
+        }
+        dictionary.value = d
     },
     { deep: true, immediate: true }
 )
@@ -79,6 +135,20 @@ watch(
                     <div class="tran-item-container">
                         <div v-for="bt in t.backTranslations" :key="bt.normalizedText">
                             <div> <span>{{ bt.normalizedText }}</span></div>
+                            <div class="example-container">
+                                <div class="example-item" v-for="ex in bt.examples" :key="ex.sourcePrefix">
+                                    <div>
+                                        <span>{{ ex.sourcePrefix }}</span>
+                                        <span class="text-strong">{{ ex.sourceTerm }}</span>
+                                        <span>{{ ex.sourceSuffix }}</span>
+                                    </div>
+                                    <div>
+                                        <span>{{ ex.targetPrefix }}</span>
+                                        <span class="text-strong">{{ ex.targetTerm }}</span>
+                                        <span>{{ ex.targetSuffix }}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -106,12 +176,14 @@ watch(
     display: flex;
     flex-direction: column;
     grid-gap: var(--grid-gap-10);
+    overflow-y: auto;
 }
 
 .trans-container {
     display: flex;
     grid-gap: var(--grid-gap-10);
     flex-direction: column;
+    padding-left: 20px;
 }
 
 .tran-header {
@@ -122,5 +194,26 @@ watch(
 .tran-item-container {
     display: flex;
     grid-gap: var(--grid-gap-10);
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.example-container {
+    padding-left: 20px;
+    display: flex;
+    grid-gap: var(--grid-gap-10);
+    flex-direction: column;
+}
+
+.example-item {
+    display: flex;
+    grid-gap: var(--grid-gap-5);
+    flex-direction: column;
+}
+
+.text-strong {
+    font-weight: var(--default-font-strong-weight);
+    margin: 0px 5px;
+    font-style: oblique;
 }
 </style>

@@ -21,6 +21,8 @@
     --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
     --default-font-size: 18px;
+    --default-font-weight: 700;
+    --default-font-strong-weight: 700;
     --font-size-body: 15px;
     --font-size-body-m: 14px;
     --line-height-body-m: 20px;

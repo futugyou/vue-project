@@ -119,7 +119,10 @@ const makeTranslateModel = (t: string) => {
         return model
     }
 
-    model.push({ Text: text })
+    model.push({
+        Text: text,
+        Translation: ''
+    })
     return model
 }
 

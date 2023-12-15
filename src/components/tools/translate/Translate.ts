@@ -2,7 +2,8 @@ import { fetchEx } from '@/tools/fetch'
 import { ArrayChunks } from '@/tools/util'
 
 export interface TranslateModel {
-    Text: string 
+    Text: string
+    Translation: string
 }
 
 export interface DetectLanguageModel {
