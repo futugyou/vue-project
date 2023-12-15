@@ -3,11 +3,11 @@ import { ref, watchEffect, computed, onMounted, watch } from 'vue'
 import Button from '@/common/Button.vue'
 import Speech from '@/common/Speech.vue'
 import Dropdown from '@/common/Dropdown.vue'
+import Dictionary from './Dictionary.vue'
 
 import {
     translateText, TranslateModel,
     detectLanguage, DetectLanguageModel,
-    lookupDictionary, DictionaryLookupModel,
     languageList, LanguageListModel,
 } from './Translate'
 
@@ -20,6 +20,7 @@ const left = ref("")
 const right = ref("")
 const from = ref("en")
 const to = ref("zh-Hans")
+const selectedText = ref("")
 const isLoading = ref(false)
 const isDetectLoading = ref(false)
 const isLookupLoading = ref(false)
@@ -98,27 +99,16 @@ const inputeChange = async (event: Event) => {
     }
 }
 
-const selectText = async () => {
+const selectText = () => {
     const selection = window.getSelection()
     if (!selection || isLookupLoading.value) {
         return
     }
 
-    const selectedText = selection.toString()
-    let model = makeTranslateModel(selectedText)
-    if (model.length == 0) {
-        return
+    const t = selection.toString().trim()
+    if (t) {
+        selectedText.value = t
     }
-
-    isLookupLoading.value = true
-    const { data, error } = await lookupDictionary(from.value, to.value, model)
-    isLookupLoading.value = false
-    if (error) {
-        return
-    }
-
-    const r = data as DictionaryLookupModel[]
-    console.log(r)
 }
 
 const makeTranslateModel = (t: string) => {
@@ -170,6 +160,9 @@ watchEffect(async () => {
                 <Speech :lang="to" :text="right"></Speech>
             </div>
         </div>
+        <div class="text-container" v-if="selectedText != ''">
+            <Dictionary :text="selectedText" :from="from" :to="to" :key="selectedText"></Dictionary>
+        </div>
     </div>
 </template>
 
@@ -189,6 +182,7 @@ watchEffect(async () => {
     flex: 1;
     padding: 10px;
     margin: 10px;
+    overflow: hidden;
     position: relative;
 }
 
