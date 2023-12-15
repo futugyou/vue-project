@@ -1,7 +1,8 @@
 import { fetchEx } from '@/tools/fetch'
+import { ArrayChunks } from '@/tools/util'
 
 export interface TranslateModel {
-    Text: string
+    Text: string 
 }
 
 export interface DetectLanguageModel {
@@ -15,6 +16,15 @@ export interface DictionaryLookupModel {
     normalizedSource: string
     displaySource: string
     translations: Translation[]
+}
+
+export interface ExampleModel {
+    sourcePrefix: string
+    sourceTerm: string
+    sourceSuffix: string
+    targetPrefix: string
+    targetTerm: string
+    targetSuffix: string
 }
 
 export interface Translation {
@@ -31,6 +41,7 @@ export interface BackTranslation {
     displayText: string
     numExamples: number
     frequencyCount: number
+    examples: ExampleModel[]
 }
 
 export interface LanguageListModel {
@@ -47,12 +58,20 @@ export interface LanguageDetail {
     toScripts: LanguageDetail[]
 }
 
+export interface DictionaryExampleModel {
+    normalizedSource: string
+    normalizedTarget: string
+    examples: ExampleModel[]
+}
+
 const api_version = "api-version=" + import.meta.env.REACT_APP_TRANSLATE_VSERION
 const api_endpoint = import.meta.env.REACT_APP_TRANSLATE_SERVER
+
+const languages_api = api_endpoint + 'languages?' + api_version
 const translate_api = api_endpoint + 'translate?' + api_version
 const detect_api = api_endpoint + 'detect?' + api_version
 const lookup_api = api_endpoint + 'dictionary/lookup?' + api_version
-const languages_api = api_endpoint + 'languages?' + api_version
+const examples_api = api_endpoint + 'dictionary/examples?' + api_version
 
 export const translateText = async (from: string, to: string, model: TranslateModel[]) => {
     const translateEndpoint = translate_api + '&from=' + from + '&to=' + to
@@ -82,6 +101,26 @@ export const lookupDictionary = async (from: string, to: string, model: Translat
     }
 
     return fetchEx(lookupEndpoint, 'post', model, false, h)
+}
+
+export const lookupDictionaryExamples = async (from: string, to: string, model: TranslateModel[]) => {
+    const examplesEndpoint = examples_api + '&from=' + from + '&to=' + to
+    let h: Record<string, string> = {
+        'Ocp-Apim-Subscription-Key': import.meta.env.REACT_APP_TRANSLATE_KEY,
+        'Ocp-Apim-Subscription-Region': import.meta.env.REACT_APP_TRANSLATE_REGION,
+    }
+
+    const submodels = ArrayChunks(model, 10)
+    let result = []
+    for (let i = 0; i < submodels.length; i++) {
+        const { data, error } = await fetchEx(examplesEndpoint, 'post', submodels[i], false, h)
+        if (error) {
+            return { data, error }
+        }
+        result.push(...data)
+    }
+
+    return { data: result, error: undefined }
 }
 
 export const languageList = async () => {
