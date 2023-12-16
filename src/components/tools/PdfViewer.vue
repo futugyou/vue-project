@@ -51,7 +51,10 @@ const translate = async () => {
 
     let model: TranslateModel[] = []
     for (let i = 0; i < reg.length; i++) {
-        model.push({ Text: reg[i] })
+        model.push({
+            Text: reg[i],
+            Translation: ''
+        })
     }
 
     const { data, error } = await translateText("en", "zh-Hans", model)
