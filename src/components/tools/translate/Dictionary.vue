@@ -100,19 +100,14 @@ watch(
                 const trans = dic.translations[j]
                 for (let l = 0; l < trans.backTranslations.length; l++) {
                     const back = trans.backTranslations[l]
-                    const subexamples = (examples as DictionaryExampleModel[])
-                        .filter(p => p.normalizedSource == back.normalizedText
-                            && p.normalizedTarget == trans.normalizedTarget)
-                    if (subexamples.length == 0) {
+                    const example = (examples as DictionaryExampleModel[]) 
+                        .find(p => p.normalizedSource == back.normalizedText
+                            && p.normalizedTarget == trans.normalizedTarget) 
+                    if (!example) {
                         continue
                     }
 
-                    const exampleChunks = ArrayChunks(subexamples[0].examples, 3)
-                    if (exampleChunks.length == 0) {
-                        continue
-                    }
-
-                    back.examples = exampleChunks[0]
+                    back.examples = example.examples.slice(0, 3)
                 }
             }
         }

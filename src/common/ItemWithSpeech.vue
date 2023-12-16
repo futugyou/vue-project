@@ -25,18 +25,26 @@ const props = withDefaults(defineProps<IItemWithSpeechProps>(), {
     </div>
 </template>
 
-<style scoped> .text-container {
-     display: flex;
-     grid-gap: var(--grid-gap-10);
-     align-items: center;
-     cursor: default
- }
+<style scoped>
+.text-container {
+    display: flex;
+    grid-gap: var(--grid-gap-10);
+    align-items: center;
+    cursor: default;
+    position: relative;
+}
 
- .speech-btn {
-     display: none;
- }
+.text-container:hover {
+    background-color: var(--color-background-normal-hover);
+}
 
- .text-container:hover>.speech-btn {
-     display: block;
- }
+.speech-btn {
+    display: none;
+    position: absolute;
+    right: 0;
+}
+
+.text-container:hover>.speech-btn {
+    display: block;
+}
 </style>
