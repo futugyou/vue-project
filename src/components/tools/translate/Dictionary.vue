@@ -7,7 +7,7 @@ import {
     DictionaryExampleModel,
 } from './Translate'
 
-import Speech from '@/common/Speech.vue'
+import ItemWithSpeech from '@/common/ItemWithSpeech.vue'
 import { ArrayChunks } from '@/tools/util'
 
 export interface IDictionaryProps {
@@ -125,63 +125,37 @@ watch(
 
 <template>
     <div class="dic-container">
-        <div class="dic-item" v-for="dic in dictionary" :key="dic.normalizedSource">
-            <div class="label-container">
-                <div>
-                    <span>{{ dic.normalizedSource }}</span>
-                </div>
-                <div class="speech-btn">
-                    <Speech :lang="from" :text="dic.normalizedSource"></Speech>
-                </div>
-            </div>
-            <div class="trans-container">
-                <div v-for="t in dic.translations" :key="t.normalizedTarget">
-                    <div class="label-container">
+        <div class="item-container overflow-y" v-for="dic in dictionary" :key="dic.normalizedSource">
+            <ItemWithSpeech :lang="from" :text="dic.normalizedSource">
+                <span>{{ dic.normalizedSource }}</span>
+            </ItemWithSpeech>
+            <div class="item-container" v-for="t in dic.translations" :key="t.normalizedTarget">
+                <ItemWithSpeech :lang="to" :text="t.normalizedTarget">
+                    <div style="display:flex; grid-gap: 10px;">
                         <div>
                             <span>{{ t.normalizedTarget }}</span>
-                        </div>
-                        <div class="speech-btn">
-                            <Speech :lang="to" :text="t.normalizedTarget"></Speech>
                         </div>
                         <div>
                             <span>{{ t.posTag }}</span>
                         </div>
                     </div>
-                    <div class="tran-item-container">
-                        <div v-for="bt in t.backTranslations" :key="bt.normalizedText">
-                            <div class="label-container">
-                                <span>{{ bt.normalizedText }}</span>
-                                <div class="speech-btn">
-                                    <Speech :lang="from" :text="bt.normalizedText"></Speech>
-                                </div>
-                            </div>
-                            <div class="example-container">
-                                <div class="example-item" v-for="ex in bt.examples" :key="ex.sourcePrefix">
-                                    <div class="label-container">
-                                        <div>
-                                            <span>{{ ex.sourcePrefix }}</span>
-                                            <span class="text-strong">{{ ex.sourceTerm }}</span>
-                                            <span>{{ ex.sourceSuffix }}</span>
-                                        </div>
-                                        <div class="speech-btn">
-                                            <Speech :lang="from" :text="ex.sourcePrefix + ex.sourceTerm + ex.sourceSuffix">
-                                            </Speech>
-                                        </div>
-                                    </div>
-                                    <div class="label-container">
-                                        <div>
-                                            <span>{{ ex.targetPrefix }}</span>
-                                            <span class="text-strong">{{ ex.targetTerm }}</span>
-                                            <span>{{ ex.targetSuffix }}</span>
-                                        </div>
-                                        <div class="speech-btn">
-                                            <Speech :lang="to" :text="ex.targetPrefix + ex.targetTerm + ex.targetSuffix">
-                                            </Speech>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                </ItemWithSpeech>
+                <div class="item-container" v-for="bt in t.backTranslations" :key="bt.normalizedText">
+                    <ItemWithSpeech :lang="from" :text="bt.normalizedText">
+                        <span>{{ bt.normalizedText }}</span>
+                    </ItemWithSpeech>
+                    <div class="item-container" v-for="ex in bt.examples" :key="ex.sourcePrefix">
+                        <ItemWithSpeech :lang="from" :text="ex.sourcePrefix + ex.sourceTerm + ex.sourceSuffix">
+                            <span>{{ ex.sourcePrefix }}</span>
+                            <span class="text-strong">{{ ex.sourceTerm }}</span>
+                            <span>{{ ex.sourceSuffix }}</span>
+                        </ItemWithSpeech>
+
+                        <ItemWithSpeech :lang="to" :text="ex.targetPrefix + ex.targetTerm + ex.targetSuffix">
+                            <span>{{ ex.targetPrefix }}</span>
+                            <span class="text-strong">{{ ex.targetTerm }}</span>
+                            <span>{{ ex.targetSuffix }}</span>
+                        </ItemWithSpeech>
                     </div>
                 </div>
             </div>
@@ -204,56 +178,15 @@ watch(
     position: relative;
 }
 
-
-.dic-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    grid-gap: var(--grid-gap-10);
-    overflow-y: auto;
-}
-
-.label-container {
-    display: flex;
-    grid-gap: var(--grid-gap-10);
-    align-items: center;
-    cursor: default
-}
-
-.speech-btn {
-    display: none;
-}
-
-.label-container:hover .speech-btn {
-    display: block;
-}
-
-.trans-container {
+.item-container {
     display: flex;
     grid-gap: var(--grid-gap-10);
     flex-direction: column;
     padding-left: 20px;
 }
 
-
-.tran-item-container {
-    display: flex;
-    grid-gap: var(--grid-gap-10);
-    flex-direction: column;
-    padding-left: 20px;
-}
-
-.example-container {
-    padding-left: 20px;
-    display: flex;
-    grid-gap: var(--grid-gap-10);
-    flex-direction: column;
-}
-
-.example-item {
-    display: flex;
-    grid-gap: var(--grid-gap-5);
-    flex-direction: column;
+.item-container:first-child {
+    padding-left: 0px;
 }
 
 .text-strong {
