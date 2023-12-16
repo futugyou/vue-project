@@ -45,7 +45,7 @@ onMounted(() => {
         <span class="tooltiptext" v-if="Tip">{{ Tip }}</span>
     </button>
     <button ref="buttonref" v-if="!Text" class="pure-icon variant-normal" @click="HandleClick" :disabled=Disabled>
-        <div class="icon-base">
+        <div class="icon-base" style="margin: 0px;">
             <slot></slot>
         </div>
         <span class="tooltiptext" v-if="Tip" :class="tipClass">{{ Tip }}</span>

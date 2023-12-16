@@ -125,6 +125,7 @@ a,
 
 .icon-base>svg {
     fill: none;
+    display: block;
     pointer-events: none;
     stroke-width: 2px;
     stroke-linecap: square;

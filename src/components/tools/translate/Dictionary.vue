@@ -137,11 +137,15 @@ watch(
             <div class="trans-container">
                 <div v-for="t in dic.translations" :key="t.normalizedTarget">
                     <div class="label-container">
-                        <div> <span>{{ t.normalizedTarget }}</span></div>
+                        <div>
+                            <span>{{ t.normalizedTarget }}</span>
+                        </div>
                         <div class="speech-btn">
                             <Speech :lang="to" :text="t.normalizedTarget"></Speech>
                         </div>
-                        <div> <span>{{ t.posTag }}</span></div>
+                        <div>
+                            <span>{{ t.posTag }}</span>
+                        </div>
                     </div>
                     <div class="tran-item-container">
                         <div v-for="bt in t.backTranslations" :key="bt.normalizedText">
@@ -217,9 +221,11 @@ watch(
 }
 
 .speech-btn {
-    right: 20px;
-    top: 20px;
-    /* display: none; */
+    display: none;
+}
+
+.label-container:hover .speech-btn {
+    display: block;
 }
 
 .trans-container {
