@@ -169,3 +169,7 @@ input[type="file"] {
     line-height: 16px;
     white-space: nowrap;
 }
+
+.overflow-y {
+    overflow-y: auto;
+}
