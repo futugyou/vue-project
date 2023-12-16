@@ -10,6 +10,7 @@ export interface ISpeechProps {
     volume?: number,
     pitch?: number,
     rate?: number,
+    tip?: string
 }
 
 const props = withDefaults(defineProps<ISpeechProps>(), {
@@ -74,7 +75,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <Button Tip="speech to text" @click="handleClick" :IsLoading="isLoading">
+        <Button :Tip="tip" @click="handleClick" :IsLoading="isLoading">
             <SpeechIcon></SpeechIcon>
         </Button>
     </div>

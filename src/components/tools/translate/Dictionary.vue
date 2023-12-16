@@ -7,6 +7,7 @@ import {
     DictionaryExampleModel,
 } from './Translate'
 
+import Speech from '@/common/Speech.vue'
 import { ArrayChunks } from '@/tools/util'
 
 export interface IDictionaryProps {
@@ -125,27 +126,54 @@ watch(
 <template>
     <div class="dic-container">
         <div class="dic-item" v-for="dic in dictionary" :key="dic.normalizedSource">
-            <div><span>{{ dic.normalizedSource }}</span></div>
+            <div class="label-container">
+                <div>
+                    <span>{{ dic.normalizedSource }}</span>
+                </div>
+                <div class="speech-btn">
+                    <Speech :lang="from" :text="dic.normalizedSource"></Speech>
+                </div>
+            </div>
             <div class="trans-container">
                 <div v-for="t in dic.translations" :key="t.normalizedTarget">
-                    <div class="tran-header">
+                    <div class="label-container">
                         <div> <span>{{ t.normalizedTarget }}</span></div>
+                        <div class="speech-btn">
+                            <Speech :lang="to" :text="t.normalizedTarget"></Speech>
+                        </div>
                         <div> <span>{{ t.posTag }}</span></div>
                     </div>
                     <div class="tran-item-container">
                         <div v-for="bt in t.backTranslations" :key="bt.normalizedText">
-                            <div> <span>{{ bt.normalizedText }}</span></div>
+                            <div class="label-container">
+                                <span>{{ bt.normalizedText }}</span>
+                                <div class="speech-btn">
+                                    <Speech :lang="from" :text="bt.normalizedText"></Speech>
+                                </div>
+                            </div>
                             <div class="example-container">
                                 <div class="example-item" v-for="ex in bt.examples" :key="ex.sourcePrefix">
-                                    <div>
-                                        <span>{{ ex.sourcePrefix }}</span>
-                                        <span class="text-strong">{{ ex.sourceTerm }}</span>
-                                        <span>{{ ex.sourceSuffix }}</span>
+                                    <div class="label-container">
+                                        <div>
+                                            <span>{{ ex.sourcePrefix }}</span>
+                                            <span class="text-strong">{{ ex.sourceTerm }}</span>
+                                            <span>{{ ex.sourceSuffix }}</span>
+                                        </div>
+                                        <div class="speech-btn">
+                                            <Speech :lang="from" :text="ex.sourcePrefix + ex.sourceTerm + ex.sourceSuffix">
+                                            </Speech>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <span>{{ ex.targetPrefix }}</span>
-                                        <span class="text-strong">{{ ex.targetTerm }}</span>
-                                        <span>{{ ex.targetSuffix }}</span>
+                                    <div class="label-container">
+                                        <div>
+                                            <span>{{ ex.targetPrefix }}</span>
+                                            <span class="text-strong">{{ ex.targetTerm }}</span>
+                                            <span>{{ ex.targetSuffix }}</span>
+                                        </div>
+                                        <div class="speech-btn">
+                                            <Speech :lang="to" :text="ex.targetPrefix + ex.targetTerm + ex.targetSuffix">
+                                            </Speech>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +197,9 @@ watch(
     flex-direction: column;
     text-align: left;
     font-size: var(--default-font-size);
+    position: relative;
 }
+
 
 .dic-item {
     flex: 1;
@@ -179,6 +209,19 @@ watch(
     overflow-y: auto;
 }
 
+.label-container {
+    display: flex;
+    grid-gap: var(--grid-gap-10);
+    align-items: center;
+    cursor: default
+}
+
+.speech-btn {
+    right: 20px;
+    top: 20px;
+    /* display: none; */
+}
+
 .trans-container {
     display: flex;
     grid-gap: var(--grid-gap-10);
@@ -186,10 +229,6 @@ watch(
     padding-left: 20px;
 }
 
-.tran-header {
-    display: flex;
-    grid-gap: var(--grid-gap-10);
-}
 
 .tran-item-container {
     display: flex;
