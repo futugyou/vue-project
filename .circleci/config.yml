@@ -5,15 +5,20 @@ version: 2.1
 # See: https://circleci.com/docs/orb-intro/
 orbs:
   node: circleci/node@5.1.1
+executors:
+  playwright:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.40.0-jammy
 jobs:
   build_and_test: # this can be any name you choose
-    executor: node/default # use the default executor defined within the orb
+    # executor: node/default # use the default executor defined within the orb
+    executor: playwright
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npx playwright install && npx playwright install-deps
+          command: npx playwright install --with-deps
           name: Run playwright install
       - run:
           command: npm run build
