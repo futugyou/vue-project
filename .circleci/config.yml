@@ -13,11 +13,14 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npm run test:e2e
-          name: Run tests
+          command: npx playwright install && npx playwright install-deps
+          name: Run playwright install
       - run:
-          command: npx playwright install && npm run build
-          name: Build app
+          command: npm run build
+          name: Run build
+      - run:
+          command: npm run test:e2e
+          name: Run test
 workflows:
   build_test_deploy: # this can be any name you choose
     jobs:
