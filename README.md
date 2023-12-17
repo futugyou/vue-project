@@ -3,6 +3,9 @@
 [![CodeQL](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/futugyou/vue-project/actions/workflows/codeql.yml)
 [![Dependabot](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml/badge.svg)](https://github.com/futugyou/vue-project/actions/workflows/dependabot-auto.yml)
 [![Markdownlint](https://github.com/futugyou/vue-project/actions/workflows/markdownlint.yml/badge.svg)](https://github.com/futugyou/vue-project/actions/workflows/markdownlint.yml)
+![CircleCI](https://img.shields.io/circleci/build/github/futugyou/vue-project/master?logo=CircleCI&label=circle-ci)
+![GitHub deployments](https://img.shields.io/github/deployments/futugyou/vue-project/Preview?logo=vercel&label=Vercel%20Preview)
+![GitHub deployments](https://img.shields.io/github/deployments/futugyou/vue-project/Production?logo=vercel&label=Vercel%20Production)
 
 ## Run End-to-End Tests with [Playwright](https://playwright.dev)
 
