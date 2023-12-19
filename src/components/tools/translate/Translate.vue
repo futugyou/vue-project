@@ -32,7 +32,7 @@ const translate = async () => {
         return
     }
 
-    let model = makeTranslateModel(left.value)
+    let model = makeTranslateModel(left.value, false)
     if (model.length == 0) {
         return
     }
@@ -56,7 +56,7 @@ const translate = async () => {
             const ele = data[i];
             for (let j = 0; j < ele.translations.length; j++) {
                 const element = ele.translations[j];
-                right.value += element.text
+                right.value += (element.text + "\r\n")
             }
         }
     }
@@ -76,7 +76,7 @@ const inputeChange = async (event: Event) => {
         return
     }
 
-    let model = makeTranslateModel(target.value)
+    let model = makeTranslateModel(target.value, true)
     if (model.length == 0) {
         return
     }
@@ -111,18 +111,34 @@ const selectText = () => {
     }
 }
 
-const makeTranslateModel = (t: string) => {
+const makeTranslateModel = (t: string, single: boolean) => {
     let text = t ?? ""
-    text = text.replaceAll("\n", "").replaceAll("\r", "").trim()
     let model: TranslateModel[] = []
-    if (text == "") {
+    if (single) {
+        text = text.replaceAll("\n", "").replaceAll("\r", "").trim()
+        if (text == "") {
+            return model
+        }
+        model.push({
+            Text: text,
+            Translation: ''
+        })
         return model
     }
 
-    model.push({
-        Text: text,
-        Translation: ''
-    })
+    let reg = text.match(/[^\n]+/g)
+
+    if (!reg) {
+        return model
+    }
+
+    for (let i = 0; i < reg.length; i++) {
+        model.push({
+            Text: reg[i].trim(),
+            Translation: ''
+        })
+    }
+
     return model
 }
 
