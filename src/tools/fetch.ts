@@ -21,7 +21,11 @@ export const fetchEx = async (
     let h: Record<string, string> = {
         'Content-Type': 'application/json',
         'Account-Id': defaultAccountId(),
-        'Authorization': getToken()
+        'Authorization': authorization
+    }
+
+    if (!needAuth) {
+        delete h['Authorization']
     }
 
     if (headers) {
