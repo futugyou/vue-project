@@ -24,7 +24,7 @@
     "immer": "^10.0.3",
     "jspdf": "^2.5.1",
     "lodash-es": "^4.17.21",
-    "moment": "^2.29.4",
+    "moment": "^2.30.1",
     "pdfjs-dist": "^4.0.269",
     "pinia": "^2.1.7",
     "tesseract.js": "^5.0.4",
