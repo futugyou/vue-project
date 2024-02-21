@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "@vercel/analytics": "^1.2.1",
+    "@vercel/analytics": "^1.2.2",
     "@vercel/speed-insights": "^1.0.10",
     "@vueuse/core": "^10.8.0",
     "@xstate/vue": "^3.1.0",
