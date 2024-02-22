@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { reactive, ref, computed, onMounted, watch, watchEffect, provide, inject } from 'vue'
-import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate  } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
 
-const demoroute1 = router.resolve({ name: 'Route', path: '/route/:username*' }).href
+const demoroute1 = router.resolve({ name: 'Route', path: '/route/:username*' } as any).href
 const demoroute2 = router.resolve({
     name: 'Route',
     path: '/route/:username*',
     params: { username: ['a'] }
-}).href
+} as any).href
 const demoroute3 = router.resolve({
     name: 'Route',
     path: '/route/:username*',
     params: { username: ['a', 'b', 'c'] }
-}).href
+} as any).href
 const demoroute4 = router.resolve({
     name: 'Route',
     path: '/route/:username*',
     params: { username: ['a', 'b', 'c'] },
     query: { game: ['d', 'e'] }
-}).href
+} as any).href
 
 const link = (r: string) => {
     router.push(r)
