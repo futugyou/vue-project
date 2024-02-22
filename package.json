@@ -33,7 +33,7 @@
     "vue": "^3.4.19",
     "vue-router": "^4.2.5",
     "vue3-moveable": "^0.28.0",
-    "xstate": "^5.7.1"
+    "xstate": "^5.8.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.2",
