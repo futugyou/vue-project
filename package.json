@@ -30,7 +30,7 @@
     "tesseract.js": "^5.0.5",
     "the-new-css-reset": "^1.11.2",
     "v-code-diff": "^1.9.0",
-    "vue": "^3.4.20",
+    "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "vue3-moveable": "^0.28.0",
     "xstate": "^5.8.0"
