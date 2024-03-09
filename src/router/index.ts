@@ -22,7 +22,9 @@ router.beforeEach((to: any, from: any) => {
         return false
     }
 
-    handleRequiresAuth()
+    if (to.meta.requiresAuth) {
+        handleRequiresAuth()
+    }
 })
 
 const clearRouter = (fn: () => void) => {
