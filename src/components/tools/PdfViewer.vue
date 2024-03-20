@@ -177,6 +177,7 @@ watch(
     grid-gap: var(--grid-gap-10);
     flex: 1;
     padding: 5px;
+    position: relative;
 }
 
 .text-container {
@@ -191,6 +192,24 @@ watch(
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
-    height: 32px;
+    height: 36px;
+}
+
+@media (max-width: 1024px) {
+    .viewer-content {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .translate-container {
+        padding-top: 0px;
+    }
+
+    .header {
+        position: absolute;
+        top: 3px;
+        left: 9px;
+        width: 32px;
+    }
 }
 </style>

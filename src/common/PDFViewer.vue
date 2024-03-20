@@ -52,7 +52,7 @@ const onFileChange = (fileList: FileList) => {
     if (!fileList || fileList.length == 0) {
         return
     }
-    
+
     const file = fileList[0]
     const extension = file.name.split('.')[1]
     pagePrefix.value = file.name.split('.')[0]
@@ -418,7 +418,7 @@ defineExpose({
 }
 
 .pdf-page-container {
-    height: calc(100% - 32px - 10px);
+    height: calc(100% - 36px - 10px);
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -448,5 +448,11 @@ defineExpose({
     border: none;
     border-radius: 0;
     padding: 0;
+}
+
+@media (max-width: 1024px) {
+    .pdf-page-container {
+        flex-direction: column;
+    }
 }
 </style>
