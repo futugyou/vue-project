@@ -100,9 +100,9 @@ watch(
                 const trans = dic.translations[j]
                 for (let l = 0; l < trans.backTranslations.length; l++) {
                     const back = trans.backTranslations[l]
-                    const example = (examples as DictionaryExampleModel[]) 
+                    const example = (examples as DictionaryExampleModel[])
                         .find(p => p.normalizedSource == back.normalizedText
-                            && p.normalizedTarget == trans.normalizedTarget) 
+                            && p.normalizedTarget == trans.normalizedTarget)
                     if (!example) {
                         continue
                     }
@@ -160,11 +160,13 @@ watch(
 
 <style scoped>
 .dic-container {
+    border: 1px solid var(--color-border-text-normal-default);
+    border-radius: var(--border-radius-input);
     height: 100%;
     width: 100%;
     display: flex;
     grid-gap: var(--grid-gap-10);
-    padding: 0;
+    padding: 10px;
     margin: 0;
     overflow: hidden;
     flex-direction: column;

@@ -155,7 +155,7 @@ const handleBreadcrumbClick = (key: string) => {
         <div class="head-content2">
             <div class="bucketItemCount">Objects ({{ bucketItems.length }}) </div>
             <div class="bucketItemReload">
-                <Button   @click="fetchData()" :IsLoading="isLoading">
+                <Button @click="fetchData()" :IsLoading="isLoading">
                     <ReloadIcon></ReloadIcon>
                 </Button>
             </div>

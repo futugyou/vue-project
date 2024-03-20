@@ -161,26 +161,32 @@ watchEffect(async () => {
 
 <template>
     <div class="full-content">
-        <div class="text-container">
-            <textarea v-model="left" placeholder="input your text" @change="inputeChange" @mouseup="selectText"></textarea>
-            <div class="speech-btn">
-                <Speech :lang="from" :text="left"></Speech>
-            </div>
-        </div>
-        <div class="trans-but-container">
+        <div class="trans-btn-container">
             <Dropdown :items="langItems" @changeSelected="changeFromLang" :defaultValue="from" :key="from"></Dropdown>
-            <Button Text="Translate" @click="translate" :IsLoading="isLoading">
-            </Button>
+            <div class="translate-btn">
+                <Button Text="Translate" @click="translate" :IsLoading="isLoading">
+                </Button>
+            </div>
             <Dropdown :items="langItems" @changeSelected="changeToLang" :defaultValue="to"></Dropdown>
         </div>
-        <div class="text-container">
-            <textarea v-model="right" placeholder=""></textarea>
-            <div class="speech-btn">
-                <Speech :lang="to" :text="right"></Speech>
+        <div class="body">
+            <div class="text-container">
+                <textarea v-model="left" placeholder="input your text" @change="inputeChange"
+                    @mouseup="selectText"></textarea>
+                <div class="speech-btn">
+                    <Speech :lang="from" :text="left"></Speech>
+                </div>
             </div>
-        </div>
-        <div class="text-container" v-if="selectedText != ''">
-            <Dictionary :text="selectedText" :from="from" :to="to" :key="selectedText"></Dictionary>
+
+            <div class="text-container">
+                <textarea v-model="right" placeholder=""></textarea>
+                <div class="speech-btn">
+                    <Speech :lang="to" :text="right"></Speech>
+                </div>
+            </div>
+            <div class="text-container" v-if="selectedText != ''">
+                <Dictionary :text="selectedText" :from="from" :to="to" :key="selectedText"></Dictionary>
+            </div>
         </div>
     </div>
 </template>
@@ -194,25 +200,27 @@ watchEffect(async () => {
     padding: 0;
     margin: 0;
     overflow: hidden;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .text-container {
     flex: 1;
     padding: 10px;
-    margin: 10px;
     overflow: hidden;
     position: relative;
 }
 
-.trans-but-container {
+.trans-btn-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
     gap: 10px;
-    width: 200px;
-    position: relative;
+    padding: 10px;
+    flex-direction: row;
+}
+
+.translate-btn {
+    flex: 0.2;
 }
 
 .speech-btn {
@@ -224,5 +232,20 @@ watchEffect(async () => {
 
 .text-container:hover .speech-btn {
     display: block;
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .body {
+        flex-direction: column;
+        overflow-y: auto;
+    }
 }
 </style>

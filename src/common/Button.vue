@@ -33,12 +33,12 @@ onMounted(() => {
 <template>
     <button ref="buttonref" v-if="Text" class="button-base variant-normal" @click="HandleClick" :disabled=Disabled>
         <template v-if="!IsLoading">
-            <div class="icon-base">
-                <slot v-if="Position == 'Left'"></slot>
+            <div class="icon-base" v-if="Position == 'Left'">
+                <slot></slot>
             </div>
             <span class="button-label">{{ Text }}</span>
-            <div class="icon-base">
-                <slot v-if="Position != 'Left'"></slot>
+            <div class="icon-base" v-if="Position == 'Right'">
+                <slot></slot>
             </div>
         </template>
         <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
