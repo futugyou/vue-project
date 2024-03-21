@@ -408,6 +408,7 @@ defineExpose({
     align-items: center;
     align-content: center;
     flex-wrap: wrap;
+    white-space: pre;
 }
 
 .header-option-group {
@@ -415,14 +416,16 @@ defineExpose({
     flex-direction: row;
     flex: 1;
     grid-gap: var(--grid-gap-10);
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
 .pdf-page-container {
-    height: calc(100% - 36px - 10px);
-    width: 100%;
+    flex: 1;
     display: flex;
     flex-direction: row;
     grid-gap: var(--grid-gap-10);
+    overflow: hidden;
 }
 
 .pdf-page {
