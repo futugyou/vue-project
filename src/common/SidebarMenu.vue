@@ -1,8 +1,9 @@
 <script setup lang="ts">
 
-import { shallowRef } from 'vue'
+import { shallowRef, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { Component } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 
 import IconAngle from '@/icons/Angle.vue'
 
@@ -16,22 +17,36 @@ export interface SideMenuDataList {
     items: SideMenuData[]
 }
 
+const isSmallScreen = useMediaQuery('(max-width: 768px)')
+
 const props = defineProps<SideMenuDataList>()
 
 const isSidebarOpen = shallowRef<Boolean>(false)
+
+const isSidebarShow = shallowRef<Boolean>(true)
 
 function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value
 }
 
+const changeSidebarShowState = () => {
+    isSidebarShow.value = !isSidebarShow.value
+}
+
+watch(isSmallScreen, () => {
+    isSidebarShow.value = !isSmallScreen.value
+})
 </script>
 
 <template>
     <div class="wrapper">
-        <aside :vue:is-open="isSidebarOpen">
+        <div class="icon-control" v-if="!isSidebarShow">
+            <img src="@/assets/logo.svg" alt="logo" width="32" height="32" @click="changeSidebarShowState">
+        </div>
+        <aside :vue:is-open="isSidebarOpen" v-if="isSidebarShow">
             <ul class="sidebar-head">
                 <li>
-                    <img src="@/assets/logo.svg" alt="logo" width="32" height="32">
+                    <img src="@/assets/logo.svg" alt="logo" width="32" height="32" @click="changeSidebarShowState">
                 </li>
                 <li>
                     <button class="sidebar-toggle" :class="isSidebarOpen ? 'toggle-button' : ''">
@@ -68,6 +83,13 @@ function toggleSidebar() {
      width: 3 * $sidebar-width;
  }
 
+ .icon-control {
+     position: fixed;
+     top: 2px;
+     cursor: pointer;
+     left: 2px;
+ }
+
  ul {
      display: flex;
      flex-direction: column;
@@ -79,6 +101,11 @@ function toggleSidebar() {
 
  img {
      object-fit: contain;
+     cursor: pointer;
+ }
+
+ img:hover {
+     box-shadow: 2px 2px 2px 2px rgb(0 0 255 / 20%);
  }
 
  li {
