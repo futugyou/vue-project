@@ -23,7 +23,7 @@ const props = defineProps<SideMenuDataList>()
 
 const isSidebarOpen = shallowRef<Boolean>(false)
 
-const isSidebarShow = shallowRef<Boolean>(true)
+const isSidebarShow = shallowRef<Boolean>(false)
 
 function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value
@@ -40,14 +40,11 @@ watch(isSmallScreen, () => {
 
 <template>
     <div class="wrapper">
-        <div class="icon-control" v-if="!isSidebarShow">
-            <img src="@/assets/logo.svg" alt="logo" width="32" height="32" @click="changeSidebarShowState">
+        <div class="icon-control" @click="changeSidebarShowState">
+            <img src="@/assets/logo.svg" alt="logo" width="32px" height="32px">
         </div>
         <aside :vue:is-open="isSidebarOpen" v-if="isSidebarShow">
             <ul class="sidebar-head">
-                <li>
-                    <img src="@/assets/logo.svg" alt="logo" width="32" height="32" @click="changeSidebarShowState">
-                </li>
                 <li>
                     <button class="sidebar-toggle" :class="isSidebarOpen ? 'toggle-button' : ''">
                         <IconAngle @click="toggleSidebar" />
@@ -85,9 +82,20 @@ watch(isSmallScreen, () => {
 
  .icon-control {
      position: fixed;
-     top: 2px;
+     top: 0;
      cursor: pointer;
-     left: 2px;
+     left: 0;
+     z-index: 10;
+     user-select: none;
+     width: 64px;
+     display: flex;
+     height: 50px;
+     justify-content: center;
+     align-items: center;
+
+     &:hover {
+         background-color: rgb(0 0 255 / 20%);
+     }
  }
 
  ul {
@@ -104,18 +112,19 @@ watch(isSmallScreen, () => {
      cursor: pointer;
  }
 
- img:hover {
-     box-shadow: 2px 2px 2px 2px rgb(0 0 255 / 20%);
- }
+ //  img:hover {
+ //      box-shadow: 4px 4px 2px 1px rgb(0 0 255 / 20%);
+ //  }
 
  li {
+     user-select: none;
      text-align: left;
      min-width: fit-content;
      cursor: pointer;
 
      &:hover {
          color: $minor-color;
-         background-color: lighten($color: #120, $amount: 5);
+         background-color: lighten($color: rgb(0 0 255 / 20%), $amount: 5);
      }
 
      & a {
@@ -147,10 +156,26 @@ watch(isSmallScreen, () => {
  .sidebar-head {
      position: relative;
      // padding-block-end: 4rem;
+     margin: 0;
+     padding: 0;
+     margin-top: 50px;
+
  }
 
  .sidebar-head li {
      padding-inline-start: $sidebar-padding-inline-start;
+     height: 32px;
+
+     &:hover {
+         color: inherit;
+         background-color: inherit;
+     }
+
+     svg {
+         &:hover {
+             box-shadow: 4px 4px 2px 1px rgb(0 0 255 / 20%);
+         }
+     }
  }
 
  .sidebar-toggle {
@@ -160,7 +185,7 @@ watch(isSmallScreen, () => {
  }
 
  h4 {
-     padding-block-end: 1rem;
+     //  padding-block-end: 1rem;
      padding-inline-start: $sidebar-padding-inline-start;
      user-select: none;
      pointer-events: none;
@@ -170,6 +195,7 @@ watch(isSmallScreen, () => {
      letter-spacing: 0.125ch;
      transition: opacity $toggle-duration;
      text-align: left;
+     margin: 0;
  }
 
  h4[transparent=true] {
@@ -182,8 +208,8 @@ watch(isSmallScreen, () => {
      transition-duration: $toggle-duration;
      transition-property: transform, left, top;
      left: 0;
-     top: 1rem;
-     transform: translateX(0%) translateY(2rem) rotateZ(0deg);
+     //  top: 1rem;
+     //  transform: translateX(0%) translateY(2rem) rotateZ(0deg);
 
      &.toggle-button {
          left: 100%;
