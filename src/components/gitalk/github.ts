@@ -44,6 +44,12 @@ export const getIssueComments = async (owner: string, repo: string, issue_number
     return response
 }
 
+export const createIssueComment = async (owner: string, repo: string, issue_number: number, body: string, access_token: string) => {
+    const octokit = new Octokit({ auth: access_token })
+    const response = await octokit.rest.issues.createComment({ owner, repo, issue_number, body })
+    return response
+}
+
 export const githubLogin = async (code: string) => {
     const url = "https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"
     try {
