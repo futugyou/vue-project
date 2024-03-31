@@ -10,6 +10,8 @@ interface ImportMetaEnv {
     readonly REACT_APP_GITTALK_REPO: string
     readonly REACT_APP_GITTALK_OWNER: string
     readonly REACT_APP_GITTALK_NUMBER: number
+    readonly REACT_APP_GITTALK_CLIENTID: string
+    readonly REACT_APP_GITTALK_CLIENTSECRET: string
 }
 
 interface ImportMeta {

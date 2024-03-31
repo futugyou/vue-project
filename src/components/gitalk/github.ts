@@ -1,4 +1,4 @@
-import { Octokit, App } from "octokit"
+import { Octokit, App, OAuthApp } from "octokit"
 
 export interface Comment {
     id: number
@@ -23,21 +23,23 @@ export interface Reaction {
 }
 
 export const getIssue = async (owner: string, repo: string, issue_number: number) => {
-    const octokit = new Octokit({
-        // auth: 'YOUR-TOKEN'
+    const app = new OAuthApp({
+        clientId: import.meta.env.REACT_APP_GITTALK_CLIENTID,
+        clientSecret: import.meta.env.REACT_APP_GITTALK_CLIENTSECRET,
     })
 
-    const response = await octokit.rest.issues.get({ owner, repo, issue_number })
+    const response = await app.octokit.rest.issues.get({ owner, repo, issue_number })
 
     return response
 }
 
 export const getIssueComments = async (owner: string, repo: string, issue_number: number) => {
-    const octokit = new Octokit({
-        // auth: 'YOUR-TOKEN'
+    const app = new OAuthApp({
+        clientId: import.meta.env.REACT_APP_GITTALK_CLIENTID,
+        clientSecret: import.meta.env.REACT_APP_GITTALK_CLIENTSECRET,
     })
-    const response = await octokit.rest.issues.listComments({ owner, repo, issue_number })
+
+    const response = await app.octokit.rest.issues.listComments({ owner, repo, issue_number })
 
     return response
-
 }
