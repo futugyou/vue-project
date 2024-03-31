@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch, watchEffect } from 'vue'
-import { getIssueById } from './github'
+import { getIssue, getIssueComments, Comment } from './github'
 
 
 export interface IGitalkProps {
@@ -12,27 +12,31 @@ export interface IGitalkProps {
 
 const props = defineProps<IGitalkProps>()
 
-const issue = ref<any>({})
+const owner = import.meta.env.REACT_APP_GITTALK_OWNER
+const repo = import.meta.env.REACT_APP_GITTALK_REPO
+const issue_number = import.meta.env.REACT_APP_GITTALK_NUMBER
 
-const fetchIssue = async () => {
-    const { data, status } = await getIssueById()
+const comments = ref<Comment[]>([])
+
+const fetchComments = async () => {
+    const { data, status } = await getIssueComments(owner, repo, issue_number)
     if (status != 200) {
         console.log("some error")
         return
     }
 
-    issue.value = data
+    comments.value = data as unknown as Comment[]
 }
 
-watchEffect(async () => fetchIssue())
+watchEffect(async () => fetchComments())
 
 
 </script>
 
 <template>
     <div>
-        <ul>
-            <li v-for="(val, index) in issue" :key="index">
+        <ul v-for=" comment  in comments" :key="comment.id">
+            <li v-for="(val, index) in comment" :key="index">
                 {{ index }} {{ val }}
             </li>
         </ul>
