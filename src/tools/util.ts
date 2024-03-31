@@ -28,3 +28,11 @@ export const ArrayChunks = <T>(items: T[], n: number) => {
     }
     return chunks
 }
+
+export const queryStringify = (query: { [x: string]: any }) => {
+    const queryString = Object.keys(query)
+      .map(key => `${key}=${encodeURIComponent(query[key] || '')}`)
+      .join('&')
+    return queryString
+  }
+  
