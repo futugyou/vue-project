@@ -23,13 +23,13 @@ const comments = ref<Comment[]>([])
 const loginUser = ref<GitHubUser>()
 
 const fetchComments = async () => {
-    const { data, status } = await getIssueComments(owner, repo, issue_number)
-    if (status != 200) {
+    const { data, err } = await getIssueComments(owner, repo, issue_number)
+    if (err.status != 200) {
         console.log("some error")
         return
     }
 
-    comments.value = data as unknown as Comment[]
+    comments.value = data
 }
 
 watchEffect(async () => fetchComments())
@@ -50,7 +50,14 @@ watchEffect(
     async () => {
         const code = new URL(location.value.href ?? "").searchParams.get("code");
         if (code) {
-            loginUser.value = await githubLogin(code)
+            const { data, err } = await githubLogin(code)
+            if (err.status != 200) {
+                loginUser.value = undefined
+                // TODO
+                return
+            }
+
+            loginUser.value = data
             const path = (location.value.pathname ?? "")
                 + location.value.search?.replace(/\b(code|state)=\w+/g, "").replace(/[?&]+$/, "")
             history.replaceState({}, "", path)
