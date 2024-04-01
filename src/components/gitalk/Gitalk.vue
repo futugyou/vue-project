@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watch, watchEffect, computed } from 'vue'
 import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
@@ -8,6 +8,7 @@ import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue } f
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
+import GithubIcon from '@/icons/Github.vue'
 
 export interface IGitalkProps {
     // clientID: string
@@ -27,6 +28,9 @@ const issue_number = import.meta.env.REACT_APP_GITTALK_NUMBER
 const issue = ref<Issue>({} as Issue)
 const comments = ref<Comment[]>([])
 const loginUser = ref<GitHubUser>()
+const userinput = ref<string>("aaaaa")
+const showMark = ref<boolean>(false)
+const userinputMark = computed(() => userinput.value)
 
 const fetchComments = async () => {
     const { data, err } = await getIssueComments(owner, repo, issue_number)
@@ -97,12 +101,33 @@ watchEffect(
                 <a :href="issue.html_url" target="_blank">{{ issue.comments ?? 0 }}</a> comments
             </div>
             <div v-if="!loginUser" class="login">
-                <a @click="handleLogin">
-                    Login
-                </a>
+                <button @click="handleLogin">Login</button>
             </div>
             <div v-if="loginUser" class="user-avatar">
                 <img :src="loginUser.avatar_url" />
+            </div>
+        </div>
+        <div class="comment-container" style="gap: 5px;">
+            <div class="comment-item">
+                <div class="user-avatar" v-if="loginUser">
+                    <img :src="loginUser.avatar_url" :alt="loginUser.login"
+                        @click="() => handleImgClick(loginUser!.html_url)" />
+                </div>
+                <div class="user-avatar" v-if="!loginUser">
+                    <GithubIcon></GithubIcon>
+                </div>
+                <div class="comment">
+                    <div class="comment-body" v-if="!showMark">
+                        <textarea v-model="userinput" rows="5" style="border: 0px;padding: 0px;"></textarea>
+                    </div>
+                    <div class="comment-body" v-if="showMark" v-html="marked(userinput)">
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <!-- <button v-if="!loginUser">Login</button> -->
+                <button v-if="loginUser">Submit</button>
+                <button @click="() => showMark = !showMark">{{ showMark ? "Edit" : "Preview" }}</button>
             </div>
         </div>
         <div class="comment-container">
@@ -149,6 +174,7 @@ watchEffect(
 .login a {
     padding: 10px;
     cursor: pointer;
+    width: 80px;
 }
 
 .comment-container {
@@ -181,6 +207,8 @@ watchEffect(
 }
 
 .comment {
+    display: flex;
+    flex-direction: column;
     text-align: left;
     flex: 1;
     padding: 10px;
@@ -188,6 +216,27 @@ watchEffect(
     border-radius: 10px;
     /* background-color: #f0f8ff; */
     user-select: text;
+}
+
+button {
+    padding: 2px 10px;
+    border: #54aeff66 1px solid;
+    width: 80px;
+    height: 30px;
+}
+
+button:hover {
+    box-shadow: 2px 2px 2px 2px rgb(0 0 255 / 20%);
+}
+
+.btn-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+    height: 40px;
+    gap: 15px;
+    user-select: none;
 }
 
 .comment:hover {
