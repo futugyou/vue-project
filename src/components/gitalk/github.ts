@@ -39,10 +39,10 @@ export interface Error {
     status: number
 }
 
-export const getIssue = async (owner: string, repo: string, issue_number: number) => {
+export const getIssue = async (owner: string, repo: string, issue_number: number, clientId: string, clientSecret: string) => {
     const app = new OAuthApp({
-        clientId: import.meta.env.REACT_APP_GITTALK_CLIENTID,
-        clientSecret: import.meta.env.REACT_APP_GITTALK_CLIENTSECRET,
+        clientId: clientId,
+        clientSecret: clientSecret,
     })
 
     let data: Issue = {} as Issue
@@ -64,10 +64,10 @@ export const getIssue = async (owner: string, repo: string, issue_number: number
     return { data, err }
 }
 
-export const getIssueComments = async (owner: string, repo: string, issue_number: number) => {
+export const getIssueComments = async (owner: string, repo: string, issue_number: number, clientId: string, clientSecret: string) => {
     const app = new OAuthApp({
-        clientId: import.meta.env.REACT_APP_GITTALK_CLIENTID,
-        clientSecret: import.meta.env.REACT_APP_GITTALK_CLIENTSECRET,
+        clientId: clientId,
+        clientSecret: clientSecret,
     })
 
     let data: Comment[] = []
@@ -110,7 +110,7 @@ export const createIssueComment = async (owner: string, repo: string, issue_numb
     return { data, err }
 }
 
-export const githubLogin = async (code: string) => {
+export const githubLogin = async (code: string, clientId: string, clientSecret: string) => {
     const url = "https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"
 
     let result: GitHubUser = {} as GitHubUser
@@ -125,8 +125,8 @@ export const githubLogin = async (code: string) => {
             },
             body: JSON.stringify({
                 code,
-                client_id: import.meta.env.REACT_APP_GITTALK_CLIENTID,
-                client_secret: import.meta.env.REACT_APP_GITTALK_CLIENTSECRET,
+                client_id: clientId,
+                client_secret: clientSecret,
             }),
         })
 

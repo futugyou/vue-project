@@ -9,21 +9,19 @@ import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
 import GithubIcon from '@/icons/Github.vue'
+import ImageSvg from '@/icons/ImageSvg.vue'
 
 export interface IGitalkProps {
-    // clientID: string
-    // clientSecret: string
-    // repo: string
-    // owner: string
+    clientID: string
+    clientSecret: string
+    repo: string
+    owner: string
+    issue_number: number
 }
 
 const props = defineProps<IGitalkProps>()
 
 const location = useBrowserLocation()
-
-const owner = import.meta.env.REACT_APP_GITTALK_OWNER
-const repo = import.meta.env.REACT_APP_GITTALK_REPO
-const issue_number = import.meta.env.REACT_APP_GITTALK_NUMBER
 
 const issue = ref<Issue>({} as Issue)
 const comments = ref<Comment[]>([])
@@ -33,7 +31,7 @@ const showMark = ref<boolean>(false)
 const userinputMark = computed(() => userinput.value)
 
 const fetchComments = async () => {
-    const { data, err } = await getIssueComments(owner, repo, issue_number)
+    const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret)
     if (err.status != 200) {
         console.log("some error")
         return
@@ -43,7 +41,7 @@ const fetchComments = async () => {
 }
 
 const fetchIssue = async () => {
-    const { data, err } = await getIssue(owner, repo, issue_number)
+    const { data, err } = await getIssue(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret)
     if (err.status != 200) {
         console.log("some error")
         return
@@ -59,7 +57,7 @@ watchEffect(async () => {
 
 const handleLogin = () => {
     const githubOauthUrl = 'https://github.com/login/oauth/authorize'
-    const clientID = import.meta.env.REACT_APP_GITTALK_CLIENTID
+    const clientID = props.clientID
     const query = {
         client_id: clientID,
         redirect_uri: window.location.href,
@@ -69,15 +67,17 @@ const handleLogin = () => {
     window.location.href = `${githubOauthUrl}?${queryStringify(query)}`
 }
 
-const handleImgClick = (html_url: string) => {
-    window.open(html_url)
+const handleImgClick = (html_url?: string) => {
+    if (html_url) {
+        window.open(html_url)
+    }
 }
 
 watchEffect(
     async () => {
         const code = new URL(location.value.href ?? "").searchParams.get("code");
         if (code) {
-            const { data, err } = await githubLogin(code)
+            const { data, err } = await githubLogin(code, props.clientID, props.clientSecret)
             if (err.status != 200) {
                 loginUser.value = undefined
                 // TODO
@@ -111,15 +111,15 @@ watchEffect(
             <div class="comment-item">
                 <div class="user-avatar" v-if="loginUser">
                     <img :src="loginUser.avatar_url" :alt="loginUser.login"
-                        @click="() => handleImgClick(loginUser!.html_url)" />
+                        @click="() => handleImgClick(loginUser?.html_url)" />
                 </div>
                 <div class="user-avatar" v-if="!loginUser">
                     <GithubIcon></GithubIcon>
                 </div>
                 <div class="comment">
-                    <div class="comment-body" v-if="!showMark">
-                        <textarea v-model="userinput" rows="5" style="border: 0px;padding: 0px;"></textarea>
-                    </div>
+                    <!-- <div class="comment-body"> -->
+                    <textarea v-if="!showMark" v-model="userinput" rows="5" style="border: 0px;padding: 0px;"></textarea>
+                    <!-- </div> -->
                     <div class="comment-body" v-if="showMark" v-html="marked(userinput)">
                     </div>
                 </div>
@@ -132,9 +132,10 @@ watchEffect(
         </div>
         <div class="comment-container">
             <div v-for="comment  in comments" :key="comment.id" class="comment-item">
-                <div class="user-avatar">
-                    <img :src="comment.user.avatar_url" :alt="comment.user.login"
-                        @click="() => handleImgClick(comment.user.html_url)" />
+                <div class="user-avatar" @click="() => handleImgClick(comment.user.html_url)">
+                    <img :src="comment.user.avatar_url" :alt="comment.user.login" />
+                    <!-- <ImageSvg :title="comment.user.login" :href="comment.user.avatar_url" height="35" width="35">
+                                                </ImageSvg> -->
                 </div>
                 <div class="comment">
                     <div class="comment-head">
@@ -196,8 +197,15 @@ watchEffect(
     height: 35px;
 }
 
+
 .user-avatar img {
     width: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.user-avatar svg {
+    width: 35px;
     border-radius: 50%;
     cursor: pointer;
 }
@@ -215,6 +223,9 @@ watchEffect(
     border: #54aeff66 1px solid;
     border-radius: 10px;
     /* background-color: #f0f8ff; */
+}
+
+.comment-body {
     user-select: text;
 }
 
