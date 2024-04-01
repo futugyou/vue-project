@@ -4,7 +4,7 @@ import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
 
-import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser } from './github'
+import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue } from './github'
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
@@ -24,6 +24,7 @@ const owner = import.meta.env.REACT_APP_GITTALK_OWNER
 const repo = import.meta.env.REACT_APP_GITTALK_REPO
 const issue_number = import.meta.env.REACT_APP_GITTALK_NUMBER
 
+const issue = ref<Issue>({} as Issue)
 const comments = ref<Comment[]>([])
 const loginUser = ref<GitHubUser>()
 
@@ -37,7 +38,20 @@ const fetchComments = async () => {
     comments.value = data
 }
 
-watchEffect(async () => fetchComments())
+const fetchIssue = async () => {
+    const { data, err } = await getIssue(owner, repo, issue_number)
+    if (err.status != 200) {
+        console.log("some error")
+        return
+    }
+
+    issue.value = data
+}
+
+watchEffect(async () => {
+    fetchComments()
+    fetchIssue()
+})
 
 const handleLogin = () => {
     const githubOauthUrl = 'https://github.com/login/oauth/authorize'
@@ -78,13 +92,16 @@ watchEffect(
 
 <template>
     <div>
-        <div>
-            <div v-if="!loginUser">
+        <div class="header">
+            <div>
+                <a :href="issue.html_url" target="_blank">{{ issue.comments ?? 0 }}</a> comments
+            </div>
+            <div v-if="!loginUser" class="login">
                 <a @click="handleLogin">
                     Login
                 </a>
             </div>
-            <div v-if="loginUser">
+            <div v-if="loginUser" class="user-avatar">
                 <img :src="loginUser.avatar_url" />
             </div>
         </div>
@@ -116,12 +133,30 @@ watchEffect(
     </div>
 </template>
 
-<style scoped >
+<style scoped lang="scss">
+.header {
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+    border-bottom: #54aeff66 1px solid;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.login a {
+    padding: 10px;
+    cursor: pointer;
+}
+
 .comment-container {
     display: flex;
     flex-direction: column;
     padding: 10px;
     gap: 20px;
+    user-select: none;
 }
 
 .comment-item {
@@ -131,17 +166,18 @@ watchEffect(
 }
 
 .user-avatar {
-    width: 50px;
+    width: 35px;
+    height: 35px;
 }
 
 .user-avatar img {
-    width: 40px;
+    width: 30px;
     border-radius: 50%;
     cursor: pointer;
 }
 
 .user-avatar img:hover {
-    width: 50px;
+    width: 35px;
 }
 
 .comment {
@@ -151,6 +187,7 @@ watchEffect(
     border: #54aeff66 1px solid;
     border-radius: 10px;
     /* background-color: #f0f8ff; */
+    user-select: text;
 }
 
 .comment:hover {
