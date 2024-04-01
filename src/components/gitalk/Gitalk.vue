@@ -1,8 +1,13 @@
 <script lang="ts" setup>
-import { queryStringify } from '@/tools/util'
 import { ref, watch, watchEffect } from 'vue'
-import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser } from './github'
 import { useBrowserLocation } from '@vueuse/core'
+import { marked } from 'marked'
+import moment from 'moment'
+
+import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser } from './github'
+import { queryStringify } from '@/tools/util'
+import Like from '@/icons/Like.vue'
+import Reply from '@/icons/Reply.vue'
 
 export interface IGitalkProps {
     // clientID: string
@@ -46,6 +51,10 @@ const handleLogin = () => {
     window.location.href = `${githubOauthUrl}?${queryStringify(query)}`
 }
 
+const handleImgClick = (html_url: string) => {
+    window.open(html_url)
+}
+
 watchEffect(
     async () => {
         const code = new URL(location.value.href ?? "").searchParams.get("code");
@@ -79,12 +88,122 @@ watchEffect(
                 <img :src="loginUser.avatar_url" />
             </div>
         </div>
-        <ul v-for=" comment  in comments" :key="comment.id">
-            <li v-for="(val, index) in comment" :key="index">
-                {{ index }} {{ val }}
-            </li>
-        </ul>
+        <div class="comment-container">
+            <div v-for="comment  in comments" :key="comment.id" class="comment-item">
+                <div class="user-avatar">
+                    <img :src="comment.user.avatar_url" :alt="comment.user.login"
+                        @click="() => handleImgClick(comment.user.html_url)" />
+                </div>
+                <div class="comment">
+                    <div class="comment-head">
+                        <div>
+                            <div><a :href="comment.user.html_url" target="_blank">{{ comment.user.login }}</a> </div>
+                            <div>created at: {{ moment(comment.created_at).fromNow() }}</div>
+                        </div>
+                        <div>
+                            <div>
+                                <Like></Like>
+                            </div>
+                            <div>
+                                <Reply></Reply>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-body" v-html="marked(comment.body)"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped >
+.comment-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 20px;
+}
+
+.comment-item {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 50px;
+}
+
+.user-avatar img {
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.user-avatar img:hover {
+    width: 50px;
+}
+
+.comment {
+    text-align: left;
+    flex: 1;
+    padding: 10px;
+    border: #54aeff66 1px solid;
+    border-radius: 10px;
+    /* background-color: #f0f8ff; */
+}
+
+.comment:hover {
+    box-shadow: 4px 4px 2px 1px rgb(0 0 255 / 20%);
+}
+
+.comment :deep(ul) {
+    list-style: unset;
+}
+
+.comment :deep(thead),
+.comment :deep(tbody),
+.comment :deep(tfoot),
+.comment :deep(tr),
+.comment :deep(td),
+.comment :deep(th) {
+    border-width: 1px;
+    border-color: #d0d7deb3;
+}
+
+.comment :deep(td),
+.comment :deep(th) {
+    padding: 6px 13px;
+}
+
+.comment :deep(th) {
+    font-weight: 600;
+}
+
+.comment :deep(tr:nth-child(2n)) {
+    background-color: #f6f8fa;
+}
+
+.comment-head {
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
+
+.comment-head>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.comment-head svg {
+    display: flex;
+    fill: #54aeff66;
+    width: 14px;
+    cursor: pointer;
+}
+</style>
