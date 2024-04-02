@@ -10,6 +10,7 @@ import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
 import GithubIcon from '@/icons/Github.vue'
+import Button from '@/common/SimpleButton.vue'
 import ImageSvg from '@/icons/ImageSvg.vue'
 
 export interface IGitalkProps {
@@ -32,6 +33,7 @@ const loginUser = ref<GitHubUser>()
 const userinput = ref<string>("")
 const showMark = ref<boolean>(false)
 const page = ref(0)
+const isLoading = ref(false)
 const userinputMark = computed(() => userinput.value)
 
 const fetchComments = async () => {
@@ -77,7 +79,9 @@ watch(
     () => [page],
     async () => {
         if (issue.value.comments > 0 && page.value > 0) {
+            isLoading.value = true
             await fetchComments()
+            isLoading.value = false
         }
     },
     { deep: true }
@@ -135,7 +139,7 @@ watchEffect(
                 <a :href="issue.html_url" target="_blank">{{ issue.comments ?? 0 }}</a> comments
             </div>
             <div v-if="!loginUser" class="login">
-                <button @click="handleLogin">Login</button>
+                <Button Text="Login" @click="handleLogin" :IsLoading="isLoading"></Button>
             </div>
             <div v-if="loginUser" class="user-avatar">
                 <img :src="loginUser.avatar_url" />
@@ -160,8 +164,9 @@ watchEffect(
             </div>
             <div class="btn-group">
                 <!-- <button v-if="!loginUser">Login</button> -->
-                <button v-if="loginUser">Submit</button>
-                <button @click="() => showMark = !showMark">{{ showMark ? "Edit" : "Preview" }}</button>
+                <Button Text="Submit" v-if="loginUser" :IsLoading="isLoading"></Button>
+                <Button :Text='showMark ? "Edit" : "Preview"' :IsLoading="isLoading"
+                    @click="() => showMark = !showMark"></Button>
             </div>
         </div>
         <div class="comment-container">
@@ -189,7 +194,10 @@ watchEffect(
                 </div>
             </div>
         </div>
-        <button v-if="page != 0 && page != 1" @click="loadmore">Load More</button>
+
+        <div v-if="page != 0 && page != 1" style="display: flex;align-items: center;justify-content: center;">
+            <Button Text="Load More" @click="loadmore" :IsLoading="isLoading"></Button>
+        </div>
     </div>
 </template>
 
@@ -260,19 +268,8 @@ watchEffect(
 }
 
 .comment-body {
+    min-height: 40px;
     user-select: text;
-}
-
-button {
-    padding: 2px 10px;
-    border: rgba(84, 174, 255, 0.4) 1px solid;
-    width: 100px;
-    height: 30px;
-    white-space: pre;
-}
-
-button:hover {
-    box-shadow: 2px 2px 2px 2px rgb(0 0 255 / 20%);
 }
 
 .btn-group {
@@ -283,6 +280,7 @@ button:hover {
     height: 40px;
     gap: 15px;
     user-select: none;
+    padding: 0px 20px;
 }
 
 .comment:hover {
