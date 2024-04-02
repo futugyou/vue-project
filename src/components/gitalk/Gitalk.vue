@@ -3,6 +3,7 @@ import { ref, watch, watchEffect, computed } from 'vue'
 import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
+import _ from 'lodash-es'
 
 import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue } from './github'
 import { queryStringify } from '@/tools/util'
@@ -30,22 +31,17 @@ const comments = ref<Comment[]>([])
 const loginUser = ref<GitHubUser>()
 const userinput = ref<string>("")
 const showMark = ref<boolean>(false)
-const page = ref(1)
+const page = ref(0)
 const userinputMark = computed(() => userinput.value)
 
 const fetchComments = async () => {
-    if (issue.value.comments == undefined || issue.value.comments <= 0) {
-        return
-    }
-
-    console.log(issue.value.comments)
-    const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret)
+    const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
     if (err.status != 200) {
         console.log("some error")
         return
     }
 
-    comments.value = data
+    comments.value = _.reverse(data)
 }
 
 const fetchIssue = async () => {
@@ -60,8 +56,32 @@ const fetchIssue = async () => {
 
 watchEffect(async () => {
     await fetchIssue()
-    await fetchComments()
 })
+
+watch(
+    () => [issue],
+    async () => {
+        if (issue.value.comments > 0 && page.value == 0) {
+            const commentCount = issue.value.comments
+            let pagecount = parseInt(commentCount / per_page + "")
+            if (commentCount % per_page != 0) {
+                pagecount = pagecount + 1
+            }
+            page.value = pagecount
+        }
+    },
+    { deep: true }
+)
+
+watch(
+    () => [page],
+    async () => {
+        if (issue.value.comments > 0 && page.value > 0) {
+            await fetchComments()
+        }
+    },
+    { deep: true }
+)
 
 const handleLogin = () => {
     const githubOauthUrl = 'https://github.com/login/oauth/authorize'
@@ -142,8 +162,7 @@ watchEffect(
             <div v-for="comment  in comments" :key="comment.id" class="comment-item">
                 <div class="user-avatar" @click="() => handleImgClick(comment.user.html_url)">
                     <img :src="comment.user.avatar_url" :alt="comment.user.login" />
-                    <!-- <ImageSvg :title="comment.user.login" :href="comment.user.avatar_url" height="35" width="35">
-                                                                        </ImageSvg> -->
+                    <!-- <ImageSvg :title="comment.user.login" :href="comment.user.avatar_url" height="35" width="35"></ImageSvg> -->
                 </div>
                 <div class="comment">
                     <div class="comment-head">
