@@ -12,7 +12,10 @@ export const GitlakRoutes = [
             clientSecret: import.meta.env.REACT_APP_GITTALK_CLIENTSECRET,
             repo: import.meta.env.REACT_APP_GITTALK_REPO,
             owner: import.meta.env.REACT_APP_GITTALK_OWNER,
-            issue_number: import.meta.env.REACT_APP_GITTALK_NUMBER
+            // ??? 
+            // [Vue warn]: Invalid prop: type check failed for prop "issue_number". Expected Number with value 1, got String with value "1". 
+            issue_number: parseInt(import.meta.env.REACT_APP_GITTALK_NUMBER + ""),
+            per_page: parseInt(import.meta.env.REACT_APP_GITTALK_PRE_PAGE + ""),
         }
     }
 ] as RouteRecordRaw[]

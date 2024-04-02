@@ -12,6 +12,7 @@ interface ImportMetaEnv {
     readonly REACT_APP_GITTALK_NUMBER: number
     readonly REACT_APP_GITTALK_CLIENTID: string
     readonly REACT_APP_GITTALK_CLIENTSECRET: string
+    readonly REACT_APP_GITTALK_PRE_PAGE: number
 }
 
 interface ImportMeta {

@@ -17,20 +17,28 @@ export interface IGitalkProps {
     repo: string
     owner: string
     issue_number: number
+    per_page: number
 }
 
 const props = defineProps<IGitalkProps>()
+const per_page = props.per_page == 0 ? 30 : props.per_page
 
 const location = useBrowserLocation()
 
 const issue = ref<Issue>({} as Issue)
 const comments = ref<Comment[]>([])
 const loginUser = ref<GitHubUser>()
-const userinput = ref<string>("aaaaa")
+const userinput = ref<string>("")
 const showMark = ref<boolean>(false)
+const page = ref(1)
 const userinputMark = computed(() => userinput.value)
 
 const fetchComments = async () => {
+    if (issue.value.comments == undefined || issue.value.comments <= 0) {
+        return
+    }
+
+    console.log(issue.value.comments)
     const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret)
     if (err.status != 200) {
         console.log("some error")
@@ -51,8 +59,8 @@ const fetchIssue = async () => {
 }
 
 watchEffect(async () => {
-    fetchComments()
-    fetchIssue()
+    await fetchIssue()
+    await fetchComments()
 })
 
 const handleLogin = () => {
@@ -135,7 +143,7 @@ watchEffect(
                 <div class="user-avatar" @click="() => handleImgClick(comment.user.html_url)">
                     <img :src="comment.user.avatar_url" :alt="comment.user.login" />
                     <!-- <ImageSvg :title="comment.user.login" :href="comment.user.avatar_url" height="35" width="35">
-                                                </ImageSvg> -->
+                                                                        </ImageSvg> -->
                 </div>
                 <div class="comment">
                     <div class="comment-head">
