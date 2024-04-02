@@ -41,7 +41,7 @@ const fetchComments = async () => {
         return
     }
 
-    comments.value = _.reverse(data)
+    comments.value = comments.value.concat(_.reverse(data))
 }
 
 const fetchIssue = async () => {
@@ -101,6 +101,12 @@ const handleImgClick = (html_url?: string) => {
     }
 }
 
+const loadmore = () => {
+    if (page.value > 1) {
+        page.value = page.value - 1
+    }
+}
+
 watchEffect(
     async () => {
         const code = new URL(location.value.href ?? "").searchParams.get("code");
@@ -123,7 +129,7 @@ watchEffect(
 </script>
 
 <template>
-    <div>
+    <div style="padding-bottom: 20px;">
         <div class="header">
             <div>
                 <a :href="issue.html_url" target="_blank">{{ issue.comments ?? 0 }}</a> comments
@@ -183,6 +189,7 @@ watchEffect(
                 </div>
             </div>
         </div>
+        <button v-if="page != 0 && page != 1" @click="loadmore">Load More</button>
     </div>
 </template>
 
@@ -258,9 +265,10 @@ watchEffect(
 
 button {
     padding: 2px 10px;
-    border: #54aeff66 1px solid;
-    width: 80px;
+    border: rgba(84, 174, 255, 0.4) 1px solid;
+    width: 100px;
     height: 30px;
+    white-space: pre;
 }
 
 button:hover {
