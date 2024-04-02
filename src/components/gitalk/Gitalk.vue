@@ -4,7 +4,7 @@ import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
 import _ from 'lodash-es'
-import { useLocalStorage } from '@vueuse/core'
+import { useLocalStorage, StorageSerializers } from '@vueuse/core'
 
 import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue } from './github'
 import { queryStringify } from '@/tools/util'
@@ -31,7 +31,9 @@ const location = useBrowserLocation()
 // const issue = ref<Issue>({} as Issue)
 const issue = useLocalStorage<Issue>(props.owner + props.repo + props.issue_number, {} as Issue)
 const comments = ref<Comment[]>([])
-const loginUser = ref<GitHubUser>()
+const tmpComment = useLocalStorage<string>(props.owner + props.repo + props.issue_number + "_comment", "")
+// const loginUser = ref<GitHubUser>()
+const loginUser = useLocalStorage<GitHubUser>(props.owner + props.repo + "_user", null, { serializer: StorageSerializers.object })
 const userinput = ref<string>("")
 const showMark = ref<boolean>(false)
 const page = ref(0)
@@ -90,10 +92,10 @@ watchEffect(
 )
 
 const handleLogin = () => {
+    tmpComment.value = userinput.value
     const githubOauthUrl = 'https://github.com/login/oauth/authorize'
-    const clientID = props.clientID
     const query = {
-        client_id: clientID,
+        client_id: props.clientID,
         redirect_uri: window.location.href,
         scope: 'public_repo'
     }
@@ -117,9 +119,13 @@ watchEffect(
     async () => {
         const code = new URL(location.value.href ?? "").searchParams.get("code");
         if (code) {
+            userinput.value = tmpComment.value
+            tmpComment.value = ""
+            isLoading.value = true
             const { data, err } = await githubLogin(code, props.clientID, props.clientSecret)
             if (err.status != 200) {
-                loginUser.value = undefined
+                loginUser.value = null
+                isLoading.value = false
                 // TODO
                 return
             }
@@ -128,6 +134,7 @@ watchEffect(
             const path = (location.value.pathname ?? "")
                 + location.value.search?.replace(/\b(code|state)=\w+/g, "").replace(/[?&]+$/, "")
             history.replaceState({}, "", path)
+            isLoading.value = false
         }
     }
 )
@@ -158,7 +165,8 @@ watchEffect(
                 </div>
                 <div class="comment">
                     <!-- <div class="comment-body"> -->
-                    <textarea v-if="!showMark" v-model="userinput" rows="5" style="border: 0px;padding: 0px;"></textarea>
+                    <textarea v-if="!showMark" v-model="userinput" rows="5" style="border: 0px;padding: 0px;"
+                        :disabled="isLoading"></textarea>
                     <!-- </div> -->
                     <div class="comment-body" v-if="showMark" v-html="marked(userinput)">
                     </div>

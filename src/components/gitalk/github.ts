@@ -26,6 +26,7 @@ export interface GitHubUser {
     avatar_url: string
     login: string
     html_url: string
+    access_token: string
 }
 
 export interface Reaction {
@@ -133,7 +134,8 @@ export const githubLogin = async (code: string, clientId: string, clientSecret: 
         const { access_token } = await response.json()
         const octokit = new Octokit({ auth: access_token })
         const { data } = await octokit.request("GET /user")
-        result = data as GitHubUser
+        let tmp = { ...data, access_token: access_token }
+        result = tmp as GitHubUser
     } catch (error) {
         if (error instanceof RequestError) {
             err.message = error.message
