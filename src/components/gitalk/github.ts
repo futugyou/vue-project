@@ -64,7 +64,7 @@ export const getIssue = async (owner: string, repo: string, issue_number: number
     return { data, err }
 }
 
-export const getIssueComments = async (owner: string, repo: string, issue_number: number, clientId: string, clientSecret: string) => {
+export const getIssueComments = async (owner: string, repo: string, issue_number: number, clientId: string, clientSecret: string, per_page?: number, page?: number) => {
     const app = new OAuthApp({
         clientId: clientId,
         clientSecret: clientSecret,
@@ -74,7 +74,7 @@ export const getIssueComments = async (owner: string, repo: string, issue_number
     let err: Error = { message: "", status: 200, }
 
     try {
-        const response = await app.octokit.rest.issues.listComments({ owner, repo, issue_number })
+        const response = await app.octokit.rest.issues.listComments({ owner, repo, issue_number, per_page, page })
         data = response.data as unknown as Comment[]
     } catch (error) {
         if (error instanceof RequestError) {
