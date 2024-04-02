@@ -4,6 +4,7 @@ import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
 import _ from 'lodash-es'
+import { useLocalStorage } from '@vueuse/core'
 
 import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue } from './github'
 import { queryStringify } from '@/tools/util'
@@ -27,7 +28,8 @@ const per_page = props.per_page == 0 ? 30 : props.per_page
 
 const location = useBrowserLocation()
 
-const issue = ref<Issue>({} as Issue)
+// const issue = ref<Issue>({} as Issue)
+const issue = useLocalStorage<Issue>(props.owner + props.repo + props.issue_number, {} as Issue)
 const comments = ref<Comment[]>([])
 const loginUser = ref<GitHubUser>()
 const userinput = ref<string>("")
@@ -47,6 +49,10 @@ const fetchComments = async () => {
 }
 
 const fetchIssue = async () => {
+    if (issue.value != undefined && issue.value.id != undefined) {
+        return
+    }
+
     const { data, err } = await getIssue(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret)
     if (err.status != 200) {
         console.log("some error")
@@ -60,9 +66,8 @@ watchEffect(async () => {
     await fetchIssue()
 })
 
-watch(
-    () => [issue],
-    async () => {
+watchEffect(
+    () => {
         if (issue.value.comments > 0 && page.value == 0) {
             const commentCount = issue.value.comments
             let pagecount = parseInt(commentCount / per_page + "")
@@ -71,20 +76,17 @@ watch(
             }
             page.value = pagecount
         }
-    },
-    { deep: true }
+    }
 )
 
-watch(
-    () => [page],
+watchEffect(
     async () => {
         if (issue.value.comments > 0 && page.value > 0) {
             isLoading.value = true
             await fetchComments()
             isLoading.value = false
         }
-    },
-    { deep: true }
+    }
 )
 
 const handleLogin = () => {
