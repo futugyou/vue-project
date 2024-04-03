@@ -6,7 +6,7 @@ import moment from 'moment'
 import _ from 'lodash-es'
 import { useLocalStorage, StorageSerializers } from '@vueuse/core'
 
-import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue } from './github'
+import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue, createIssueComment } from './github'
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
@@ -24,32 +24,22 @@ export interface IGitalkProps {
 }
 
 const props = defineProps<IGitalkProps>()
+
+const page = ref(0)
 const per_page = props.per_page == 0 ? 30 : props.per_page
 
 const location = useBrowserLocation()
-
-// const issue = ref<Issue>({} as Issue)
 const issue = useLocalStorage<Issue>(props.owner + props.repo + props.issue_number, {} as Issue)
 const comments = ref<Comment[]>([])
-const commentcode = ref<boolean[]>([])
-const tmpComment = useLocalStorage<string>(props.owner + props.repo + props.issue_number + "_comment", "")
-// const loginUser = ref<GitHubUser>()
+// this is used by display 'markdown' or 'raw' text
+const commentMark = ref<boolean[]>([])
 const loginUser = useLocalStorage<GitHubUser>(props.owner + props.repo + "_user", null, { serializer: StorageSerializers.object })
-const userinput = ref<string>("")
-const showMark = ref<boolean>(false)
-const page = ref(0)
+const userComment = ref<string>("")
+// store user comment when user redirect to github login page
+const tmpComment = useLocalStorage<string>(props.owner + props.repo + props.issue_number + "_comment", "")
+
+const showMarkdown = ref<boolean>(false)
 const isLoading = ref(false)
-const textarearef = ref<HTMLTextAreaElement>()
-
-const fetchComments = async () => {
-    const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
-    if (err.status != 200) {
-        console.log("some error")
-        return
-    }
-
-    comments.value = comments.value.concat(_.reverse(data))
-}
 
 const fetchIssue = async () => {
     if (issue.value != undefined && issue.value.id != undefined) {
@@ -65,36 +55,18 @@ const fetchIssue = async () => {
     issue.value = data
 }
 
-watchEffect(async () => {
-    await fetchIssue()
-})
-
-watchEffect(
-    () => {
-        if (issue.value.comments > 0 && page.value == 0) {
-            const commentCount = issue.value.comments
-            let pagecount = parseInt(commentCount / per_page + "")
-            if (commentCount % per_page != 0) {
-                pagecount = pagecount + 1
-            }
-            page.value = pagecount
-            commentcode.value = []
-        }
+const fetchComments = async () => {
+    const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
+    if (err.status != 200) {
+        console.log("some error")
+        return
     }
-)
 
-watchEffect(
-    async () => {
-        if (issue.value.comments > 0 && page.value > 0) {
-            isLoading.value = true
-            await fetchComments()
-            isLoading.value = false
-        }
-    }
-)
+    comments.value = comments.value.concat(_.reverse(data))
+}
 
 const handleLogin = () => {
-    tmpComment.value = userinput.value
+    tmpComment.value = userComment.value
     const githubOauthUrl = 'https://github.com/login/oauth/authorize'
     const query = {
         client_id: props.clientID,
@@ -117,11 +89,90 @@ const loadmore = () => {
     }
 }
 
+const addReply = (body: string) => {
+    let commend = userComment.value.trim()
+    const subs = body.split("\r\n")
+    for (let i = 0; i < subs.length; i++) {
+        const sub = subs[i]
+        if (i == 0) {
+            if (commend.length != 0) {
+                commend = commend + "\r\n\r\n"
+            }
+        } else {
+            commend = commend + "\r\n"
+        }
+
+        commend = commend + "> " + sub
+    }
+
+    if (subs.length > 0) {
+        commend = commend + "\r\n\r\n"
+    }
+
+    userComment.value = commend
+}
+
+const createComment = async () => {
+    if (userComment.value.trim().length == 0) {
+        return
+    }
+
+    if (loginUser.value == undefined || loginUser.value.access_token == undefined
+        || loginUser.value.access_token.trim().length == 0) {
+        // TODO: tip login
+        return
+    }
+
+    isLoading.value = true
+    const { data, err } = await createIssueComment(props.owner, props.repo, props.issue_number, userComment.value, loginUser.value.access_token)
+    if (err.status != 200) {
+        console.log("some error")
+        isLoading.value = false
+        return
+    }
+
+    comments.value = [data].concat(comments.value)
+    userComment.value = ""
+    isLoading.value = false
+}
+
+// page init, load issue data
+watchEffect(async () => {
+    await fetchIssue()
+})
+
+// calculate actual page No.
+watchEffect(
+    () => {
+        if (issue.value.comments > 0 && page.value == 0) {
+            const commentCount = issue.value.comments
+            let pagecount = parseInt(commentCount / per_page + "")
+            if (commentCount % per_page != 0) {
+                pagecount = pagecount + 1
+            }
+            page.value = pagecount
+            commentMark.value = []
+        }
+    }
+)
+
+// page No. change to load more comments
+watchEffect(
+    async () => {
+        if (issue.value.comments > 0 && page.value > 0) {
+            isLoading.value = true
+            await fetchComments()
+            isLoading.value = false
+        }
+    }
+)
+
+// github user login callback
 watchEffect(
     async () => {
         const code = new URL(location.value.href ?? "").searchParams.get("code");
         if (code) {
-            userinput.value = tmpComment.value
+            userComment.value = tmpComment.value
             tmpComment.value = ""
             isLoading.value = true
             const { data, err } = await githubLogin(code, props.clientID, props.clientSecret)
@@ -141,29 +192,12 @@ watchEffect(
     }
 )
 
-const addReply = (body: string) => {
-    let commend = userinput.value
-    const subs = body.split("\r\n")
-    for (let i = 0; i < subs.length; i++) {
-        const sub = subs[i]
-        if (commend.length != 0) {
-            commend = commend + "\r\n"
-        }
-
-        commend = commend + "> " + sub
-    }
-
-    if (subs.length > 0) {
-        commend = commend + "\r\n"
-    }
-
-    userinput.value = commend
-}
-
+// comment textarea focus
+const textarearef = ref<HTMLTextAreaElement>()
 watch(
-    () => userinput,
+    () => userComment,
     () => {
-        if (textarearef.value) {
+        if (userComment.value.trim().length > 0 && textarearef.value) {
             textarearef.value.focus()
             textarearef.value.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' })
         }
@@ -197,18 +231,18 @@ watch(
                 </div>
                 <div class="comment">
                     <!-- <div class="comment-body"> -->
-                    <textarea id="textarea" v-if="!showMark" v-model="userinput" rows="5" ref="textarearef"
+                    <textarea id="textarea" v-if="!showMarkdown" v-model="userComment" rows="5" ref="textarearef"
                         :disabled="isLoading"></textarea>
                     <!-- </div> -->
-                    <div class="comment-body" v-if="showMark" v-html="marked(userinput)">
+                    <div class="comment-body" v-if="showMarkdown" v-html="marked(userComment)">
                     </div>
                 </div>
             </div>
             <div class="btn-group">
                 <!-- <button v-if="!loginUser">Login</button> -->
-                <Button Text="Submit" v-if="loginUser" :IsLoading="isLoading"></Button>
-                <Button :Text='showMark ? "Edit" : "Preview"' :IsLoading="isLoading"
-                    @click="() => showMark = !showMark"></Button>
+                <Button Text="Submit" v-if="loginUser" :IsLoading="isLoading" @click="createComment"></Button>
+                <Button :Text='showMarkdown ? "Edit" : "Preview"' :IsLoading="isLoading"
+                    @click="() => showMarkdown = !showMarkdown"></Button>
             </div>
         </div>
         <div class="comment-container">
@@ -223,10 +257,10 @@ watch(
                             <div><a :href="comment.user.html_url" target="_blank">{{ comment.user.login }}</a> </div>
                             <div>created at: {{ moment(comment.created_at).fromNow() }}</div>
                             <div>
-                                <span v-if="!commentcode[index]"
-                                    @click="commentcode[index] = !commentcode[index]">code</span>
-                                <span v-if="commentcode[index]"
-                                    @click="commentcode[index] = !commentcode[index]">marked</span>
+                                <span v-if="!commentMark[index]"
+                                    @click="commentMark[index] = !commentMark[index]">code</span>
+                                <span v-if="commentMark[index]"
+                                    @click="commentMark[index] = !commentMark[index]">marked</span>
                             </div>
                         </div>
                         <div>
@@ -238,8 +272,8 @@ watch(
                             </div>
                         </div>
                     </div>
-                    <div v-if="!commentcode[index]" class="comment-body" v-html="marked(comment.body)"></div>
-                    <textarea rows="5" v-if="commentcode[index]" readonly class="comment-body"
+                    <div v-if="!commentMark[index]" class="comment-body" v-html="marked(comment.body)"></div>
+                    <textarea rows="5" v-if="commentMark[index]" readonly class="comment-body"
                         v-html="comment.body"></textarea>
                 </div>
             </div>
@@ -258,6 +292,7 @@ textarea {
     border: 0px;
     padding: 0px;
 }
+
 
 .header {
     font-size: 16px;
@@ -369,6 +404,23 @@ textarea {
 
 .comment :deep(tr:nth-child(2n)) {
     background-color: #f6f8fa;
+}
+
+.comment :deep(blockquote) {
+    padding: 0 1em;
+    color: #636c76;
+    border-left: 0.25em solid #d0d7de;
+}
+
+.comment :deep(pre) {
+    min-height: 52px;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    color: #1f2328;
+    background-color: #f6f8fa;
+    border-radius: 6px;
 }
 
 .comment-head {
