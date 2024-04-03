@@ -111,6 +111,44 @@ export const createIssueComment = async (owner: string, repo: string, issue_numb
     return { data, err }
 }
 
+export const likeIssueComment = async (owner: string, repo: string, comment_id: number, access_token: string) => {
+    let err: Error = { message: "", status: 200, }
+
+    try {
+        const octokit = new Octokit({ auth: access_token })
+        const { data } = await octokit.rest.reactions.createForCommitComment({ owner, repo, comment_id, content: "heart" })
+    } catch (error) {
+        if (error instanceof RequestError) {
+            err.message = error.message
+            err.status = error.status
+        } else {
+            err.status = 500
+            err.message = JSON.stringify(error)
+        }
+    }
+
+    return { err }
+}
+
+export const unLikeIssueComment = async (owner: string, repo: string, comment_id: number, reaction_id: number, access_token: string) => {
+    let err: Error = { message: "", status: 200, }
+
+    try {
+        const octokit = new Octokit({ auth: access_token })
+        await octokit.rest.reactions.deleteForCommitComment({ owner, repo, comment_id, reaction_id })
+    } catch (error) {
+        if (error instanceof RequestError) {
+            err.message = error.message
+            err.status = error.status
+        } else {
+            err.status = 500
+            err.message = JSON.stringify(error)
+        }
+    }
+
+    return { err }
+}
+
 export const githubLogin = async (code: string, clientId: string, clientSecret: string) => {
     const url = "https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"
 
