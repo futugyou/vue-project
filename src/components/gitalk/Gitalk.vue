@@ -31,6 +31,7 @@ const location = useBrowserLocation()
 // const issue = ref<Issue>({} as Issue)
 const issue = useLocalStorage<Issue>(props.owner + props.repo + props.issue_number, {} as Issue)
 const comments = ref<Comment[]>([])
+const commentcode = ref<boolean[]>([])
 const tmpComment = useLocalStorage<string>(props.owner + props.repo + props.issue_number + "_comment", "")
 // const loginUser = ref<GitHubUser>()
 const loginUser = useLocalStorage<GitHubUser>(props.owner + props.repo + "_user", null, { serializer: StorageSerializers.object })
@@ -77,6 +78,7 @@ watchEffect(
                 pagecount = pagecount + 1
             }
             page.value = pagecount
+            commentcode.value = []
         }
     }
 )
@@ -195,8 +197,8 @@ watch(
                 </div>
                 <div class="comment">
                     <!-- <div class="comment-body"> -->
-                    <textarea id="textarea" v-if="!showMark" v-model="userinput" rows="5" style="border: 0px;padding: 0px;"
-                        ref="textarearef" :disabled="isLoading"></textarea>
+                    <textarea id="textarea" v-if="!showMark" v-model="userinput" rows="5" ref="textarearef"
+                        :disabled="isLoading"></textarea>
                     <!-- </div> -->
                     <div class="comment-body" v-if="showMark" v-html="marked(userinput)">
                     </div>
@@ -210,7 +212,7 @@ watch(
             </div>
         </div>
         <div class="comment-container">
-            <div v-for="comment  in comments" :key="comment.id" class="comment-item">
+            <div v-for="(comment, index) in comments" :key="comment.id" class="comment-item">
                 <div class="user-avatar" @click="() => handleImgClick(comment.user.html_url)">
                     <img :src="comment.user.avatar_url" :alt="comment.user.login" />
                     <!-- <ImageSvg :title="comment.user.login" :href="comment.user.avatar_url" height="35" width="35"></ImageSvg> -->
@@ -220,6 +222,12 @@ watch(
                         <div>
                             <div><a :href="comment.user.html_url" target="_blank">{{ comment.user.login }}</a> </div>
                             <div>created at: {{ moment(comment.created_at).fromNow() }}</div>
+                            <div>
+                                <span v-if="!commentcode[index]"
+                                    @click="commentcode[index] = !commentcode[index]">code</span>
+                                <span v-if="commentcode[index]"
+                                    @click="commentcode[index] = !commentcode[index]">marked</span>
+                            </div>
                         </div>
                         <div>
                             <div>
@@ -230,7 +238,9 @@ watch(
                             </div>
                         </div>
                     </div>
-                    <div class="comment-body" v-html="marked(comment.body)"></div>
+                    <div v-if="!commentcode[index]" class="comment-body" v-html="marked(comment.body)"></div>
+                    <textarea rows="5" v-if="commentcode[index]" readonly class="comment-body"
+                        v-html="comment.body"></textarea>
                 </div>
             </div>
         </div>
@@ -242,6 +252,13 @@ watch(
 </template>
 
 <style scoped lang="scss">
+textarea {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 0px;
+    padding: 0px;
+}
+
 .header {
     font-size: 16px;
     display: flex;
@@ -307,11 +324,6 @@ watch(
     /* background-color: #f0f8ff; */
 }
 
-.comment textarea {
-    max-height: 200px;
-    overflow-y: auto;
-}
-
 .comment-body {
     min-height: 40px;
     user-select: text;
@@ -373,6 +385,17 @@ watch(
     flex-direction: row;
     align-items: center;
     gap: 15px;
+}
+
+.comment-head span {
+    display: flex;
+    padding: 2px 10px;
+    cursor: pointer;
+    border-radius: 10px;
+
+    &:hover {
+        background-color: #d0d7deb3;
+    }
 }
 
 .comment-head svg {
