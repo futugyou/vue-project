@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect, computed } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
@@ -38,7 +38,7 @@ const userinput = ref<string>("")
 const showMark = ref<boolean>(false)
 const page = ref(0)
 const isLoading = ref(false)
-const userinputMark = computed(() => userinput.value)
+const textarearef = ref<HTMLTextAreaElement>()
 
 const fetchComments = async () => {
     const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
@@ -139,6 +139,36 @@ watchEffect(
     }
 )
 
+const addReply = (body: string) => {
+    let commend = userinput.value
+    const subs = body.split("\r\n")
+    for (let i = 0; i < subs.length; i++) {
+        const sub = subs[i]
+        if (commend.length != 0) {
+            commend = commend + "\r\n"
+        }
+
+        commend = commend + "> " + sub
+    }
+
+    if (subs.length > 0) {
+        commend = commend + "\r\n"
+    }
+
+    userinput.value = commend
+}
+
+watch(
+    () => userinput,
+    () => {
+        if (textarearef.value) {
+            textarearef.value.focus()
+            textarearef.value.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' })
+        }
+    },
+    { deep: true, immediate: true, }
+)
+
 </script>
 
 <template>
@@ -165,8 +195,8 @@ watchEffect(
                 </div>
                 <div class="comment">
                     <!-- <div class="comment-body"> -->
-                    <textarea v-if="!showMark" v-model="userinput" rows="5" style="border: 0px;padding: 0px;"
-                        :disabled="isLoading"></textarea>
+                    <textarea id="textarea" v-if="!showMark" v-model="userinput" rows="5" style="border: 0px;padding: 0px;"
+                        ref="textarearef" :disabled="isLoading"></textarea>
                     <!-- </div> -->
                     <div class="comment-body" v-if="showMark" v-html="marked(userinput)">
                     </div>
@@ -196,7 +226,7 @@ watchEffect(
                                 <Like></Like>
                             </div>
                             <div>
-                                <Reply></Reply>
+                                <Reply @click="() => addReply(comment.body)"></Reply>
                             </div>
                         </div>
                     </div>
@@ -275,6 +305,11 @@ watchEffect(
     border: #54aeff66 1px solid;
     border-radius: 10px;
     /* background-color: #f0f8ff; */
+}
+
+.comment textarea {
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .comment-body {
