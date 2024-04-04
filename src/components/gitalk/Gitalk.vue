@@ -6,7 +6,10 @@ import moment from 'moment'
 import _ from 'lodash-es'
 import { useLocalStorage, StorageSerializers } from '@vueuse/core'
 
-import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue, createIssueComment, getGraphQLIssueComments } from './github'
+import {
+    getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue, createIssueComment,
+    getGraphQLIssueComments, likeIssueComment, unLikeIssueComment
+} from './github'
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
@@ -29,7 +32,7 @@ const page = ref(0)
 const per_page = props.per_page == 0 ? 30 : props.per_page
 
 const location = useBrowserLocation()
-const issue = useLocalStorage<Issue>(props.owner + props.repo + props.issue_number, {} as Issue)
+const issue = ref<Issue>({} as Issue)
 const comments = ref<Comment[]>([])
 // this is used by display 'markdown' or 'raw' text
 const commentMark = ref<boolean[]>([])
@@ -57,13 +60,14 @@ const fetchIssue = async () => {
 }
 
 const fetchComments = async () => {
+    let commends: Comment[] = []
     if (loginUser.value && loginUser.value.access_token) {
         const { data, err, startCursor } = await getGraphQLIssueComments(props.owner, props.repo, props.issue_number, per_page, cursor, loginUser.value.access_token)
         if (err.status != 200) {
             console.log("some error")
             return
         }
-        comments.value = comments.value.concat(_.reverse(data))
+        commends = comments.value.concat(_.reverse(data))
         cursor = startCursor
     } else {
 
@@ -73,8 +77,9 @@ const fetchComments = async () => {
             return
         }
 
-        comments.value = comments.value.concat(_.reverse(data))
+        commends = comments.value.concat(_.reverse(data))
     }
+    comments.value = _.uniqBy(commends, "id")
 }
 
 const handleLogin = () => {
@@ -122,6 +127,56 @@ const addReply = (body: string) => {
     }
 
     userComment.value = commend
+}
+
+const updateReaction = async (commend: Comment) => {
+    if (loginUser.value == undefined || loginUser.value.access_token == undefined
+        || loginUser.value.access_token.trim().length == 0) {
+        // TODO: tip login
+        return
+    }
+
+    let tmp = commend
+    const f = commend.reactions.viewerHasReacted ?? false
+    if (f) {
+        const reaction_id = commend.reactions.nodes.find(p => p.login == loginUser.value.login)?.id ?? 0
+        if (reaction_id == 0) {
+            return
+        }
+
+        const { err } = await unLikeIssueComment(props.owner, props.repo, commend.id, reaction_id, loginUser.value.access_token)
+        if (err.status == 200) {
+            tmp = {
+                ...tmp,
+                reactions: {
+                    ...tmp.reactions,
+                    viewerHasReacted: false,
+                    nodes: tmp.reactions.nodes.filter(p => p.login != loginUser.value.login),
+                },
+            }
+        }
+    } else {
+        const { id, err } = await likeIssueComment(props.owner, props.repo, commend.id, loginUser.value.access_token)
+        if (err.status == 200) {
+            let nodes = tmp.reactions.nodes ?? []
+            tmp = {
+                ...tmp,
+                reactions: {
+                    ...tmp.reactions,
+                    viewerHasReacted: true,
+                    nodes: nodes.findIndex(p => p.login == loginUser.value.login) >= 0 ? nodes : nodes.concat({ id: id, login: loginUser.value.login }),
+                },
+            }
+        }
+    }
+
+    comments.value = comments.value.map(p => {
+        if (p.id == tmp.id) {
+            return tmp
+        } else {
+            return { ...p }
+        }
+    })
 }
 
 const createComment = async () => {
@@ -277,7 +332,8 @@ watch(
                         </div>
                         <div>
                             <div>
-                                <Like></Like>
+                                <Like :class="comment.reactions.viewerHasReacted ? 'like' : ''"
+                                    @click="() => updateReaction(comment)"></Like>
                             </div>
                             <div>
                                 <Reply @click="() => addReply(comment.body)"></Reply>
@@ -305,6 +361,9 @@ textarea {
     padding: 0px;
 }
 
+.comment-head svg.like :deep(path) {
+    fill: red;
+}
 
 .header {
     font-size: 16px;

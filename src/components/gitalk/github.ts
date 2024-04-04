@@ -225,10 +225,11 @@ export const createIssueComment = async (owner: string, repo: string, issue_numb
 
 export const likeIssueComment = async (owner: string, repo: string, comment_id: number, access_token: string) => {
     let err: Error = { message: "", status: 200, }
-
+    let id = 0
     try {
         const octokit = new Octokit({ auth: access_token })
-        const { data } = await octokit.rest.reactions.createForCommitComment({ owner, repo, comment_id, content: "heart" })
+        const { data } = await octokit.rest.reactions.createForIssueComment({ owner, repo, comment_id, content: "heart" })
+        id = data.id
     } catch (error) {
         if (error instanceof RequestError) {
             err.message = error.message
@@ -239,7 +240,7 @@ export const likeIssueComment = async (owner: string, repo: string, comment_id: 
         }
     }
 
-    return { err }
+    return { id, err }
 }
 
 export const unLikeIssueComment = async (owner: string, repo: string, comment_id: number, reaction_id: number, access_token: string) => {
@@ -247,7 +248,7 @@ export const unLikeIssueComment = async (owner: string, repo: string, comment_id
 
     try {
         const octokit = new Octokit({ auth: access_token })
-        await octokit.rest.reactions.deleteForCommitComment({ owner, repo, comment_id, reaction_id })
+        await octokit.rest.reactions.deleteForIssueComment({ owner, repo, comment_id, reaction_id })
     } catch (error) {
         if (error instanceof RequestError) {
             err.message = error.message
