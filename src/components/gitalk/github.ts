@@ -33,6 +33,13 @@ export interface Reaction {
     id: number
     url: string
     total_count: number
+    viewerHasReacted: boolean
+    nodes: ReactionNested[]
+}
+
+export interface ReactionNested {
+    id: number
+    login: string
 }
 
 export interface Error {
@@ -88,6 +95,111 @@ export const getIssueComments = async (owner: string, repo: string, issue_number
     }
 
     return { data, err }
+}
+
+export const getGraphQLIssueComments = async (owner: string, repo: string, issue_number: number, per_page: number, cursor: string | null, access_token: string) => {
+    let startCursor: string | null = null
+    let data: Comment[] = []
+    let err: Error = { message: "", status: 200, }
+
+    try {
+        const octokit = new Octokit({ auth: access_token })
+        const { repository } = await octokit.graphql(
+            `
+            query getComments($owner: String!, $repo: String!, $id: Int!, $cursor: String, $pageSize: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  issue(number: $id) {
+                    number
+                    url
+                    title
+                    comments(last: $pageSize, before: $cursor) {
+                      totalCount
+                      pageInfo {
+                        hasPreviousPage
+                        startCursor
+                      }
+                      nodes { 
+                        databaseId
+                        url
+                        body
+                        createdAt
+                        author {
+                          avatarUrl
+                          login
+                          url
+                        }
+                        reactions(first: 100, content: HEART) {
+                          totalCount
+                          viewerHasReacted
+                          pageInfo {
+                            hasNextPage
+                          }
+                          nodes {
+                            id
+                            databaseId
+                            user {
+                              login
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            {
+                "owner": owner,
+                "repo": repo,
+                "id": issue_number,
+                "pageSize": per_page,
+                "cursor": cursor
+            },
+        )
+
+        if (repository && repository.issue && repository.issue.comments) {
+            startCursor = repository.issue.comments.pageInfo.startCursor
+            const nodes = repository.issue.comments.nodes as any[]
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i]
+                data.push({
+                    id: node.databaseId,
+                    html_url: node.url,
+                    created_at: node.createdAt,
+                    body: node.body,
+                    user: {
+                        id: 0,
+                        avatar_url: node.author?.avatarUrl,
+                        login: node.author?.login,
+                        html_url: node.author?.url,
+                        access_token: ""
+                    },
+                    reactions: {
+                        id: 0,
+                        url: "",
+                        total_count: node.reactions?.totalCount ?? 0,
+                        viewerHasReacted: node.reactions?.viewerHasReacted ?? false,
+                        nodes: (node.reactions?.nodes as []).map((p: any) => {
+                            return {
+                                "id": p.databaseId,
+                                "login": p.user?.login ?? ""
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    } catch (error) {
+        if (error instanceof RequestError) {
+            err.message = error.message
+            err.status = error.status
+        } else {
+            err.status = 500
+            err.message = JSON.stringify(error)
+        }
+    }
+
+    return { data, err, startCursor }
 }
 
 export const createIssueComment = async (owner: string, repo: string, issue_number: number, body: string, access_token: string) => {
