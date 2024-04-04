@@ -67,19 +67,20 @@ const fetchComments = async () => {
             console.log("some error")
             return
         }
-        commends = comments.value.concat(_.reverse(data))
+
+        commends = data
         cursor = startCursor
     } else {
-
         const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
         if (err.status != 200) {
             console.log("some error")
             return
         }
 
-        commends = comments.value.concat(_.reverse(data))
+        commends = data
     }
-    comments.value = _.uniqBy(commends, "id")
+
+    comments.value = _.orderBy(_.uniqBy(commends.concat(comments.value), "id"), "id", "desc")
 }
 
 const handleLogin = () => {
