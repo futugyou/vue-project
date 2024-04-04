@@ -84,20 +84,32 @@ const fetchComments = async () => {
 }
 
 const handleLogin = () => {
+    let href = window.location.href
+    if (window.rawWindow && window.rawWindow.location) {
+        href = window.rawWindow.location.href
+    }
     tmpComment.value = userComment.value
     const githubOauthUrl = 'https://github.com/login/oauth/authorize'
     const query = {
         client_id: props.clientID,
-        redirect_uri: window.location.href,
+        redirect_uri: href,
         scope: 'public_repo'
     }
 
-    window.location.href = `${githubOauthUrl}?${queryStringify(query)}`
+    if (window.rawWindow && window.rawWindow.location) {
+        window.rawWindow.location.href = `${githubOauthUrl}?${queryStringify(query)}`
+    } else {
+        window.location.href = `${githubOauthUrl}?${queryStringify(query)}`
+    }
 }
 
 const handleImgClick = (html_url?: string) => {
     if (html_url) {
-        window.open(html_url)
+        if (window.rawWindow) {
+            window.rawWindow.open(html_url)
+        } else {
+            window.open(html_url)
+        }
     }
 }
 
@@ -242,7 +254,18 @@ watchEffect(
 // github user login callback
 watchEffect(
     async () => {
-        const code = new URL(location.value.href ?? "").searchParams.get("code");
+        let href = location.value.href ?? ""
+        let pathname = location.value.pathname ?? ""
+        let search = location.value.search
+        let history = window.history
+        if (window.rawWindow) {
+            href = window.rawWindow.location.href ?? ""
+            pathname = window.rawWindow.location.pathname ?? ""
+            search = window.rawWindow.location.search
+            history = window.rawWindow.history
+        }
+
+        const code = new URL(href).searchParams.get("code");
         if (code) {
             userComment.value = tmpComment.value
             tmpComment.value = ""
@@ -256,8 +279,7 @@ watchEffect(
             }
 
             loginUser.value = data
-            const path = (location.value.pathname ?? "")
-                + location.value.search?.replace(/\b(code|state)=\w+/g, "").replace(/[?&]+$/, "")
+            const path = pathname + search?.replace(/\b(code|state)=\w+/g, "").replace(/[?&]+$/, "")
             history.replaceState({}, "", path)
             isLoading.value = false
         }
