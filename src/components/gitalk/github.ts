@@ -104,7 +104,7 @@ export const getGraphQLIssueComments = async (owner: string, repo: string, issue
 
     try {
         const octokit = new Octokit({ auth: access_token })
-        const { repository } = await octokit.graphql(
+        const result: any = await octokit.graphql(
             `
             query getComments($owner: String!, $repo: String!, $id: Int!, $cursor: String, $pageSize: Int!) {
                 repository(owner: $owner, name: $repo) {
@@ -157,9 +157,9 @@ export const getGraphQLIssueComments = async (owner: string, repo: string, issue
             },
         )
 
-        if (repository && repository.issue && repository.issue.comments) {
-            startCursor = repository.issue.comments.pageInfo.startCursor
-            const nodes = repository.issue.comments.nodes as any[]
+        if (result && result.repository && result.repository.issue && result.repository.issue.comments) {
+            startCursor = result.repository.issue.comments.pageInfo.startCursor
+            const nodes = result.repository.issue.comments.nodes as any[]
             for (let i = 0; i < nodes.length; i++) {
                 const node = nodes[i]
                 data.push({
