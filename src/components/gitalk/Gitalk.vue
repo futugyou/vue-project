@@ -204,6 +204,10 @@ const createComment = async () => {
     isLoading.value = false
 }
 
+const logout = () => {
+    loginUser.value = null
+}
+
 // page init, load issue data
 watchEffect(async () => {
     await fetchIssue()
@@ -286,6 +290,9 @@ watch(
             </div>
             <div v-if="loginUser" class="user-avatar">
                 <img :src="loginUser.avatar_url" />
+                <div class="logout">
+                    <Button Text="Logout" @click="logout" :IsLoading="isLoading"></Button>
+                </div>
             </div>
         </div>
         <div class="comment-container" style="gap: 5px;">
@@ -382,6 +389,21 @@ textarea {
     padding: 10px;
     cursor: pointer;
     width: 80px;
+}
+
+.user-avatar {
+    position: relative;
+}
+
+.user-avatar .logout {
+    display: none;
+    position: absolute;
+}
+
+.user-avatar:hover .logout {
+    top: 35px;
+    right: -20px;
+    display: block;
 }
 
 .comment-container {
