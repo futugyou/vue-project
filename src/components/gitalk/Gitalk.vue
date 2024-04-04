@@ -6,7 +6,7 @@ import moment from 'moment'
 import _ from 'lodash-es'
 import { useLocalStorage, StorageSerializers } from '@vueuse/core'
 
-import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue, createIssueComment } from './github'
+import { getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue, createIssueComment, getGraphQLIssueComments } from './github'
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
@@ -40,6 +40,7 @@ const tmpComment = useLocalStorage<string>(props.owner + props.repo + props.issu
 
 const showMarkdown = ref<boolean>(false)
 const isLoading = ref(false)
+let cursor: string | null = null
 
 const fetchIssue = async () => {
     if (issue.value != undefined && issue.value.id != undefined) {
@@ -56,13 +57,24 @@ const fetchIssue = async () => {
 }
 
 const fetchComments = async () => {
-    const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
-    if (err.status != 200) {
-        console.log("some error")
-        return
-    }
+    if (loginUser.value && loginUser.value.access_token) {
+        const { data, err, startCursor } = await getGraphQLIssueComments(props.owner, props.repo, props.issue_number, per_page, cursor, loginUser.value.access_token)
+        if (err.status != 200) {
+            console.log("some error")
+            return
+        }
+        comments.value = comments.value.concat(_.reverse(data))
+        cursor = startCursor
+    } else {
 
-    comments.value = comments.value.concat(_.reverse(data))
+        const { data, err } = await getIssueComments(props.owner, props.repo, props.issue_number, props.clientID, props.clientSecret, per_page, page.value)
+        if (err.status != 200) {
+            console.log("some error")
+            return
+        }
+
+        comments.value = comments.value.concat(_.reverse(data))
+    }
 }
 
 const handleLogin = () => {
