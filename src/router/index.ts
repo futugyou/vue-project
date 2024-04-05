@@ -4,9 +4,8 @@ import { AwsRoutes } from './aws'
 import { DemoRoutes } from './demo'
 import { ToolsRoutes } from './tools'
 import { handleRequiresAuth } from '@/tools/baseAppEvent'
-import { DrawioRoutes } from './drawio'
 
-const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes).concat(DrawioRoutes)
+const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes)
 
 let router: Router | null = null
 let history: RouterHistory | null = null
