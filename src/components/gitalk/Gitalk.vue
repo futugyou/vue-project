@@ -29,7 +29,7 @@ export interface IGitalkProps {
 const props = defineProps<IGitalkProps>()
 
 const page = ref(0)
-const per_page = props.per_page == 0 ? 30 : props.per_page
+const per_page = (props.per_page <= 0 || props.per_page == undefined) ? 30 : props.per_page
 
 const location = useBrowserLocation()
 const issue = ref<Issue>({} as Issue)
