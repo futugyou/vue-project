@@ -6,6 +6,7 @@ import { getEmbedUrl, handleEvent } from './utils'
 import { useEventListener } from '@/composables/event'
 
 export interface IEmbedDrawioProps {
+    xml?: string
     baseUrl?: string,
     urlParameters?: UrlParameters,
     configuration?: { [key: string]: any }
@@ -21,9 +22,18 @@ const messageHandler = (evt: MessageEvent) => {
         {
             init: (data) => {
                 iframeRef.value?.contentWindow?.postMessage(
-                    JSON.stringify({ action: 'load', xml: '' }),
+                    JSON.stringify({ action: 'load', xml: props.xml }),
                     '*'
                 )
+            },
+            configure: (data) => {
+                console.log(data)
+            },
+            autosave: (data) => {
+                console.log(data)
+            },
+            load: (data) => {
+                console.log(data)
             },
             openLink: (data) => {
                 console.log(data)
@@ -32,6 +42,21 @@ const messageHandler = (evt: MessageEvent) => {
                 console.log(data)
             },
             save: (data) => {
+                console.log(data)
+            },
+            merge: (data) => {
+                console.log(data)
+            },
+            prompt: (data) => {
+                console.log(data)
+            },
+            template: (data) => {
+                console.log(data)
+            },
+            draft: (data) => {
+                console.log(data)
+            },
+            export: (data) => {
                 console.log(data)
             },
         },

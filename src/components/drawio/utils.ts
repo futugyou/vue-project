@@ -6,7 +6,7 @@ export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters, add
     const urlSearchParams = new URLSearchParams()
 
     urlSearchParams.append('proto', 'json')
-    // urlSearchParams.append('returnbounds', '1')
+    urlSearchParams.append('returnbounds', '1')
     if (addConfiguration) {
         urlSearchParams.append('configure', '1')
     }
