@@ -3,11 +3,10 @@ import { createRouter, createWebHistory, Router, RouterHistory, RouteRecordRaw }
 import { AwsRoutes } from './aws'
 import { DemoRoutes } from './demo'
 import { ToolsRoutes } from './tools'
-import { GitlakRoutes } from './gitlak'
 import { handleRequiresAuth } from '@/tools/baseAppEvent'
 import { DrawioRoutes } from './drawio'
 
-const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes).concat(GitlakRoutes).concat(DrawioRoutes)
+const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes).concat(DrawioRoutes)
 
 let router: Router | null = null
 let history: RouterHistory | null = null
