@@ -1,4 +1,4 @@
-import { MergeAction } from "./action"
+import { MergeAction, PromptAction } from "./action"
 
 type EventHandler = {
     [key in DrawioEvent['event']]?: (data: Extract<DrawioEvent, { event: key }>) => void
@@ -36,6 +36,7 @@ export type DrawioEvent =
     | TemplateEvent
     | DraftEvent
     | ExportEvent
+    | PromptCancelEvent
 
 export type InitEvent = {
     event: 'init'
@@ -81,7 +82,12 @@ export type MergeEvent = {
 export type PromptEvent = {
     event: 'prompt'
     value: string
-    message: string
+    message: PromptAction
+}
+
+export type PromptCancelEvent = {
+    event: 'prompt-cancel'
+    message: PromptAction
 }
 
 export type TemplateEvent = {

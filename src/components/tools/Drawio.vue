@@ -2,7 +2,7 @@
 
 import { ref } from 'vue'
 import SimpleButton from '@/common/SimpleButton.vue'
-import EmbedDrawio, { MergeEvent } from '@/common/drawio'
+import EmbedDrawio, { MergeEvent, PromptCancelEvent, PromptEvent } from '@/common/drawio'
 
 const drawioRef = ref<InstanceType<typeof EmbedDrawio> | null>(null)
 const urlParameters: any = {
@@ -24,7 +24,17 @@ const dialog = () => {
     drawioRef.value?.dialog("title!", "message!", "ok", false)
 }
 
+const prompt = () => {
+    drawioRef.value?.prompt("title!", "ok!", "default")
+}
+
 const handleMerge = (e: MergeEvent) => {
+    console.log(e)
+}
+const handlePrompt = (e: PromptEvent) => {
+    console.log(e)
+}
+const handlePromptCancel = (e: PromptCancelEvent) => {
     console.log(e)
 }
 </script>
@@ -36,10 +46,12 @@ const handleMerge = (e: MergeEvent) => {
             </SimpleButton>
             <SimpleButton Text="Dialog" @click="dialog">
             </SimpleButton>
+            <SimpleButton Text="Prompt" @click="prompt">
+            </SimpleButton>
         </div>
         <div class="body">
             <EmbedDrawio ref="drawioRef" :urlParameters="urlParameters" :xml="xml" :configuration="config"
-                :onMerge="handleMerge"></EmbedDrawio>
+                :onMerge="handleMerge" :onPrompt="handlePrompt" :onPromptCancel="handlePromptCancel"></EmbedDrawio>
         </div>
     </div>
 </template>
@@ -58,6 +70,7 @@ const handleMerge = (e: MergeEvent) => {
     flex-direction: row;
     padding: 10px;
     padding-bottom: 0px;
+    gap: 10px;
 }
 
 .body {

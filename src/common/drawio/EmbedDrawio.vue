@@ -3,7 +3,7 @@ import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
 import { DrawAction } from './action'
-import { handleEvent, MergeEvent } from './event'
+import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent } from './event'
 import { UrlParameters, getEmbedUrl } from './types'
 
 export interface IEmbedDrawioProps {
@@ -14,6 +14,8 @@ export interface IEmbedDrawioProps {
     autosave?: boolean
     title?: string
     onMerge?: (e: MergeEvent) => void
+    onPrompt?: (e: PromptEvent) => void
+    onPromptCancel?: (e: PromptCancelEvent) => void
 }
 
 const props = defineProps<IEmbedDrawioProps>()
@@ -60,7 +62,14 @@ const messageHandler = (evt: MessageEvent) => {
                 }
             },
             prompt: (data) => {
-                console.log(data)
+                if (props.onPrompt) {
+                    props.onPrompt(data)
+                }
+            },
+            'prompt-cancel': (data) => {
+                if (props.onPromptCancel) {
+                    props.onPromptCancel(data)
+                }
             },
             template: (data) => {
                 console.log(data)
@@ -86,11 +95,18 @@ const dialog = (title: string, message: string, button: string, modified: boolea
     })
 }
 
+const prompt = (title: string, ok: string, defaultValue: string) => {
+    action.prompt({
+        title: title, ok: ok, defaultValue: defaultValue
+    })
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
-    merge: merge,
-    dialog: dialog,
+    merge,
+    dialog,
+    prompt,
 })
 </script>
 

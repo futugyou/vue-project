@@ -34,6 +34,16 @@ type DialogAction = {
     buttonKey: boolean
 }
 
+export type PromptAction = {
+    title: string
+    ok: string
+    defaultValue: string
+} | {
+    titleKey: string
+    okKey: string
+    defaultValue: string
+}
+
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
 
@@ -55,6 +65,10 @@ export class DrawAction {
 
     dialog(data: DialogAction) {
         action(this.iframeRef, "dialog", data)
+    }
+
+    prompt(data: PromptAction) {
+        action(this.iframeRef, "prompt", data)
     }
 }
 
