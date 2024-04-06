@@ -1,3 +1,5 @@
+import { MergeAction } from "./action"
+
 // https://www.drawio.com/doc/faq/embed-mode
 export type UrlParameters = {
     ui?: 'min' | 'atlas' | 'kennedy' | 'dark' | 'sketch' | 'simple'
@@ -66,8 +68,8 @@ export type SaveEvent = {
 
 export type MergeEvent = {
     event: 'merge'
-    message: string
-    error?: string
+    message: MergeAction
+    error?: any
 }
 
 export type PromptEvent = {

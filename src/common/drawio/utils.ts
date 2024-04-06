@@ -1,4 +1,5 @@
 import _ from 'lodash-es'
+import { Ref } from 'vue'
 import { DrawioEvent, UrlParameters } from './types'
 
 export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters, addConfiguration?: boolean) => {
@@ -33,7 +34,7 @@ type EventHandler = {
     [key in DrawioEvent['event']]?: (data: Extract<DrawioEvent, { event: key }>) => void
 }
 
-export function handleEvent(event: MessageEvent, handlers: EventHandler, baseUrl?: string) {
+export const handleEvent = (event: MessageEvent, handlers: EventHandler, baseUrl?: string) => {
     if (!event.origin.includes('embed.diagrams.net') && (baseUrl && !event.origin.includes(baseUrl))) {
         return
     }
@@ -51,3 +52,4 @@ export function handleEvent(event: MessageEvent, handlers: EventHandler, baseUrl
         }
     }
 }
+

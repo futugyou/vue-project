@@ -1,18 +1,25 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect } from 'vue'
-import { UrlParameters } from './types'
+import { ref, watch, watchEffect, computed } from 'vue'
+import { MergeEvent, UrlParameters } from './types'
 import { getEmbedUrl, handleEvent } from './utils'
 
 import { useEventListener } from '@/composables/event'
+import { drawAction } from './action'
 
 export interface IEmbedDrawioProps {
     xml?: string
     baseUrl?: string,
     urlParameters?: UrlParameters,
     configuration?: { [key: string]: any }
+    autosave?: boolean
+    title?: string
+    onMerge?: (e: MergeEvent) => void
 }
 
 const props = defineProps<IEmbedDrawioProps>()
+const parser = new DOMParser()
+const xml = ref(props.xml ?? "")
+const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xml"))
 const iframeUrl = ref(getEmbedUrl(props.baseUrl, props.urlParameters, !!props.configuration))
 
 const iframeRef = ref<HTMLIFrameElement>()
@@ -21,17 +28,13 @@ const messageHandler = (evt: MessageEvent) => {
         evt,
         {
             init: (data) => {
-                iframeRef.value?.contentWindow?.postMessage(
-                    JSON.stringify({ action: 'load', xml: props.xml }),
-                    '*'
-                )
+                drawAction(iframeRef, "load", {
+                    xml: props.xml, autosave: props.autosave == false ? 0 : 1, title: props.title ?? "",
+                })
             },
             configure: (data) => {
                 if (!!props.configuration) {
-                    iframeRef.value?.contentWindow?.postMessage(
-                        JSON.stringify({ action: 'configure', config: props.configuration }),
-                        '*'
-                    )
+                    drawAction(iframeRef, "configure", { config: props.configuration })
                 }
             },
             autosave: (data) => {
@@ -50,7 +53,9 @@ const messageHandler = (evt: MessageEvent) => {
                 console.log(data)
             },
             merge: (data) => {
-                console.log(data)
+                if (props.onMerge) {
+                    props.onMerge(data)
+                }
             },
             prompt: (data) => {
                 console.log(data)
@@ -69,11 +74,19 @@ const messageHandler = (evt: MessageEvent) => {
     )
 }
 
+const merge = (xml: string) => {
+    drawAction(iframeRef, "merge", { xml: xml })
+}
+
 useEventListener(window, 'message', messageHandler)
+
+defineExpose({
+    merge: merge,
+})
 </script>
 
 <template>
-    <iframe className="diagrams-iframe" ref="iframeRef" :src="iframeUrl" title="Diagrams.net" />
+    <iframe className="diagrams-iframe" ref="iframeRef" :src="iframeUrl" />
 </template>
 
 <style scoped  lang="scss">
