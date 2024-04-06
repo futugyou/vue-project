@@ -27,7 +27,12 @@ const messageHandler = (evt: MessageEvent) => {
                 )
             },
             configure: (data) => {
-                console.log(data)
+                if (!!props.configuration) {
+                    iframeRef.value?.contentWindow?.postMessage(
+                        JSON.stringify({ action: 'configure', config: props.configuration }),
+                        '*'
+                    )
+                }
             },
             autosave: (data) => {
                 console.log(data)

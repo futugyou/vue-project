@@ -38,8 +38,7 @@ export function handleEvent(event: MessageEvent, handlers: EventHandler, baseUrl
         return
     }
 
-    const ss = event?.data?.source
-    if (ss) {
+    if (event?.data?.source == "react-devtools-content-script" && event?.data?.hello == true) {
         return
     }
 
