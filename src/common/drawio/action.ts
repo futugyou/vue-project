@@ -22,12 +22,16 @@ export type MergeAction = {
     xml: string
 }
 
-export type DialogAction = {
-    action: 'dialog'
+type DialogAction = {
     title: string
     message: string
     button: string
     modified: boolean
+} | {
+    titleKey: string
+    messageKey: string
+    button: string
+    buttonKey: boolean
 }
 
 export class DrawAction {
@@ -47,6 +51,10 @@ export class DrawAction {
 
     merge(xml: string) {
         action(this.iframeRef, "merge", { xml: xml })
+    }
+
+    dialog(data: DialogAction) {
+        action(this.iframeRef, "dialog", data)
     }
 }
 

@@ -20,6 +20,10 @@ const merge = () => {
     drawioRef.value?.merge("<mxCell id=\"3\" value=\"\" style=\"rounded=1;whiteSpace=wrap;html=1;\" vertex=\"1\" parent=\"1\">\n  <mxGeometry x=\"350\" y=\"360\" width=\"120\" height=\"60\" as=\"geometry\" />\n</mxCell>\n")
 }
 
+const dialog = () => {
+    drawioRef.value?.dialog("title!", "message!", "ok", false)
+}
+
 const handleMerge = (e: MergeEvent) => {
     console.log(e)
 }
@@ -29,6 +33,8 @@ const handleMerge = (e: MergeEvent) => {
     <div class="drawio-demo">
         <div class="header">
             <SimpleButton Text="Merge" @click="merge">
+            </SimpleButton>
+            <SimpleButton Text="Dialog" @click="dialog">
             </SimpleButton>
         </div>
         <div class="body">

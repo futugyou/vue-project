@@ -80,10 +80,17 @@ const merge = (xml: string) => {
     action.merge(xml)
 }
 
+const dialog = (title: string, message: string, button: string, modified: boolean) => {
+    action.dialog({
+        title: title, message: message, button: button, modified: modified
+    })
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
     merge: merge,
+    dialog: dialog,
 })
 </script>
 
