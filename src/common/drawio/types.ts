@@ -1,4 +1,4 @@
-import { MergeAction } from "./action"
+import _ from 'lodash-es'
 
 // https://www.drawio.com/doc/faq/embed-mode
 export type UrlParameters = {
@@ -12,91 +12,30 @@ export type UrlParameters = {
     noExitBtn?: boolean
 }
 
-export type SkipEvent = {
-    source: string
-    hello: boolean
-}
+export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters, addConfiguration?: boolean) => {
+    const url = new URL('/', baseUrl ?? 'https://embed.diagrams.net')
+    const urlSearchParams = new URLSearchParams()
 
-export type DrawioEvent =
-    | InitEvent
-    | ConfigureEvent
-    | AutosaveEvent
-    | LoadEvent
-    | OpenLinkEvent
-    | ExitEvent
-    | SaveEvent
-    | MergeEvent
-    | PromptEvent
-    | TemplateEvent
-    | DraftEvent
-    | ExportEvent
+    urlSearchParams.append('proto', 'json')
+    urlSearchParams.append('returnbounds', '1')
+    if (addConfiguration) {
+        urlSearchParams.append('configure', '1')
+    }
 
-export type InitEvent = {
-    event: 'init'
-}
+    if (urlParameters) {
+        for (const key in urlParameters) {
+            const value = _.get(urlParameters, key)
+            if (value !== undefined) {
+                if (typeof value === 'boolean') {
+                    urlSearchParams.append(key, value ? '1' : '0')
+                } else {
+                    urlSearchParams.append(key, value.toString())
+                }
+            }
+        }
+    }
 
-export type ConfigureEvent = {
-    event: 'configure'
-}
+    url.search = urlSearchParams.toString()
 
-export type AutosaveEvent = {
-    event: 'autosave'
-}
-
-export type LoadEvent = {
-    event: 'load'
-    xml: string
-    scale: number
-}
-
-export type OpenLinkEvent = {
-    event: 'openLink'
-    href: string
-    target: string
-}
-
-export type ExitEvent = {
-    event: 'exit'
-    modified: boolean
-}
-
-export type SaveEvent = {
-    event: 'save'
-    exit: boolean
-    xml: string
-}
-
-export type MergeEvent = {
-    event: 'merge'
-    message: MergeAction
-    error?: any
-}
-
-export type PromptEvent = {
-    event: 'prompt'
-    value: string
-    message: string
-}
-
-export type TemplateEvent = {
-    event: 'template'
-    xml: string
-    blank: boolean
-    name: string
-    message: string
-}
-
-export type DraftEvent = {
-    event: 'draft'
-    error?: string
-    result?: string
-    message: string
-}
-
-export type ExportEvent = {
-    event: 'export'
-    format: "html" | "html2" | "svg" | "xmlsvg" | "png" | "xmlpng"
-    message: string
-    data: string
-    xml: string
+    return url.toString()
 }

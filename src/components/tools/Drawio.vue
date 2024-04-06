@@ -1,9 +1,8 @@
 <script setup lang="ts">
 
 import { ref } from 'vue'
-import EmbedDrawio from '@/common/drawio/EmbedDrawio.vue'
 import SimpleButton from '@/common/SimpleButton.vue'
-import { MergeEvent } from '@/common/drawio/types';
+import EmbedDrawio, { MergeEvent } from '@/common/drawio'
 
 const drawioRef = ref<InstanceType<typeof EmbedDrawio> | null>(null)
 const urlParameters: any = {

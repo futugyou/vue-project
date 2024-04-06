@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, watch, watchEffect, computed } from 'vue'
-import { MergeEvent, UrlParameters } from './types'
-import { getEmbedUrl, handleEvent } from './utils'
 
 import { useEventListener } from '@/composables/event'
 import { drawAction } from './action'
+import { handleEvent, MergeEvent } from './event'
+import { UrlParameters, getEmbedUrl } from './types'
 
 export interface IEmbedDrawioProps {
     xml?: string
