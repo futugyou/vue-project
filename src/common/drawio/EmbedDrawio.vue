@@ -2,7 +2,7 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
-import { drawAction } from './action'
+import { DrawAction } from './action'
 import { handleEvent, MergeEvent } from './event'
 import { UrlParameters, getEmbedUrl } from './types'
 
@@ -17,24 +17,26 @@ export interface IEmbedDrawioProps {
 }
 
 const props = defineProps<IEmbedDrawioProps>()
+
 const parser = new DOMParser()
 const xml = ref(props.xml ?? "")
 const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xml"))
-const iframeUrl = ref(getEmbedUrl(props.baseUrl, props.urlParameters, !!props.configuration))
 
+const iframeUrl = ref(getEmbedUrl(props.baseUrl, props.urlParameters, !!props.configuration))
 const iframeRef = ref<HTMLIFrameElement>()
+
+const action = new DrawAction(iframeRef)
+
 const messageHandler = (evt: MessageEvent) => {
     handleEvent(
         evt,
         {
             init: (data) => {
-                drawAction(iframeRef, "load", {
-                    xml: props.xml, autosave: props.autosave == false ? 0 : 1, title: props.title ?? "",
-                })
+                action.load(props.xml, props.autosave, props.title,)
             },
             configure: (data) => {
                 if (!!props.configuration) {
-                    drawAction(iframeRef, "configure", { config: props.configuration })
+                    action.configure(props.configuration)
                 }
             },
             autosave: (data) => {
@@ -75,7 +77,7 @@ const messageHandler = (evt: MessageEvent) => {
 }
 
 const merge = (xml: string) => {
-    drawAction(iframeRef, "merge", { xml: xml })
+    action.merge(xml)
 }
 
 useEventListener(window, 'message', messageHandler)

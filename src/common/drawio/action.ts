@@ -1,6 +1,6 @@
 import { Ref } from "vue"
 
-export const drawAction = (iframeRef: Ref<HTMLIFrameElement | undefined>, action: string, data: any) => {
+const action = (iframeRef: Ref<HTMLIFrameElement | undefined>, action: string, data: any) => {
     iframeRef.value?.contentWindow?.postMessage(
         JSON.stringify({
             action: action,
@@ -10,7 +10,43 @@ export const drawAction = (iframeRef: Ref<HTMLIFrameElement | undefined>, action
     )
 }
 
+export type LoadAction = {
+    action: 'load'
+    xml: string
+    autosave: boolean
+    title: string
+}
+
 export type MergeAction = {
     action: 'merge'
     xml: string
 }
+
+export type DialogAction = {
+    action: 'dialog'
+    title: string
+    message: string
+    button: string
+    modified: boolean
+}
+
+export class DrawAction {
+    iframeRef: Ref<HTMLIFrameElement | undefined>
+
+    constructor(iframeRef: Ref<HTMLIFrameElement | undefined>) {
+        this.iframeRef = iframeRef
+    }
+
+    load(xml?: string, autosave?: boolean, title?: string) {
+        action(this.iframeRef, "load", { xml: xml, autosave: autosave == false ? 0 : 1, title: title ?? "" })
+    }
+
+    configure(configuration?: { [key: string]: any }) {
+        action(this.iframeRef, "configure", { config: configuration })
+    }
+
+    merge(xml: string) {
+        action(this.iframeRef, "merge", { xml: xml })
+    }
+}
+
