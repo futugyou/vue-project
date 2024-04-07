@@ -51,6 +51,10 @@ const unspinner = () => {
     drawioRef.value?.spinner(false)
 }
 
+const drawioExport = ()=>{
+    drawioRef.value?.drawioExport("png")
+}
+
 const handleMerge = (e: MergeEvent) => {
     console.log(e)
 }
@@ -87,7 +91,9 @@ const handleDraft = (e: DraftEvent) => {
             </SimpleButton>
             <SimpleButton Text="Spinner" @click="spinner">
             </SimpleButton>
-            <SimpleButton Text="close Spinner" @click="unspinner">
+            <SimpleButton Text="Close Spinner" @click="unspinner">
+            </SimpleButton>
+            <SimpleButton Text="Export" @click="drawioExport">
             </SimpleButton>
         </div>
         <div class="body">

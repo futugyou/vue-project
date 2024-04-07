@@ -2,8 +2,8 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
-import { DrawAction, LayoutType } from './action'
-import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent } from './event'
+import { DrawAction, ExportFromat, LayoutType } from './action'
+import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent, OpenLinkEvent, ExitEvent, ExportEvent } from './event'
 import { UrlParameters, getEmbedUrl } from './types'
 
 export interface IEmbedDrawioProps {
@@ -12,12 +12,16 @@ export interface IEmbedDrawioProps {
     urlParameters?: UrlParameters,
     configuration?: { [key: string]: any }
     title?: string
+    format?: ExportFromat
     onLoad?: (e: LoadEvent) => void
     onAutosave?: (e: AutosaveEvent) => void
     onMerge?: (e: MergeEvent) => void
     onPrompt?: (e: PromptEvent) => void
     onPromptCancel?: (e: PromptCancelEvent) => void
     onDraft?: (e: DraftEvent) => void
+    onOpenLink?: (e: OpenLinkEvent) => void
+    onExit?: (e: ExitEvent) => void
+    onSaveOrExport?: (e: ExportEvent) => void
 }
 
 const props = defineProps<IEmbedDrawioProps>()
@@ -54,13 +58,17 @@ const messageHandler = (evt: MessageEvent) => {
                 }
             },
             openLink: (data) => {
-                console.log(data)
+                if (props.onOpenLink) {
+                    props.onOpenLink(data)
+                }
             },
             exit: (data) => {
-                console.log(data)
+                if (props.onExit) {
+                    props.onExit(data)
+                }
             },
             save: (data) => {
-                console.log(data)
+                action.drawioExport(props.format ?? "xmlsvg", data.exit)
             },
             merge: (data) => {
                 // TODO: need merge xml to current
@@ -90,7 +98,15 @@ const messageHandler = (evt: MessageEvent) => {
                 }
             },
             export: (data) => {
-                console.log(data)
+                if (props.onSaveOrExport) {
+                    props.onSaveOrExport(data)
+                }
+                if (data?.message?.exit && props.onExit) {
+                    props.onExit({
+                        event: 'exit',
+                        modified: true,
+                    })
+                }
             },
         },
         props.baseUrl,
@@ -137,6 +153,10 @@ const spinner = (show: boolean, message?: string) => {
     action.spinner({ show: show, message: message })
 }
 
+const drawioExport = (format: ExportFromat) => {
+    action.drawioExport(format)
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
@@ -148,6 +168,7 @@ defineExpose({
     draft,
     status,
     spinner,
+    drawioExport,
 })
 </script>
 

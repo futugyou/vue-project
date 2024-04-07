@@ -75,6 +75,8 @@ export type SpinnerAction = {
     message?: string, show: boolean
 } | { messageKey?: string, show: boolean }
 
+export type ExportFromat = "html" | "html2" | "svg" | "xmlsvg" | "png" | "xmlpng"
+
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
 
@@ -125,6 +127,10 @@ export class DrawAction {
 
     spinner(data: SpinnerAction) {
         action(this.iframeRef, "spinner", data)
+    }
+
+    drawioExport(format: ExportFromat, exit?: boolean) {
+        action(this.iframeRef, "export", { format: format, exit: exit })
     }
 }
 

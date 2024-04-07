@@ -1,4 +1,4 @@
-import { DraftAction, MergeAction, PromptAction } from "./action"
+import { DraftAction, MergeAction, PromptAction, ExportFromat } from "./action"
 
 type EventHandler = {
     [key in DrawioEvent['event']]?: (data: Extract<DrawioEvent, { event: key }>) => void
@@ -117,8 +117,9 @@ export type DraftEvent = {
 
 export type ExportEvent = {
     event: 'export'
-    format: "html" | "html2" | "svg" | "xmlsvg" | "png" | "xmlpng"
-    message: string
+    format: ExportFromat
+    message: { action: 'export', format: ExportFromat, exit?: boolean }
     data: string
     xml: string
+    scale: number
 }
