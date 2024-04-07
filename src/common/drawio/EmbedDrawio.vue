@@ -129,6 +129,10 @@ const draft = (xml: string, name: string) => {
     })
 }
 
+const status = (message: string, modified?: boolean) => {
+    action.status({ message: message, modified: modified ?? false })
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
@@ -138,6 +142,7 @@ defineExpose({
     template,
     layout,
     draft,
+    status,
 })
 </script>
 

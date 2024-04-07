@@ -40,6 +40,10 @@ const draft = () => {
     drawioRef.value?.draft(xml, "ok!")
 }
 
+const status = () => {
+    drawioRef.value?.status("ok")
+}
+
 const handleMerge = (e: MergeEvent) => {
     console.log(e)
 }
@@ -71,6 +75,8 @@ const handleDraft = (e: DraftEvent) => {
             <SimpleButton Text="Layout" @click="layout">
             </SimpleButton>
             <SimpleButton Text="Draft" @click="draft">
+            </SimpleButton>
+            <SimpleButton Text="Status" @click="status">
             </SimpleButton>
         </div>
         <div class="body">

@@ -63,6 +63,14 @@ export type DraftAction = {
     ignore?: boolean
 }
 
+export type StatusAction = {
+    message: string
+    modified: boolean
+} | {
+    messageKey: string
+    modified: boolean
+}
+
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
 
@@ -105,6 +113,10 @@ export class DrawAction {
 
     draft(data: DraftAction) {
         action(this.iframeRef, "draft", data)
+    }
+
+    status(data: StatusAction) {
+        action(this.iframeRef, "status", data)
     }
 }
 
