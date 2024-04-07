@@ -133,6 +133,10 @@ const status = (message: string, modified?: boolean) => {
     action.status({ message: message, modified: modified ?? false })
 }
 
+const spinner = (show: boolean, message?: string) => {
+    action.spinner({ show: show, message: message })
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
@@ -143,6 +147,7 @@ defineExpose({
     layout,
     draft,
     status,
+    spinner,
 })
 </script>
 

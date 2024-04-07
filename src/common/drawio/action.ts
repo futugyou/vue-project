@@ -71,6 +71,10 @@ export type StatusAction = {
     modified: boolean
 }
 
+export type SpinnerAction = {
+    message?: string, show: boolean
+} | { messageKey?: string, show: boolean }
+
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
 
@@ -117,6 +121,10 @@ export class DrawAction {
 
     status(data: StatusAction) {
         action(this.iframeRef, "status", data)
+    }
+
+    spinner(data: SpinnerAction) {
+        action(this.iframeRef, "spinner", data)
     }
 }
 

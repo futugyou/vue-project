@@ -31,7 +31,6 @@ const prompt = () => {
 const layout = () => {
     drawioRef.value?.layout("mxCircleLayout")
 }
-
 const template = () => {
     drawioRef.value?.template(true)
 }
@@ -42,6 +41,14 @@ const draft = () => {
 
 const status = () => {
     drawioRef.value?.status("ok")
+}
+
+const spinner = () => {
+    drawioRef.value?.spinner(true)
+}
+
+const unspinner = () => {
+    drawioRef.value?.spinner(false)
 }
 
 const handleMerge = (e: MergeEvent) => {
@@ -77,6 +84,10 @@ const handleDraft = (e: DraftEvent) => {
             <SimpleButton Text="Draft" @click="draft">
             </SimpleButton>
             <SimpleButton Text="Status" @click="status">
+            </SimpleButton>
+            <SimpleButton Text="Spinner" @click="spinner">
+            </SimpleButton>
+            <SimpleButton Text="close Spinner" @click="unspinner">
             </SimpleButton>
         </div>
         <div class="body">
