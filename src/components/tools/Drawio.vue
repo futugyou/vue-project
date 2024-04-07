@@ -2,7 +2,7 @@
 
 import { ref } from 'vue'
 import SimpleButton from '@/common/SimpleButton.vue'
-import EmbedDrawio, { MergeEvent, PromptCancelEvent, PromptEvent } from '@/common/drawio'
+import EmbedDrawio, { MergeEvent, PromptCancelEvent, PromptEvent, DraftEvent } from '@/common/drawio'
 
 const drawioRef = ref<InstanceType<typeof EmbedDrawio> | null>(null)
 const urlParameters: any = {
@@ -36,6 +36,10 @@ const template = () => {
     drawioRef.value?.template(true)
 }
 
+const draft = () => {
+    drawioRef.value?.draft(xml, "ok!")
+}
+
 const handleMerge = (e: MergeEvent) => {
     console.log(e)
 }
@@ -48,6 +52,9 @@ const handlePromptCancel = (e: PromptCancelEvent) => {
     console.log(e)
 }
 
+const handleDraft = (e: DraftEvent) => {
+    console.log(e)
+}
 </script>
 
 <template>
@@ -63,10 +70,13 @@ const handlePromptCancel = (e: PromptCancelEvent) => {
             </SimpleButton>
             <SimpleButton Text="Layout" @click="layout">
             </SimpleButton>
+            <SimpleButton Text="Draft" @click="draft">
+            </SimpleButton>
         </div>
         <div class="body">
             <EmbedDrawio ref="drawioRef" :urlParameters="urlParameters" :xml="xml" :configuration="config"
-                :onMerge="handleMerge" :onPrompt="handlePrompt" :onPromptCancel="handlePromptCancel"></EmbedDrawio>
+                :onMerge="handleMerge" :onPrompt="handlePrompt" :onPromptCancel="handlePromptCancel" :onDraft="handleDraft">
+            </EmbedDrawio>
         </div>
     </div>
 </template>

@@ -1,4 +1,4 @@
-import { MergeAction, PromptAction } from "./action"
+import { DraftAction, MergeAction, PromptAction } from "./action"
 
 type EventHandler = {
     [key in DrawioEvent['event']]?: (data: Extract<DrawioEvent, { event: key }>) => void
@@ -53,6 +53,8 @@ export type ConfigureEvent = {
 
 export type AutosaveEvent = {
     event: 'autosave'
+    xml: string
+    scale: number
 }
 
 export type LoadEvent = {
@@ -109,8 +111,8 @@ export type TemplateEvent = {
 export type DraftEvent = {
     event: 'draft'
     error?: string
-    result?: string
-    message: string
+    result: "discard" | "edit" | "ignore"
+    message: DraftAction
 }
 
 export type ExportEvent = {

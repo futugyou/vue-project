@@ -3,7 +3,7 @@ import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
 import { DrawAction, LayoutType } from './action'
-import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent } from './event'
+import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent } from './event'
 import { UrlParameters, getEmbedUrl } from './types'
 
 export interface IEmbedDrawioProps {
@@ -11,11 +11,13 @@ export interface IEmbedDrawioProps {
     baseUrl?: string,
     urlParameters?: UrlParameters,
     configuration?: { [key: string]: any }
-    autosave?: boolean
     title?: string
+    onLoad?: (e: LoadEvent) => void
+    onAutosave?: (e: AutosaveEvent) => void
     onMerge?: (e: MergeEvent) => void
     onPrompt?: (e: PromptEvent) => void
     onPromptCancel?: (e: PromptCancelEvent) => void
+    onDraft?: (e: DraftEvent) => void
 }
 
 const props = defineProps<IEmbedDrawioProps>()
@@ -34,7 +36,7 @@ const messageHandler = (evt: MessageEvent) => {
         evt,
         {
             init: (data) => {
-                action.load(props.xml, props.autosave, props.title,)
+                action.load(props.xml, true, props.title,)
             },
             configure: (data) => {
                 if (!!props.configuration) {
@@ -42,10 +44,14 @@ const messageHandler = (evt: MessageEvent) => {
                 }
             },
             autosave: (data) => {
-                console.log(data)
+                if (props.onAutosave) {
+                    props.onAutosave(data)
+                }
             },
             load: (data) => {
-                console.log(data)
+                if (props.onLoad) {
+                    props.onLoad(data)
+                }
             },
             openLink: (data) => {
                 console.log(data)
@@ -57,6 +63,7 @@ const messageHandler = (evt: MessageEvent) => {
                 console.log(data)
             },
             merge: (data) => {
+                // TODO: need merge xml to current
                 if (props.onMerge) {
                     props.onMerge(data)
                 }
@@ -72,13 +79,15 @@ const messageHandler = (evt: MessageEvent) => {
                 }
             },
             template: (data) => {
-                console.log(data)
                 if (data.message?.callback && data.xml) {
-                    action.load(data.xml, props.autosave, props.title,)
+                    action.load(data.xml, true, props.title,)
                 }
             },
             draft: (data) => {
-                console.log(data)
+                // TODO: need merge draft xml to current if result: 'edit'
+                if (props.onDraft) {
+                    props.onDraft(data)
+                }
             },
             export: (data) => {
                 console.log(data)
@@ -112,6 +121,14 @@ const layout = (layout: LayoutType) => {
     action.layout({ layouts: [{ layout: layout }] })
 }
 
+const draft = (xml: string, name: string) => {
+    action.draft({
+        xml: xml,
+        name: name,
+        ignore: true,
+    })
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
@@ -120,6 +137,7 @@ defineExpose({
     prompt,
     template,
     layout,
+    draft,
 })
 </script>
 

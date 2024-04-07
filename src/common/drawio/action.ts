@@ -55,6 +55,14 @@ export type LayoutAction = {
 
 export type LayoutType = 'mxHierarchicalLayout' | 'mxCircleLayout' | 'mxCompactTreeLayout' | 'mxEdgeLabelLayout' | 'mxFastOrganicLayout' | 'mxParallelEdgeLayout' | 'mxPartitionLayout' | 'mxRadialTreeLayout' | 'mxStackLayout'
 
+export type DraftAction = {
+    xml: string
+    name: string
+    editKey?: string
+    discardKey?: string
+    ignore?: boolean
+}
+
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
 
@@ -93,6 +101,10 @@ export class DrawAction {
 
     layout(layout: LayoutAction) {
         action(this.iframeRef, "layout", layout)
+    }
+
+    draft(data: DraftAction) {
+        action(this.iframeRef, "draft", data)
     }
 }
 
