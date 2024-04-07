@@ -10,6 +10,10 @@ const action = (iframeRef: Ref<HTMLIFrameElement | undefined>, action: string, d
     )
 }
 
+type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never
+
+type OmitActionField<T> = DistributiveOmit<T, 'action'>
+
 export type LoadAction = {
     action: 'load'
     xml: string
@@ -23,11 +27,13 @@ export type MergeAction = {
 }
 
 type DialogAction = {
+    action: 'dialog'
     title: string
     message: string
     button: string
     modified: boolean
 } | {
+    action: 'dialog'
     titleKey: string
     messageKey: string
     button: string
@@ -35,16 +41,19 @@ type DialogAction = {
 }
 
 export type PromptAction = {
+    action: 'prompt'
     title: string
     ok: string
     defaultValue: string
 } | {
+    action: 'prompt'
     titleKey: string
     okKey: string
     defaultValue: string
 }
 
 export type LayoutAction = {
+    action: 'layout'
     layouts: [
         {
             layout: LayoutType,
@@ -56,6 +65,7 @@ export type LayoutAction = {
 export type LayoutType = 'mxHierarchicalLayout' | 'mxCircleLayout' | 'mxCompactTreeLayout' | 'mxEdgeLabelLayout' | 'mxFastOrganicLayout' | 'mxParallelEdgeLayout' | 'mxPartitionLayout' | 'mxRadialTreeLayout' | 'mxStackLayout'
 
 export type DraftAction = {
+    action: 'draft'
     xml: string
     name: string
     editKey?: string
@@ -64,18 +74,37 @@ export type DraftAction = {
 }
 
 export type StatusAction = {
+    action: 'status'
     message: string
     modified: boolean
 } | {
+    action: 'status'
     messageKey: string
     modified: boolean
 }
 
 export type SpinnerAction = {
-    message?: string, show: boolean
-} | { messageKey?: string, show: boolean }
+    action: 'spinner'
+    message?: string
+    show: boolean
+} | {
+    action: 'spinner'
+    messageKey?: string
+    show: boolean
+}
 
 export type ExportFromat = "html" | "html2" | "svg" | "xmlsvg" | "png" | "xmlpng"
+
+export type TemplateAction = {
+    action: 'template'
+    callback: boolean
+}
+
+export type ExportAction = {
+    action: 'export'
+    format: ExportFromat
+    exit?: boolean
+}
 
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
@@ -96,41 +125,35 @@ export class DrawAction {
         action(this.iframeRef, "merge", { xml: xml })
     }
 
-    dialog(data: DialogAction) {
+    dialog(data: OmitActionField<DialogAction>) {
         action(this.iframeRef, "dialog", data)
     }
 
-    prompt(data: PromptAction) {
+    prompt(data: OmitActionField<PromptAction>) {
         action(this.iframeRef, "prompt", data)
     }
 
-    template(callback: boolean) {
-        if (callback) {
-            action(this.iframeRef, "template", { callback: true })
-        }
-        else {
-            action(this.iframeRef, "template", {})
-        }
+    template(data: OmitActionField<TemplateAction>) {
+        action(this.iframeRef, "template", data)
     }
 
-    layout(layout: LayoutAction) {
+    layout(layout: OmitActionField<LayoutAction>) {
         action(this.iframeRef, "layout", layout)
     }
 
-    draft(data: DraftAction) {
+    draft(data: OmitActionField<DraftAction>) {
         action(this.iframeRef, "draft", data)
     }
 
-    status(data: StatusAction) {
+    status(data: OmitActionField<StatusAction>) {
         action(this.iframeRef, "status", data)
     }
 
-    spinner(data: SpinnerAction) {
+    spinner(data: OmitActionField<SpinnerAction>) {
         action(this.iframeRef, "spinner", data)
     }
 
-    drawioExport(format: ExportFromat, exit?: boolean) {
-        action(this.iframeRef, "export", { format: format, exit: exit })
+    drawioExport(data: OmitActionField<ExportAction>) {
+        action(this.iframeRef, "export", data)
     }
 }
-

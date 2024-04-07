@@ -1,4 +1,4 @@
-import { DraftAction, MergeAction, PromptAction, ExportFromat } from "./action"
+import { DraftAction, MergeAction, PromptAction, ExportFromat, TemplateAction, ExportAction } from "./action"
 
 type EventHandler = {
     [key in DrawioEvent['event']]?: (data: Extract<DrawioEvent, { event: key }>) => void
@@ -23,9 +23,8 @@ export const handleEvent = (event: MessageEvent, handlers: EventHandler, baseUrl
             }
         }
     } catch (error) {
-
+        console.log(error)
     }
-
 }
 
 export type DrawioEvent =
@@ -104,7 +103,7 @@ export type TemplateEvent = {
     builtIn: boolean
     libs: string
     name: string
-    message: { event: "template", callback: true }
+    message: TemplateAction
     tempUrl: string
 }
 
@@ -118,7 +117,7 @@ export type DraftEvent = {
 export type ExportEvent = {
     event: 'export'
     format: ExportFromat
-    message: { action: 'export', format: ExportFromat, exit?: boolean }
+    message: ExportAction
     data: string
     xml: string
     scale: number

@@ -40,7 +40,7 @@ const messageHandler = (evt: MessageEvent) => {
         evt,
         {
             init: (data) => {
-                action.load(props.xml, true, props.title,)
+                action.load(xml.value, true, props.title,)
             },
             configure: (data) => {
                 if (!!props.configuration) {
@@ -51,6 +51,8 @@ const messageHandler = (evt: MessageEvent) => {
                 if (props.onAutosave) {
                     props.onAutosave(data)
                 }
+
+                xml.value = data.xml
             },
             load: (data) => {
                 if (props.onLoad) {
@@ -68,7 +70,7 @@ const messageHandler = (evt: MessageEvent) => {
                 }
             },
             save: (data) => {
-                action.drawioExport(props.format ?? "xmlsvg", data.exit)
+                action.drawioExport({ format: props.format ?? "xmlsvg", exit: data.exit })
             },
             merge: (data) => {
                 // TODO: need merge xml to current
@@ -101,12 +103,15 @@ const messageHandler = (evt: MessageEvent) => {
                 if (props.onSaveOrExport) {
                     props.onSaveOrExport(data)
                 }
+
                 if (data?.message?.exit && props.onExit) {
                     props.onExit({
                         event: 'exit',
                         modified: true,
                     })
                 }
+
+                xml.value = data.xml
             },
         },
         props.baseUrl,
@@ -130,7 +135,7 @@ const prompt = (title: string, ok: string, defaultValue: string) => {
 }
 
 const template = (callback: boolean) => {
-    action.template(callback)
+    action.template({ callback })
 }
 
 const layout = (layout: LayoutType) => {
@@ -154,7 +159,7 @@ const spinner = (show: boolean, message?: string) => {
 }
 
 const drawioExport = (format: ExportFromat) => {
-    action.drawioExport(format)
+    action.drawioExport({ format })
 }
 
 useEventListener(window, 'message', messageHandler)

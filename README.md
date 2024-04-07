@@ -47,3 +47,5 @@ npm install
 [pdf.js](https://github.com/mozilla/pdf.js)
 
 [moveable](https://github.com/daybrush/moveable)
+
+[drawio embed](https://www.drawio.com/doc/faq/embed-mode)
