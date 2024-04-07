@@ -9,18 +9,23 @@ export const handleEvent = (event: MessageEvent, handlers: EventHandler, baseUrl
         return
     }
 
-    if (event?.data?.source == "react-devtools-content-script" && event?.data?.hello == true) {
+    if ((event?.data?.source as string ?? "").startsWith("react-devtools")) {
         return
     }
 
     console.log(event.data)
-    const data = JSON.parse(event.data) as DrawioEvent
-    if (data.event in handlers) {
-        const handler = handlers[data.event]
-        if (handler) {
-            handler(data as never)
+    try {
+        const data = JSON.parse(event.data) as DrawioEvent
+        if (data.event in handlers) {
+            const handler = handlers[data.event]
+            if (handler) {
+                handler(data as never)
+            }
         }
+    } catch (error) {
+
     }
+
 }
 
 export type DrawioEvent =
@@ -94,8 +99,11 @@ export type TemplateEvent = {
     event: 'template'
     xml: string
     blank: boolean
+    builtIn: boolean
+    libs: string
     name: string
-    message: string
+    message: { event: "template", callback: true }
+    tempUrl: string
 }
 
 export type DraftEvent = {

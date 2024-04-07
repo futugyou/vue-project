@@ -70,5 +70,14 @@ export class DrawAction {
     prompt(data: PromptAction) {
         action(this.iframeRef, "prompt", data)
     }
+
+    template(callback: boolean) {
+        if (callback) {
+            action(this.iframeRef, "template", { callback: true })
+        }
+        else {
+            action(this.iframeRef, "template", {})
+        }
+    }
 }
 

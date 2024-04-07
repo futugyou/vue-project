@@ -28,15 +28,22 @@ const prompt = () => {
     drawioRef.value?.prompt("title!", "ok!", "default")
 }
 
+const template = () => {
+    drawioRef.value?.template(true)
+}
+
 const handleMerge = (e: MergeEvent) => {
     console.log(e)
 }
+
 const handlePrompt = (e: PromptEvent) => {
     console.log(e)
 }
+
 const handlePromptCancel = (e: PromptCancelEvent) => {
     console.log(e)
 }
+
 </script>
 
 <template>
@@ -47,6 +54,8 @@ const handlePromptCancel = (e: PromptCancelEvent) => {
             <SimpleButton Text="Dialog" @click="dialog">
             </SimpleButton>
             <SimpleButton Text="Prompt" @click="prompt">
+            </SimpleButton>
+            <SimpleButton Text="Template" @click="template">
             </SimpleButton>
         </div>
         <div class="body">

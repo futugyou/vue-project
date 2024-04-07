@@ -73,6 +73,9 @@ const messageHandler = (evt: MessageEvent) => {
             },
             template: (data) => {
                 console.log(data)
+                if (data.message?.callback && data.xml) {
+                    action.load(data.xml, props.autosave, props.title,)
+                }
             },
             draft: (data) => {
                 console.log(data)
@@ -101,12 +104,17 @@ const prompt = (title: string, ok: string, defaultValue: string) => {
     })
 }
 
+const template = (callback: boolean) => {
+    action.template(callback)
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
     merge,
     dialog,
     prompt,
+    template,
 })
 </script>
 
