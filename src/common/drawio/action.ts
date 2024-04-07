@@ -44,6 +44,17 @@ export type PromptAction = {
     defaultValue: string
 }
 
+export type LayoutAction = {
+    layouts: [
+        {
+            layout: LayoutType,
+            config?: { [key: string]: any }
+        }
+    ]
+}
+
+export type LayoutType = 'mxHierarchicalLayout' | 'mxCircleLayout' | 'mxCompactTreeLayout' | 'mxEdgeLabelLayout' | 'mxFastOrganicLayout' | 'mxParallelEdgeLayout' | 'mxPartitionLayout' | 'mxRadialTreeLayout' | 'mxStackLayout'
+
 export class DrawAction {
     iframeRef: Ref<HTMLIFrameElement | undefined>
 
@@ -78,6 +89,10 @@ export class DrawAction {
         else {
             action(this.iframeRef, "template", {})
         }
+    }
+
+    layout(layout: LayoutAction) {
+        action(this.iframeRef, "layout", layout)
     }
 }
 

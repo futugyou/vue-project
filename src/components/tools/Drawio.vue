@@ -28,6 +28,10 @@ const prompt = () => {
     drawioRef.value?.prompt("title!", "ok!", "default")
 }
 
+const layout = () => {
+    drawioRef.value?.layout("mxCircleLayout")
+}
+
 const template = () => {
     drawioRef.value?.template(true)
 }
@@ -56,6 +60,8 @@ const handlePromptCancel = (e: PromptCancelEvent) => {
             <SimpleButton Text="Prompt" @click="prompt">
             </SimpleButton>
             <SimpleButton Text="Template" @click="template">
+            </SimpleButton>
+            <SimpleButton Text="Layout" @click="layout">
             </SimpleButton>
         </div>
         <div class="body">

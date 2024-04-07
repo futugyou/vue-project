@@ -2,7 +2,7 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
-import { DrawAction } from './action'
+import { DrawAction, LayoutType } from './action'
 import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent } from './event'
 import { UrlParameters, getEmbedUrl } from './types'
 
@@ -108,6 +108,10 @@ const template = (callback: boolean) => {
     action.template(callback)
 }
 
+const layout = (layout: LayoutType) => {
+    action.layout({ layouts: [{ layout: layout }] })
+}
+
 useEventListener(window, 'message', messageHandler)
 
 defineExpose({
@@ -115,6 +119,7 @@ defineExpose({
     dialog,
     prompt,
     template,
+    layout,
 })
 </script>
 
