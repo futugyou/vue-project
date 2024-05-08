@@ -54,7 +54,7 @@
     "eslint-plugin-vue": "^9.25.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
-    "sass": "^1.76.0",
+    "sass": "^1.77.0",
     "typescript": "~5.4.5",
     "vite": "^5.2.11",
     "vite-plugin-top-level-await": "^1.4.1",
