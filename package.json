@@ -32,8 +32,8 @@
     "tesseract.js": "^5.1.0",
     "the-new-css-reset": "^1.11.2",
     "v-code-diff": "^1.12.0",
-    "vue": "^3.4.29",
-    "vue-router": "^4.3.3",
+    "vue": "^3.4.30",
+    "vue-router": "^4.4.0",
     "vue3-moveable": "^0.28.0",
     "xstate": "^5.13.2"
   },
@@ -58,6 +58,6 @@
     "typescript": "~5.5.2",
     "vite": "^5.3.1",
     "vite-plugin-top-level-await": "^1.4.1",
-    "vue-tsc": "^2.0.21"
+    "vue-tsc": "^2.0.22"
   }
 }
