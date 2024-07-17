@@ -38,7 +38,7 @@
     "xstate": "^5.15.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.45.1",
+    "@playwright/test": "^1.45.2",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node18": "^18.2.4",
     "@types/bootstrap": "^5.2.10",
