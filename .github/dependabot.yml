@@ -19,3 +19,9 @@ updates:
       vercel:
         patterns:
         - "@vercel*"
+        
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "04:00"
