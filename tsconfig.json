@@ -16,7 +16,8 @@
     "noImplicitThis": true,
     "types": [
       "node",
-      "offscreencanvas"
+      "offscreencanvas",
+      "./src/types/vue-i18n.d.ts"
     ],
     "baseUrl": ".",
     "paths": {
