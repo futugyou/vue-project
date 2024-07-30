@@ -16,8 +16,7 @@
     "noImplicitThis": true,
     "types": [
       "node",
-      "offscreencanvas",
-      "./src/types/vue-i18n.d.ts"
+      "offscreencanvas"
     ],
     "baseUrl": ".",
     "paths": {
@@ -39,10 +38,9 @@
     "nightwatch.conf.*",
     "playwright.config.*",
     "env.d.ts",
-    "src/**/*",
-    "src/**/*.vue"
+    "src/**/*"
   ],
   "exclude": [
     "src/**/__tests__/*"
-  ],
+  ]
 }
