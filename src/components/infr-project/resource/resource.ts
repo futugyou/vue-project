@@ -1,4 +1,4 @@
-import { BaseAPI, FetchAPI, FetchArgs, isomorphicFetch, RequiredError } from "@/tools/fetch"
+import { BaseAPI, FetchAPI, FetchArgs, isomorphicFetch, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
 import * as url from "url"
 
 
@@ -163,20 +163,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
          * @throws {RequiredError}
          */
         v1ResourceGet(options: any = {}): FetchArgs {
-            const localVarPath = `/v1/resource`
-            const localVarUrlObj = url.parse(localVarPath, true)
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options)
-            const localVarHeaderParameter = {} as any
-            const localVarQueryParameter = {} as any
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            }
+            return FetchParamCreator(configuration).BuildFetchArgs(`/v1/resource`, 'GET', undefined, options)
         },
         /**
          * delete resource
@@ -192,19 +179,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            const localVarUrlObj = url.parse(localVarPath, true)
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options)
-            const localVarHeaderParameter = {} as any
-            const localVarQueryParameter = {} as any
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            }
+            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'DELETE', undefined, options)
         },
         /**
          * get resource
@@ -220,19 +196,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            const localVarUrlObj = url.parse(localVarPath, true)
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options)
-            const localVarHeaderParameter = {} as any
-            const localVarQueryParameter = {} as any
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            }
+            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
         },
         /**
          * get resource history
@@ -248,19 +212,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/resource/{id}/history`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            const localVarUrlObj = url.parse(localVarPath, true)
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options)
-            const localVarHeaderParameter = {} as any
-            const localVarQueryParameter = {} as any
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            }
+            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
         },
         /**
          * update resource
@@ -281,23 +234,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            const localVarUrlObj = url.parse(localVarPath, true)
-            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options)
-            const localVarHeaderParameter = {} as any
-            const localVarQueryParameter = {} as any
 
-            localVarHeaderParameter['Content-Type'] = 'application/json'
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-            const needsSerialization = (<any>"ViewmodelsUpdateResourceRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json'
-            localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || "")
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            }
+            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
         },
         /**
          * create resource
@@ -312,23 +250,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ResourcePost.')
             }
             const localVarPath = `/v1/resource`
-            const localVarUrlObj = url.parse(localVarPath, true)
-            const localVarRequestOptions = Object.assign({ method: 'POST' }, options)
-            const localVarHeaderParameter = {} as any
-            const localVarQueryParameter = {} as any
 
-            localVarHeaderParameter['Content-Type'] = 'application/json'
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
-            const needsSerialization = (<any>"ViewmodelsCreateResourceRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json'
-            localVarRequestOptions.body = needsSerialization ? JSON.stringify(body || {}) : (body || "")
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            }
+            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'POST', body, options)
         },
     }
 }
@@ -490,7 +413,7 @@ export const ResourceApiFp = (configuration?: any) => {
  * ResourceApi - factory interface
  * @export
  */
-export const ResourceApiFactory = (configuration?: any, fetch?: FetchAPI, basePath?: string) => {
+export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?: FetchAPI) => {
     return {
         /**
          * get all resources
