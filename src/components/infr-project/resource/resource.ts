@@ -261,151 +261,56 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
  * @export
  */
 export const ResourceApiFp = (configuration?: any) => {
+    const fetchParamsCreator = ResourceApiFetchParamCreator(configuration)
     return {
         /**
          * get all resources
          * @summary get all resources
          * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
          */
-        v1ResourceGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ data?: ViewmodelsResourceView[], error?: any }> {
-            const localVarFetchArgs = ResourceApiFetchParamCreator(configuration).v1ResourceGet(options)
-            return async (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                try {
-                    const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
-                    if (response.status >= 200 && response.status < 300) {
-                        const data = await response.json()
-                        return { data }
-                    } else {
-                        const error = await response.json()
-                        return { error }
-                    }
-                } catch (error) {
-                    return { error }
-                }
-            }
-        },
+        v1ResourceGet: (options?: any) => () => fetchData<ViewmodelsResourceView[]>(BASE_PATH, fetchParamsCreator.v1ResourceGet(options)),
+
         /**
          * delete resource
          * @summary delete resource
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
          */
-        v1ResourceIdDelete(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ data?: string, error?: any }> {
-            const localVarFetchArgs = ResourceApiFetchParamCreator(configuration).v1ResourceIdDelete(id, options)
-            return async (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                try {
-                    const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
-                    if (response.status >= 200 && response.status < 300) {
-                        const data = await response.json()
-                        return { data }
-                    } else {
-                        const error = await response.json()
-                        return { error }
-                    }
-                } catch (error) {
-                    return { error }
-                }
-            }
-        },
+        v1ResourceIdDelete: (id: string, options?: any) => () => fetchData<string>(BASE_PATH, fetchParamsCreator.v1ResourceIdDelete(id, options)),
+
         /**
          * get resource
          * @summary get resource
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
          */
-        v1ResourceIdGet(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ data?: ViewmodelsResourceView, error?: any }> {
-            const localVarFetchArgs = ResourceApiFetchParamCreator(configuration).v1ResourceIdGet(id, options)
-            return async (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                try {
-                    const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
-                    if (response.status >= 200 && response.status < 300) {
-                        const data = await response.json()
-                        return { data }
-                    } else {
-                        const error = await response.json()
-                        return { error }
-                    }
-                } catch (error) {
-                    return { error }
-                }
-            }
-        },
+        v1ResourceIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView>(BASE_PATH, fetchParamsCreator.v1ResourceIdGet(id, options)),
+
         /**
          * get resource history
          * @summary get resource history
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
          */
-        v1ResourceIdHistoryGet(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ data?: ViewmodelsResourceView[], error?: any }> {
-            const localVarFetchArgs = ResourceApiFetchParamCreator(configuration).v1ResourceIdHistoryGet(id, options)
-            return async (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                try {
-                    const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
-                    if (response.status >= 200 && response.status < 300) {
-                        const data = await response.json()
-                        return { data }
-                    } else {
-                        const error = await response.json()
-                        return { error }
-                    }
-                } catch (error) {
-                    return { error }
-                }
-            }
-        },
+        v1ResourceIdHistoryGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView[]>(BASE_PATH, fetchParamsCreator.v1ResourceIdHistoryGet(id, options)),
+
         /**
          * update resource
          * @summary update resource
          * @param {ViewmodelsUpdateResourceRequest} body Request body
          * @param {string} id Resource ID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
+         * @param {*} [options] Override http request option. 
          */
-        v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ data?: string, error?: any }> {
-            const localVarFetchArgs = ResourceApiFetchParamCreator(configuration).v1ResourceIdPut(body, id, options)
-            return async (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                try {
-                    const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
-                    if (response.status >= 200 && response.status < 300) {
-                        const data = await response.json()
-                        return { data }
-                    } else {
-                        const error = await response.json()
-                        return { error }
-                    }
-                } catch (error) {
-                    return { error }
-                }
-            }
-        },
+        v1ResourceIdPut: (body: ViewmodelsUpdateResourceRequest, id: string, options?: any) => () => fetchData<string>(BASE_PATH, fetchParamsCreator.v1ResourceIdPut(body, id, options)),
+
         /**
          * create resource
          * @summary create resource
          * @param {ViewmodelsCreateResourceRequest} body Request body
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
+         * @param {*} [options] Override http request option. 
          */
-        v1ResourcePost(body: ViewmodelsCreateResourceRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<{ data?: ViewmodelsCreateResourceResponse, error?: any }> {
-            const localVarFetchArgs = ResourceApiFetchParamCreator(configuration).v1ResourcePost(body, options)
-            return async (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                try {
-                    const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
-                    if (response.status >= 200 && response.status < 300) {
-                        const data = await response.json()
-                        return { data }
-                    } else {
-                        const error = await response.json()
-                        return { error }
-                    }
-                } catch (error) {
-                    return { error }
-                }
-            }
-        },
+        v1ResourcePost: (body: ViewmodelsCreateResourceRequest, options?: any) => () => fetchData<ViewmodelsCreateResourceResponse>(BASE_PATH, fetchParamsCreator.v1ResourcePost(body, options)),
+
     }
 }
 
@@ -413,7 +318,7 @@ export const ResourceApiFp = (configuration?: any) => {
  * ResourceApi - factory interface
  * @export
  */
-export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?: FetchAPI) => {
+export const ResourceApiFactory = (configuration?: any) => {
     return {
         /**
          * get all resources
@@ -422,7 +327,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
          * @throws {RequiredError}
          */
         v1ResourceGet(options?: any) {
-            return ResourceApiFp(configuration).v1ResourceGet(options)(fetch, basePath)
+            return ResourceApiFp(configuration).v1ResourceGet(options)()
         },
         /**
          * delete resource
@@ -432,7 +337,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
          * @throws {RequiredError}
          */
         v1ResourceIdDelete(id: string, options?: any) {
-            return ResourceApiFp(configuration).v1ResourceIdDelete(id, options)(fetch, basePath)
+            return ResourceApiFp(configuration).v1ResourceIdDelete(id, options)()
         },
         /**
          * get resource
@@ -442,7 +347,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
          * @throws {RequiredError}
          */
         v1ResourceIdGet(id: string, options?: any) {
-            return ResourceApiFp(configuration).v1ResourceIdGet(id, options)(fetch, basePath)
+            return ResourceApiFp(configuration).v1ResourceIdGet(id, options)()
         },
         /**
          * get resource history
@@ -452,7 +357,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
          * @throws {RequiredError}
          */
         v1ResourceIdHistoryGet(id: string, options?: any) {
-            return ResourceApiFp(configuration).v1ResourceIdHistoryGet(id, options)(fetch, basePath)
+            return ResourceApiFp(configuration).v1ResourceIdHistoryGet(id, options)()
         },
         /**
          * update resource
@@ -463,7 +368,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
          * @throws {RequiredError}
          */
         v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options?: any) {
-            return ResourceApiFp(configuration).v1ResourceIdPut(body, id, options)(fetch, basePath)
+            return ResourceApiFp(configuration).v1ResourceIdPut(body, id, options)()
         },
         /**
          * create resource
@@ -473,7 +378,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
          * @throws {RequiredError}
          */
         v1ResourcePost(body: ViewmodelsCreateResourceRequest, options?: any) {
-            return ResourceApiFp(configuration).v1ResourcePost(body, options)(fetch, basePath)
+            return ResourceApiFp(configuration).v1ResourcePost(body, options)()
         },
     }
 }
@@ -485,7 +390,7 @@ export const ResourceApiFactory = (basePath: string, configuration?: any, fetch?
  * @extends {BaseAPI}
  */
 export class ResourceApi extends BaseAPI {
-    constructor(protected basePath: string, protected fetch: FetchAPI, configuration?: any) {
+    constructor() {
         super(BASE_PATH)
     }
     /**
@@ -496,7 +401,7 @@ export class ResourceApi extends BaseAPI {
     * @memberof ResourceApi
     */
     public v1ResourceGet(options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceGet(options)(this.fetch, this.basePath);
+        return ResourceApiFp(this.configuration).v1ResourceGet(options)();
     }
 
     /**
@@ -508,7 +413,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdDelete(id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdDelete(id, options)(this.fetch, this.basePath);
+        return ResourceApiFp(this.configuration).v1ResourceIdDelete(id, options)();
     }
 
     /**
@@ -520,7 +425,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdGet(id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdGet(id, options)(this.fetch, this.basePath);
+        return ResourceApiFp(this.configuration).v1ResourceIdGet(id, options)();
     }
 
     /**
@@ -532,7 +437,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdHistoryGet(id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdHistoryGet(id, options)(this.fetch, this.basePath);
+        return ResourceApiFp(this.configuration).v1ResourceIdHistoryGet(id, options)();
     }
 
     /**
@@ -545,7 +450,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdPut(body, id, options)(this.fetch, this.basePath);
+        return ResourceApiFp(this.configuration).v1ResourceIdPut(body, id, options)();
     }
 
     /**
@@ -557,6 +462,6 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourcePost(body: ViewmodelsCreateResourceRequest, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourcePost(body, options)(this.fetch, this.basePath);
+        return ResourceApiFp(this.configuration).v1ResourcePost(body, options)();
     }
 }

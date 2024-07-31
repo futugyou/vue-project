@@ -156,9 +156,10 @@ export const FetchParamCreator = (configuration?: any) => {
     }
 }
 
-export const fetchData = async (basePath: string, localVarFetchArgs: FetchArgs, fetch: FetchAPI = isomorphicFetch): Promise<{ data?: any, error?: any }> => {
+export const fetchData = async <T>(basePath: string, localVarFetchArgs: FetchArgs, fetch: FetchAPI = isomorphicFetch): Promise<{ data?: T, error?: any }> => {
+    const actualFetch = fetch || isomorphicFetch
     try {
-        const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
+        const response = await actualFetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
         if (response.status >= 200 && response.status < 300) {
             const data = await response.json()
             return { data }
