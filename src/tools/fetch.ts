@@ -101,7 +101,7 @@ export interface FetchArgs {
 export class RequiredError extends Error {
     name = "RequiredError"
     constructor(public field: string, msg?: string) {
-        super(msg);
+        super(msg)
     }
 }
 
@@ -153,5 +153,20 @@ export const FetchParamCreator = (configuration?: any) => {
                 options: localVarRequestOptions,
             }
         }
+    }
+}
+
+export const fetchData = async (basePath: string, localVarFetchArgs: FetchArgs, fetch: FetchAPI = isomorphicFetch): Promise<{ data?: any, error?: any }> => {
+    try {
+        const response = await fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
+        if (response.status >= 200 && response.status < 300) {
+            const data = await response.json()
+            return { data }
+        } else {
+            const error = await response.json()
+            return { error }
+        }
+    } catch (error) {
+        return { error }
     }
 }
