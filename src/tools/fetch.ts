@@ -1,6 +1,11 @@
+
+import { forEach } from "lodash-es"
+import * as url from "url"
+
 import { getToken, logout } from "./token"
 import { defaultAccountId } from "./accountid"
-import { forEach } from "lodash-es"
+
+export const isomorphicFetch = fetch
 
 export const fetchEx = async (
     url: string,
@@ -66,4 +71,87 @@ export const fetchEx = async (
     }
 
     return { data, error }
+}
+
+/**
+ *
+ * @export
+ * @interface FetchAPI
+ */
+export interface FetchAPI {
+    (url: string, init?: any): Promise<Response>
+}
+
+/**
+ *
+ * @export
+ * @interface FetchArgs
+ */
+export interface FetchArgs {
+    url: string
+    options: any
+}
+
+/**
+ *
+ * @export
+ * @class RequiredError
+ * @extends {Error}
+ */
+export class RequiredError extends Error {
+    name = "RequiredError"
+    constructor(public field: string, msg?: string) {
+        super(msg);
+    }
+}
+
+/**
+ *
+ * @export
+ * @class BaseAPI
+ */
+export class BaseAPI {
+    protected configuration: any
+
+    constructor(protected basePath: string, protected fetch: FetchAPI = isomorphicFetch, configuration?: any) {
+        if (configuration) {
+            this.configuration = configuration
+            this.basePath = configuration.basePath || this.basePath
+        }
+    }
+}
+
+/**
+ * fetch parameter creator
+ * @export
+ */
+export const FetchParamCreator = (configuration?: any) => {
+    return {
+        /**
+         * get all resources
+         * @summary get all resources
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        BuildFetchArgs(path: string, method: string, body: any, options: any = {}): FetchArgs {
+            const localVarPath = path
+            const localVarUrlObj = url.parse(localVarPath, true)
+            const localVarRequestOptions = Object.assign({ method: method }, options)
+            const localVarHeaderParameter = {} as any
+            const localVarQueryParameter = {} as any
+            localVarHeaderParameter['Content-Type'] = 'application/json'
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
+            localVarUrlObj.search = null
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
+
+            if (body !== null && body !== undefined) {
+                localVarRequestOptions.body = JSON.stringify(body || {})
+            }
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            }
+        }
+    }
 }
