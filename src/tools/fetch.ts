@@ -131,7 +131,6 @@ export const FetchParamCreator = (configuration?: any) => {
          * get all resources
          * @summary get all resources
          * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
          */
         BuildFetchArgs(path: string, method: string, body: any, options: any = {}): FetchArgs {
             const localVarPath = path
@@ -140,6 +139,10 @@ export const FetchParamCreator = (configuration?: any) => {
             const localVarHeaderParameter = {} as any
             const localVarQueryParameter = {} as any
             localVarHeaderParameter['Content-Type'] = 'application/json'
+
+            if (method != 'GET' && method != 'HEAD' && method != 'OPTIONS') {
+                localVarHeaderParameter['Authorization'] = getToken()
+            }
 
             localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
             localVarUrlObj.search = null
