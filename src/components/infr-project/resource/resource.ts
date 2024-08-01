@@ -392,7 +392,7 @@ export class ResourceApi extends BaseAPI {
     * @memberof ResourceApi
     */
     public v1ResourceGet(options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceGet(options)();
+        return ResourceApiFp(this.configuration).v1ResourceGet(options)()
     }
 
     /**
@@ -404,7 +404,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdDelete(id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdDelete(id, options)();
+        return ResourceApiFp(this.configuration).v1ResourceIdDelete(id, options)()
     }
 
     /**
@@ -416,7 +416,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdGet(id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdGet(id, options)();
+        return ResourceApiFp(this.configuration).v1ResourceIdGet(id, options)()
     }
 
     /**
@@ -428,7 +428,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdHistoryGet(id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdHistoryGet(id, options)();
+        return ResourceApiFp(this.configuration).v1ResourceIdHistoryGet(id, options)()
     }
 
     /**
@@ -441,7 +441,7 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourceIdPut(body, id, options)();
+        return ResourceApiFp(this.configuration).v1ResourceIdPut(body, id, options)()
     }
 
     /**
@@ -453,6 +453,6 @@ export class ResourceApi extends BaseAPI {
      * @memberof ResourceApi
      */
     public v1ResourcePost(body: ViewmodelsCreateResourceRequest, options?: any) {
-        return ResourceApiFp(this.configuration).v1ResourcePost(body, options)();
+        return ResourceApiFp(this.configuration).v1ResourcePost(body, options)()
     }
 }

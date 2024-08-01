@@ -13,19 +13,19 @@ export interface ViewmodelsProjectDesign {
      * @type {string}
      * @memberof ViewmodelsProjectDesign
      */
-    description?: string;
+    description?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectDesign
      */
-    name?: string;
+    name?: string
     /**
      * 
      * @type {Array<string>}
      * @memberof ViewmodelsProjectDesign
      */
-    resources?: Array<string>;
+    resources?: Array<string>
 }
 
 /**
@@ -39,19 +39,19 @@ export interface ViewmodelsProjectPlatform {
      * @type {string}
      * @memberof ViewmodelsProjectPlatform
      */
-    description?: string;
+    description?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectPlatform
      */
-    name?: string;
+    name?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectPlatform
      */
-    projectId?: string;
+    projectId?: string
 }
 
 /**
@@ -65,55 +65,55 @@ export interface ViewmodelsProjectView {
      * @type {string}
      * @memberof ViewmodelsProjectView
      */
-    description?: string;
+    description?: string
     /**
      * 
      * @type {Array<ViewmodelsProjectDesign>}
      * @memberof ViewmodelsProjectView
      */
-    designs?: Array<ViewmodelsProjectDesign>;
+    designs?: Array<ViewmodelsProjectDesign>
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectView
      */
-    endDate?: string;
+    endDate?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectView
      */
-    id?: string;
+    id?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectView
      */
-    name?: string;
+    name?: string
     /**
      * 
      * @type {Array<ViewmodelsProjectPlatform>}
      * @memberof ViewmodelsProjectView
      */
-    platforms?: Array<ViewmodelsProjectPlatform>;
+    platforms?: Array<ViewmodelsProjectPlatform>
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectView
      */
-    startDate?: string;
+    startDate?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsProjectView
      */
-    state?: string;
+    state?: string
     /**
      * 
      * @type {Array<string>}
      * @memberof ViewmodelsProjectView
      */
-    tags?: Array<string>;
+    tags?: Array<string>
 }
 
 /**
@@ -127,19 +127,19 @@ export interface ViewmodelsUpdateProjectDesignRequest {
      * @type {string}
      * @memberof ViewmodelsUpdateProjectDesignRequest
      */
-    description?: string;
+    description?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectDesignRequest
      */
-    name: string;
+    name: string
     /**
      * 
      * @type {Array<string>}
      * @memberof ViewmodelsUpdateProjectDesignRequest
      */
-    resources: Array<string>;
+    resources: Array<string>
 }
 
 /**
@@ -153,19 +153,19 @@ export interface ViewmodelsUpdateProjectPlatformRequest {
      * @type {string}
      * @memberof ViewmodelsUpdateProjectPlatformRequest
      */
-    description?: string;
+    description?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectPlatformRequest
      */
-    name: string;
+    name: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectPlatformRequest
      */
-    projectId: string;
+    projectId: string
 }
 
 /**
@@ -179,37 +179,37 @@ export interface ViewmodelsUpdateProjectRequest {
      * @type {string}
      * @memberof ViewmodelsUpdateProjectRequest
      */
-    description?: string;
+    description?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectRequest
      */
-    endTime?: string;
+    endTime?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectRequest
      */
-    name?: string;
+    name?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectRequest
      */
-    startTime?: string;
+    startTime?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsUpdateProjectRequest
      */
-    state?: ProjectStateEnum;
+    state?: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
      * @memberof ViewmodelsUpdateProjectRequest
      */
-    tags?: Array<string>;
+    tags?: Array<string>
 }
 
 /**
@@ -233,37 +233,37 @@ export interface ViewmodelsCreateProjectRequest {
      * @type {string}
      * @memberof ViewmodelsCreateProjectRequest
      */
-    description: string;
+    description: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsCreateProjectRequest
      */
-    endTime?: string;
+    endTime?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsCreateProjectRequest
      */
-    name: string;
+    name: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsCreateProjectRequest
      */
-    startTime?: string;
+    startTime?: string
     /**
      * 
      * @type {string}
      * @memberof ViewmodelsCreateProjectRequest
      */
-    state?: ProjectStateEnum;
+    state?: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
      * @memberof ViewmodelsCreateProjectRequest
      */
-    tags?: Array<string>;
+    tags?: Array<string>
 }
 
 /**
