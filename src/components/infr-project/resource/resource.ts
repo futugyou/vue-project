@@ -1,9 +1,6 @@
-import { BaseAPI, FetchAPI, FetchArgs, isomorphicFetch, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
-import * as url from "url"
-
+import { BaseAPI, FetchAPI, FetchArgs, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
 
 const BASE_PATH = import.meta.env.REACT_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
-
 
 /**
  * 
@@ -116,24 +113,18 @@ export interface ViewmodelsCreateResourceRequest {
      * @type {string}
      * @memberof ViewmodelsCreateResourceRequest
      */
-    type?: ViewmodelsCreateResourceRequest.TypeEnum
+    type?: ResourceTypeEnum
 }
 
 /**
  * @export
- * @namespace ViewmodelsCreateResourceRequest
+ * @enum {string}
  */
-export namespace ViewmodelsCreateResourceRequest {
-    /**
-     * @export
-     * @enum {string}
-     */
-    export enum TypeEnum {
-        DrawIO = <any>'DrawIO',
-        Markdown = <any>'Markdown',
-        Excalidraw = <any>'Excalidraw',
-        Plate = <any>'Plate'
-    }
+export enum ResourceTypeEnum {
+    DrawIO = <any>'DrawIO',
+    Markdown = <any>'Markdown',
+    Excalidraw = <any>'Excalidraw',
+    Plate = <any>'Plate'
 }
 
 /**
