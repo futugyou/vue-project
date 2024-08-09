@@ -4,8 +4,10 @@ import 'the-new-css-reset/css/reset.css'
 import '@popperjs/core'
 import 'bootstrap'
 
+import { HoneycombSDK } from './tools/honeycomb'
+HoneycombSDK.start()
+
 import { createApp, App as AppInstance } from 'vue'
-import { Router } from 'vue-router'
 
 import { inject } from '@vercel/analytics'
 import CodeDiff from 'v-code-diff'
@@ -16,7 +18,7 @@ import { globalMessageKey } from './tools/injectkey'
 import { usePinia } from './stores/plugins'
 import i18nPlugin from './plugins/i18n'
 
-import { handleMicroData } from '@/tools/baseAppEvent' 
+import { handleMicroData } from '@/tools/baseAppEvent'
 
 let app: AppInstance | null = null
 
