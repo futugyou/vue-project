@@ -1,15 +1,18 @@
 import { HoneycombWebSDK } from '@honeycombio/opentelemetry-web'
 import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web'
 
-const configDefaults = {
-    ignoreNetworkEvents: true,
-    // propagateTraceHeaderCorsUrls: [
-    // /.+/g, // Regex to match your backend URLs. Update to the domains you wish to include.
-    // ]
-}
-
 const apikey = import.meta.env.HONEYCOMB_SDK_API_KEY
 const debugFlag = process.env.NODE_ENV == "development"
+const domain = import.meta.env.HONEYCOMB_SDK_BACKEND_URL
+const regex = new RegExp(`.+${domain}`, "g");
+
+const configDefaults = {
+    ignoreNetworkEvents: true,
+    propagateTraceHeaderCorsUrls: [
+        regex,// Regex to match your backend URLs. Update to the domains you wish to include.
+    ]
+}
+
 
 export const HoneycombSDK = new HoneycombWebSDK({
     // endpoint: "https://api.eu1.honeycomb.io/v1/traces", // Send to EU instance of Honeycomb. Defaults to sending to US instance.
