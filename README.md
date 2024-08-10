@@ -35,8 +35,12 @@ npm run lint
 ## update all package
 
 ```sh
+// npm config set registry http://registry.npmjs.org/
+// npm config set strict-ssl false 
+// npm config set fetch-timeout 60000 
+// npm cache clean --force
 npx npm-check-updates -u
-npm install 
+npm install
 ```
 
 [lodashjs](https://www.lodashjs.com/)
