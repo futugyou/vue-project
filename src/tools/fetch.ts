@@ -1,6 +1,5 @@
 
 import { forEach } from "lodash-es"
-import * as url from "url"
 
 import { getToken, logout } from "./token"
 import { defaultAccountId } from "./accountid"
@@ -133,26 +132,32 @@ export const FetchParamCreator = (configuration?: any) => {
          * @param {*} [options] Override http request option.
          */
         BuildFetchArgs(path: string, method: string, body: any, options: any = {}): FetchArgs {
-            const localVarPath = path
-            const localVarUrlObj = url.parse(localVarPath, true)
+            const localVarUrlObj = new URL(path)
             const localVarRequestOptions = Object.assign({ method: method }, options)
             const localVarHeaderParameter = {} as any
             const localVarQueryParameter = {} as any
             localVarHeaderParameter['Content-Type'] = 'application/json'
 
-            if (method != 'GET' && method != 'HEAD' && method != 'OPTIONS') {
+            if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
                 localVarHeaderParameter['Authorization'] = getToken()
             }
 
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query)
-            localVarUrlObj.search = null
+            const params = new URLSearchParams(localVarUrlObj.search)
+            Object.entries(Object.assign({}, localVarQueryParameter, options.query)).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                    params.set(key, value.toString())
+                }
+            })
+            localVarUrlObj.search = params.toString()
+
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
 
             if (body !== null && body !== undefined) {
                 localVarRequestOptions.body = JSON.stringify(body || {})
             }
+
             return {
-                url: url.format(localVarUrlObj),
+                url: localVarUrlObj.toString(),
                 options: localVarRequestOptions,
             }
         }
