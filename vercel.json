@@ -4,6 +4,7 @@
             "src": "/[^.]+",
             "dest": "/",
             "status": 200,
+            "methods": ["GET", "OPTIONS", "PATCH", "DELETE", "POST", "PUT"],
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "*",
