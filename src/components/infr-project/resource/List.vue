@@ -48,12 +48,12 @@ const fields: TableField[] = [
         label: 'Deleted'
     },
     {
-        key: 'createdAt',
+        key: 'created_at',
         label: 'CreatedAt',
         format: timeFormat
     },
     {
-        key: 'updatedAt',
+        key: 'updated_at',
         label: 'UpdatedAt',
         format: timeFormat
     }
