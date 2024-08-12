@@ -154,7 +154,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
          * @throws {RequiredError}
          */
         v1ResourceGet(options: any = {}): FetchArgs {
-            return FetchParamCreator(configuration).BuildFetchArgs(`/v1/resource`, 'GET', undefined, options)
+            const path = new URL(BASE_PATH + `/v1/resource`)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * delete resource
@@ -171,7 +172,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             const localVarPath = `/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'DELETE', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'DELETE', undefined, options)
         },
         /**
          * get resource
@@ -187,7 +189,9 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
+
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * get resource history
@@ -204,7 +208,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             const localVarPath = `/v1/resource/{id}/history`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * update resource
@@ -226,7 +231,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             const localVarPath = `/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * create resource
@@ -242,7 +248,8 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/resource`
 
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'POST', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)
         },
     }
 }
@@ -259,7 +266,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @summary get all resources
          * @param {*} [options] Override http request option.
          */
-        v1ResourceGet: (options?: any) => () => fetchData<ViewmodelsResourceView[]>(BASE_PATH, fetchParamsCreator.v1ResourceGet(options)),
+        v1ResourceGet: (options?: any) => () => fetchData<ViewmodelsResourceView[]>(fetchParamsCreator.v1ResourceGet(options)),
 
         /**
          * delete resource
@@ -267,7 +274,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          */
-        v1ResourceIdDelete: (id: string, options?: any) => () => fetchData<string>(BASE_PATH, fetchParamsCreator.v1ResourceIdDelete(id, options)),
+        v1ResourceIdDelete: (id: string, options?: any) => () => fetchData<string>(fetchParamsCreator.v1ResourceIdDelete(id, options)),
 
         /**
          * get resource
@@ -275,7 +282,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          */
-        v1ResourceIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView>(BASE_PATH, fetchParamsCreator.v1ResourceIdGet(id, options)),
+        v1ResourceIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView>(fetchParamsCreator.v1ResourceIdGet(id, options)),
 
         /**
          * get resource history
@@ -283,7 +290,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          */
-        v1ResourceIdHistoryGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView[]>(BASE_PATH, fetchParamsCreator.v1ResourceIdHistoryGet(id, options)),
+        v1ResourceIdHistoryGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView[]>(fetchParamsCreator.v1ResourceIdHistoryGet(id, options)),
 
         /**
          * update resource
@@ -292,7 +299,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option. 
          */
-        v1ResourceIdPut: (body: ViewmodelsUpdateResourceRequest, id: string, options?: any) => () => fetchData<string>(BASE_PATH, fetchParamsCreator.v1ResourceIdPut(body, id, options)),
+        v1ResourceIdPut: (body: ViewmodelsUpdateResourceRequest, id: string, options?: any) => () => fetchData<string>(fetchParamsCreator.v1ResourceIdPut(body, id, options)),
 
         /**
          * create resource
@@ -300,7 +307,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {ViewmodelsCreateResourceRequest} body Request body
          * @param {*} [options] Override http request option. 
          */
-        v1ResourcePost: (body: ViewmodelsCreateResourceRequest, options?: any) => () => fetchData<ViewmodelsCreateResourceResponse>(BASE_PATH, fetchParamsCreator.v1ResourcePost(body, options)),
+        v1ResourcePost: (body: ViewmodelsCreateResourceRequest, options?: any) => () => fetchData<ViewmodelsCreateResourceResponse>(fetchParamsCreator.v1ResourcePost(body, options)),
 
     }
 }

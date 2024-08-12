@@ -336,7 +336,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
          */
         v1PlatformGet(options: any = {}): FetchArgs {
             const localVarPath = `/v1/platform`
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * delete platform
@@ -351,7 +352,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             }
             const localVarPath = `/v1/platform/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'DELETE', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'DELETE', undefined, options)
         },
         /**
          * get platform
@@ -366,7 +368,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             }
             const localVarPath = `/v1/platform/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * create platform webhook
@@ -386,7 +389,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             }
             const localVarPath = `/v1/platform/{id}/project`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'POST', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)
         },
         /**
          * delete platform project
@@ -407,7 +411,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             const localVarPath = `/v1/platform/{id}/project/{project_id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'DELETE', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'DELETE', undefined, options)
         },
         /**
          * update platform webhook
@@ -433,7 +438,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             const localVarPath = `/v1/platform/{id}/project/{project_id}/hook`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * update platform project
@@ -459,7 +465,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             const localVarPath = `/v1/platform/{id}/project/{project_id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * update platform
@@ -479,7 +486,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             }
             const localVarPath = `/v1/platform/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * create platform
@@ -493,7 +501,8 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1PlatformPost.')
             }
             const localVarPath = `/v1/platform`
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'POST', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)
         },
     }
 }
@@ -510,7 +519,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @summary get all platform
          * @param {*} [options] Override http request option.
          */
-        v1PlatformGet: (options?: any) => () => fetchData<ViewmodelsPlatformView[]>(BASE_PATH, fetchParamsCreator.v1PlatformGet(options)),
+        v1PlatformGet: (options?: any) => () => fetchData<ViewmodelsPlatformView[]>(fetchParamsCreator.v1PlatformGet(options)),
 
         /**
          * delete platform
@@ -518,7 +527,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdDelete: (id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdDelete(id, options)),
+        v1PlatformIdDelete: (id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdDelete(id, options)),
 
         /**
          * get platform
@@ -526,7 +535,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdGet(id, options)),
+        v1PlatformIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdGet(id, options)),
 
         /**
          * create platform webhook
@@ -535,7 +544,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectPost: (body: ViewmodelsUpdatePlatformProjectRequest, id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdProjectPost(body, id, options)),
+        v1PlatformIdProjectPost: (body: ViewmodelsUpdatePlatformProjectRequest, id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectPost(body, id, options)),
 
         /**
          * delete platform project
@@ -544,7 +553,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
+        v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
 
         /**
          * update platform webhook
@@ -554,7 +563,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookPut: (body: ViewmodelsUpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdProjectProjectIdHookPut(body, id, projectId, options)),
+        v1PlatformIdProjectProjectIdHookPut: (body: ViewmodelsUpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectProjectIdHookPut(body, id, projectId, options)),
 
         /**
          * update platform project
@@ -564,7 +573,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdPut: (body: ViewmodelsUpdatePlatformProjectRequest, id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdProjectProjectIdPut(body, id, projectId, options)),
+        v1PlatformIdProjectProjectIdPut: (body: ViewmodelsUpdatePlatformProjectRequest, id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectProjectIdPut(body, id, projectId, options)),
 
         /**
          * update platform
@@ -573,7 +582,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdPut: (body: ViewmodelsUpdatePlatformRequest, id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformIdPut(body, id, options)),
+        v1PlatformIdPut: (body: ViewmodelsUpdatePlatformRequest, id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdPut(body, id, options)),
 
         /**
          * create platform
@@ -581,7 +590,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {ViewmodelsCreatePlatformRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1PlatformPost: (body: ViewmodelsCreatePlatformRequest, options?: any) => () => fetchData<ViewmodelsPlatformView>(BASE_PATH, fetchParamsCreator.v1PlatformPost(body, options)),
+        v1PlatformPost: (body: ViewmodelsCreatePlatformRequest, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformPost(body, options)),
 
     }
 }

@@ -131,8 +131,7 @@ export const FetchParamCreator = (configuration?: any) => {
          * @summary get all resources
          * @param {*} [options] Override http request option.
          */
-        BuildFetchArgs(path: string, method: string, body: any, options: any = {}): FetchArgs {
-            const localVarUrlObj = new URL(path)
+        BuildFetchArgs(path: URL, method: string, body: any, options: any = {}): FetchArgs {
             const localVarRequestOptions = Object.assign({ method: method }, options)
             const localVarHeaderParameter = {} as any
             const localVarQueryParameter = {} as any
@@ -142,13 +141,13 @@ export const FetchParamCreator = (configuration?: any) => {
                 localVarHeaderParameter['Authorization'] = getToken()
             }
 
-            const params = new URLSearchParams(localVarUrlObj.search)
+            const params = new URLSearchParams(path.search)
             Object.entries(Object.assign({}, localVarQueryParameter, options.query)).forEach(([key, value]) => {
                 if (value !== undefined && value !== null) {
                     params.set(key, value.toString())
                 }
             })
-            localVarUrlObj.search = params.toString()
+            path.search = params.toString()
 
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers)
 
@@ -157,17 +156,17 @@ export const FetchParamCreator = (configuration?: any) => {
             }
 
             return {
-                url: localVarUrlObj.toString(),
+                url: path.toString(),
                 options: localVarRequestOptions,
             }
         }
     }
 }
 
-export const fetchData = async <T>(basePath: string, localVarFetchArgs: FetchArgs, fetch: FetchAPI = isomorphicFetch): Promise<{ data?: T, error?: any }> => {
+export const fetchData = async <T>(localVarFetchArgs: FetchArgs, fetch: FetchAPI = isomorphicFetch): Promise<{ data?: T, error?: any }> => {
     const actualFetch = fetch || isomorphicFetch
     try {
-        const response = await actualFetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
+        const response = await actualFetch(localVarFetchArgs.url, localVarFetchArgs.options)
         if (response.status >= 200 && response.status < 300) {
             const data = await response.json()
             return { data }

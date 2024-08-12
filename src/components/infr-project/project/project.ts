@@ -278,7 +278,8 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
          * @param {*} [options] Override http request option.
          */
         v1ProjectGet(options: any = {}): FetchArgs {
-            return FetchParamCreator(configuration).BuildFetchArgs(`/v1/project`, 'GET', undefined, options)
+            const path = new URL(BASE_PATH + `/v1/project`)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * update project design
@@ -298,7 +299,8 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/project/{id}/design`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * get project
@@ -313,7 +315,8 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/project/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'GET', undefined, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
          * update project platform
@@ -333,7 +336,8 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/project/{id}/platform`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * update project
@@ -353,7 +357,8 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             }
             const localVarPath = `/v1/project/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'PUT', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
         /**
          * create project
@@ -367,7 +372,8 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ProjectPost.')
             }
             const localVarPath = `/v1/project`
-            return FetchParamCreator(configuration).BuildFetchArgs(localVarPath, 'POST', body, options)
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)
         },
     }
 }
@@ -384,7 +390,7 @@ export const ProjectApiFp = function (configuration?: any) {
          * @summary get all project
          * @param {*} [options] Override http request option.
          */
-        v1ProjectGet: (options?: any) => () => fetchData<ViewmodelsProjectView[]>(BASE_PATH, fetchParamsCreator.v1ProjectGet(options)),
+        v1ProjectGet: (options?: any) => () => fetchData<ViewmodelsProjectView[]>(fetchParamsCreator.v1ProjectGet(options)),
 
         /**
         * update project design
@@ -394,7 +400,7 @@ export const ProjectApiFp = function (configuration?: any) {
         * @param {*} [options] Override http request option.
         * @throws {RequiredError}
         */
-        v1ProjectIdDesignPut: (body: Array<ViewmodelsUpdateProjectDesignRequest>, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(BASE_PATH, fetchParamsCreator.v1ProjectIdDesignPut(body, id, options)),
+        v1ProjectIdDesignPut: (body: Array<ViewmodelsUpdateProjectDesignRequest>, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdDesignPut(body, id, options)),
 
         /**
         * get project
@@ -403,8 +409,8 @@ export const ProjectApiFp = function (configuration?: any) {
         * @param {*} [options] Override http request option.
         * @throws {RequiredError}
         */
-        v1ProjectIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(BASE_PATH, fetchParamsCreator.v1ProjectIdGet(id, options)),
-        
+        v1ProjectIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdGet(id, options)),
+
         /**
          * update project platform
          * @summary update project platform
@@ -412,7 +418,7 @@ export const ProjectApiFp = function (configuration?: any) {
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPlatformPut: (body: Array<ViewmodelsUpdateProjectPlatformRequest>, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(BASE_PATH, fetchParamsCreator.v1ProjectIdPlatformPut(body, id, options)),
+        v1ProjectIdPlatformPut: (body: Array<ViewmodelsUpdateProjectPlatformRequest>, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdPlatformPut(body, id, options)),
 
         /**
          * update project
@@ -421,7 +427,7 @@ export const ProjectApiFp = function (configuration?: any) {
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPut: (body: ViewmodelsUpdateProjectRequest, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(BASE_PATH, fetchParamsCreator.v1ProjectIdPut(body, id, options)),
+        v1ProjectIdPut: (body: ViewmodelsUpdateProjectRequest, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdPut(body, id, options)),
 
         /**
          * create project
@@ -429,7 +435,7 @@ export const ProjectApiFp = function (configuration?: any) {
          * @param {ViewmodelsCreateProjectRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1ProjectPost: (body: ViewmodelsCreateProjectRequest, options?: any) => () => fetchData<ViewmodelsProjectView>(BASE_PATH, fetchParamsCreator.v1ProjectPost(body, options)),
+        v1ProjectPost: (body: ViewmodelsCreateProjectRequest, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectPost(body, options)),
 
     }
 }
