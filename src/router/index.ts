@@ -2,10 +2,11 @@ import { createRouter, createWebHistory, Router, RouterHistory, RouteRecordRaw }
 
 import { AwsRoutes } from './aws'
 import { DemoRoutes } from './demo'
+import { ProjectRoutes } from './project'
 import { ToolsRoutes } from './tools'
 import { handleRequiresAuth } from '@/tools/baseAppEvent'
 
-const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes)
+const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes).concat(ProjectRoutes)
 
 let router: Router | null = null
 let history: RouterHistory | null = null
