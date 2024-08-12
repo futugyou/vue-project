@@ -5,55 +5,105 @@ const BASE_PATH = import.meta.env.REACT_APP_INFR_PROJECT_SERVER.replace(/\/+$/, 
 /**
  * 
  * @export
- * @interface ViewmodelsResourceView
+ * @interface ResourceView
  */
-export interface ViewmodelsResourceView {
+ export interface ResourceView {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
      */
-    createdAt?: string
+    created_at?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsResourceView
-     */
-    data?: string
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
      */
     id?: string
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
      */
-    isDeleted?: boolean
+     is_deleted?: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
      */
     name?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
      */
     type?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
      */
-    updatedAt?: string
+    updated_at?: string
     /**
      * 
      * @type {number}
-     * @memberof ViewmodelsResourceView
+     * @memberof ResourceView
+     */
+    version?: number
+}
+
+/**
+ * 
+ * @export
+ * @interface ResourceViewDetail
+ */
+export interface ResourceViewDetail {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    created_at?: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    data?: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    id?: string
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ResourceViewDetail
+     */
+     is_deleted?: boolean
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    name?: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    type?: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    updated_at?: string
+    /**
+     * 
+     * @type {number}
+     * @memberof ResourceViewDetail
      */
     version?: number
 }
@@ -266,7 +316,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @summary get all resources
          * @param {*} [options] Override http request option.
          */
-        v1ResourceGet: (options?: any) => () => fetchData<ViewmodelsResourceView[]>(fetchParamsCreator.v1ResourceGet(options)),
+        v1ResourceGet: (options?: any) => () => fetchData<ResourceView[]>(fetchParamsCreator.v1ResourceGet(options)),
 
         /**
          * delete resource
@@ -282,7 +332,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          */
-        v1ResourceIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView>(fetchParamsCreator.v1ResourceIdGet(id, options)),
+        v1ResourceIdGet: (id: string, options?: any) => () => fetchData<ResourceViewDetail>(fetchParamsCreator.v1ResourceIdGet(id, options)),
 
         /**
          * get resource history
@@ -290,7 +340,7 @@ export const ResourceApiFp = (configuration?: any) => {
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          */
-        v1ResourceIdHistoryGet: (id: string, options?: any) => () => fetchData<ViewmodelsResourceView[]>(fetchParamsCreator.v1ResourceIdHistoryGet(id, options)),
+        v1ResourceIdHistoryGet: (id: string, options?: any) => () => fetchData<ResourceViewDetail[]>(fetchParamsCreator.v1ResourceIdHistoryGet(id, options)),
 
         /**
          * update resource

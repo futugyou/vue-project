@@ -6,18 +6,18 @@ import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
-import { ViewmodelsResourceView, ResourceApiFactory } from './resource'
+import { ResourceView, ResourceApiFactory } from './resource'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const resources = ref<ViewmodelsResourceView[]>([])
+const resources = ref<ResourceView[]>([])
 const isLoading = ref(true)
 
 const limit = ref(30)
 const page = ref(1)
 
-const timeFormat = (timestamp: number): string => {
+const timeFormat = (timestamp: any): string => {
     return useTimeFormat(timestamp)
 }
 
@@ -38,10 +38,6 @@ const fields: TableField[] = [
     {
         key: 'version',
         label: 'Version'
-    },
-    {
-        key: 'data',
-        label: 'Data'
     },
     {
         key: 'is_deleted',
