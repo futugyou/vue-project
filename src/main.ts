@@ -12,6 +12,12 @@ import { createApp, App as AppInstance } from 'vue'
 import { inject } from '@vercel/analytics'
 import CodeDiff from 'v-code-diff'
 
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
 import App from './App.vue'
 import { router, clearRouter } from './router'
 import { globalMessageKey } from './tools/injectkey'
@@ -21,6 +27,11 @@ import i18nPlugin from './plugins/i18n'
 import { handleMicroData } from '@/tools/baseAppEvent'
 
 let app: AppInstance | null = null
+
+const vuetify = createVuetify({
+    components,
+    directives,
+})
 
 const mount = () => {
     // @ts-ignore
@@ -36,6 +47,7 @@ const mount = () => {
 
     app.use(router!)
     app.use(CodeDiff)
+    app.use(vuetify)
 
     app.mount('#vue3-app-main')
     console.log(3, 'micro app vue demo rendered')
