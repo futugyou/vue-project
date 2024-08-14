@@ -164,7 +164,7 @@ watch(pagesize, () => {
                 </nav>
             </div>
             <div style="margin-left: 20px;display: flex;align-items: center;" v-if="canChangePageSize">
-                <v-select v-model="pagesize" :items="['10', '20', '30', '50']" variant="outlined" :center-affix="true"
+                <v-select v-model="pagesize" :items="[10, 20, 30, 50]" variant="outlined" :center-affix="true"
                     density="compact" :hide-details="true"></v-select>
             </div>
         </div>
