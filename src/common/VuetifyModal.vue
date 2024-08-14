@@ -36,7 +36,7 @@ const emit = defineEmits<{
 
                 <v-divider></v-divider>
 
-                <v-card-actions v-if="hideFooter">
+                <v-card-actions v-if="!!!hideFooter">
                     <v-spacer></v-spacer>
 
                     <v-btn text="Close" variant="plain" @click="cancle"></v-btn>

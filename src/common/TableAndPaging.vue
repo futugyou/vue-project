@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, PropType, computed } from 'vue'
+import { ref, PropType, computed, watch } from 'vue'
 import Spinners from '@/common/Spinners.vue'
 
 export interface TableField {
@@ -101,6 +101,11 @@ const sort = (key: string) => {
 
     sortKey.value = key
 }
+
+watch(pagesize, () => {
+    changePagesize(pagesize.value)
+})
+
 </script>
 
 <template>
@@ -136,38 +141,31 @@ const sort = (key: string) => {
         </div>
         <div class="paging-container">
             <div>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" @click="updatePage(-1)">Previous</a>
+                <nav class="v-pagination v-theme--light" role="navigation" aria-label="Pagination Navigation"
+                    data-test="v-pagination-root">
+                    <ul class="v-pagination__list">
+                        <li class="v-pagination__prev">
+                            <a class="page-link" href="#" @click="updatePage(-1)">Prev</a>
                         </li>
-                        <li class="page-item" v-if="page != 1">
+                        <li class="v-pagination__item" v-if="page != 1">
                             <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
                         </li>
-                        <li class="page-item active" aria-current="page">
+                        <li class="v-pagination__item v-pagination__item--is-active" aria-current="page">
                             <span class="page-link">{{ page }}</span>
                         </li>
-                        <li class="page-item" v-if="pagesize == sortedItems!.length">
+                        <li class="v-pagination__item" v-if="pagesize == sortedItems!.length">
                             <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
                         </li>
-                        <li class="page-item">
+                        <li class="v-pagination__next">
                             <a class="page-link" href="#" @click="updatePage(1)"
                                 v-if="pagesize == sortedItems!.length">Next</a>
                         </li>
                     </ul>
                 </nav>
             </div>
-            <div class="dropdown" style="margin-left: 20px" v-if="canChangePageSize">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    {{ pagesize }}
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" @click="changePagesize(10)">10</a></li>
-                    <li><a class="dropdown-item" href="#" @click="changePagesize(20)">20</a></li>
-                    <li><a class="dropdown-item" href="#" @click="changePagesize(30)">30</a></li>
-                    <li><a class="dropdown-item" href="#" @click="changePagesize(50)">50</a></li>
-                </ul>
+            <div style="margin-left: 20px;display: flex;align-items: center;" v-if="canChangePageSize">
+                <v-select v-model="pagesize" :items="['10', '20', '30', '50']" variant="outlined" :center-affix="true"
+                    density="compact" :hide-details="true"></v-select>
             </div>
         </div>
     </div>
@@ -204,5 +202,13 @@ const sort = (key: string) => {
 
 .table>tbody {
     vertical-align: middle;
+}
+
+.page-link {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
 }
 </style>
