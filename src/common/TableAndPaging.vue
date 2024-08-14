@@ -113,10 +113,10 @@ watch(pagesize, () => {
         <div class="table-container">
             <div v-if="sortedItems!.length == 0 && !isLoading">{{ placeholder }}</div>
             <Spinners v-else-if="isLoading"> </Spinners>
-            <table class="table table-striped table-hover" v-else>
+            <v-table fixed-header hover density="comfortable" theme="light" v-else>
                 <thead>
-                    <tr class="table-dark">
-                        <th scope="col" v-for="field in fields" @click="sort(field.key)">
+                    <tr>
+                        <th class="text-left" v-for="field in fields" @click="sort(field.key)">
                             <slot :name="`header_${field.key}`" v-bind="field">
                                 {{ field.label }}
                             </slot>
@@ -137,7 +137,7 @@ watch(pagesize, () => {
                         </template>
                     </tr>
                 </tbody>
-            </table>
+            </v-table>
         </div>
         <div class="paging-container">
             <div>
@@ -196,11 +196,8 @@ watch(pagesize, () => {
     text-align: left;
 }
 
-.table {
-    text-align: left;
-}
-
-.table>tbody {
+td,
+th {
     vertical-align: middle;
 }
 
