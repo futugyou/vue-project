@@ -174,6 +174,11 @@ onUnmounted(async () => {
     grid-gap: var(--grid-gap-10);
 }
 
+.image-container div{
+    border: 1px solid var(--color-border-text-normal-default);
+    border-radius: var(--border-radius-input);
+}
+
 .text-container {
     flex: 1;
     display: grid;
@@ -181,5 +186,8 @@ onUnmounted(async () => {
     width: 100%;
     grid-template-columns: v-bind('theme.columns');
     grid-gap: var(--grid-gap-10);
+}
+.text-container textarea{
+    border-style: solid;
 }
 </style>  

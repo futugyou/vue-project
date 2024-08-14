@@ -210,6 +210,10 @@ watchEffect(async () => {
     position: relative;
 }
 
+.text-container textarea {
+    border-style: solid;
+}
+
 .trans-btn-container {
     display: flex;
     align-items: center;

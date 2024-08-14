@@ -184,6 +184,10 @@ watch(
     flex-grow: 1;
 }
 
+.text-container textarea {
+    border-style: solid;
+}
+
 .header {
     display: flex;
     flex-direction: row;
