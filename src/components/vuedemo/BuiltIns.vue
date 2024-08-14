@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import CompA from './CompA.vue'
 import CompB from './CompB.vue'
 import MyModal from './MyModal.vue'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const show = ref(false)
 const show1 = ref(false)
@@ -88,6 +89,10 @@ const tweened = reactive({
     number: 0
 })
 
+const showVuetifyModal = () => {
+
+}
+
 watch(number, (n) => {
     gsap.to(tweened, { duration: 0.5, number: Number(n) || 0 })
 })
@@ -128,13 +133,7 @@ watch(number, (n) => {
         </div>
         <div class="vueapp-layer">
             <input v-model="query" />
-            <TransitionGroup
-                tag="ul"
-                :css="false"
-                @before-enter="onBeforeEnter"
-                @enter="onEnter"
-                @leave="onLeave"
-            >
+            <TransitionGroup tag="ul" :css="false" @before-enter="onBeforeEnter" @enter="onEnter" @leave="onLeave">
                 <li v-for="(item, index) in computedList" :key="item.msg" :data-index="index">
                     {{ item.msg }}
                 </li>
@@ -164,11 +163,7 @@ watch(number, (n) => {
         </div>
         <div class="vueapp-layer">
             <h3>hsl() function</h3>
-            <div
-                @mousemove="onMousemove"
-                :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }"
-                class="movearea"
-            >
+            <div @mousemove="onMousemove" :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }" class="movearea">
                 <p>Move your mouse across this div...</p>
                 <p>x: {{ x }}</p>
             </div>
@@ -178,6 +173,14 @@ watch(number, (n) => {
             <div class="demo">
                 Type a number: <input v-model.number="number" />
                 <p class="big-number">{{ tweened.number.toFixed(0) }}</p>
+            </div>
+        </div>
+        <div class="vueapp-layer">
+            <h3>VuetifyModal</h3>
+            <div class="demo">
+                <VuetifyModal text="test1" title="title1" :hideFooter="true">
+                    <h1>hello allone!</h1>
+                </VuetifyModal>
             </div>
         </div>
     </div>
@@ -190,6 +193,7 @@ watch(number, (n) => {
 }
 
 @keyframes shake {
+
     10%,
     90% {
         transform: translate3d(-1px, 0, 0);
