@@ -22,7 +22,7 @@ const HandleClick = () => {
 <template>
     <button @click="HandleClick" :disabled="props.IsLoading">
         <span v-if="!props.IsLoading">{{ Text }}</span>
-        <Spinners width="20px" height="20px" v-if="props.IsLoading"></Spinners>
+        <Spinners :size="20" v-if="props.IsLoading"></Spinners>
     </button>
 </template>
 

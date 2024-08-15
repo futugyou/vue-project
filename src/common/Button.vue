@@ -41,7 +41,7 @@ onMounted(() => {
                 <slot></slot>
             </div>
         </template>
-        <Spinners width="20px" height="20px" v-if="IsLoading"></Spinners>
+        <Spinners :size="20" v-if="IsLoading"></Spinners>
         <span class="tooltiptext" v-if="Tip">{{ Tip }}</span>
     </button>
     <button ref="buttonref" v-if="!Text" class="pure-icon variant-normal" @click="HandleClick" :disabled=Disabled>
