@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref, watch } from 'vue'
 import { getRegions } from '@/tools/regions'
 
 const props = withDefaults(
@@ -12,43 +13,19 @@ const props = withDefaults(
     }
 )
 
+const selected = ref(props.selected)
+
 const emit = defineEmits<{
     (e: 'changeRegion', key: string): void
 }>()
 
-
-const regionList = getRegions().map((item) => {
-    return {
-        key: item,
-        value: item
-    }
+watch(selected, () => {
+    emit('changeRegion', selected.value)
 })
-
-
-const changeRegion = (key: string) => {
-    emit('changeRegion', key)
-}
-
 </script>
 
 
 <template>
-    <div class="dropdown-center" style="width: 100%;">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-            data-bs-display="static" style="width: 100%;">
-            {{ selected.length > 0 ? selected : '--choose a item--' }}
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <a class="dropdown-item" href="#" @click="changeRegion('')" :class="{ active: '' == selected }">
-                    --choose a item--
-                </a>
-            </li>
-            <li key="item" v-for="item in regionList">
-                <a class="dropdown-item" href="#" @click="changeRegion(item.key)" :class="{ active: item.key == selected }">
-                    {{ item.value }}
-                </a>
-            </li>
-        </ul>
-    </div>
+    <v-select v-model="selected" :items="getRegions()" variant="outlined" :center-affix="true" density="compact"
+        :hide-details="true"></v-select>
 </template>
