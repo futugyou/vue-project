@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onMounted, watch } from 'vue'
-import { Account, defaultAccount, getAccounts } from './account'
+import { ref, watchEffect, watch } from 'vue'
+import { Account, getAccounts } from './account'
 
 const props = withDefaults(
     defineProps<{
@@ -14,6 +14,7 @@ const props = withDefaults(
 )
 
 const accounts = ref<Account[]>([])
+const selectedAccount = ref<string>(props.selected)
 
 const fetchData = async () => {
     const { data, error } = await getAccounts()
@@ -31,33 +32,15 @@ const emit = defineEmits<{
     (e: 'changeAccount', acc: Account): void
 }>()
 
-const changeRegion = (acc: Account) => {
-    emit('changeAccount', acc)
-}
-
-const selectedAccount = computed(() => {
-    return accounts.value.find((item) => item.id == props.selected)
+watch(selectedAccount, () => {
+    const account = accounts.value.find((item) => item.id == selectedAccount.value)
+    if (account) {
+        emit('changeAccount', account)
+    }
 })
 </script>
 
-
 <template>
-    <div class="dropdown-center" style="width: 100%;">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-            data-bs-display="static" style="width: 100%;">
-            {{ (selectedAccount ?? defaultAccount).alias?.length > 0 ? selectedAccount?.alias : '--choose a item--' }}
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <a class="dropdown-item" href="#" @click="changeRegion(defaultAccount)" :class="{ active: '' == selected }">
-                    --choose a item--
-                </a>
-            </li>
-            <li key="item" v-for="item in accounts">
-                <a class="dropdown-item" href="#" @click="changeRegion(item)" :class="{ active: item.id == selected }">
-                    {{ item.alias }}
-                </a>
-            </li>
-        </ul>
-    </div>
+    <v-select v-model="selectedAccount" :items="accounts" item-title="alias" item-value="id" variant="outlined"
+        :center-affix="true" density="compact" :hide-details="true"></v-select>
 </template>
