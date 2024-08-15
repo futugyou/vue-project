@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+
 const props = defineProps({
     text: String,
-    title: String, 
+    title: String,
     hideFooter: Boolean,
 })
 
@@ -13,6 +14,9 @@ const cancle = () => {
     dialog.value = false
 }
 
+const CancleModal = () => {
+    dialog.value = false
+}
 const save = () => {
     emit('save')
     dialog.value = false
@@ -22,6 +26,10 @@ const emit = defineEmits<{
     (e: 'cancle'): void
     (e: 'save'): void
 }>()
+
+defineExpose({
+    CancleModal
+})
 
 </script>
 <template>
