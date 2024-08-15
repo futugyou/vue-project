@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { MessageInfo, useMessageStore } from '@/stores/message'
@@ -11,7 +11,7 @@ const showMessage = ref(false)
 const errorMessages = ref([''])
 
 const checkDisplayState = () => {
-    let data = msg.value
+    let data: MessageInfo = msg.value
     if (data && data.errorMessages && data.errorMessages.length >= 0) {
         showMessage.value = true
         errorMessages.value = data.errorMessages
@@ -37,9 +37,8 @@ watch(msg, checkDisplayState)
 
 <template>
     <div v-if="showMessage" class="alert-container">
-        <div class="alert alert-danger check-message" role="alert" v-for="text in errorMessages" :key="text">
-            {{ text }}
-        </div>
+        <v-banner icon="$warning" bg-color="#FFB74D" width="100%" v-for="text in errorMessages" :key="text" :text="text"
+            v-if="showMessage"></v-banner>
     </div>
 </template>
 <style scoped>
