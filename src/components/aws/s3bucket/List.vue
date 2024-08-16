@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { Modal, openModal } from '@/common/Modal.vue'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 import Detail from './Detail.vue'
 
 import { S3Bucket, defaultS3Bucket, getS3Buckets } from './s3bucket'
@@ -18,6 +18,7 @@ const selecedBucket = ref<S3Bucket>()
 
 const searchKey = ref<string>('')
 const isLoading = ref(true)
+const dialog = ref(false)
 
 const limit = ref(30)
 const page = ref(1)
@@ -79,17 +80,17 @@ const handleKeyworkChange = (e: any) => {
 
 const showS2Resource = (r: S3Bucket) => {
     selecedBucket.value = r
-    openModal('s3resourceModal')
+    dialog.value = true
 }
 
 </script>
 
 <template>
     <div class="full-content">
-        <Modal id="s3resourceModal" title="Choose an archive in S3" :hideFooter="true" size="xl">
+        <VuetifyModal text="Choose an archive in S3" title="Choose an archive in S3" activator="somme" hideFooter
+            v-model:dialog="dialog">
             <Detail :key="selecedBucket?.id" :s3Bucket="selecedBucket" v-if="selecedBucket"> </Detail>
-        </Modal>
-
+        </VuetifyModal>
         <div class="head-content">
             <div class="">
                 <h1>S3 Bucket</h1>
