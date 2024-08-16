@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
     text: String,
     title: String,
     hideFooter: Boolean,
+    activator: String,
+    persistent: Boolean,
+    dialog: Boolean,
 })
 
-const dialog = ref(false)
+const dialog = ref(props.dialog)
 
 const cancle = () => {
     emit('cancle')
@@ -25,7 +28,16 @@ const save = () => {
 const emit = defineEmits<{
     (e: 'cancle'): void
     (e: 'save'): void
+    (e: 'update:dialog', dialog: boolean): void
 }>()
+
+watch(() => props.dialog, (newVal) => {
+    dialog.value = newVal
+})
+
+watch(dialog, (newVal) => {
+    emit('update:dialog', newVal)
+})
 
 defineExpose({
     CancleModal
@@ -34,8 +46,8 @@ defineExpose({
 </script>
 <template>
     <div class="pa-4 text-center">
-        <v-dialog v-model="dialog" max-width="600">
-            <template v-slot:activator="{ props: activatorProps }">
+        <v-dialog v-model="dialog" max-width="600" :persistent="persistent">
+            <template v-slot:activator="{ props: activatorProps }" v-if="!activator">
                 <v-btn class="text-none font-weight-regular" :text="text" variant="tonal" v-bind="activatorProps"></v-btn>
             </template>
 
