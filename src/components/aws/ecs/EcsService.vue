@@ -39,10 +39,6 @@ const fields: TableField[] = [
     {
         key: 'operate_At',
         label: 'Operate At'
-    },
-    {
-        key: 'operation',
-        label: 'Operation'
     }
 ]
 
@@ -92,8 +88,6 @@ const changePagesize = (n: number) => {
                         {{ body.id }}
                     </span>
                 </router-link>
-            </template>
-            <template v-slot:body_operation="body">
             </template>
         </TableAndPaging>
     </div>

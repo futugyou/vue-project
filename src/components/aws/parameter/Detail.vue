@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
-import { Modal, openModal } from '@/common/Modal.vue'
-import { useTimeFormat } from '@/composables/timeFormat'
-import { Parameter, getParameter, SyncParameter, syncParameter } from './parameter'
+import VuetifyModal from '@/common/VuetifyModal.vue'
+import { getParameter, SyncParameter, syncParameter } from './parameter'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -20,6 +19,8 @@ const parameterId = route.params.parameterId as string
 const parameter = ref()
 const awsparameter = ref()
 const historys = ref<any[]>([])
+const tab = ref()
+const dialog = ref(false)
 
 const checkedParameters = ref<string[]>([])
 const compareParameters = ref<string[]>([])
@@ -76,7 +77,7 @@ const compareParameter = () => {
     }
 
     compareParameters.value = []
-    openModal('compareModal')
+    dialog.value = true
     let selectedValues: any[] = []
     historys.value.map(p => {
         if (checkedParameters.value.includes(p.id)) {
@@ -92,7 +93,7 @@ const compareWithAWS = () => {
     }
 
     compareParameters.value = []
-    openModal('compareModal')
+    dialog.value = true
     let awsstring: string = ''
     if (awsparameter.value) {
         awsstring = awsparameter.value.value
@@ -127,98 +128,104 @@ const syncFromAWS = async () => {
 
 <template>
     <div class="detail-full-content">
-        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true" size="xl">
+        <VuetifyModal text="Compare Parameter" title="Compare Parameter" activator="somme" hideFooter
+            v-model:dialog="dialog">
             <code-diff v-if="compareParameters.length == 2" :old-string="compareParameters[0]"
                 :new-string="compareParameters[1]" output-format="side-by-side" />
-        </Modal>
+        </VuetifyModal>
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading">
-            <ul class="nav nav-tabs">
-                <li class="nav-item" @click="changeTab('1')">
-                    <a class="nav-link" :class="{ active: tabIndex == '1' }" href="#">Latest</a>
-                </li>
-                <li class="nav-item" @click="changeTab('2')">
-                    <a class="nav-link" :class="{ active: tabIndex == '2' }" href="#">AWS
-                        Current</a>
-                </li>
-                <li class="nav-item" @click="changeTab('3')">
-                    <a class="nav-link" :class="{ active: tabIndex == '3' }" href="#">History</a>
-                </li>
-            </ul>
-        </div>
-        <div v-if="!isLoading && parameter != undefined && tabIndex == '1'" class="detail-container">
-            <div class="compare-container">
-                <button type="button" class="btn btn-warning" @click="syncFromAWS" :disabled="displaySync"> SyncFromAWS
-                </button>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Name:</div>
-                <div class="detail-item-content"> {{ parameter.key }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Version:</div>
-                <div class="detail-item-content"> {{ parameter.version }}</div>
-            </div>
-            <div class="detail-item-textarea">
-                <div class="detail-item-lable">Value:</div>
-                <div class="textarea-container">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
-                        :value="parameter.value"></textarea>
-                </div>
-            </div>
-        </div>
-        <div v-if="!isLoading && awsparameter != undefined && tabIndex == '2'" class="detail-container">
-            <div class="detail-item">
-                <div class="detail-item-lable">Name:</div>
-                <div class="detail-item-content"> {{ awsparameter.key }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Version:</div>
-                <div class="detail-item-content"> {{ awsparameter.version }}</div>
-            </div>
-            <div class="detail-item-textarea">
-                <div class="detail-item-lable">Value:</div>
-                <div class="textarea-container">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
-                        :value="awsparameter.value"></textarea>
-                </div>
-            </div>
-        </div>
-        <div v-if="!isLoading && historys != undefined && historys.length > 0 && tabIndex == '3'" class="detail-container">
-            <div class="compare-container">
-                <button type="button" class="btn btn-warning" @click="compareWithAWS"
-                    :disabled="checkedParameters.length != 1"> CompareWithAWS
-                </button>
-                <button type="button" class="btn btn-warning" @click="compareParameter"
-                    :disabled="checkedParameters.length != 2"> Compare
-                </button>
-            </div>
-            <div v-for="(item, idx) in historys" :key="idx" class="history-item">
-                <div class="detail-item">
-                    <div class="detail-item-lable">Name:</div>
-                    <div class="detail-item-content"> {{ item.key }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-item-lable">Version:</div>
-                    <div class="detail-item-content"> {{ item.version }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-item-lable">Operate Time:</div>
-                    <div class="detail-item-content"> {{ item.operateAt }}</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-item-lable">
-                        <label class="form-check-label" :for="item.id">
-                            Choose:
-                        </label>
+
+        <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4" v-if="!isLoading">
+            <v-tab value="one">Latest</v-tab>
+            <v-tab value="two">AWS</v-tab>
+            <v-tab value="three">History</v-tab>
+        </v-tabs>
+        <v-tabs-window v-model="tab" v-if="!isLoading" grow>
+            <v-tabs-window-item value="one" v-if="parameter != undefined">
+                <div class="detail-container">
+                    <div class="compare-container">
+                        <button type="button" class="btn btn-warning" @click="syncFromAWS" :disabled="displaySync">
+                            SyncFromAWS
+                        </button>
                     </div>
-                    <div class="detail-item-content">
-                        <input class="form-check-input gap-right-10" type="checkbox" :value="item.id" :id="item.id"
-                            v-model="checkedParameters" :disabled="checkedParametersStatus(item.id)">
+                    <div class="detail-item">
+                        <div class="detail-item-lable">Name:</div>
+                        <div class="detail-item-content"> {{ parameter.key }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-lable">Version:</div>
+                        <div class="detail-item-content"> {{ parameter.version }}</div>
+                    </div>
+                    <div class="detail-item-textarea">
+                        <div class="detail-item-lable">Value:</div>
+                        <div class="textarea-container">
+                            <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
+                                :value="parameter.value"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="two" v-if="awsparameter != undefined">
+                <div class="detail-container">
+                    <div class="detail-item">
+                        <div class="detail-item-lable">Name:</div>
+                        <div class="detail-item-content"> {{ awsparameter.key }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-lable">Version:</div>
+                        <div class="detail-item-content"> {{ awsparameter.version }}</div>
+                    </div>
+                    <div class="detail-item-textarea">
+                        <div class="detail-item-lable">Value:</div>
+                        <div class="textarea-container">
+                            <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
+                                :value="awsparameter.value"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="three" v-if="historys != undefined && historys.length > 0">
+                <div class="detail-container">
+                    <div class="compare-container">
+                        <v-btn variant="outlined" @click="compareWithAWS" :disabled="checkedParameters.length != 1">
+                            CompareWithAWS
+                        </v-btn>
+
+                        <v-btn variant="outlined" @click="compareParameter" :disabled="checkedParameters.length != 2">
+                            Compare
+                        </v-btn>
+                    </div>
+                    <div v-for="(item, idx) in historys" :key="idx" class="history-item">
+                        <div class="detail-item">
+                            <div class="detail-item-lable">Name:</div>
+                            <div class="detail-item-content"> {{ item.key }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-lable">Version:</div>
+                            <div class="detail-item-content"> {{ item.version }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-lable">Operate Time:</div>
+                            <div class="detail-item-content"> {{ item.operateAt }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-lable">
+                                <label class="form-check-label" :for="item.id">
+                                    Choose:
+                                </label>
+                            </div>
+                            <div class="detail-item-content">
+                                <v-checkbox v-model="checkedParameters" density="compact" color="red" hide-details
+                                    :disabled="checkedParametersStatus(item.id)" :value="item.id"
+                                    :id="item.id"></v-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </v-tabs-window-item>
+        </v-tabs-window>
     </div>
 </template>
 
@@ -269,5 +276,10 @@ const syncFromAWS = async () => {
 
 .compare-container>* {
     margin-right: 20px;
+}
+
+.v-window {
+    width: 100%;
+    height: 100%;
 }
 </style>
