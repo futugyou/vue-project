@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onMounted, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
-import { join } from 'lodash-es'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { Modal, ModalButton, closeModal } from '@/common/Modal.vue'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 import Edit from './Edit.vue'
 
 import { Account, getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
@@ -22,8 +21,8 @@ const defaultAccount = ref<Account>(JSON.parse(localStorage.getItem('defaultAcco
 const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
-const editref = ref(null)
 const selecedAccount = ref<Account>(defaultAccountraw)
+const vuetifyModalRef = ref<InstanceType<typeof VuetifyModal> | null>(null)
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -90,7 +89,10 @@ const changePagesize = (n: number) => {
 }
 
 const close = () => {
-    closeModal()
+    if (vuetifyModalRef.value) {
+        vuetifyModalRef.value.CancleModal()
+    }
+
     selecedAccount.value = defaultAccountraw
 }
 
@@ -125,19 +127,10 @@ const setDefaultAccount = (acc: Account) => {
     defaultAccount.value = acc
 }
 
-watchEffect(() => {
-    if (selecedAccount.value != defaultAccountraw && document.getElementById("account-modal")) {
-        document.getElementById("account-modal")!.click()
-    }
-})
-
 </script>
 
 <template>
     <div class="account-full-content">
-        <Modal id="accountModal" title="Create Account" @close="close" :hideFooter="true" size="lg">
-            <Edit ref="editref" @save="close" @close="close" :account="selecedAccount"></Edit>
-        </Modal>
         <div class="head-content">
             <div class="">
                 <h1>account</h1>
@@ -146,7 +139,9 @@ watchEffect(() => {
                 <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
             </div>
             <div>
-                <ModalButton id="account-modal" targetId="#accountModal" title="Create Account"></ModalButton>
+                <VuetifyModal ref="vuetifyModalRef" text="Create Account" title="Create Account" hideFooter @close="close">
+                    <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
+                </VuetifyModal>
             </div>
         </div>
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
