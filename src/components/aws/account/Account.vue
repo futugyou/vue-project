@@ -22,7 +22,7 @@ const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const selecedAccount = ref<Account>(defaultAccountraw)
-const vuetifyModalRef = ref<InstanceType<typeof VuetifyModal> | null>(null)
+const dialog = ref(false)
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -89,10 +89,7 @@ const changePagesize = (n: number) => {
 }
 
 const close = () => {
-    if (vuetifyModalRef.value) {
-        vuetifyModalRef.value.CancleModal()
-    }
-
+    dialog.value = false
     selecedAccount.value = defaultAccountraw
 }
 
@@ -139,7 +136,7 @@ const setDefaultAccount = (acc: Account) => {
                 <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
             </div>
             <div>
-                <VuetifyModal ref="vuetifyModalRef" text="Create Account" title="Create Account" hideFooter @close="close">
+                <VuetifyModal v-model:dialog="dialog" text="Create Account" title="Create Account" hideFooter>
                     <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
                 </VuetifyModal>
             </div>

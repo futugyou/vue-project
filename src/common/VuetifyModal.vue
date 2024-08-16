@@ -17,9 +17,6 @@ const cancle = () => {
     dialog.value = false
 }
 
-const CancleModal = () => {
-    dialog.value = false
-}
 const save = () => {
     emit('save')
     dialog.value = false
@@ -37,10 +34,6 @@ watch(() => props.dialog, (newVal) => {
 
 watch(dialog, (newVal) => {
     emit('update:dialog', newVal)
-})
-
-defineExpose({
-    CancleModal
 })
 
 </script>

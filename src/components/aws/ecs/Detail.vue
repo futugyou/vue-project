@@ -81,7 +81,7 @@ const compareDefinitions = async () => {
                     Compare Definitions
                 </v-btn>
                 <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
-                    v-model:dialog="dialog" @cancle="dialog = false;" :disabled="checkedTaskDefinitions.length != 2">
+                    v-model:dialog="dialog" :disabled="checkedTaskDefinitions.length != 2">
                     <Spinners v-if="subLoading"></Spinners>
                     <code-diff v-if="compareTaskDefinitions.length == 2 && subLoading == false" language="json"
                         :old-string="compareTaskDefinitions[0]" :new-string="compareTaskDefinitions[1]"
