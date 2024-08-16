@@ -3,8 +3,8 @@ import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
-import { Modal, openModal } from '@/common/Modal.vue'
-import { EcsService, getEcsServiceDetail, compareEcsTaskDefinition, EcsTaskCompare } from "./ecs"
+import VuetifyModal from '@/common/VuetifyModal.vue'
+import { getEcsServiceDetail, compareEcsTaskDefinition, EcsTaskCompare } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -16,6 +16,7 @@ const subLoading = ref(true)
 const ecsServiceDetail = ref()
 const route = useRoute()
 const ecsserviceId = route.params.id as string
+const dialog = ref(false)
 
 const fetchData = async () => {
     isLoading.value = true
@@ -54,7 +55,7 @@ const compareDefinitions = async () => {
         dest_task_arn: checkedTaskDefinitions.value[1]
     }
 
-    openModal('compareModal')
+    dialog.value = true
     subLoading.value = true
     const { data, error } = await compareEcsTaskDefinition(model)
     subLoading.value = false
@@ -73,19 +74,19 @@ const compareDefinitions = async () => {
 
 <template>
     <div class="detail-full-content">
-        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true" size="xl">
-            <Spinners v-if="subLoading"></Spinners>
-            <code-diff v-if="compareTaskDefinitions.length == 2 && subLoading == false" language="json"
-                :old-string="compareTaskDefinitions[0]" :new-string="compareTaskDefinitions[1]"
-                output-format="side-by-side" />
-        </Modal>
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && ecsServiceDetail" class="detail-container">
             <div class="compare-container">
-                <button type="button" class="btn btn-warning" @click="compareDefinitions"
-                    :disabled="checkedTaskDefinitions.length != 2">
-                    CompareDefinitions
-                </button>
+                <v-btn variant="outlined" @click="compareDefinitions" :disabled="checkedTaskDefinitions.length != 2">
+                    Compare Definitions
+                </v-btn>
+                <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
+                    v-model:dialog="dialog" @cancle="dialog = false;" :disabled="checkedTaskDefinitions.length != 2">
+                    <Spinners v-if="subLoading"></Spinners>
+                    <code-diff v-if="compareTaskDefinitions.length == 2 && subLoading == false" language="json"
+                        :old-string="compareTaskDefinitions[0]" :new-string="compareTaskDefinitions[1]"
+                        output-format="side-by-side" />
+                </VuetifyModal>
             </div>
             <div class="detail-item">
                 <div class="detail-item-lable">Account Alias</div>
@@ -167,8 +168,8 @@ const compareDefinitions = async () => {
                             <label class="form-check-label" :for="td">
                                 {{ td }}
                             </label>
-                            <input class="form-check-input" type="checkbox" :value="td" :id="td"
-                                v-model="checkedTaskDefinitions" :disabled="checkedTaskDefinitionsStatus(td)">
+                            <v-checkbox v-model="checkedTaskDefinitions" density="compact" color="red" hide-details
+                                :disabled="checkedTaskDefinitionsStatus(td)" :value="td" :id="td"></v-checkbox>
                         </li>
                     </ul>
                 </div>
@@ -194,6 +195,9 @@ const compareDefinitions = async () => {
 .list-group-item {
     background-color: inherit;
     padding-left: 0px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .content-scroll {
