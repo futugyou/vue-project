@@ -34,8 +34,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': '/src', // 直接使用相对路径
-      '~bootstrap': '/node_modules/bootstrap', // 同样可以使用相对路径
+      '@': '/src'
     }
   },
   server: {
