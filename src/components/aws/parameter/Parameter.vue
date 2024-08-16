@@ -3,7 +3,7 @@ import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { Modal, openModal } from '@/common/Modal.vue'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 import RegionList from "@/components/aws/region/list.vue"
 import AccountList from "@/components/aws/account/list.vue"
 import Spinners from '@/common/Spinners.vue'
@@ -31,6 +31,7 @@ const subLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const editref = ref(null)
+const dialog = ref(false)
 
 const timeFormat = (timestamp: number): string => {
     return useTimeFormat(timestamp)
@@ -114,7 +115,7 @@ const compareParameter = async () => {
         return
     }
 
-    openModal('compareModal')
+    dialog.value = true
     subLoading.value = true
     compareParameterDatas.value = []
     const sourceid = checkedParameters.value[0]
@@ -154,13 +155,14 @@ const changeAccount = (acc: Account) => {
 
 <template>
     <div class="Parameter-full-content">
-        <Modal id="compareModal" title="Compare Parameter" :hideFooter="true" size="xl">
+        <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
+            v-model:dialog="dialog">
             <Spinners v-if="subLoading"></Spinners>
             <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
                 :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"
                 output-format="side-by-side" />
             <h2 v-if="compareParameterDatas.length != 2">no data found</h2>
-        </Modal>
+        </VuetifyModal>
         <div class="head-content">
             <div class="">
                 <h1>Parameter</h1>
@@ -200,9 +202,9 @@ const changeAccount = (acc: Account) => {
             </div>
 
             <div class="">
-                <button type="button" class="btn btn-warning" @click="compareParameter"
-                    :disabled="checkedParameters.length != 2"> Compare
-                </button>
+                <v-btn variant="outlined" @click="compareParameter" :disabled="checkedParameters.length != 2">
+                    Compare
+                </v-btn>
             </div>
         </div>
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
@@ -218,11 +220,14 @@ const changeAccount = (acc: Account) => {
                 </router-link>
             </template>
             <template v-slot:body_operation="body">
-                <input class="form-check-input gap-right-10" type="checkbox" :value="body.id" :id="body.id"
-                    v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)">
-                <label class="form-check-label" :for="body.id">
-                    Choose
-                </label>
+                <div class="operation">
+
+                    <v-checkbox v-model="checkedParameters" density="compact" color="red" hide-details
+                        :disabled="checkedParametersStatus(body.id)" :value="body.id" :id="body.id"></v-checkbox>
+                    <label class="form-check-label" :for="body.id">
+                        Choose
+                    </label>
+                </div>
             </template>
         </TableAndPaging>
     </div>
@@ -267,7 +272,7 @@ div.search-contatiner>* {
 .search-item-contatiner {
     display: flex;
     flex-direction: row;
-    align-items: baseline;
+    align-items: center;
     margin-right: 30px;
 }
 
@@ -284,5 +289,13 @@ div.search-contatiner>* {
 
 #searchKey {
     border: 1px solid turquoise;
+}
+
+.operation {
+    background-color: inherit;
+    padding-left: 0px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 </style>
