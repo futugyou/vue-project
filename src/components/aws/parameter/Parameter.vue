@@ -249,12 +249,6 @@ const changeAccount = (acc: Account) => {
     justify-content: space-between;
 }
 
-.detail-link {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
 .gap-right-10 {
     margin-right: 20px;
 }

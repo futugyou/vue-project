@@ -173,20 +173,6 @@ const setDefaultAccount = (acc: Account) => {
     justify-content: space-between;
 }
 
-.detail-link {
-    width: 100%;
-    height: 100%;
-    display: block;
-    text-decoration: none;
-    color: hsla(160, 100%, 37%, 1);
-    transition: 0.4s;
-    cursor: pointer;
-}
-
-.detail-link:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-}
-
 .gap-right-10 {
     margin-right: 10px;
 }

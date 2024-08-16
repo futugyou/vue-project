@@ -225,22 +225,6 @@ const handleBreadcrumbClick = (key: string) => {
     color: var(--vt-c-black);
 }
 
-.detail-link {
-    width: 100%;
-    height: 100%;
-    display: block;
-    color: var(--color-text-link-default, #0972d3);
-    text-underline-offset: 0.25em;
-    text-decoration-thickness: 1px;
-}
-
-.detail-link:hover {
-    text-decoration-line: underline;
-    text-decoration-color: initial;
-    cursor: pointer;
-    color: var(--color-text-link-hover, #033160);
-}
-
 .gap-right-10 {
     margin-right: 20px;
 }
