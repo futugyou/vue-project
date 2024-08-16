@@ -8,6 +8,7 @@ const props = defineProps({
     activator: String,
     persistent: Boolean,
     dialog: Boolean,
+    width: Number,
 })
 
 const dialog = ref(props.dialog)
@@ -38,13 +39,15 @@ watch(dialog, (newVal) => {
 
 </script>
 <template>
-    <v-dialog v-model="dialog" max-width="600" :persistent="persistent">
+    <v-dialog v-model="dialog" :max-width="width" :persistent="persistent">
         <template v-slot:activator="{ props: activatorProps }" v-if="!activator">
             <v-btn class="text-none font-weight-regular" :text="text" variant="tonal" v-bind="activatorProps"></v-btn>
         </template>
 
         <v-card :title="title">
-            <slot></slot>
+            <v-card-text>
+                <slot></slot>
+            </v-card-text>
 
             <v-divider></v-divider>
 
@@ -58,3 +61,6 @@ watch(dialog, (newVal) => {
         </v-card>
     </v-dialog>
 </template>
+
+<style scoped> 
+</style>

@@ -136,7 +136,7 @@ const setDefaultAccount = (acc: Account) => {
                 <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
             </div>
             <div>
-                <VuetifyModal v-model:dialog="dialog" text="Create Account" title="Create Account" hideFooter>
+                <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true" title="Create Account" hideFooter>
                     <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
                 </VuetifyModal>
             </div>
