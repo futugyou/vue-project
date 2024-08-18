@@ -113,7 +113,7 @@ watch(pagesize, () => {
         <div class="table-container">
             <div v-if="sortedItems!.length == 0 && !isLoading">{{ placeholder }}</div>
             <Spinners v-else-if="isLoading"> </Spinners>
-            <v-table fixed-header hover theme="light" v-else>
+            <v-table fixed-header hover v-else>
                 <thead>
                     <tr>
                         <th class="text-left" v-for="field in fields" @click="sort(field.key)">

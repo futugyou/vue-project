@@ -4,7 +4,9 @@ import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
+import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { getParameter, SyncParameter, syncParameter } from './parameter'
+import { useTimeFormat } from '@/composables/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -24,7 +26,28 @@ const dialog = ref(false)
 
 const checkedParameters = ref<string[]>([])
 const compareParameters = ref<string[]>([])
-const tabIndex = ref("1")
+
+const fields: TableField[] = [
+    {
+        key: 'key',
+        label: 'Name',
+        header: true
+    },
+    {
+        key: 'version',
+        label: 'Version'
+    },
+    {
+        key: 'operateAt',
+        label: 'OperateAt',
+        format: useTimeFormat
+    },
+    {
+        key: 'operation',
+        label: 'Operation'
+    }
+]
+
 const displaySync = computed(() => {
     if (parameter.value
         && awsparameter.value
@@ -58,10 +81,6 @@ const fetchData = async () => {
 }
 
 fetchData()
-
-const changeTab = (index: string) => {
-    tabIndex.value = index
-}
 
 const checkedParametersStatus = (id: string) => {
     if (checkedParameters.value.length >= 2 && checkedParameters.value.findIndex(i => i == id) == -1) {
@@ -197,31 +216,16 @@ const syncFromAWS = async () => {
                             Compare
                         </v-btn>
                     </div>
-                    <div v-for="(item, idx) in historys" :key="idx" class="history-item">
-                        <div class="detail-item">
-                            <div class="detail-item-lable">Name:</div>
-                            <div class="detail-item-content"> {{ item.key }}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-item-lable">Version:</div>
-                            <div class="detail-item-content"> {{ item.version }}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-item-lable">Operate Time:</div>
-                            <div class="detail-item-content"> {{ item.operateAt }}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-item-lable">
-                                <label class="form-check-label" :for="item.id">
-                                    Choose:
-                                </label>
-                            </div>
-                            <div class="detail-item-content">
-                                <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(item.id)"
-                                    :value="item.id" :id="item.id"></v-checkbox>
-                            </div>
-                        </div>
-                    </div>
+
+                    <TableAndPaging :items="historys" :fields="fields" :isLoading="isLoading">
+                        <template v-slot:header_id="header">
+                            <span style="color: red">{{ header.label }}</span>
+                        </template>
+                        <template v-slot:body_operation="body">
+                            <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)"
+                                :value="body.id" :id="body.id" label="Choose"></v-checkbox>
+                        </template>
+                    </TableAndPaging>
                 </div>
             </v-tabs-window-item>
         </v-tabs-window>
@@ -259,15 +263,6 @@ const syncFromAWS = async () => {
     margin-right: 10px;
 }
 
-.history-item {
-    display: flex;
-    flex-direction: row;
-}
-
-.history-item>.detail-item {
-    margin-right: 20px;
-}
-
 .compare-container {
     position: fixed;
     right: 50px;
@@ -277,7 +272,8 @@ const syncFromAWS = async () => {
     margin-right: 20px;
 }
 
-.v-window {
+.v-window,
+.v-window-item {
     width: 100%;
     height: 100%;
 }

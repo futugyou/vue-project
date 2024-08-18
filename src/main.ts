@@ -29,6 +29,9 @@ import { handleMicroData } from '@/tools/baseAppEvent'
 let app: AppInstance | null = null
 
 const vuetify = createVuetify({
+    theme: {
+        defaultTheme: 'light',
+    },
     blueprint: md3,
     components,
     directives,
