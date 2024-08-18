@@ -161,7 +161,7 @@ const changeAccount = (acc: Account) => {
             <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
                 :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"
                 output-format="side-by-side" />
-            <h2 v-if="compareParameterDatas.length != 2">no data found</h2>
+            <h2 v-if="!subLoading && compareParameterDatas.length != 2">no data found</h2>
         </VuetifyModal>
         <div class="head-content">
             <div class="">
@@ -170,7 +170,7 @@ const changeAccount = (acc: Account) => {
             <div class="search-contatiner">
                 <div class="search-item-contatiner">
                     <div class="search-item-lable">
-                        <label class="form-check-label" for="searchKey">
+                        <label for="searchKey">
                             Key:
                         </label>
                     </div>
@@ -180,7 +180,7 @@ const changeAccount = (acc: Account) => {
                 </div>
                 <div class="search-item-contatiner">
                     <div class="search-item-lable">
-                        <label class="form-check-label" for="region">
+                        <label for="region">
                             Account:
                         </label>
                     </div>
@@ -191,7 +191,7 @@ const changeAccount = (acc: Account) => {
                 </div>
                 <div class="search-item-contatiner">
                     <div class="search-item-lable">
-                        <label class="form-check-label" for="region">
+                        <label for="region">
                             Region:
                         </label>
                     </div>
@@ -202,7 +202,7 @@ const changeAccount = (acc: Account) => {
             </div>
 
             <div class="">
-                <v-btn variant="outlined" @click="compareParameter" :disabled="checkedParameters.length != 2">
+                <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
                     Compare
                 </v-btn>
             </div>
@@ -220,14 +220,8 @@ const changeAccount = (acc: Account) => {
                 </router-link>
             </template>
             <template v-slot:body_operation="body">
-                <div class="operation">
-
-                    <v-checkbox v-model="checkedParameters" density="compact" color="red" hide-details
-                        :disabled="checkedParametersStatus(body.id)" :value="body.id" :id="body.id"></v-checkbox>
-                    <label class="form-check-label" :for="body.id">
-                        Choose
-                    </label>
-                </div>
+                <v-checkbox v-model="checkedParameters" density="compact" color="red" hide-details
+                    :disabled="checkedParametersStatus(body.id)" :value="body.id" :id="body.id" label="Choose"></v-checkbox>
             </template>
         </TableAndPaging>
     </div>
@@ -283,13 +277,5 @@ div.search-contatiner>* {
 
 #searchKey {
     border: 1px solid turquoise;
-}
-
-.operation {
-    background-color: inherit;
-    padding-left: 0px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
 }
 </style>

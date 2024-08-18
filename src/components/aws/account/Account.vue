@@ -136,7 +136,8 @@ const setDefaultAccount = (acc: Account) => {
                 <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
             </div>
             <div>
-                <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true" title="Create Account" hideFooter>
+                <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true"
+                    title="Create Account" hideFooter>
                     <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
                 </VuetifyModal>
             </div>
@@ -149,9 +150,9 @@ const setDefaultAccount = (acc: Account) => {
                 </span>
             </template>
             <template v-slot:body_operation="body">
-                <button type="button" class="btn btn-secondary gap-right-10" @click="setDefaultAccount(body)"> Default
-                </button>
-                <button type="button" class="btn btn-warning" @click="accountDelete(body.id)"> Delete </button>
+                <v-btn class="gap-right-10" @click="setDefaultAccount(body)"> Default
+                </v-btn>
+                <v-btn @click="accountDelete(body.id)"> Delete </v-btn>
             </template>
         </TableAndPaging>
     </div>

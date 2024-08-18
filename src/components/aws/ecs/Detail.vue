@@ -77,7 +77,7 @@ const compareDefinitions = async () => {
         <Spinners v-if="isLoading"></Spinners>
         <div v-if="!isLoading && ecsServiceDetail" class="detail-container">
             <div class="compare-container">
-                <v-btn variant="outlined" @click="compareDefinitions" :disabled="checkedTaskDefinitions.length != 2">
+                <v-btn @click="compareDefinitions" :disabled="checkedTaskDefinitions.length != 2">
                     Compare Definitions
                 </v-btn>
                 <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter

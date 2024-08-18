@@ -16,6 +16,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, md } from 'vuetify/iconsets/md'
+import { md3 } from 'vuetify/blueprints'
 
 import App from './App.vue'
 import { router, clearRouter } from './router'
@@ -28,6 +29,7 @@ import { handleMicroData } from '@/tools/baseAppEvent'
 let app: AppInstance | null = null
 
 const vuetify = createVuetify({
+    blueprint: md3,
     components,
     directives,
     icons: {
@@ -36,6 +38,10 @@ const vuetify = createVuetify({
         sets: {
             md,
         },
+    },
+    defaults: {
+        VBtn: { variant: 'outlined' },
+        VSelect: { variant: 'outlined' },
     },
 })
 

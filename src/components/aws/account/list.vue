@@ -41,6 +41,6 @@ watch(selectedAccount, () => {
 </script>
 
 <template>
-    <v-select v-model="selectedAccount" :items="accounts" item-title="alias" item-value="id" variant="outlined"
-        :center-affix="true" density="compact" :hide-details="true"></v-select>
+    <v-select v-model="selectedAccount" :items="accounts" item-title="alias" item-value="id" :center-affix="true"
+        density="compact" :hide-details="true"></v-select>
 </template>

@@ -144,9 +144,9 @@ const syncFromAWS = async () => {
             <v-tabs-window-item value="one" v-if="parameter != undefined">
                 <div class="detail-container">
                     <div class="compare-container">
-                        <button type="button" class="btn btn-warning" @click="syncFromAWS" :disabled="displaySync">
+                        <v-btn @click="syncFromAWS" :disabled="displaySync">
                             SyncFromAWS
-                        </button>
+                        </v-btn>
                     </div>
                     <div class="detail-item">
                         <div class="detail-item-lable">Name:</div>
@@ -189,11 +189,11 @@ const syncFromAWS = async () => {
             <v-tabs-window-item value="three" v-if="historys != undefined && historys.length > 0">
                 <div class="detail-container">
                     <div class="compare-container">
-                        <v-btn variant="outlined" @click="compareWithAWS" :disabled="checkedParameters.length != 1">
+                        <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1">
                             CompareWithAWS
                         </v-btn>
 
-                        <v-btn variant="outlined" @click="compareParameter" :disabled="checkedParameters.length != 2">
+                        <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
                             Compare
                         </v-btn>
                     </div>
