@@ -155,9 +155,9 @@ const syncFromAWS = async () => {
         <Spinners v-if="isLoading"></Spinners>
 
         <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4" v-if="!isLoading">
-            <v-tab value="one">Latest</v-tab>
-            <v-tab value="two">AWS</v-tab>
-            <v-tab value="three">History</v-tab>
+            <v-tab value="one" text="Latest"></v-tab>
+            <v-tab value="two" text="AWS"></v-tab>
+            <v-tab value="three" text="History"></v-tab>
         </v-tabs>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="parameter != undefined">
@@ -266,10 +266,11 @@ const syncFromAWS = async () => {
 .compare-container {
     position: fixed;
     right: 50px;
+    top: 10px;
 }
 
 .compare-container>* {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .v-window,
