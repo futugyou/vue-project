@@ -113,7 +113,7 @@ watch(pagesize, () => {
         <div class="table-container">
             <div v-if="sortedItems!.length == 0 && !isLoading">{{ placeholder }}</div>
             <Spinners v-else-if="isLoading"> </Spinners>
-            <v-table fixed-header hover density="comfortable" theme="light" v-else>
+            <v-table fixed-header hover theme="light" v-else>
                 <thead>
                     <tr>
                         <th class="text-left" v-for="field in fields" @click="sort(field.key)">
@@ -164,8 +164,7 @@ watch(pagesize, () => {
                 </nav>
             </div>
             <div style="margin-left: 20px;display: flex;align-items: center;" v-if="canChangePageSize">
-                <v-select v-model="pagesize" :items="[10, 20, 30, 50]"  :center-affix="true"
-                    density="compact" :hide-details="true"></v-select>
+                <v-select v-model="pagesize" :items="[10, 20, 30, 50]"></v-select>
             </div>
         </div>
     </div>

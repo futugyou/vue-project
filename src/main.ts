@@ -40,8 +40,10 @@ const vuetify = createVuetify({
         },
     },
     defaults: {
-        VBtn: { variant: 'outlined' },
-        VSelect: { variant: 'outlined' },
+        VBtn: { variant: 'outlined', density: "comfortable" },
+        VSelect: { variant: 'outlined', density: "compact", centerAffix: true, hideDetails: true },
+        VCheckbox: { density: "compact", color: "red", hideDetails: true },
+        VTable: { density: "comfortable" },
     },
 })
 

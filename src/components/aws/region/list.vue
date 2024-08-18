@@ -26,6 +26,5 @@ watch(selected, () => {
 
 
 <template>
-    <v-select v-model="selected" :items="getRegions()" :center-affix="true" density="compact"
-        :hide-details="true"></v-select>
+    <v-select v-model="selected" :items="getRegions()"></v-select>
 </template>

@@ -220,8 +220,8 @@ const changeAccount = (acc: Account) => {
                 </router-link>
             </template>
             <template v-slot:body_operation="body">
-                <v-checkbox v-model="checkedParameters" density="compact" color="red" hide-details
-                    :disabled="checkedParametersStatus(body.id)" :value="body.id" :id="body.id" label="Choose"></v-checkbox>
+                <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)" :value="body.id"
+                    :id="body.id" label="Choose"></v-checkbox>
             </template>
         </TableAndPaging>
     </div>

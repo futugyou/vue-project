@@ -168,8 +168,8 @@ const compareDefinitions = async () => {
                             <label class="form-check-label" :for="td">
                                 {{ td }}
                             </label>
-                            <v-checkbox v-model="checkedTaskDefinitions" density="compact" color="red" hide-details
-                                :disabled="checkedTaskDefinitionsStatus(td)" :value="td" :id="td"></v-checkbox>
+                            <v-checkbox v-model="checkedTaskDefinitions" :disabled="checkedTaskDefinitionsStatus(td)"
+                                :value="td" :id="td"></v-checkbox>
                         </li>
                     </ul>
                 </div>

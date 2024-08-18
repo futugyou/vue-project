@@ -217,9 +217,8 @@ const syncFromAWS = async () => {
                                 </label>
                             </div>
                             <div class="detail-item-content">
-                                <v-checkbox v-model="checkedParameters" density="compact" color="red" hide-details
-                                    :disabled="checkedParametersStatus(item.id)" :value="item.id"
-                                    :id="item.id"></v-checkbox>
+                                <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(item.id)"
+                                    :value="item.id" :id="item.id"></v-checkbox>
                             </div>
                         </div>
                     </div>

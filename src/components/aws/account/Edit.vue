@@ -157,8 +157,8 @@ defineExpose({
                 </div>
             </div>
             <div class="button-container">
-                <button type="button" class="btn btn-secondary" @click="close">Close</button>
-                <button type="button" class="btn btn-primary" @click="save">Save changes</button>
+                <v-btn @click="close">Close</v-btn>
+                <v-btn @click="save">Save changes</v-btn>
             </div>
         </div>
     </div>
