@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { EcsService, getEcsServices } from "./ecs"
+import { Account, defaultAccount } from '@/components/aws/account/account'
+import AccountList from "@/components/aws/account/list.vue"
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const router = useRouter()
 const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const ecsServices = ref<EcsService[]>([])
 
-const account = ref('')
+const selectedAccount = ref<Account>(defaultAccount)
 
 const fields: TableField[] = [
     {
@@ -44,7 +44,7 @@ const fields: TableField[] = [
 
 const fetchData = async () => {
     isLoading.value = true
-    const { data, error } = await getEcsServices(page.value, limit.value, account.value)
+    const { data, error } = await getEcsServices(page.value, limit.value, selectedAccount.value.id)
     isLoading.value = false
     if (error) {
         msg.value = {
@@ -67,7 +67,10 @@ const changePagesize = (n: number) => {
     limit.value = n
 }
 
-
+const changeAccount = (acc: Account) => {
+    selectedAccount.value = acc
+    ecsServices.value = []
+}
 </script>
 
 <template>
@@ -75,6 +78,19 @@ const changePagesize = (n: number) => {
         <div class="head-content">
             <div class="">
                 <h1>ecs service</h1>
+            </div>
+            <div class="search-contatiner">
+                <div class="search-item-contatiner">
+                    <div class="search-item-lable">
+                        <label for="region">
+                            Account:
+                        </label>
+                    </div>
+                    <div class="search-item-com">
+                        <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
+                        </AccountList>
+                    </div>
+                </div>
             </div>
         </div>
         <TableAndPaging :items="ecsServices" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
@@ -107,6 +123,33 @@ const changePagesize = (n: number) => {
     align-items: center;
     padding: 0px 10px;
     justify-content: space-between;
+}
+
+.search-contatiner {
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+}
+
+div.search-contatiner>* {
+    height: 100%;
+}
+
+.search-item-contatiner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.search-item-lable {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.search-item-com {
+    width: 200px;
+    text-align: left;
 }
 
 .gap-right-10 {
