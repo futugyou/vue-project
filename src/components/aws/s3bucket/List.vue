@@ -5,7 +5,7 @@ import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Detail from './Detail.vue'
 
-import { S3Bucket, defaultS3Bucket, getS3Buckets } from './s3bucket'
+import { S3Bucket, getS3Buckets } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -47,8 +47,8 @@ const fields: TableField[] = [
     }
 ]
 
-
 const fetchData = async () => {
+    buckets.value = []
     isLoading.value = true
     const { data, error } = await getS3Buckets(page.value, limit.value, searchKey.value)
     isLoading.value = false
@@ -73,11 +73,6 @@ const changePagesize = (n: number) => {
     limit.value = n
 }
 
-const handleKeyworkChange = (e: any) => {
-    const k: string = e.target.value;
-    searchKey.value = k
-}
-
 const showS2Resource = (r: S3Bucket) => {
     selecedBucket.value = r
     dialog.value = true
@@ -86,28 +81,21 @@ const showS2Resource = (r: S3Bucket) => {
 </script>
 
 <template>
-    <div class="full-content">
+    <v-sheet class="d-flex flex-column" height="100%">
         <VuetifyModal text="Choose an archive in S3" title="Choose an archive in S3" activator="somme" hideFooter
             v-model:dialog="dialog">
             <Detail :key="selecedBucket?.id" :s3Bucket="selecedBucket" v-if="selecedBucket"> </Detail>
         </VuetifyModal>
-        <div class="head-content">
-            <div class="">
-                <h1>S3 Bucket</h1>
-            </div>
-            <div class="search-contatiner">
-                <div class="search-item-contatiner">
-                    <div class="search-item-lable">
-                        <label class="form-check-label" for="searchKey">
-                            BucketName:
-                        </label>
-                    </div>
-                    <div class="search-item-com">
-                        <input id="searchKey" :value="searchKey" @change="handleKeyworkChange" />
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <v-toolbar>
+            <v-toolbar-title>S3 Bucket</v-toolbar-title>
+            <label class="text-h6 mr-2" for="searchKey">
+                Key:
+            </label>
+            <v-text-field clearable variant="outlined" v-model="searchKey"></v-text-field>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+        </v-toolbar>
         <TableAndPaging :items="buckets" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_name="body">
@@ -116,60 +104,5 @@ const showS2Resource = (r: S3Bucket) => {
                 </span>
             </template>
         </TableAndPaging>
-    </div>
+    </v-sheet>
 </template>
-
-<style scoped>
-.full-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-.head-content {
-    display: flex;
-    align-items: center;
-    padding: 0px 10px;
-    justify-content: flex-start;
-    grid-gap: 50px;
-}
-
-.head-content h1 {
-    margin: 0;
-}
-.gap-right-10 {
-    margin-right: 20px;
-}
-
-.search-contatiner {
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-}
-
-div.search-contatiner>* {
-    height: 100%;
-}
-
-.search-item-contatiner {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.search-item-lable {
-    margin-right: 10px;
-    font-size: 20px;
-}
-
-.search-item-com {
-    width: 200px;
-    text-align: left;
-}
-
-#searchKey {
-    border: 1px solid turquoise;
-}
-</style>

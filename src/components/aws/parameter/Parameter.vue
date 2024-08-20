@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
@@ -18,19 +17,15 @@ import { Account, defaultAccount } from '@/components/aws/account/account'
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const router = useRouter()
-
 const parameters = ref<Parameter[]>([])
 const selectedRegion = ref<string>('')
 const selectedAccount = ref<Account>(defaultAccount)
 
 const searchKey = ref<string>('')
-const defaultParameter = ref<Parameter>(JSON.parse(localStorage.getItem('defaultParameter') ?? '{}'))
 const isLoading = ref(true)
 const subLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
-const editref = ref(null)
 const dialog = ref(false)
 
 const timeFormat = (timestamp: number): string => {
@@ -136,13 +131,6 @@ const compareParameter = async () => {
 
 const changeRegion = (key: string) => {
     selectedRegion.value = key
-    checkedParameters.value = []
-}
-
-
-const handleKeyworkChange = (e: any) => {
-    const k: string = e.target.value;
-    searchKey.value = k
     checkedParameters.value = []
 }
 
