@@ -43,6 +43,7 @@ const vuetify = createVuetify({
         },
     },
     defaults: {
+        VTextField: { density: "compact", hideDetails: true },
         VBtn: { variant: 'outlined', density: "comfortable" },
         VSelect: { variant: 'outlined', density: "compact", centerAffix: true, hideDetails: true },
         VCheckbox: { density: "compact", color: "red", hideDetails: true },

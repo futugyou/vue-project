@@ -154,7 +154,30 @@ const changeAccount = (acc: Account) => {
 </script>
 
 <template>
-    <div class="Parameter-full-content">
+    <v-sheet class="d-flex flex-column" height="100%">
+        <v-toolbar>
+            <v-toolbar-title>Parameter</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <label class="text-h6 mr-2" for="searchKey">
+                Key:
+            </label>
+            <v-text-field clearable variant="outlined" v-model="searchKey"></v-text-field>
+            <v-spacer></v-spacer>
+            <label class="text-h6 mr-2" for="region">
+                Account:
+            </label>
+            <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
+            </AccountList>
+            <v-spacer></v-spacer>
+            <label class="text-h6 mr-2" for="region">
+                Region:
+            </label>
+            <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>
+            <v-spacer></v-spacer>
+            <v-btn @click="compareParameter" variant="outlined" :disabled="checkedParameters.length != 2">
+                Compare
+            </v-btn>
+        </v-toolbar>
         <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
             v-model:dialog="dialog">
             <Spinners v-if="subLoading"></Spinners>
@@ -163,50 +186,6 @@ const changeAccount = (acc: Account) => {
                 output-format="side-by-side" />
             <h2 v-if="!subLoading && compareParameterDatas.length != 2">no data found</h2>
         </VuetifyModal>
-        <div class="head-content">
-            <div class="">
-                <h1>Parameter</h1>
-            </div>
-            <div class="search-contatiner">
-                <div class="search-item-contatiner">
-                    <div class="search-item-lable">
-                        <label for="searchKey">
-                            Key:
-                        </label>
-                    </div>
-                    <div class="search-item-com">
-                        <input id="searchKey" :value="searchKey" @change="handleKeyworkChange" />
-                    </div>
-                </div>
-                <div class="search-item-contatiner">
-                    <div class="search-item-lable">
-                        <label for="region">
-                            Account:
-                        </label>
-                    </div>
-                    <div class="search-item-com">
-                        <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
-                        </AccountList>
-                    </div>
-                </div>
-                <div class="search-item-contatiner">
-                    <div class="search-item-lable">
-                        <label for="region">
-                            Region:
-                        </label>
-                    </div>
-                    <div class="search-item-com">
-                        <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>
-                    </div>
-                </div>
-            </div>
-
-            <div class="">
-                <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
-                    Compare
-                </v-btn>
-            </div>
-        </div>
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:header_id="header">
@@ -224,58 +203,5 @@ const changeAccount = (acc: Account) => {
                     :id="body.id" label="Choose"></v-checkbox>
             </template>
         </TableAndPaging>
-    </div>
+    </v-sheet>
 </template>
-
-<style scoped>
-.Parameter-full-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-.head-content {
-    display: flex;
-    align-items: center;
-    padding: 0px 10px;
-    justify-content: space-between;
-}
-
-.gap-right-10 {
-    margin-right: 20px;
-}
-
-.search-contatiner {
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-}
-
-div.search-contatiner>* {
-    height: 100%;
-}
-
-.search-item-contatiner {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 30px;
-}
-
-
-.search-item-lable {
-    margin-right: 10px;
-    font-size: 20px;
-}
-
-.search-item-com {
-    width: 200px;
-    text-align: left;
-}
-
-#searchKey {
-    border: 1px solid turquoise;
-}
-</style>
