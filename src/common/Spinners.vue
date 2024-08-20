@@ -7,5 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <v-progress-circular color="red" indeterminate :size="size"></v-progress-circular>
+    <div class="text-center">
+        <v-progress-circular color="red" indeterminate :size="size"></v-progress-circular>
+    </div>
 </template>  
