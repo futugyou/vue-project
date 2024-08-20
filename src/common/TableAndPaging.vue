@@ -183,6 +183,7 @@ watch(pagesize, () => {
     overflow: auto;
     margin-bottom: 10px;
     min-height: 40vh;
+    text-align: center;
 }
 
 .paging-container {
