@@ -74,25 +74,17 @@ const changeAccount = (acc: Account) => {
 </script>
 
 <template>
-    <div class="ecs-full-content">
-        <div class="head-content">
-            <div class="">
-                <h1>ecs service</h1>
-            </div>
-            <div class="search-contatiner">
-                <div class="search-item-contatiner">
-                    <div class="search-item-lable">
-                        <label for="region">
-                            Account:
-                        </label>
-                    </div>
-                    <div class="search-item-com">
-                        <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
-                        </AccountList>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <v-sheet class="d-flex flex-column" height="100%">
+        <v-toolbar>
+            <v-toolbar-title>ECS Service</v-toolbar-title>
+            <label class="text-h6 mr-2" for="region">
+                Account:
+            </label>
+            <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
+            </AccountList>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+        </v-toolbar>
         <TableAndPaging :items="ecsServices" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:header_id="header">
@@ -106,53 +98,5 @@ const changeAccount = (acc: Account) => {
                 </router-link>
             </template>
         </TableAndPaging>
-    </div>
+    </v-sheet>
 </template>
-
-<style scoped>
-.ecs-full-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-.head-content {
-    display: flex;
-    align-items: center;
-    padding: 0px 10px;
-    justify-content: space-between;
-}
-
-.search-contatiner {
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-}
-
-div.search-contatiner>* {
-    height: 100%;
-}
-
-.search-item-contatiner {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 30px;
-}
-
-.search-item-lable {
-    margin-right: 10px;
-    font-size: 20px;
-}
-
-.search-item-com {
-    width: 200px;
-    text-align: left;
-}
-
-.gap-right-10 {
-    margin-right: 10px;
-}
-</style>

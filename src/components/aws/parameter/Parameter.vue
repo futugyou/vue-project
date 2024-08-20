@@ -163,7 +163,7 @@ const changeAccount = (acc: Account) => {
             </label>
             <v-text-field clearable variant="outlined" v-model="searchKey"></v-text-field>
             <v-spacer></v-spacer>
-            <label class="text-h6 mr-2" for="region">
+            <label class="text-h6 mr-2" for="account">
                 Account:
             </label>
             <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
