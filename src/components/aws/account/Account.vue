@@ -127,21 +127,16 @@ const setDefaultAccount = (acc: Account) => {
 </script>
 
 <template>
-    <div class="account-full-content">
-        <div class="head-content">
-            <div class="">
-                <h1>account</h1>
-            </div>
-            <div class="">
-                <span>Current Default Account is : {{ defaultAccount?.alias }}</span>
-            </div>
-            <div>
-                <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true"
-                    title="Create Account" hideFooter>
-                    <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
-                </VuetifyModal>
-            </div>
-        </div>
+    <v-sheet class="d-flex flex-column" height="100%">
+        <v-toolbar>
+            <v-toolbar-title>Account</v-toolbar-title>
+            <h2 class="text-h6">Current Default Account is : {{ defaultAccount?.alias }}</h2>
+            <v-spacer></v-spacer>
+            <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true"
+                title="Create Account" hideFooter>
+                <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
+            </VuetifyModal>
+        </v-toolbar>
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_alias="body">
@@ -150,31 +145,10 @@ const setDefaultAccount = (acc: Account) => {
                 </span>
             </template>
             <template v-slot:body_operation="body">
-                <v-btn class="gap-right-10" @click="setDefaultAccount(body)"> Default
+                <v-btn class="mr-3" @click="setDefaultAccount(body)"> Default
                 </v-btn>
                 <v-btn @click="accountDelete(body.id)"> Delete </v-btn>
             </template>
         </TableAndPaging>
-    </div>
+    </v-sheet>
 </template>
-
-<style scoped>
-.account-full-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-.head-content {
-    display: flex;
-    align-items: center;
-    padding: 0px 10px;
-    justify-content: space-between;
-}
-
-.gap-right-10 {
-    margin-right: 10px;
-}
-</style>

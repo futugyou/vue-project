@@ -41,7 +41,7 @@ watch(dialog, (newVal) => {
 <template>
     <v-dialog v-model="dialog" :max-width="width" :persistent="persistent">
         <template v-slot:activator="{ props: activatorProps }" v-if="!activator">
-            <v-btn class="text-none font-weight-regular" :text="text" v-bind="activatorProps"></v-btn>
+            <v-btn class="text-none font-weight-regular" variant="outlined" :text="text" v-bind="activatorProps"></v-btn>
         </template>
 
         <v-card :title="title">
