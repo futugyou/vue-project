@@ -147,18 +147,13 @@ const handleBreadcrumbClick = (key: string) => {
 </script>
 
 <template>
-    <!-- <Spinners v-if="isSubLoading"></Spinners> -->
-    <div class="full-content">
-        <div class="head-content">
-            <BreadcrumbGroup :items="crumbItems" :action="handleBreadcrumbClick"></BreadcrumbGroup>
-        </div>
-        <div class="head-content2">
-            <div class="bucketItemCount">Objects ({{ bucketItems.length }}) </div>
-            <div class="bucketItemReload">
-                <Button @click="fetchData()" :IsLoading="isLoading">
-                    <ReloadIcon></ReloadIcon>
-                </Button>
-            </div>
+    <v-sheet class="d-flex flex-column overflow-hidden" height="100%">
+        <BreadcrumbGroup :items="crumbItems" :action="handleBreadcrumbClick"></BreadcrumbGroup>
+        <div class="d-flex align-center justify-space-between">
+            <div class="text-h6">Objects ({{ bucketItems.length }}) </div>
+            <Button @click="fetchData()" :IsLoading="isLoading">
+                <ReloadIcon></ReloadIcon>
+            </Button>
         </div>
         <TableAndPaging :items="bucketItems" :fields="fields" :isLoading="isLoading" :canChangePageSize=(false)
             :pagesize=(100) @changePagesize="changePagesize">
@@ -178,85 +173,5 @@ const handleBreadcrumbClick = (key: string) => {
                 </div>
             </template>
         </TableAndPaging>
-    </div>
+    </v-sheet>
 </template>
-
-<style scoped>
-.head-content2 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    line-height: 40px;
-}
-
-.bucketItemCount {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.bucketItemReload {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.full-content {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-.head-content {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    line-height: 40px;
-}
-
-.head-content h4 {
-    margin: 0;
-}
-
-.detail-label {
-    width: 100%;
-    height: 100%;
-    display: block;
-    color: var(--vt-c-black);
-}
-
-.gap-right-10 {
-    margin-right: 20px;
-}
-
-.search-contatiner {
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-}
-
-div.search-contatiner>* {
-    height: 100%;
-}
-
-.search-item-contatiner {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-
-.search-item-lable {
-    margin-right: 10px;
-    font-size: 20px;
-}
-
-.search-item-com {
-    width: 200px;
-    text-align: left;
-}
-
-#searchKey {
-    border: 1px solid turquoise;
-}
-</style>

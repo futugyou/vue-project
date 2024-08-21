@@ -56,6 +56,7 @@ const handlerClick = (key: string) => {
     right: -25px;
     font-size: 20px;
     cursor: default;
+    text-decoration-line: none;
     pointer-events: none;
     color: var(--color-text-breadcrumb-spilt, #5f6b7a);
 }
