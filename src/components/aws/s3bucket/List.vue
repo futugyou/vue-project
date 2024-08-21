@@ -89,7 +89,7 @@ const showS2Resource = (r: S3Bucket) => {
 
         <v-toolbar>
             <v-toolbar-title>S3 Bucket</v-toolbar-title>
-            <label class="text-h6 mr-2" for="searchKey">
+            <label class="text-subtitle-1 mr-2" for="searchKey">
                 Key:
             </label>
             <v-text-field clearable variant="outlined" v-model="searchKey"></v-text-field>

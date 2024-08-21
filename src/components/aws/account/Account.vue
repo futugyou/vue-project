@@ -130,7 +130,7 @@ const setDefaultAccount = (acc: Account) => {
     <v-sheet class="d-flex flex-column" height="100%">
         <v-toolbar>
             <v-toolbar-title>Account</v-toolbar-title>
-            <h2 class="text-h6">Current Default Account is : {{ defaultAccount?.alias }}</h2>
+            <h2 class="text-subtitle-1">Current Default Account is : {{ defaultAccount?.alias }}</h2>
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true"
                 title="Create Account" hideFooter>

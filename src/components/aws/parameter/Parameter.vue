@@ -146,18 +146,18 @@ const changeAccount = (acc: Account) => {
         <v-toolbar>
             <v-toolbar-title>Parameter</v-toolbar-title>
             <v-spacer></v-spacer>
-            <label class="text-h6 mr-2" for="searchKey">
+            <label class="text-subtitle-1 mr-2" for="searchKey">
                 Key:
             </label>
             <v-text-field clearable variant="outlined" v-model="searchKey"></v-text-field>
             <v-spacer></v-spacer>
-            <label class="text-h6 mr-2" for="account">
+            <label class="text-subtitle-1 mr-2" for="account">
                 Account:
             </label>
             <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">
             </AccountList>
             <v-spacer></v-spacer>
-            <label class="text-h6 mr-2" for="region">
+            <label class="text-subtitle-1 mr-2" for="region">
                 Region:
             </label>
             <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>

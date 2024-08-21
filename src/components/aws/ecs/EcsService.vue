@@ -77,7 +77,7 @@ const changeAccount = (acc: Account) => {
     <v-sheet class="d-flex flex-column" height="100%">
         <v-toolbar>
             <v-toolbar-title>ECS Service</v-toolbar-title>
-            <label class="text-h6 mr-2" for="region">
+            <label class="text-subtitle-1 mr-2" for="region">
                 Account:
             </label>
             <AccountList id="account" :selected="selectedAccount.id" @changeAccount="changeAccount">

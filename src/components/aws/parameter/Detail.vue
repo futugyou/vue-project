@@ -146,7 +146,7 @@ const syncFromAWS = async () => {
 </script>
 
 <template>
-    <div class="detail-full-content">
+    <v-sheet class="d-flex flex-column overflow-hidden" height="100%">
         <VuetifyModal text="Compare Parameter" title="Compare Parameter" activator="somme" hideFooter
             v-model:dialog="dialog">
             <code-diff v-if="compareParameters.length == 2" :old-string="compareParameters[0]"
@@ -161,108 +161,52 @@ const syncFromAWS = async () => {
         </v-tabs>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="parameter != undefined">
-                <div class="detail-container">
-                    <div class="compare-container">
-                        <v-btn @click="syncFromAWS" :disabled="displaySync">
-                            SyncFromAWS
-                        </v-btn>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-lable">Name:</div>
-                        <div class="detail-item-content"> {{ parameter.key }}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-lable">Version:</div>
-                        <div class="detail-item-content"> {{ parameter.version }}</div>
-                    </div>
-                    <div class="detail-item-textarea">
-                        <div class="detail-item-lable">Value:</div>
-                        <div class="textarea-container">
-                            <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
-                                :value="parameter.value"></textarea>
-                        </div>
-                    </div>
+                <div class="compare-container">
+                    <v-btn @click="syncFromAWS" :disabled="displaySync">
+                        SyncFromAWS
+                    </v-btn>
                 </div>
+                <v-list lines="two">
+                    <v-list-item title="Name" :subtitle="parameter.key"></v-list-item>
+                    <v-list-item title="Version" :subtitle="parameter.version"></v-list-item>
+                    <v-list-item title="Value" :subtitle="parameter.value"></v-list-item>
+                </v-list>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two" v-if="awsparameter != undefined">
-                <div class="detail-container">
-                    <div class="detail-item">
-                        <div class="detail-item-lable">Name:</div>
-                        <div class="detail-item-content"> {{ awsparameter.key }}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-lable">Version:</div>
-                        <div class="detail-item-content"> {{ awsparameter.version }}</div>
-                    </div>
-                    <div class="detail-item-textarea">
-                        <div class="detail-item-lable">Value:</div>
-                        <div class="textarea-container">
-                            <textarea class="form-control" id="exampleFormControlTextarea1" Disabled
-                                :value="awsparameter.value"></textarea>
-                        </div>
-                    </div>
-                </div>
+                <v-list lines="two">
+                    <v-list-item title="Name" :subtitle="awsparameter.key"></v-list-item>
+                    <v-list-item title="Version" :subtitle="awsparameter.version"></v-list-item>
+                    <v-list-item title="Value" :subtitle="awsparameter.value"></v-list-item>
+                </v-list>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="historys != undefined && historys.length > 0">
-                <div class="detail-container">
-                    <div class="compare-container">
-                        <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1">
-                            CompareWithAWS
-                        </v-btn>
+                <div class="compare-container">
+                    <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1">
+                        CompareWithAWS
+                    </v-btn>
 
-                        <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
-                            Compare
-                        </v-btn>
-                    </div>
-
-                    <TableAndPaging :items="historys" :fields="fields" :isLoading="isLoading">
-                        <template v-slot:header_id="header">
-                            <span style="color: red">{{ header.label }}</span>
-                        </template>
-                        <template v-slot:body_operation="body">
-                            <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)"
-                                :value="body.id" :id="body.id" label="Choose"></v-checkbox>
-                        </template>
-                    </TableAndPaging>
+                    <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
+                        Compare
+                    </v-btn>
                 </div>
+
+                <TableAndPaging :items="historys" :fields="fields" :isLoading="isLoading">
+                    <template v-slot:header_id="header">
+                        <span style="color: red">{{ header.label }}</span>
+                    </template>
+                    <template v-slot:body_operation="body">
+                        <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)"
+                            :value="body.id" :id="body.id" label="Choose"></v-checkbox>
+                    </template>
+                </TableAndPaging>
             </v-tabs-window-item>
         </v-tabs-window>
-    </div>
+    </v-sheet>
 </template>
 
 <style scoped>
-.detail-full-content {
-    justify-content: normal;
-}
-
-.detail-container {
-    padding: 20px
-}
-
-.detail-item {
-    height: auto;
-}
-
-.detail-item-textarea {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
-
-.textarea-container {
-    flex: 1;
-}
-
-.textarea-container>textarea {
-    height: 100%;
-}
-
-.detail-item-lable {
-    margin-right: 10px;
-}
-
 .compare-container {
     position: fixed;
     right: 50px;
