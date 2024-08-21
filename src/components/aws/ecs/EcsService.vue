@@ -75,7 +75,7 @@ const changeAccount = (acc: Account) => {
 
 <template>
     <v-sheet class="d-flex flex-column" height="100%">
-        <v-toolbar>
+        <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>ECS Service</v-toolbar-title>
             <label class="text-subtitle-1 mr-2" for="region">
                 Account:

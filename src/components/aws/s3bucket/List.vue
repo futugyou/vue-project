@@ -87,7 +87,7 @@ const showS2Resource = (r: S3Bucket) => {
             <Detail :key="selecedBucket?.id" :s3Bucket="selecedBucket" v-if="selecedBucket"> </Detail>
         </VuetifyModal>
 
-        <v-toolbar>
+        <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>S3 Bucket</v-toolbar-title>
             <label class="text-subtitle-1 mr-2" for="searchKey">
                 Key:

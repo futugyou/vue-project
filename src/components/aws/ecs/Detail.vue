@@ -73,146 +73,77 @@ const compareDefinitions = async () => {
 </script>
 
 <template>
-    <div class="detail-full-content">
+    <v-sheet class="d-flex flex-column overflow-hidden position-relative" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading && ecsServiceDetail" class="detail-container">
-            <div class="compare-container">
-                <v-btn @click="compareDefinitions" :disabled="checkedTaskDefinitions.length != 2">
-                    Compare Definitions
-                </v-btn>
-                <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
-                    v-model:dialog="dialog" :disabled="checkedTaskDefinitions.length != 2">
-                    <Spinners v-if="subLoading"></Spinners>
-                    <code-diff v-if="compareTaskDefinitions.length == 2 && subLoading == false" language="json"
-                        :old-string="compareTaskDefinitions[0]" :new-string="compareTaskDefinitions[1]"
-                        output-format="side-by-side" />
-                </VuetifyModal>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Account Alias</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.account_alias }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Cluster Name</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.cluster_name }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Cluster Arn</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.cluster_arn }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Service Name</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.service }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Service Arn</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.service_arn }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Role Arn</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.role_arn }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Operate At</div>
-                <div class="detail-item-content">
-                    {{ ecsServiceDetail.operate_At }}
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Security Groups</div>
-                <div class="detail-item-content">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" v-for="sg in ecsServiceDetail.security_groups">
-                            {{ sg }}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">VPC Subnets</div>
-                <div class="detail-item-content">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" v-for="net in ecsServiceDetail.subnets">
-                            {{ net }}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Service Registries</div>
-                <div class="detail-item-content">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" v-for="sr in ecsServiceDetail.service_registries">
-                            {{ sr }}
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Latest 10 Task Definitions</div>
-                <div class="detail-item-content content-scroll">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" v-for="td in ecsServiceDetail.task_definitions">
-                            <label class="form-check-label" :for="td">
-                                {{ td }}
-                            </label>
-                            <v-checkbox v-model="checkedTaskDefinitions" :disabled="checkedTaskDefinitionsStatus(td)"
-                                :value="td" :id="td"></v-checkbox>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <div class="compare-container">
+            <v-btn @click="compareDefinitions" :disabled="checkedTaskDefinitions.length != 2">
+                Compare Definitions
+            </v-btn>
+            <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
+                v-model:dialog="dialog" :disabled="checkedTaskDefinitions.length != 2">
+                <Spinners v-if="subLoading"></Spinners>
+                <code-diff v-if="compareTaskDefinitions.length == 2 && subLoading == false" language="json"
+                    :old-string="compareTaskDefinitions[0]" :new-string="compareTaskDefinitions[1]"
+                    output-format="side-by-side" />
+            </VuetifyModal>
         </div>
-    </div>
+        <!-- </div> -->
+        <v-container max-width="100%" max-height="100%" v-if="!isLoading && ecsServiceDetail">
+            <v-row class="mb-6" no-gutters>
+                <v-col>
+                    <v-list lines="two" class="overflow-hidden" height="100%">
+                        <v-list-item title="Account Alias" :subtitle="ecsServiceDetail.account_alias"></v-list-item>
+                        <v-list-item title="Cluster Name" :subtitle="ecsServiceDetail.cluster_name"></v-list-item>
+                        <v-list-item title="Cluster Arn" :subtitle="ecsServiceDetail.cluster_arn"></v-list-item>
+                        <v-list-item title="Service Name" :subtitle="ecsServiceDetail.service"></v-list-item>
+                        <v-list-item title="Service Arn" :subtitle="ecsServiceDetail.service_arn"></v-list-item>
+                        <v-list-item title="Role Arn" :subtitle="ecsServiceDetail.role_arn"></v-list-item>
+                        <v-list-item title="Operate At" :subtitle="ecsServiceDetail.operate_At"></v-list-item>
+                        <v-list-group>
+                            <template v-slot:activator="{ props }">
+                                <v-list-item v-bind="props" title="Security Groups"></v-list-item>
+                            </template>
+                            <v-list-item :key="sg" :title="sg" v-for="sg in ecsServiceDetail.security_groups">
+                            </v-list-item>
+                        </v-list-group>
+                        <v-list-group>
+                            <template v-slot:activator="{ props }">
+                                <v-list-item v-bind="props" title="VPC Subnets"></v-list-item>
+                            </template>
+                            <v-list-item :key="sg" :title="sg" v-for="sg in ecsServiceDetail.subnets">
+                            </v-list-item>
+                        </v-list-group>
+                        <v-list-group>
+                            <template v-slot:activator="{ props }">
+                                <v-list-item v-bind="props" title="Service Registries"></v-list-item>
+                            </template>
+                            <v-list-item :key="sg" :title="sg" v-for="sg in ecsServiceDetail.service_registries">
+                            </v-list-item>
+                        </v-list-group>
+                    </v-list>
+                </v-col>
+
+                <v-col>
+                    <v-list height="100%">
+                        <v-list-item title="Latest 10 Task Definitions">
+                            <v-list-item-subtitle>
+                                <v-checkbox :label="td" v-model="checkedTaskDefinitions"
+                                    :disabled="checkedTaskDefinitionsStatus(td)" :value="td" :id="td" :key="td"
+                                    v-for="td in ecsServiceDetail.task_definitions">
+                                </v-checkbox>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                    </v-list>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-sheet>
 </template>
 
-<style scoped>
-.detail-item {
-    height: auto;
-}
-
-.detail-item-lable {
-    align-content: flex-start;
-    flex: 1;
-}
-
-.detail-item-content {
-    flex: 3;
-}
-
-.list-group-item {
-    background-color: inherit;
-    padding-left: 0px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.content-scroll {
-    flex-wrap: nowrap;
-    overflow-y: scroll;
-}
-
-.form-check-input {
-    margin-left: 20px;
-    vertical-align: bottom;
-}
-
-.compare-container {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
+<style scoped> .compare-container {
+     position: absolute;
+     right: 10px;
+     top: 10px;
+     z-index: 10;
+ }
 </style>

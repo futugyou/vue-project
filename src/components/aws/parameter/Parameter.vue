@@ -143,7 +143,7 @@ const changeAccount = (acc: Account) => {
 
 <template>
     <v-sheet class="d-flex flex-column" height="100%">
-        <v-toolbar>
+        <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Parameter</v-toolbar-title>
             <v-spacer></v-spacer>
             <label class="text-subtitle-1 mr-2" for="searchKey">

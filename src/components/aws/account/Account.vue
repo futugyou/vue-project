@@ -128,7 +128,7 @@ const setDefaultAccount = (acc: Account) => {
 
 <template>
     <v-sheet class="d-flex flex-column" height="100%">
-        <v-toolbar>
+        <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Account</v-toolbar-title>
             <h2 class="text-subtitle-1">Current Default Account is : {{ defaultAccount?.alias }}</h2>
             <v-spacer></v-spacer>
