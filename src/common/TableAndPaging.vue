@@ -109,8 +109,8 @@ watch(pagesize, () => {
 </script>
 
 <template>
-    <div class="table-paging-container">
-        <div class="table-container">
+    <v-sheet class="d-flex flex-column overflow-hidden" height="100%">
+        <v-sheet class="flex-1-1 mb-2 overflow-auto" height="100%">
             <div v-if="sortedItems!.length == 0 && !isLoading">{{ placeholder }}</div>
             <Spinners v-else-if="isLoading"> </Spinners>
             <v-table fixed-header hover v-else>
@@ -120,13 +120,13 @@ watch(pagesize, () => {
                             <slot :name="`header_${field.key}`" v-bind="field">
                                 {{ field.label }}
                             </slot>
-                            <i class="bi bi-arrow-down-short" v-if="sortKey == field.key && sorydir == 'desc'"></i>
-                            <i class="bi bi-arrow-up-short" v-if="sortKey == field.key && sorydir == 'asc'"></i>
+                            <v-icon icon="md:arrow_drop_down" v-if="sortKey == field.key && sorydir == 'desc'"></v-icon>
+                            <v-icon icon="md:arrow_drop_up" v-if="sortKey == field.key && sorydir == 'asc'"></v-icon>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in sortedItems" :key="index" class="table-primary">
+                    <tr v-for="(item, index) in sortedItems" :key="index" class="text-left">
                         <template v-for="field in fields">
                             <Component :is="cellElement(field.key)"
                                 :class="{ 'table-info': cellElement(field.key) == 'th' }">
@@ -138,8 +138,8 @@ watch(pagesize, () => {
                     </tr>
                 </tbody>
             </v-table>
-        </div>
-        <div class="paging-container">
+        </v-sheet>
+        <v-sheet class="d-flex justify-center">
             <div>
                 <nav class="v-pagination v-theme--light" role="navigation" aria-label="Pagination Navigation"
                     data-test="v-pagination-root">
@@ -166,36 +166,11 @@ watch(pagesize, () => {
             <div style="margin-left: 20px;display: flex;align-items: center;" v-if="canChangePageSize">
                 <v-select v-model="pagesize" :items="[10, 20, 30, 50]"></v-select>
             </div>
-        </div>
-    </div>
+        </v-sheet>
+    </v-sheet>
 </template>
 
 <style scoped>
-.table-paging-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.table-container {
-    flex: 1;
-    overflow: auto;
-    margin-bottom: 10px;
-    min-height: 40vh;
-    text-align: center;
-}
-
-.paging-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.table-primary {
-    text-align: left;
-}
-
 td,
 th {
     vertical-align: middle;
