@@ -6,6 +6,7 @@ import VuetifyModal from '@/common/VuetifyModal.vue'
 import RegionList from "@/components/aws/region/list.vue"
 import AccountList from "@/components/aws/account/list.vue"
 import Spinners from '@/common/Spinners.vue'
+import Empty from '@/common/EmptyStates.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
 import { useTimeFormat } from '@/composables/timeFormat'
@@ -172,7 +173,7 @@ const changeAccount = (acc: Account) => {
             <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
                 :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"
                 output-format="side-by-side" />
-            <h2 v-if="!subLoading && compareParameterDatas.length != 2">no data found</h2>
+            <Empty v-if="!subLoading && compareParameterDatas.length != 2"></Empty>
         </VuetifyModal>
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">

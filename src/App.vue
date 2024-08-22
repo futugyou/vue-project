@@ -99,7 +99,7 @@ const components = shallowRef(componentDic)
             <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
         </v-navigation-drawer>
 
-        <v-main class="vu3-app">
+        <v-main height="100%">
             <router-view v-slot="{ Component, route }">
                 <!-- 使用任何自定义过渡和回退到 `fade` -->
                 <transition :name="route.meta.transition as string || 'fade'">
