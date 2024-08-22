@@ -2,7 +2,6 @@
 import { ref, PropType, computed, watch } from 'vue'
 
 import Empty from '@/common/EmptyStates.vue'
-import Spinners from '@/common/Spinners.vue'
 
 export interface TableField {
     key: string
@@ -113,32 +112,33 @@ watch(pagesize, () => {
     <v-sheet class="d-flex flex-column overflow-hidden" height="100%">
         <v-sheet class="flex-1-1 mb-2 overflow-auto" height="100%" min-height="40vh">
             <Empty v-if="sortedItems!.length == 0 && !isLoading"></Empty>
-            <Spinners v-else-if="isLoading"></Spinners>
-            <v-table fixed-header hover v-else>
-                <thead>
-                    <tr>
-                        <th class="text-left" v-for="field in fields" @click="sort(field.key)">
-                            <slot :name="`header_${field.key}`" v-bind="field">
-                                {{ field.label }}
-                            </slot>
-                            <v-icon icon="md:arrow_drop_down" v-if="sortKey == field.key && sorydir == 'desc'"></v-icon>
-                            <v-icon icon="md:arrow_drop_up" v-if="sortKey == field.key && sorydir == 'asc'"></v-icon>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item, index) in sortedItems" :key="index" class="text-left">
-                        <template v-for="field in fields">
-                            <Component :is="cellElement(field.key)"
-                                :class="{ 'table-info': cellElement(field.key) == 'th' }">
-                                <slot :name="`body_${field.key}`" v-bind="item">
-                                    {{ format(item, field.key) }}
+            <v-skeleton-loader :elevation="2" :loading="isLoading" type="table">
+                <v-table hover class="w-100" v-if="sortedItems!.length != 0">
+                    <thead>
+                        <tr>
+                            <th class="text-left" v-for="field in fields" @click="sort(field.key)">
+                                <slot :name="`header_${field.key}`" v-bind="field">
+                                    {{ field.label }}
                                 </slot>
-                            </Component>
-                        </template>
-                    </tr>
-                </tbody>
-            </v-table>
+                                <v-icon icon="md:arrow_drop_down" v-if="sortKey == field.key && sorydir == 'desc'"></v-icon>
+                                <v-icon icon="md:arrow_drop_up" v-if="sortKey == field.key && sorydir == 'asc'"></v-icon>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in sortedItems" :key="index" class="text-left">
+                            <template v-for="field in fields">
+                                <Component :is="cellElement(field.key)"
+                                    :class="{ 'table-info': cellElement(field.key) == 'th' }">
+                                    <slot :name="`body_${field.key}`" v-bind="item">
+                                        {{ format(item, field.key) }}
+                                    </slot>
+                                </Component>
+                            </template>
+                        </tr>
+                    </tbody>
+                </v-table>
+            </v-skeleton-loader>
         </v-sheet>
         <v-sheet class="d-flex justify-center">
             <div>
