@@ -48,6 +48,7 @@ const vuetify = createVuetify({
         VSelect: { variant: 'outlined', density: "compact", centerAffix: true, hideDetails: true },
         VCheckbox: { density: "compact", color: "red", hideDetails: true },
         VTable: { density: "comfortable" },
+        VToolbar: { density: "compact" },
     },
 })
 

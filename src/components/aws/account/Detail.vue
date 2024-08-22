@@ -103,21 +103,22 @@ const accountDelete = async () => {
     </div>
 </template>
 
-<style scoped> .detail-container {
-     height: auto;
- }
+<style scoped>
+.detail-container {
+    height: auto;
+}
 
- .detail-item-lable {
-     flex: 0.5;
-     padding: 5px;
-     margin: 5px;
-     background-color: #e2f7f0;
- }
+.detail-item-lable {
+    flex: 0.5;
+    padding: 5px;
+    margin: 5px;
+    background-color: #e2f7f0;
+}
 
- .detail-item-content {
-     flex: 1;
-     padding: 5px;
-     margin: 5px;
-     height: 40px;
- }
+.detail-item-content {
+    flex: 1;
+    padding: 5px;
+    margin: 5px;
+    height: 40px;
+}
 </style>

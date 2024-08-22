@@ -80,16 +80,26 @@ const components = shallowRef(componentDic)
 </script>
 
 <template>
-    <SpeedInsights /> 
+    <SpeedInsights />
     <Alert></Alert>
-    <div :class="rootContainer">
-        <div id="public-links" @click="onRouteChange">
-            <KeepAlive>
-                <TabContainer :components="components" v-if="rootContainer == 'nomalRootContainer'"> </TabContainer>
-            </KeepAlive>
-            <SidebarMenu class="subappsidebar" v-if="rootContainer == 'subAppRootContainer'" :items="SidebarMenuItems" />
-        </div>
-        <div class="vu3-app">
+    <v-app>
+        <v-app-bar density="compact" :elevation="2" @click="onRouteChange" v-if="rootContainer == 'nomalRootContainer'">
+            <template v-slot:prepend>
+                <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            </template>
+            <v-app-bar-title>
+                <KeepAlive>
+                    <TabContainer :components="components">
+                    </TabContainer>
+                </KeepAlive>
+            </v-app-bar-title>
+        </v-app-bar>
+
+        <v-navigation-drawer :rail="true" v-if="rootContainer == 'subAppRootContainer'">
+            <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
+        </v-navigation-drawer>
+
+        <v-main class="vu3-app">
             <router-view v-slot="{ Component, route }">
                 <!-- 使用任何自定义过渡和回退到 `fade` -->
                 <transition :name="route.meta.transition as string || 'fade'">
@@ -98,39 +108,12 @@ const components = shallowRef(componentDic)
                     </KeepAlive>
                 </transition>
             </router-view>
-        </div>
-    </div>
+        </v-main>
+    </v-app>
 </template>
 
 <style scoped>
-#public-links {
-    padding: 0;
-    font-size: 18px;
-    background: var(--color-background-menu-default);
-}
-
-.vu3-app {
-    flex-grow: 1;
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-}
-
 .subappsidebar {
     grid-area: 'sidebar';
-}
-
-.nomalRootContainer {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.subAppRootContainer {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
 }
 </style>

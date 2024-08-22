@@ -140,10 +140,11 @@ const compareDefinitions = async () => {
     </v-sheet>
 </template>
 
-<style scoped> .compare-container {
-     position: absolute;
-     right: 10px;
-     top: 10px;
-     z-index: 10;
- }
+<style scoped>
+.compare-container {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10;
+}
 </style>
