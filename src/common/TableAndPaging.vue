@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { ref, PropType, computed, watch } from 'vue'
+
+import Empty from '@/common/EmptyStates.vue'
 import Spinners from '@/common/Spinners.vue'
 
 export interface TableField {
@@ -34,7 +36,6 @@ const emit = defineEmits<{
 
 const pagesize = ref(props.pagesize)
 const page = ref(1)
-const placeholder = ref('no data found')
 
 const updatePage = (n: number) => {
     if (n == -1 && page.value >= 2) {
@@ -111,7 +112,7 @@ watch(pagesize, () => {
 <template>
     <v-sheet class="d-flex flex-column overflow-hidden" height="100%">
         <v-sheet class="flex-1-1 mb-2 overflow-auto" height="100%" min-height="40vh">
-            <div v-if="sortedItems!.length == 0 && !isLoading">{{ placeholder }}</div>
+            <Empty v-if="sortedItems!.length == 0 && !isLoading"></Empty>
             <Spinners v-else-if="isLoading"></Spinners>
             <v-table fixed-header hover v-else>
                 <thead>
