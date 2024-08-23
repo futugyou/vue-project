@@ -95,13 +95,12 @@ const components = shallowRef(componentDic)
             </v-app-bar-title>
         </v-app-bar>
 
-        <v-navigation-drawer :rail="true" v-if="rootContainer == 'subAppRootContainer'">
+        <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem" v-if="rootContainer == 'subAppRootContainer'">
             <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
         </v-navigation-drawer>
 
         <v-main height="100%">
             <router-view v-slot="{ Component, route }">
-                <!-- 使用任何自定义过渡和回退到 `fade` -->
                 <transition :name="route.meta.transition as string || 'fade'">
                     <KeepAlive>
                         <component :is="Component" :key="route.path" />
