@@ -77,6 +77,8 @@ const componentDic: Record<string, Component> = {
 }
 
 const components = shallowRef(componentDic)
+
+const isSidebarOpen = shallowRef<Boolean>(false)
 </script>
 
 <template>
@@ -94,8 +96,10 @@ const components = shallowRef(componentDic)
                 </KeepAlive>
             </v-app-bar-title>
         </v-app-bar>
-
-        <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem" v-if="rootContainer == 'subAppRootContainer'">
+        <v-fab icon="$vuetify" variant="tonal" location="top start" absolute app width="40" height="40" color="success"
+            @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
+        <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
+            v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
             <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
         </v-navigation-drawer>
 

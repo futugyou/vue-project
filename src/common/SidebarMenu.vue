@@ -23,7 +23,7 @@ const props = defineProps<SideMenuDataList>()
 
 const isSidebarOpen = shallowRef<Boolean>(false)
 
-const isSidebarShow = shallowRef<Boolean>(false)
+const isSidebarShow = shallowRef<Boolean>(true)
 
 function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value
@@ -40,9 +40,9 @@ watch(isSmallScreen, () => {
 
 <template>
     <div class="wrapper">
-        <div class="icon-control" @click="changeSidebarShowState">
+        <!-- <div class="icon-control" @click="changeSidebarShowState">
             <img src="@/assets/logo.svg" alt="logo" width="32px" height="32px">
-        </div>
+        </div> -->
         <aside :vue:is-open="isSidebarOpen" v-if="isSidebarShow">
             <ul class="sidebar-head">
                 <li>
