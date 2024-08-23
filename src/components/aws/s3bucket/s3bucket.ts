@@ -1,5 +1,7 @@
 import { fetchEx } from '@/tools/fetch'
 
+const BASE_PATH = import.meta.env.REACT_APP_AWS_SERVER.replace(/\/+$/, "")
+
 export interface S3Bucket {
     id: string
     accountId: string
@@ -25,8 +27,7 @@ export const defaultS3Bucket: S3Bucket = {
 }
 
 export const getS3Buckets = async (page: number, limit: number, bucketName: string) => {
-    let parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/s3?page=' + page + '&limit=' + limit
+    let parameterGetEndpoint = BASE_PATH + '/api/v1/s3?page=' + page + '&limit=' + limit
     if (bucketName) {
         parameterGetEndpoint += '&bucketName=' + bucketName
     }
@@ -53,8 +54,7 @@ export const defaultS3BucketItem: S3BucketItem = {
 }
 
 export const getS3BucketItems = async (page: number, limit: number, bucketName: string, accountId: string, perfix: string) => {
-    let parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/s3/items?page=' + page + '&limit=' + limit
+    let parameterGetEndpoint = BASE_PATH + '/api/v1/s3/items?page=' + page + '&limit=' + limit
     if (bucketName) {
         parameterGetEndpoint += '&bucketName=' + bucketName
     }
@@ -69,8 +69,7 @@ export const getS3BucketItems = async (page: number, limit: number, bucketName: 
 }
 
 export const getS3Download = async (bucketName: string, accountId: string, fileName: string) => {
-    let parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/s3/download'
+    let parameterGetEndpoint = BASE_PATH + '/api/v1/s3/download'
 
     parameterGetEndpoint += '?bucketName=' + bucketName
 
@@ -86,8 +85,7 @@ export const getS3Download = async (bucketName: string, accountId: string, fileN
 }
 
 export const getS3ItemUrl = async (bucketName: string, accountId: string, fileName: string) => {
-    let parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/s3/url'
+    let parameterGetEndpoint = BASE_PATH + '/api/v1/s3/url'
 
     parameterGetEndpoint += '?bucketName=' + bucketName
 

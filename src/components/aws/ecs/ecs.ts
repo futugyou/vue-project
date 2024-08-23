@@ -1,5 +1,7 @@
 import { fetchEx } from '@/tools/fetch'
 
+const BASE_PATH = import.meta.env.REACT_APP_AWS_SERVER.replace(/\/+$/, "")
+
 export interface EcsService {
     id: string
     account_alias: string
@@ -23,8 +25,7 @@ export interface EcsTaskCompare {
 }
 
 export const getEcsServices = async (page: number, limit: number, account_id: string) => {
-    let ecsEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/ecsservices?page=' + page + '&limit=' + limit
+    let ecsEndpoint = BASE_PATH + '/api/v1/ecsservices?page=' + page + '&limit=' + limit
     if (account_id) {
         ecsEndpoint += '&account_id=' + account_id
     }
@@ -33,13 +34,11 @@ export const getEcsServices = async (page: number, limit: number, account_id: st
 }
 
 export const getEcsServiceDetail = async (id: string) => {
-    const ecsEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/ecsservices/' + id
+    const ecsEndpoint = BASE_PATH + '/api/v1/ecsservices/' + id
     return fetchEx(ecsEndpoint, ...[, ,], true)
 }
 
 export const compareEcsTaskDefinition = async (com: EcsTaskCompare) => {
-    const ecsEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/ecsservices/compare'
+    const ecsEndpoint = BASE_PATH + '/api/v1/ecsservices/compare'
     return fetchEx(ecsEndpoint, 'post', com, true)
 }
