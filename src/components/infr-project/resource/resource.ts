@@ -204,7 +204,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
          * @throws {RequiredError}
          */
         v1ResourceGet(options: any = {}): FetchArgs {
-            const path = new URL(BASE_PATH + `/v1/resource`)
+            const path = new URL(BASE_PATH + `/api/v1/resource`)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
@@ -219,7 +219,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ResourceIdDelete.')
             }
-            const localVarPath = `/v1/resource/{id}`
+            const localVarPath = `/api/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -237,7 +237,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ResourceIdGet.')
             }
-            const localVarPath = `/v1/resource/{id}`
+            const localVarPath = `/api/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -255,7 +255,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ResourceIdHistoryGet.')
             }
-            const localVarPath = `/v1/resource/{id}/history`
+            const localVarPath = `/api/v1/resource/{id}/history`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -278,7 +278,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ResourceIdPut.')
             }
-            const localVarPath = `/v1/resource/{id}`
+            const localVarPath = `/api/v1/resource/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -296,7 +296,7 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ResourcePost.')
             }
-            const localVarPath = `/v1/resource`
+            const localVarPath = `/api/v1/resource`
 
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)

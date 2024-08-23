@@ -278,7 +278,7 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
          * @param {*} [options] Override http request option.
          */
         v1ProjectGet(options: any = {}): FetchArgs {
-            const path = new URL(BASE_PATH + `/v1/project`)
+            const path = new URL(BASE_PATH + `/api/v1/project`)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
@@ -297,7 +297,7 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ProjectIdDesignPut.')
             }
-            const localVarPath = `/v1/project/{id}/design`
+            const localVarPath = `/api/v1/project/{id}/design`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
@@ -313,7 +313,7 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ProjectIdGet.')
             }
-            const localVarPath = `/v1/project/{id}`
+            const localVarPath = `/api/v1/project/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
@@ -334,7 +334,7 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ProjectIdPlatformPut.')
             }
-            const localVarPath = `/v1/project/{id}/platform`
+            const localVarPath = `/api/v1/project/{id}/platform`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
@@ -355,7 +355,7 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1ProjectIdPut.')
             }
-            const localVarPath = `/v1/project/{id}`
+            const localVarPath = `/api/v1/project/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
@@ -371,7 +371,7 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ProjectPost.')
             }
-            const localVarPath = `/v1/project`
+            const localVarPath = `/api/v1/project`
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)
         },

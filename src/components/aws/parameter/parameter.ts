@@ -26,7 +26,7 @@ export interface SyncParameter {
 
 export const getParameters = async (page: number, limit: number, region: string, key: string, alias: string) => {
     let parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters?page=' + page + '&limit=' + limit
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/parameters?page=' + page + '&limit=' + limit
     if (region) {
         parameterGetEndpoint += '&region=' + region
     }
@@ -44,18 +44,18 @@ export const getParameters = async (page: number, limit: number, region: string,
 
 export const syncParameter = async (sync: SyncParameter) => {
     const parameterSyncEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/sync'
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/parameters/sync'
     return fetchEx(parameterSyncEndpoint, 'post', sync, true)
 }
 
 export const getParameter = async (id: string) => {
     const parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/' + id
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/parameters/' + id
     return fetchEx(parameterGetEndpoint, ...[, ,], true)
 }
 
 export const getParameterCompare = async (sourceid: string, destid: string) => {
     const parameterGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/parameters/compare?sourceid=' + sourceid + '&destid=' + destid
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/parameters/compare?sourceid=' + sourceid + '&destid=' + destid
     return fetchEx(parameterGetEndpoint, ...[, ,], true)
 } 

@@ -41,34 +41,34 @@ export const checkAccount = (account: Account) => {
 }
 
 export const editAccount = async (account: Account) => {
-    const accountEditEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + account.id
+    const accountEditEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/accounts/' + account.id
     return fetchEx(accountEditEndpoint, 'put', account, true)
 }
 
 export const createAccount = async (account: Account) => {
-    const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
+    const accountCreateEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/accounts'
     return fetchEx(accountCreateEndpoint, 'post', account, true)
 }
 
 export const getAccountsWithPaging = async (page: number, limit: number) => {
     const accountGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts?page=' + page + '&limit=' + limit
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/accounts?page=' + page + '&limit=' + limit
     return fetchEx(accountGetEndpoint, ...[, ,], true)
 }
 
 export const getAccounts = async () => {
     const accountGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts'
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/accounts'
     return fetchEx(accountGetEndpoint, ...[, ,], true)
 }
 
 export const getAccount = async (id: string) => {
     const accountGetEndpoint =
-        import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + id
+        import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/accounts/' + id
     return fetchEx(accountGetEndpoint, ...[, ,], true)
 }
 
 export const deleteAccount = async (id: string) => {
-    const accountDeleteEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'v1/accounts/' + id
+    const accountDeleteEndpoint = import.meta.env.REACT_APP_AWS_SERVER + 'api/v1/accounts/' + id
     return fetchEx(accountDeleteEndpoint, 'delete', ...[,], true)
 }
