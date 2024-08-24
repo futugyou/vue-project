@@ -4,6 +4,7 @@ import { ref, watchEffect } from 'vue'
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Detail from './Detail.vue'
+import { useTimeFormat } from '@/composables/timeFormat'
 
 import { S3Bucket, getS3Buckets } from './s3bucket'
 
@@ -44,6 +45,7 @@ const fields: TableField[] = [
     {
         key: 'creationDate',
         label: 'CreationDate',
+        format: useTimeFormat
     }
 ]
 

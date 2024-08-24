@@ -7,6 +7,7 @@ import Button from '@/common/Button.vue'
 import OpenIcon from '@/icons/Open.vue'
 import ReloadIcon from '@/icons/Reload.vue'
 
+import { useTimeFormat } from '@/composables/timeFormat'
 import { S3Bucket, S3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
@@ -56,6 +57,7 @@ const fields: TableField[] = [
     {
         key: 'creationDate',
         label: 'CreationDate',
+        format: useTimeFormat
     },
     {
         key: 'operation',
