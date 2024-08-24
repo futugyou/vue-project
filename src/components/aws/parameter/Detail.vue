@@ -211,6 +211,7 @@ const syncFromAWS = async () => {
     position: fixed;
     right: 50px;
     top: 10px;
+    z-index: 2000;
 }
 
 .compare-container>* {

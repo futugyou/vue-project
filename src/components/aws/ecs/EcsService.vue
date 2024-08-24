@@ -20,21 +20,16 @@ const selectedAccount = ref<Account>(defaultAccount)
 
 const fields: TableField[] = [
     {
-        key: 'id',
-        label: '#',
-        header: true
-    },
-    {
-        key: 'account_alias',
-        label: 'Account Alias'
+        key: 'service_name',
+        label: 'Service Name'
     },
     {
         key: 'cluster_name',
         label: 'Cluster Name'
     },
     {
-        key: 'service_name',
-        label: 'Service Name'
+        key: 'account_alias',
+        label: 'Account Alias'
     },
     {
         key: 'operate_At',
@@ -90,10 +85,10 @@ const changeAccount = (acc: Account) => {
             <template v-slot:header_id="header">
                 <span style="color: red">{{ header.label }}</span>
             </template>
-            <template v-slot:body_id="body">
+            <template v-slot:body_service_name="body">
                 <router-link :to="'/ecs/' + body.id" page-path="" class="detail-link">
                     <span>
-                        {{ body.id }}
+                        {{ body.service_name }}
                     </span>
                 </router-link>
             </template>

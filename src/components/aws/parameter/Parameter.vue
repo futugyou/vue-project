@@ -35,17 +35,12 @@ const timeFormat = (timestamp: number): string => {
 
 const fields: TableField[] = [
     {
-        key: 'id',
-        label: '#',
-        header: true
+        key: 'key',
+        label: 'Key'
     },
     {
         key: 'alias',
         label: 'AccountAlias'
-    },
-    {
-        key: 'key',
-        label: 'Key'
     },
     {
         key: 'region',
@@ -177,13 +172,10 @@ const changeAccount = (acc: Account) => {
         </VuetifyModal>
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <template v-slot:header_id="header">
-                <span style="color: red">{{ header.label }}</span>
-            </template>
-            <template v-slot:body_id="body">
+            <template v-slot:body_key="body">
                 <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link">
                     <span>
-                        {{ body.id }}
+                        {{ body.key }}
                     </span>
                 </router-link>
             </template>
