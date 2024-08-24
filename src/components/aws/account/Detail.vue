@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, watch } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
@@ -57,68 +57,47 @@ const accountDelete = async () => {
 </script>
 
 <template>
-    <div class="detail-full-content">
+    <v-sheet class="d-flex flex-column align-center" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading && !editModel" class="detail-container">
-            <div class="detail-item">
-                <div class="detail-item-lable">ID</div>
-                <div class="detail-item-content">{{ account?.id }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Region</div>
-                <div class="detail-item-content">{{ account?.region }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Alias</div>
-                <div class="detail-item-content">{{ account?.alias }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">AccessKeyId</div>
-                <div class="detail-item-content">{{ account?.accessKeyId }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">SecretAccessKey</div>
-                <div class="detail-item-content">{{ account?.secretAccessKey }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">CreatedAt</div>
-                <div class="detail-item-content">
-                    {{ account ? useTimeFormat(account.createdAt) : '' }}
+        <v-card title="Account Information" v-if="!isLoading && !editModel" class="d-flex flex-column align-center">
+            <v-card-text v-if="account" class="text-truncate">
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">ID</div>
+                    <div class="pa-3">{{ account.id }}</div>
                 </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-content">
-                    <button type="button" class="btn btn-secondary" @click="editAccount">
-                        Edit Account
-                    </button>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">Region</div>
+                    <div class="pa-3">{{ account.region }}</div>
                 </div>
-                <div class="detail-item-content">
-                    <button type="button" class="btn btn-warning" @click="accountDelete">
-                        Delete Account
-                    </button>
+                <div class="d-flex ma-1 text-body-1 ga-3 ">
+                    <div class="font-weight-bold flex-1-1 pa-3">Alias</div>
+                    <div class="pa-3">{{ account.alias }}</div>
                 </div>
-            </div>
-        </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">AccessKeyId</div>
+                    <div class="pa-3">{{ account.accessKeyId }}</div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">SecretAccessKey</div>
+                    <div class="pa-3">{{ account.secretAccessKey }}</div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">CreatedAt</div>
+                    <div class="pa-3">
+                        {{ useTimeFormat(account.createdAt) }}
+                    </div>
+                </div>
+            </v-card-text>
+
+            <v-card-actions>
+                <v-btn color="primary" variant="outlined" @click="editAccount">
+                    Edit Account
+                </v-btn>
+                <v-btn color="secondary" variant="outlined" @click="accountDelete">
+                    Delete Account
+                </v-btn>
+            </v-card-actions>
+        </v-card>
         <Edit v-if="editModel" @close="editAccount" :account="account" @save="editAccount"></Edit>
-    </div>
+    </v-sheet>
 </template>
-
-<style scoped>
-.detail-container {
-    height: auto;
-}
-
-.detail-item-lable {
-    flex: 0.5;
-    padding: 5px;
-    margin: 5px;
-    background-color: #e2f7f0;
-}
-
-.detail-item-content {
-    flex: 1;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
-}
-</style>

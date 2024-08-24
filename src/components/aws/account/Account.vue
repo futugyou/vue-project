@@ -29,11 +29,6 @@ const timeFormat = (timestamp: number): string => {
 }
 
 const fields: TableField[] = [
-    // {
-    //     key: 'id',
-    //     label: '#',
-    //     header: true
-    // },
     {
         key: 'alias',
         label: 'Alias'
