@@ -34,8 +34,8 @@ export const checkAccount = (account: Account) => {
         if (!account.region || account.region.length < 5 || account.region.length > 25) {
             message.push('Region is required, and lenght Must between 5 and 25')
         }
-        if (!account.secretAccessKey || account.secretAccessKey.length < 5 || account.secretAccessKey.length > 25) {
-            message.push('SecretAccessKey is required, and lenght Must between 5 and 25')
+        if (!account.secretAccessKey || account.secretAccessKey.length < 5 || account.secretAccessKey.length > 50) {
+            message.push('SecretAccessKey is required, and lenght Must between 5 and 50')
         }
     }
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, watch } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
-import { isEqual, join } from 'lodash-es'
+import { isEqual } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import RegionList from "@/components/aws/region/list.vue"
@@ -119,103 +119,50 @@ defineExpose({
 </script>
 
 <template>
-    <div class="detail-full-content">
+    <v-sheet class="d-flex flex-column align-center" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading" class="detail-container">
-            <div class="detail-item" v-if="account?.id">
-                <div class="detail-item-lable">ID</div>
-                <div class="detail-item-content">{{ account?.id }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Region</div>
-                <div class="detail-item-content">
-                    <RegionList :selected="account.region" @changeRegion="changeRegion"></RegionList>
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Alias</div>
-                <div class="detail-item-content">
-                    <input v-model="account.alias" />
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">AccessKeyId</div>
-                <div class="detail-item-content">
-                    <input v-model="account.accessKeyId" />
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">SecretAccessKey</div>
-                <div class="detail-item-content">
-                    <input v-model="account.secretAccessKey" />
-                </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">CreatedAt</div>
-                <div class="detail-item-content">
-                    {{ account ? useTimeFormat(account.createdAt) : '' }}
-                </div>
-            </div>
-            <div class="button-container">
-                <v-btn @click="close">Close</v-btn>
-                <v-btn @click="save">Save changes</v-btn>
-            </div>
-        </div>
-    </div>
+        <v-card title="Account Information" v-if="!isLoading" class="d-flex flex-column align-center">
+            <v-card-text class="d-flex flex-column text-body-1 ga-4 pa-4">
+                <v-sheet v-if="account.id">
+                    <div class="font-weight-bold flex-1-1 pa-1">ID</div>
+                    <div class="pa-1 flex-1-1">{{ account.id }}</div>
+                </v-sheet>
+                <v-sheet>
+                    <div class="font-weight-bold flex-1-1 pa-1">Region</div>
+                    <div class="pa-1 flex-1-1">
+                        <RegionList :selected="account.region" @changeRegion="changeRegion"></RegionList>
+                    </div>
+                </v-sheet>
+                <v-sheet>
+                    <div class="font-weight-bold flex-1-1 pa-1">Alias</div>
+                    <div class="pa-1 flex-1-1">
+                        <v-text-field v-model="account.alias"></v-text-field>
+                    </div>
+                </v-sheet>
+                <v-sheet>
+                    <div class="font-weight-bold flex-1-1 pa-1">AccessKeyId</div>
+                    <div class="pa-1 flex-1-1">
+                        <v-text-field v-model="account.accessKeyId"></v-text-field>
+                    </div>
+                </v-sheet>
+                <v-sheet>
+                    <div class="font-weight-bold flex-1-1 pa-1">SecretAccessKey</div>
+                    <div class="pa-1 flex-1-1">
+                        <v-text-field v-model="account.secretAccessKey" width="500"></v-text-field>
+                    </div>
+                </v-sheet>
+                <v-sheet>
+                    <div class="font-weight-bold flex-1-1 pa-1">CreatedAt</div>
+                    <div class="pa-1 flex-1-1">
+                        {{ useTimeFormat(account.createdAt) }}
+                    </div>
+                </v-sheet>
+            </v-card-text>
+
+            <v-card-actions>
+                <v-btn color="primary" variant="outlined" @click="close">Close</v-btn>
+                <v-btn color="secondary" variant="outlined" @click="save">Save changes</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-sheet>
 </template>
-
-<style scoped>
-.detail-container {
-    /* max-width: 600px; */
-    height: auto;
-}
-
-.detail-item-lable {
-    flex: 0.5;
-    padding: 5px;
-    margin: 5px;
-    background-color: #e2f7f0;
-}
-
-.detail-item-content {
-    flex: 1;
-    padding: 5px;
-    margin: 5px;
-    height: 40px;
-}
-
-.detail-item-content input {
-    width: 100%;
-    height: 100%;
-    line-height: 100%;
-    border: 1px solid turquoise;
-    cursor: pointer;
-}
-
-.detail-item-content input:hover {
-    height: 110%;
-    line-height: 110%;
-    border: 1px solid rgb(91, 242, 227);
-}
-
-.detail-item-content ul {
-    width: 100%;
-}
-
-.button-container {
-    display: flex;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px;
-}
-
-.button-container>button {
-    margin: 5px;
-}
-
-.alert-container {
-    position: relative;
-}
-</style>
