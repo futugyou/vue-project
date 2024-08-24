@@ -146,13 +146,29 @@ const syncFromAWS = async () => {
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column overflow-hidden" height="100%">
+    <v-sheet class="d-flex flex-column overflow-hidden position-relative" height="100%">
         <VuetifyModal text="Compare Parameter" title="Compare Parameter" activator="somme" hideFooter
             v-model:dialog="dialog">
             <code-diff v-if="compareParameters.length == 2" :old-string="compareParameters[0]"
                 :new-string="compareParameters[1]" output-format="side-by-side" />
         </VuetifyModal>
         <Spinners v-if="isLoading"></Spinners>
+
+        <div class="compare-container" v-if="!isLoading && parameter != undefined && tab == 'one'">
+            <v-btn @click="syncFromAWS" :disabled="displaySync">
+                SyncFromAWS
+            </v-btn>
+        </div>
+
+        <div class="compare-container" v-if="historys != undefined && historys.length > 0 && tab == 'three'">
+            <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1">
+                CompareWithAWS
+            </v-btn>
+
+            <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
+                Compare
+            </v-btn>
+        </div>
 
         <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4" v-if="!isLoading">
             <v-tab value="one" text="Latest"></v-tab>
@@ -161,11 +177,6 @@ const syncFromAWS = async () => {
         </v-tabs>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="parameter != undefined">
-                <div class="compare-container">
-                    <v-btn @click="syncFromAWS" :disabled="displaySync">
-                        SyncFromAWS
-                    </v-btn>
-                </div>
                 <v-list lines="two">
                     <v-list-item title="Name" :subtitle="parameter.key"></v-list-item>
                     <v-list-item title="Version" :subtitle="parameter.version"></v-list-item>
@@ -182,16 +193,6 @@ const syncFromAWS = async () => {
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="historys != undefined && historys.length > 0">
-                <div class="compare-container">
-                    <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1">
-                        CompareWithAWS
-                    </v-btn>
-
-                    <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
-                        Compare
-                    </v-btn>
-                </div>
-
                 <TableAndPaging :items="historys" :fields="fields" :isLoading="isLoading">
                     <template v-slot:header_id="header">
                         <span style="color: red">{{ header.label }}</span>
@@ -208,10 +209,9 @@ const syncFromAWS = async () => {
 
 <style scoped>
 .compare-container {
-    position: fixed;
+    position: absolute;
     right: 50px;
     top: 10px;
-    z-index: 2000;
 }
 
 .compare-container>* {
