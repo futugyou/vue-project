@@ -40,78 +40,46 @@ const fetchData = async () => {
 
 fetchData()
 
-const timeFormat = (timestamp: any): string => {
-    return useTimeFormat(timestamp)
-}
-
 </script>
 
 <template>
-    <div class="detail-full-content">
+    <v-sheet class="d-flex flex-column align-center" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <div v-if="!isLoading" class="detail-container">
-            <div class="detail-item">
-                <div class="detail-item-lable">Name:</div>
-                <div class="detail-item-content"> {{ resource?.name }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Type:</div>
-                <div class="detail-item-content"> {{ resource?.type }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Version:</div>
-                <div class="detail-item-content"> {{ resource?.version }}</div>
-            </div>
-            <div class="detail-item-textarea">
-                <div class="detail-item-lable">Data:</div>
-                <div class="textarea-container">
-                    <textarea class="form-control" Disabled :value="resource?.data"></textarea>
+        <v-card title="Resource Information" v-if="!isLoading" class="d-flex flex-column align-center">
+            <v-card-text v-if="resource" class="text-truncate">
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">ID</div>
+                    <div class="pa-3">{{ resource.id }}</div>
                 </div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">Deleted:</div>
-                <div class="detail-item-content"> {{ resource?.is_deleted }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">CreatedAt:</div>
-                <div class="detail-item-content"> {{ timeFormat(resource?.created_at) }}</div>
-            </div>
-            <div class="detail-item">
-                <div class="detail-item-lable">UpdatedAt:</div>
-                <div class="detail-item-content"> {{ timeFormat(resource?.updated_at) }}</div>
-            </div>
-        </div>
-    </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">Name</div>
+                    <div class="pa-3">{{ resource.name }}</div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3 ">
+                    <div class="font-weight-bold flex-1-1 pa-3">Type</div>
+                    <div class="pa-3">{{ resource.type }}</div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">Data</div>
+                    <div class="pa-3">{{ resource.data }}</div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">Deleted</div>
+                    <div class="pa-3">{{ resource.is_deleted }}</div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">CreatedAt</div>
+                    <div class="pa-3">
+                        {{ useTimeFormat(resource.created_at) }}
+                    </div>
+                </div>
+                <div class="d-flex ma-1 text-body-1 ga-3">
+                    <div class="font-weight-bold flex-1-1 pa-3">UpdatedAt</div>
+                    <div class="pa-3">
+                        {{ useTimeFormat(resource.updated_at) }}
+                    </div>
+                </div>
+            </v-card-text> 
+        </v-card> 
+    </v-sheet>
 </template>
-
-<style scoped>
-.detail-full-content {
-    justify-content: normal;
-}
-
-.detail-container {
-    padding: 20px
-}
-
-.detail-item {
-    height: auto;
-}
-
-.detail-item-textarea {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
-
-.textarea-container {
-    flex: 1;
-}
-
-.textarea-container>textarea {
-    height: 100%;
-}
-
-.detail-item-lable {
-    margin-right: 10px;
-}
-</style>
