@@ -50,6 +50,12 @@ const BASE_PATH = import.meta.env.REACT_APP_INFR_PROJECT_SERVER.replace(/\/+$/, 
      * @memberof ResourceView
      */
     version?: number
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ResourceView
+     */
+    tags?: Array<string>
 }
 
 /**
@@ -106,6 +112,12 @@ export interface ResourceViewDetail {
      * @memberof ResourceViewDetail
      */
     version?: number
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ResourceViewDetail
+     */
+    tags?: Array<string>
 }
 
 /**
