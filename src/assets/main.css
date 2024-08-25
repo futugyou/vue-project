@@ -184,3 +184,9 @@ input[type="file"] {
     cursor: pointer;
     color: var(--color-text-link-hover, #033160);
 }
+
+.word-break {
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+}
