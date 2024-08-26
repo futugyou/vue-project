@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { useTimeFormat } from '@/composables/timeFormat'
+import { useShortTimeFormat } from '@/composables/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
 import { ResourceView, ResourceApiFactory } from './resource'
@@ -37,9 +37,9 @@ const buildUrl = (id: string) => '/resource/' + id
     <v-sheet class="d-flex flex-wrap justify-center ga-3 pa-3 overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-row v-if="!isLoading">
-            <v-col v-for="resource in resources" :key="resource.id" cols="12" md="4">
+            <v-col v-for="resource in resources" :key="resource.id" cols="12" md="3">
                 <v-card :title="resource.name" v-if="!isLoading" class="d-flex flex-column" :href="buildUrl(resource.id!)"
-                    target="_blank" append-icon="mdi-open-in-new" hover>
+                    target="_blank" append-icon="md:open_in_new" hover>
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">
                         <v-sheet class="d-flex flex-wrap ga-2">
                             <v-chip>
@@ -65,10 +65,10 @@ const buildUrl = (id: string) => '/resource/' + id
 
                         <v-divider></v-divider>
 
-                        <v-chip-group>
-                            <v-chip>CreatedAt: {{ useTimeFormat(resource.created_at) }}</v-chip>
-                            <v-chip>UpdatedAt: {{ useTimeFormat(resource.updated_at) }}</v-chip>
-                        </v-chip-group>
+                        <div class="d-flex ga-2 justify-center">
+                            <v-chip>Created: {{ useShortTimeFormat(resource.created_at) }}</v-chip>
+                            <v-chip>Updated: {{ useShortTimeFormat(resource.updated_at) }}</v-chip>
+                        </div>
                     </v-card-text>
                 </v-card>
             </v-col>
