@@ -38,8 +38,20 @@ const buildUrl = (id: string) => '/resource/' + id
         <Spinners v-if="isLoading"></Spinners>
         <v-row v-if="!isLoading">
             <v-col v-for="resource in resources" :key="resource.id" cols="12" md="3">
-                <v-card :title="resource.name" v-if="!isLoading" class="d-flex flex-column" :href="buildUrl(resource.id!)"
-                    target="_blank" append-icon="md:open_in_new" hover>
+                <v-card v-if="!isLoading" class="d-flex flex-column" hover>
+                    <template v-slot:title> {{ resource.name }} </template>
+                    
+                    <template v-slot:append>
+                        <a :href="buildUrl(resource.id!)" target="_blank">
+                            <v-hover>
+                                <template v-slot:default="{ isHovering, props }">
+                                    <v-icon icon="md:open_in_new" v-bind="props"
+                                        :color="isHovering ? '#75FBFD' : undefined"></v-icon>
+                                </template>
+                            </v-hover>
+                        </a>
+                    </template>
+
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">
                         <v-sheet class="d-flex flex-wrap ga-2">
                             <v-chip>
@@ -55,10 +67,10 @@ const buildUrl = (id: string) => '/resource/' + id
 
                         <v-divider></v-divider>
 
-                        <v-img :aspect-ratio="1" :src="resource.data">
+                        <v-img :aspect-ratio="16 / 9" :src="resource.data" width="100%">
                             <template v-slot:error>
                                 <v-sheet>
-                                    <span class="text-body-1 word-break">{{ resource.data }}</span>
+                                    <div class="text-body-1 word-break">{{ resource.data }}</div>
                                 </v-sheet>
                             </template>
                         </v-img>
