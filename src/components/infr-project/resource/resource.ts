@@ -41,6 +41,12 @@ const BASE_PATH = import.meta.env.REACT_APP_INFR_PROJECT_SERVER.replace(/\/+$/, 
     /**
      * 
      * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    data?: string
+    /**
+     * 
+     * @type {string}
      * @memberof ResourceView
      */
     updated_at?: string

@@ -5,7 +5,7 @@ html {
     color: var(--vt-c-indigo);
     font-family: Avenir, Helvetica, Arial, sans-serif;
     height: 100%;
-    overflow-y: hidden;
+    overflow-y: hidden !important;
     position: relative;
 
     -moz-osx-font-smoothing: grayscale;
