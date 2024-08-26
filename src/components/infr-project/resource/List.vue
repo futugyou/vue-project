@@ -60,6 +60,9 @@ const buildUrl = (id: string) => '/resource/' + id
                             <v-chip>
                                 <strong>{{ resource.is_deleted ? 'deleted' : 'activated' }}</strong>&nbsp;
                             </v-chip>
+                            <v-chip>
+                                <strong>version: {{ resource.version }}</strong>&nbsp;
+                            </v-chip>
                             <v-chip v-for="tag in resource.tags">
                                 <strong>{{ tag }}</strong>&nbsp;
                             </v-chip>

@@ -16,7 +16,7 @@ const route = useRoute()
 
 const isLoading = ref(true)
 const resourceId = route.params.id as string
-const resource = ref<ResourceViewDetail>()
+const histories = ref<ResourceViewDetail[]>()
 
 const fetchData = async () => {
     if (resourceId == undefined) {
@@ -24,7 +24,7 @@ const fetchData = async () => {
     }
 
     isLoading.value = true
-    const { data, error } = await ResourceApiFactory().v1ResourceIdGet(resourceId)
+    const { data, error } = await ResourceApiFactory().v1ResourceIdHistoryGet(resourceId)
     isLoading.value = false
     if (error) {
         msg.value = {
@@ -35,7 +35,7 @@ const fetchData = async () => {
         return
     }
 
-    resource.value = data
+    histories.value = data
 }
 
 fetchData()
@@ -45,41 +45,46 @@ fetchData()
 <template>
     <v-sheet class="d-flex flex-column align-center" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-card title="Resource Information" v-if="!isLoading" class="d-flex flex-column align-center">
-            <v-card-text v-if="resource" class="d-flex flex-column ga-3 text-truncate">
-                <p class="text-h4 font-weight-black">{{ resource.name }}</p>
-                <v-sheet class="d-flex flex-wrap ga-2">
-                    <v-chip>
-                        <strong>{{ resource.type }}</strong>&nbsp;
-                    </v-chip>
-                    <v-chip>
-                        <strong>{{ resource.is_deleted ? 'deleted' : 'activated' }}</strong>&nbsp;
-                    </v-chip>
-                    <v-chip v-for="tag in resource.tags">
-                        <strong>{{ tag }}</strong>&nbsp;
-                    </v-chip>
-                </v-sheet>
+        <v-timeline align="start" v-if="!isLoading">
+            <v-timeline-item v-for="(history, i) in histories" :key="i" fill-dot>
+                <v-card v-if="!isLoading" class="d-flex flex-column" hover>
+                    <template v-slot:title> {{ history.name }} </template>
 
-                <v-divider></v-divider>
-
-                <v-img :aspect-ratio="1" :src="resource.data" v-if="resource.type == 'DrawIO'">
-                    <template v-slot:error>
-                        <v-sheet>
-                            <span class="text-body-1 word-break">{{ resource.data }}</span>
+                    <v-card-text class="d-flex flex-column ga-3 text-truncate">
+                        <v-sheet class="d-flex flex-wrap ga-2">
+                            <v-chip>
+                                <strong>{{ history.type }}</strong>&nbsp;
+                            </v-chip>
+                            <v-chip>
+                                <strong>{{ history.is_deleted ? 'deleted' : 'activated' }}</strong>&nbsp;
+                            </v-chip>
+                            <v-chip>
+                                <strong>version: {{ history.version }}</strong>&nbsp;
+                            </v-chip>
+                            <v-chip v-for="tag in history.tags">
+                                <strong>{{ tag }}</strong>&nbsp;
+                            </v-chip>
                         </v-sheet>
-                    </template>
-                </v-img>
-                <div v-if="resource.type != 'DrawIO'">
-                    <span class="text-body-1 word-break">{{ resource.data }}</span>
-                </div>
 
-                <v-divider></v-divider>
+                        <v-divider></v-divider>
 
-                <v-chip-group >
-                    <v-chip>CreatedAt: {{ useTimeFormat(resource.created_at) }}</v-chip>
-                    <v-chip>UpdatedAt: {{ useTimeFormat(resource.updated_at) }}</v-chip>
-                </v-chip-group>
-            </v-card-text>
-        </v-card>
+                        <v-img :aspect-ratio="16 / 9" :src="history.data" width="100%">
+                            <template v-slot:error>
+                                <v-sheet>
+                                    <div class="text-body-1 word-break">{{ history.data }}</div>
+                                </v-sheet>
+                            </template>
+                        </v-img>
+
+                        <v-divider></v-divider>
+
+                        <div class="d-flex ga-2 justify-center">
+                            <v-chip>CreatedAt: {{ useTimeFormat(history.created_at) }}</v-chip>
+                            <v-chip>UpdatedAt: {{ useTimeFormat(history.updated_at) }}</v-chip>
+                        </div>
+                    </v-card-text>
+                </v-card>
+            </v-timeline-item>
+        </v-timeline>
     </v-sheet>
 </template>
