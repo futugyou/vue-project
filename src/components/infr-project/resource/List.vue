@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
+import _ from 'lodash-es'
 
 import { useShortTimeFormat } from '@/composables/timeFormat'
 import { useMessageStore } from '@/stores/message'
@@ -25,7 +26,7 @@ const fetchData = async () => {
         return
     }
 
-    resources.value = data ?? []
+    resources.value =  _.orderBy(data, "updated_at", "desc")
 }
 
 watchEffect(async () => fetchData())

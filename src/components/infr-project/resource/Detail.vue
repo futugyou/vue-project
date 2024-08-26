@@ -2,6 +2,7 @@
 import { ref, } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useTimeFormat } from '@/composables/timeFormat'
@@ -35,7 +36,7 @@ const fetchData = async () => {
         return
     }
 
-    histories.value = data
+    histories.value = _.orderBy(data, "updated_at", "desc")
 }
 
 fetchData()
@@ -54,10 +55,11 @@ const dispalyTime = (history: ResourceViewDetail) => {
     <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-timeline v-if="!isLoading" align="start" justify="center">
-            <v-timeline-item v-for="(history, i) in histories" :key="i">
+            <v-timeline-item v-for="(history, i) in histories" :key="i" dot-color="indigo-lighten-2"
+                icon="md:schedule">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ dispalyTime(history) }} </template>
-                    
+
                     <template v-slot:subtitle> {{ history.name }} </template>
 
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">
