@@ -40,15 +40,25 @@ const fetchData = async () => {
 
 fetchData()
 
+const dispalyTime = (history: ResourceViewDetail) => {
+    var t = useTimeFormat(history.updated_at)
+    if (t == "-") {
+        t = useTimeFormat(history.created_at)
+    }
+    return t
+}
+
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column align-center" height="100%">
+    <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-timeline align="start" v-if="!isLoading">
-            <v-timeline-item v-for="(history, i) in histories" :key="i" fill-dot>
+        <v-timeline v-if="!isLoading" align="start" justify="center">
+            <v-timeline-item v-for="(history, i) in histories" :key="i">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
-                    <template v-slot:title> {{ history.name }} </template>
+                    <template v-slot:title> {{ dispalyTime(history) }} </template>
+                    
+                    <template v-slot:subtitle> {{ history.name }} </template>
 
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">
                         <v-sheet class="d-flex flex-wrap ga-2">
@@ -75,13 +85,6 @@ fetchData()
                                 </v-sheet>
                             </template>
                         </v-img>
-
-                        <v-divider></v-divider>
-
-                        <div class="d-flex ga-2 justify-center">
-                            <v-chip>CreatedAt: {{ useTimeFormat(history.created_at) }}</v-chip>
-                            <v-chip>UpdatedAt: {{ useTimeFormat(history.updated_at) }}</v-chip>
-                        </div>
                     </v-card-text>
                 </v-card>
             </v-timeline-item>
