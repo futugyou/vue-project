@@ -67,6 +67,8 @@ export interface DictionaryExampleModel {
 
 const api_version = "api-version=" + import.meta.env.VUE_APP_TRANSLATE_VSERION
 const api_endpoint = import.meta.env.VUE_APP_TRANSLATE_SERVER
+const subscription_key = import.meta.env.VUE_APP_TRANSLATE_KEY
+const subscription_region = import.meta.env.VUE_APP_TRANSLATE_REGION
 
 const languages_api = api_endpoint + 'languages?' + api_version
 const translate_api = api_endpoint + 'translate?' + api_version
@@ -77,8 +79,8 @@ const examples_api = api_endpoint + 'dictionary/examples?' + api_version
 export const translateText = async (from: string, to: string, model: TranslateModel[]) => {
     const translateEndpoint = translate_api + '&from=' + from + '&to=' + to
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': subscription_key,
+        'Ocp-Apim-Subscription-Region': subscription_region,
     }
 
     return fetchEx(translateEndpoint, 'post', model, false, h)
@@ -87,8 +89,8 @@ export const translateText = async (from: string, to: string, model: TranslateMo
 export const detectLanguage = async (from: string, to: string, model: TranslateModel[]) => {
     const detectEndpoint = detect_api
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': subscription_key,
+        'Ocp-Apim-Subscription-Region': subscription_region,
     }
 
     return fetchEx(detectEndpoint, 'post', model, false, h)
@@ -97,8 +99,8 @@ export const detectLanguage = async (from: string, to: string, model: TranslateM
 export const lookupDictionary = async (from: string, to: string, model: TranslateModel[]) => {
     const lookupEndpoint = lookup_api + '&from=' + from + '&to=' + to
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': subscription_key,
+        'Ocp-Apim-Subscription-Region': subscription_region,
     }
 
     return fetchEx(lookupEndpoint, 'post', model, false, h)
@@ -107,8 +109,8 @@ export const lookupDictionary = async (from: string, to: string, model: Translat
 export const lookupDictionaryExamples = async (from: string, to: string, model: TranslateModel[]) => {
     const examplesEndpoint = examples_api + '&from=' + from + '&to=' + to
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': subscription_key,
+        'Ocp-Apim-Subscription-Region': subscription_region,
     }
 
     const submodels = ArrayChunks(model, 10)
