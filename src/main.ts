@@ -17,13 +17,18 @@ import i18nPlugin from './plugins/i18n'
 import { handleMicroData } from '@/tools/baseAppEvent'
 import { globalMessageKey } from '@/tools/injectkey'
 import vuetify from '@/tools/vuetify'
+import { AuthService } from './tools/auth'
+import { createAuthPlugin } from './plugins/auth'
 
 let app: AppInstance | null = null
+
+const authService = new AuthService({} as any)// TODO: fill props
 
 const mount = () => {
     // @ts-ignore
     const pinia = usePinia()
     app = createApp(App)
+    app.use(createAuthPlugin(authService))
     app.use(pinia)
     app.provide(globalMessageKey, 'hello!')
     app.use(i18nPlugin, {
