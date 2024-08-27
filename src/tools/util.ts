@@ -1,5 +1,3 @@
-import shaJs from "sha.js"
-
 export const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTMLCanvasElement> => {
     // Create an offscreen canvas
     const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
@@ -44,7 +42,22 @@ export const b64toB64UrlEncoded = (str: string): string => {
         .replace(/=/g, "")
 }
 
-export const shaString = (str: string): string => shaJs("sha256").update(str).digest("base64")
+export const shaString = async (str: string): Promise<string> => {
+    // Encode string to Uint8Array using TextEncoder
+    const encoder = new TextEncoder()
+    const data = encoder.encode(str)
+
+    // Generate SHA-256 hash using Web Crypto API
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data)
+
+    // Convert ArrayBuffer to Uint8Array
+    const hashArray = new Uint8Array(hashBuffer)
+
+    // Convert hash value to Base64 string
+    const base64String = window.btoa(String.fromCharCode(...hashArray))
+
+    return base64String;
+}
 
 export const btoa = (str: string): string => {
     return window.btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {

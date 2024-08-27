@@ -10,9 +10,9 @@ export class pkce {
     constructor() {
     }
 
-    create(): PKCECodePair {
+    async create(): Promise<PKCECodePair> {
         const codeVerifier = generateCodeVerifier()
-        const codeChallenge = createCodeChallenge(codeVerifier)
+        const codeChallenge = await createCodeChallenge(codeVerifier)
         const createdAt = new Date()
         const codePair = {
             codeVerifier,
@@ -32,6 +32,7 @@ const generateCodeVerifier = () => {
     )
 }
 
-const createCodeChallenge = (codeVerifier: string): string => {
-    return b64toB64UrlEncoded(shaString(codeVerifier))
+const createCodeChallenge = async (codeVerifier: string): Promise<string> => {
+    var shacode = await shaString(codeVerifier)
+    return b64toB64UrlEncoded(shacode)
 }

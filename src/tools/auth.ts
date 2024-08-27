@@ -208,10 +208,10 @@ export class AuthService<TIDToken = JWTIDToken> {
     }
 
     // this will do a full page reload and to to the OAuth2 provider's login page and then redirect back to redirectUri
-    authorize(): boolean {
+    async authorize(): Promise<boolean> {
         const { clientId, provider, authorizeEndpoint, redirectUri, scopes, audience } = this.props
 
-        const pkcePair = new pkce().create()
+        const pkcePair = await new pkce().create()
         window.localStorage.setItem('pkce', JSON.stringify(pkcePair))
         window.localStorage.setItem('preAuthUri', location.href)
         window.localStorage.removeItem('auth')
