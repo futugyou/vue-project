@@ -1,6 +1,6 @@
 import { fetchEx } from '@/tools/fetch'
 
-const BASE_PATH = import.meta.env.REACT_APP_AWS_SERVER.replace(/\/+$/, "")
+const BASE_PATH = import.meta.env.VUE_APP_AWS_SERVER.replace(/\/+$/, "")
 
 export interface Parameter {
     id: string

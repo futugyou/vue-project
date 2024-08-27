@@ -65,8 +65,8 @@ export interface DictionaryExampleModel {
     examples: ExampleModel[]
 }
 
-const api_version = "api-version=" + import.meta.env.REACT_APP_TRANSLATE_VSERION
-const api_endpoint = import.meta.env.REACT_APP_TRANSLATE_SERVER
+const api_version = "api-version=" + import.meta.env.VUE_APP_TRANSLATE_VSERION
+const api_endpoint = import.meta.env.VUE_APP_TRANSLATE_SERVER
 
 const languages_api = api_endpoint + 'languages?' + api_version
 const translate_api = api_endpoint + 'translate?' + api_version
@@ -77,8 +77,8 @@ const examples_api = api_endpoint + 'dictionary/examples?' + api_version
 export const translateText = async (from: string, to: string, model: TranslateModel[]) => {
     const translateEndpoint = translate_api + '&from=' + from + '&to=' + to
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.REACT_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.REACT_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
+        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
     }
 
     return fetchEx(translateEndpoint, 'post', model, false, h)
@@ -87,8 +87,8 @@ export const translateText = async (from: string, to: string, model: TranslateMo
 export const detectLanguage = async (from: string, to: string, model: TranslateModel[]) => {
     const detectEndpoint = detect_api
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.REACT_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.REACT_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
+        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
     }
 
     return fetchEx(detectEndpoint, 'post', model, false, h)
@@ -97,8 +97,8 @@ export const detectLanguage = async (from: string, to: string, model: TranslateM
 export const lookupDictionary = async (from: string, to: string, model: TranslateModel[]) => {
     const lookupEndpoint = lookup_api + '&from=' + from + '&to=' + to
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.REACT_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.REACT_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
+        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
     }
 
     return fetchEx(lookupEndpoint, 'post', model, false, h)
@@ -107,8 +107,8 @@ export const lookupDictionary = async (from: string, to: string, model: Translat
 export const lookupDictionaryExamples = async (from: string, to: string, model: TranslateModel[]) => {
     const examplesEndpoint = examples_api + '&from=' + from + '&to=' + to
     let h: Record<string, string> = {
-        'Ocp-Apim-Subscription-Key': import.meta.env.REACT_APP_TRANSLATE_KEY,
-        'Ocp-Apim-Subscription-Region': import.meta.env.REACT_APP_TRANSLATE_REGION,
+        'Ocp-Apim-Subscription-Key': import.meta.env.VUE_APP_TRANSLATE_KEY,
+        'Ocp-Apim-Subscription-Region': import.meta.env.VUE_APP_TRANSLATE_REGION,
     }
 
     const submodels = ArrayChunks(model, 10)

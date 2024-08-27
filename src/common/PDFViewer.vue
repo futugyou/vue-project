@@ -20,7 +20,7 @@ import Next from '@/icons/Next.vue'
 import Contact from '@/icons/Contact.vue'
 import Draggable from '@/common/Draggable.vue'
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.REACT_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
+pdfjsLib.GlobalWorkerOptions.workerSrc = `${import.meta.env.VUE_APP_PDFJS_CDN + pdfjsLib.version}/pdf.worker.mjs`
 
 interface pdfinfo {
     name: string

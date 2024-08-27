@@ -1,9 +1,9 @@
 import { HoneycombWebSDK } from '@honeycombio/opentelemetry-web'
 import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations-web'
 
-const apikey = import.meta.env.REACT_APP_HONEYCOMB_SDK_API_KEY
+const apikey = import.meta.env.VUE_APP_HONEYCOMB_SDK_API_KEY
 const debugFlag = import.meta.env.MODE === "development"
-const domain = import.meta.env.REACT_APP_HONEYCOMB_SDK_BACKEND_URL
+const domain = import.meta.env.VUE_APP_HONEYCOMB_SDK_BACKEND_URL
 const regex = new RegExp(`.+${domain}`, "g")
 
 const configDefaults = {

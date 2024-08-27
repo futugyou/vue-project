@@ -5,7 +5,7 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  envPrefix: "REACT_APP_",
+  envPrefix: "VUE_APP_",
   build: {
     target: 'esnext',
     rollupOptions: {
