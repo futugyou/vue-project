@@ -2,7 +2,7 @@
 import { computed, inject } from 'vue'
 import { globalMessageKey, messageKey, locationKey, DefaultLocation } from '../../tools/injectkey'
 
-interface Book {
+export interface Book {
     title: string
     name: string
 }

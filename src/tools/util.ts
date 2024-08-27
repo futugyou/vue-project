@@ -1,3 +1,4 @@
+import shaJs from "sha.js"
 
 export const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTMLCanvasElement> => {
     // Create an offscreen canvas
@@ -9,8 +10,8 @@ export const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTM
 
     // Create a visible canvas
     const visibleCanvas = document.createElement('canvas')
-    visibleCanvas.width = imageBitmap.width;
-    visibleCanvas.height = imageBitmap.height;
+    visibleCanvas.width = imageBitmap.width
+    visibleCanvas.height = imageBitmap.height
 
     // Get the rendering context for the visible canvas
     const visibleContext = visibleCanvas.getContext('2d')!
@@ -31,8 +32,45 @@ export const ArrayChunks = <T>(items: T[], n: number) => {
 
 export const queryStringify = (query: { [x: string]: any }) => {
     const queryString = Object.keys(query)
-      .map(key => `${key}=${encodeURIComponent(query[key] || '')}`)
-      .join('&')
+        .map(key => `${key}=${encodeURIComponent(query[key] || '')}`)
+        .join('&')
     return queryString
-  }
-  
+}
+
+export const b64toB64UrlEncoded = (str: string): string => {
+    return str
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=/g, "")
+}
+
+export const shaString = (str: string): string => shaJs("sha256").update(str).digest("base64")
+
+export const btoa = (str: string): string => {
+    return window.btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+        return String.fromCharCode(parseInt(p1, 16))
+    }))
+}
+
+export const atob = (base64: string): string => {
+    return decodeURIComponent(Array.prototype.map.call(window.atob(base64), (c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(''))
+}
+
+
+export const toSnakeCase = (str: string): string => {
+    return str
+        .split(/(?=[A-Z])/)
+        .join('_')
+        .toLowerCase()
+}
+
+export const toUrlEncoded = (obj: any): string => {
+    return Object.keys(obj)
+        .map(
+            (k) =>
+                encodeURIComponent(toSnakeCase(k)) + '=' + encodeURIComponent(obj[k])
+        )
+        .join('&')
+}
