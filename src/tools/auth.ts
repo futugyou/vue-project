@@ -346,3 +346,14 @@ export class AuthService<TIDToken = JWTIDToken> {
         this.removeCodeFromLocation()
     }
 }
+
+export const authService = new AuthService({
+    clientId: import.meta.env.VUE_APP_CLIENT_ID,
+    location: window.location,
+    provider: import.meta.env.VUE_APP_PROVIDER,
+    authorizeEndpoint: import.meta.env.VUE_APP_AUTHORIZE,
+    tokenEndpoint: import.meta.env.VUE_APP_TOKEN,
+    redirectUri: import.meta.env.VUE_APP_REDIRECT_URI || window.location.origin,
+    autoRefresh: true,
+    scopes: ['openid', 'profile']
+})
