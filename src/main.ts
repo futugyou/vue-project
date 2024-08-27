@@ -5,41 +5,21 @@ import { HoneycombSDK } from './tools/honeycomb'
 HoneycombSDK.start()
 
 import { createApp, App as AppInstance } from 'vue'
-
 import { inject } from '@vercel/analytics'
-import CodeDiff from 'v-code-diff'
 
-import App from './App.vue'
 import { router, clearRouter } from './router'
-import { usePinia } from './stores/plugins'
-import i18nPlugin from './plugins/i18n'
-
 import { handleMicroData } from '@/tools/baseAppEvent'
-import { globalMessageKey } from '@/tools/injectkey'
-import vuetify from '@/tools/vuetify'
-import { AuthService } from './tools/auth'
-import { createAuthPlugin } from './plugins/auth'
+import { registerPlugins } from './plugins'
+// @ts-ignore
+import App from './App.vue'
 
 let app: AppInstance | null = null
 
-const authService = new AuthService({} as any)// TODO: fill props
-
 const mount = () => {
-    // @ts-ignore
-    const pinia = usePinia()
     app = createApp(App)
-    app.use(createAuthPlugin(authService))
-    app.use(pinia)
-    app.provide(globalMessageKey, 'hello!')
-    app.use(i18nPlugin, {
-        greetings: {
-            hello: 'Bonjour!'
-        }
-    })
-
     app.use(router!)
-    app.use(CodeDiff)
-    app.use(vuetify)
+    
+    registerPlugins(app)
 
     app.mount('#vue3-app-main')
     console.log(3, 'micro app vue demo rendered')
