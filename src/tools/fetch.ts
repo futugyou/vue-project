@@ -1,7 +1,7 @@
 
 import { forEach } from "lodash-es"
 
-import { getToken, logout } from "./token"
+import { getToken, logout } from "./auth"
 import { defaultAccountId } from "./accountid"
 
 export const isomorphicFetch = fetch
@@ -144,7 +144,7 @@ export const FetchParamCreator = (configuration?: any) => {
             const params = new URLSearchParams(path.search)
             Object.entries(Object.assign({}, localVarQueryParameter, options.query)).forEach(([key, value]) => {
                 if (value !== undefined && value !== null) {
-                    params.set(key, value.toString())
+                    params.set(key, (value as any).toString())
                 }
             })
             path.search = params.toString()
