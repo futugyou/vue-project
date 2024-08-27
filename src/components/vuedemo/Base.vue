@@ -6,6 +6,17 @@ import ChildComp from './ChildComp.vue'
 import MouseComp from './MouseComp.vue'
 
 import { messageKey, locationKey, i18nKey, I18nInject } from '../../tools/injectkey'
+import { useAuth } from '@/plugins/auth'
+
+const authService = useAuth()
+
+const authStatus = computed(() => authService.isAuthenticated())
+
+const authUser = computed(() => authService.getUser())
+
+const login = async () => {
+    authService.authorize()
+}
 
 const props = defineProps({
     id: Number
@@ -161,12 +172,7 @@ const i18n = inject(i18nKey) as I18nInject
             <button class="btn btn-primary" @click="increment">Increment Count</button>
         </div>
         <div class="vueapp-layer">
-            <input
-                :value="message"
-                @input="onInput"
-                placeholder="Hello World!"
-                v-if="counter.count % 2 == 0"
-            />
+            <input :value="message" @input="onInput" placeholder="Hello World!" v-if="counter.count % 2 == 0" />
             <input v-model="message" placeholder="Hello World!" v-if="counter.count % 2 == 1" />
             <h1 v-else>this match last 'v-if'</h1>
         </div>
@@ -237,6 +243,12 @@ const i18n = inject(i18nKey) as I18nInject
             <h2>Plugins</h2>
             <h1>{{ $translate('greetings.hello') }}</h1>
             <h1>{{ i18n.greetings.hello }}</h1>
+        </div>
+        <div class="vueapp-layer">
+            <h2>auth</h2>
+            <v-btn @click="login">login</v-btn>
+            <p> login status: {{ authStatus }}</p>
+            <pre> user : {{ authUser }}</pre>
         </div>
     </div>
 </template>
