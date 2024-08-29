@@ -13,13 +13,23 @@ const login = async () => {
     authService.authorize()
 }
 
+const logout = async () => {
+    authService.logout()
+}
+
 </script>
 
 <template>
     <v-sheet class="d-flex align-center justify-center pr-3 pl-3" height="100%">
-        <div v-if="authStatus">
-            <span>{{ authUser?.name }}</span>
-        </div>
+        <v-hover v-if="authStatus">
+            <template v-slot:default="{ isHovering, props }">
+                <v-avatar v-bind="props">
+                    <v-icon icon="md:face" v-if="!isHovering"></v-icon>
+                    <v-icon icon="md:logout" v-if="isHovering" @click="logout"></v-icon>
+                </v-avatar>
+            </template>
+        </v-hover>
+
         <v-btn variant="outlined" @click="login" text="Login" v-else>
             <template v-slot:append>
                 <v-icon icon="md:login"></v-icon>
