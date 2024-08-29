@@ -16,12 +16,14 @@ const login = async () => {
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
+    <v-sheet class="d-flex align-center justify-center pr-3 pl-3" height="100%">
         <div v-if="authStatus">
             <span>{{ authUser?.name }}</span>
         </div>
-        <div v-else>
-            <v-btn @click="login">Login</v-btn>
-        </div>
+        <v-btn variant="outlined" @click="login" text="Login" v-else>
+            <template v-slot:append>
+                <v-icon icon="md:login"></v-icon>
+            </template>
+        </v-btn>
     </v-sheet>
 </template>
