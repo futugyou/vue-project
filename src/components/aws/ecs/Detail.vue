@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 import { getEcsServiceDetail, compareEcsTaskDefinition, EcsTaskCompare } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'
@@ -100,7 +100,7 @@ const compareDefinitions = async () => {
                         <v-list-item title="Service Arn" :subtitle="ecsServiceDetail.service_arn"></v-list-item>
                         <v-list-item title="Role Arn" :subtitle="ecsServiceDetail.role_arn"></v-list-item>
                         <v-list-item title="Operate At"
-                            :subtitle="useTimeFormat(ecsServiceDetail.operate_At)"></v-list-item>
+                            :subtitle="timeFormat(ecsServiceDetail.operate_At)"></v-list-item>
                         <v-list-group>
                             <template v-slot:activator="{ props }">
                                 <v-list-item v-bind="props" title="Security Groups"></v-list-item>

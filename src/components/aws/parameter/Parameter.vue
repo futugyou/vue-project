@@ -9,7 +9,7 @@ import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 
 import { Parameter, getParameters, getParameterCompare } from './parameter'
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -28,10 +28,6 @@ const subLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const dialog = ref(false)
-
-const timeFormat = (timestamp: number): string => {
-    return useTimeFormat(timestamp)
-}
 
 const fields: TableField[] = [
     {

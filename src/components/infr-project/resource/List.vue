@@ -3,7 +3,7 @@ import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
-import { useShortTimeFormat } from '@/composables/timeFormat'
+import { shortTimeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
 import { ResourceView, ResourceApiFactory } from './resource'
@@ -82,8 +82,8 @@ const buildUrl = (id: string) => '/resource/' + id
                         <v-divider></v-divider>
 
                         <div class="d-flex ga-2 justify-center">
-                            <v-chip>Created: {{ useShortTimeFormat(resource.created_at) }}</v-chip>
-                            <v-chip>Updated: {{ useShortTimeFormat(resource.updated_at) }}</v-chip>
+                            <v-chip>Created: {{ shortTimeFormat(resource.created_at) }}</v-chip>
+                            <v-chip>Updated: {{ shortTimeFormat(resource.updated_at) }}</v-chip>
                         </div>
                     </v-card-text>
                 </v-card>

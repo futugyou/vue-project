@@ -5,7 +5,7 @@ import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { EcsService, getEcsServices } from "./ecs"
 import { Account, defaultAccount } from '@/components/aws/account/account'
 import AccountList from "@/components/aws/account/list.vue"
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -35,7 +35,7 @@ const fields: TableField[] = [
     {
         key: 'operate_At',
         label: 'Operate At',
-        format: useTimeFormat
+        format: timeFormat
     }
 ]
 

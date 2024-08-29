@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
 import { ResourceApiFactory, ResourceViewDetail } from './resource'
@@ -42,9 +42,9 @@ const fetchData = async () => {
 fetchData()
 
 const dispalyTime = (history: ResourceViewDetail) => {
-    var t = useTimeFormat(history.updated_at)
+    var t = timeFormat(history.updated_at)
     if (t == "-") {
-        t = useTimeFormat(history.created_at)
+        t = timeFormat(history.created_at)
     }
     return t
 }

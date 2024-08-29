@@ -6,7 +6,7 @@ import Spinners from '@/common/Spinners.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { getParameter, SyncParameter, syncParameter } from './parameter'
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -40,7 +40,7 @@ const fields: TableField[] = [
     {
         key: 'operateAt',
         label: 'OperateAt',
-        format: useTimeFormat
+        format: timeFormat
     },
     {
         key: 'operation',

@@ -5,7 +5,7 @@ import { isEqual } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import RegionList from "@/components/aws/region/list.vue"
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
 import { getRegions } from '@/tools/regions'
 
@@ -154,7 +154,7 @@ defineExpose({
                 <v-sheet>
                     <div class="font-weight-bold flex-1-1 pa-1">CreatedAt</div>
                     <div class="pa-1 flex-1-1">
-                        {{ useTimeFormat(account.createdAt) }}
+                        {{ timeFormat(account.createdAt) }}
                     </div>
                 </v-sheet>
             </v-card-text>

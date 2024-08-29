@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 import { Account, defaultAccount, getAccount, deleteAccount } from './account'
 import Edit from './Edit.vue'
 
@@ -84,7 +84,7 @@ const accountDelete = async () => {
                 <div class="d-flex ma-1 text-body-1 ga-3">
                     <div class="font-weight-bold flex-1-1 pa-3">CreatedAt</div>
                     <div class="pa-3">
-                        {{ useTimeFormat(account.createdAt) }}
+                        {{ timeFormat(account.createdAt) }}
                     </div>
                 </div>
             </v-card-text>

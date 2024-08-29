@@ -7,7 +7,7 @@ import VuetifyModal from '@/common/VuetifyModal.vue'
 import Edit from './Edit.vue'
 
 import { Account, getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
-import { useTimeFormat } from '@/composables/timeFormat'
+import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -23,10 +23,6 @@ const limit = ref(30)
 const page = ref(1)
 const selecedAccount = ref<Account>(defaultAccountraw)
 const dialog = ref(false)
-
-const timeFormat = (timestamp: number): string => {
-    return useTimeFormat(timestamp)
-}
 
 const fields: TableField[] = [
     {
