@@ -6,6 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/vue'
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
 import SidebarMenu from '@/common/SidebarMenu.vue'
+import User from "@/components/user/user.vue"
 
 import IconECSService from '@/icons/ECSService.vue'
 import IconSSM from '@/icons/SSM.vue'
@@ -95,6 +96,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
                     </TabContainer>
                 </KeepAlive>
             </v-app-bar-title>
+            <User></User>
         </v-app-bar>
         <v-fab icon="$vuetify" variant="tonal" location="top start" absolute app width="40" height="40" color="success"
             @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
