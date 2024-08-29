@@ -1,5 +1,6 @@
 
 import { Router } from 'vue-router'
+import { useAuth } from '@/plugins/auth'
 
 declare global {
     interface Window {
@@ -43,10 +44,9 @@ export const handleRequiresAuth = () => {
             })
         }
     } else {
-        // return {
-        //     // this is fake
-        //     path: '/login',
-        //     query: { redirect: to.fullPath }
-        // }
+        const authService = useAuth()
+        if (!authService.isAuthenticated()) {
+            authService.login()
+        }
     }
 } 

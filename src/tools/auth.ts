@@ -13,22 +13,21 @@ export const getToken = () => {
             token = data.Authorization
         }
     } else {
-        // TODO: no mirco sub app env
-        token = localStorage.getItem('faketoken') ?? ""
+        const data = authService.getAuthTokens()
+        token = data.access_token
     }
 
     return token
 }
 
-export const logout = () => {
+export const logout = async () => {
     if (window.__MICRO_APP_ENVIRONMENT__) {
         window.microApp.dispatch({
             Logout: true,
             CreateAt: Date()
         })
     } else {
-        // TODO: no mirco sub app env
-        localStorage.setItem('faketoken', '')
+        await authService.logout()
     }
 }
 

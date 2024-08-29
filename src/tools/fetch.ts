@@ -53,7 +53,7 @@ export const fetchEx = async (
         }
 
         if (res.status == 401) {
-            logout()
+            await logout()
             throw new Error('user not login or do not have right')
         }
         if (res.status == 404) {
