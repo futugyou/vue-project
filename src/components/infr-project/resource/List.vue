@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import { marked } from 'marked'
 import _ from 'lodash-es'
 
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
 import { ResourceView, ResourceApiFactory } from './resource'
+import ResourceData from './ResourceData.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -72,18 +72,7 @@ const buildUrl = (id: string) => '/resource/' + id
 
                         <v-divider></v-divider>
 
-                        <v-img :aspect-ratio="16 / 9" :src="resource.data" v-if="resource.type !== 'Markdown'">
-                            <template v-slot:error>
-                                <v-sheet>
-                                    <div class="text-body-1 word-break">{{ resource.data }}</div>
-                                </v-sheet>
-                            </template>
-                        </v-img>
-                        <v-sheet v-if="resource.type == 'Markdown'">
-                            <v-responsive :aspect-ratio="16 / 9">
-                                <div v-html="marked(resource.data ?? '')"></div>
-                            </v-responsive>
-                        </v-sheet>
+                        <ResourceData :data="resource.data" :type="resource.type"></ResourceData>
 
                         <v-divider></v-divider>
 

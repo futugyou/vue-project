@@ -2,12 +2,12 @@
 import { ref, } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { marked } from 'marked'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
+import ResourceData from './ResourceData.vue'
 
 import { ResourceApiFactory, ResourceViewDetail } from './resource'
 
@@ -80,18 +80,7 @@ const dispalyTime = (history: ResourceViewDetail) => {
 
                         <v-divider></v-divider>
 
-                        <v-img :aspect-ratio="16 / 9" :src="history.data" v-if="history.type !== 'Markdown'">
-                            <template v-slot:error>
-                                <v-sheet>
-                                    <div class="text-body-1 word-break">{{ history.data }}</div>
-                                </v-sheet>
-                            </template>
-                        </v-img>
-                        <v-sheet v-if="history.type == 'Markdown'">
-                            <v-responsive :aspect-ratio="16 / 9">
-                                <div v-html="marked(history.data ?? '')"></div>
-                            </v-responsive>
-                        </v-sheet>
+                        <ResourceData :data="history.data" :type="history.type"></ResourceData>
                     </v-card-text>
                 </v-card>
             </v-timeline-item>
