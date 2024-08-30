@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-import { ref, computed, } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 import { useAuth } from '@/plugins/auth'
 
+const router = useRouter()
+const route = useRoute()
+
 const authService = useAuth()
 
-const authStatus = computed(() => authService.isAuthenticated())
+const authStatus = ref(authService.isAuthenticated())
 
 const authUser = computed(() => authService.getUser())
 
@@ -14,7 +18,13 @@ const login = async () => {
 }
 
 const logout = async () => {
-    authService.logout()
+    await authService.logout()
+
+    authStatus.value = authService.isAuthenticated()
+
+    if (route.meta.requiresAuth) {
+        router.push({ name: 'Home' });
+    }
 }
 
 </script>

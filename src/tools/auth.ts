@@ -195,11 +195,11 @@ export class AuthService<TIDToken = JWTIDToken> {
             }
             const url = `${logoutEndpoint || `${provider}/logout`}?${toUrlEncoded(query)}`
             window.location.replace(url)
-            return true;
         } else {
-            window.location.reload()
-            return true
+            // window.location.reload()
         }
+
+        return true
     }
 
     async login(): Promise<void> {
