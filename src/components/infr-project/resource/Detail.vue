@@ -2,6 +2,7 @@
 import { ref, } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { marked } from 'marked'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
@@ -55,8 +56,7 @@ const dispalyTime = (history: ResourceViewDetail) => {
     <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-timeline v-if="!isLoading" align="start" justify="center">
-            <v-timeline-item v-for="(history, i) in histories" :key="i" dot-color="indigo-lighten-2"
-                icon="md:schedule">
+            <v-timeline-item v-for="(history, i) in histories" :key="i" dot-color="indigo-lighten-2" icon="md:schedule">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ dispalyTime(history) }} </template>
 
@@ -80,13 +80,18 @@ const dispalyTime = (history: ResourceViewDetail) => {
 
                         <v-divider></v-divider>
 
-                        <v-img :aspect-ratio="16 / 9" :src="history.data" width="100%">
+                        <v-img :aspect-ratio="16 / 9" :src="history.data" v-if="history.type !== 'Markdown'">
                             <template v-slot:error>
                                 <v-sheet>
                                     <div class="text-body-1 word-break">{{ history.data }}</div>
                                 </v-sheet>
                             </template>
                         </v-img>
+                        <v-sheet v-if="history.type == 'Markdown'">
+                            <v-responsive :aspect-ratio="16 / 9">
+                                <div v-html="marked(history.data ?? '')"></div>
+                            </v-responsive>
+                        </v-sheet>
                     </v-card-text>
                 </v-card>
             </v-timeline-item>

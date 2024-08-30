@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
+import { marked } from 'marked'
 import _ from 'lodash-es'
 
 import { shortTimeFormat } from '@/tools/timeFormat'
@@ -26,7 +27,7 @@ const fetchData = async () => {
         return
     }
 
-    resources.value =  _.orderBy(data, "updated_at", "desc")
+    resources.value = _.orderBy(data, "updated_at", "desc")
 }
 
 watchEffect(async () => fetchData())
@@ -41,7 +42,7 @@ const buildUrl = (id: string) => '/resource/' + id
             <v-col v-for="resource in resources" :key="resource.id" cols="12" md="3">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ resource.name }} </template>
-                    
+
                     <template v-slot:append>
                         <a :href="buildUrl(resource.id!)" target="_blank">
                             <v-hover>
@@ -71,13 +72,18 @@ const buildUrl = (id: string) => '/resource/' + id
 
                         <v-divider></v-divider>
 
-                        <v-img :aspect-ratio="16 / 9" :src="resource.data" width="100%">
+                        <v-img :aspect-ratio="16 / 9" :src="resource.data" v-if="resource.type !== 'Markdown'">
                             <template v-slot:error>
                                 <v-sheet>
                                     <div class="text-body-1 word-break">{{ resource.data }}</div>
                                 </v-sheet>
                             </template>
                         </v-img>
+                        <v-sheet v-if="resource.type == 'Markdown'">
+                            <v-responsive :aspect-ratio="16 / 9">
+                                <div v-html="marked(resource.data ?? '')"></div>
+                            </v-responsive>
+                        </v-sheet>
 
                         <v-divider></v-divider>
 
