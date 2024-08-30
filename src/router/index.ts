@@ -17,14 +17,16 @@ router = createRouter({
 }) as Router
 
 // route guards
-router.beforeEach((to: any, from: any) => {
+router.beforeEach((to: any, from: any, next: any) => {
     // it will NOT stop redirect
     if (to.name == 'Redirect') {
         return false
     }
 
-    if (to.meta.requiresAuth) {
-        handleRequiresAuth()
+    if (to.meta.requiresAuth && !handleRequiresAuth()) {
+        next(false)
+    } else {
+        next()
     }
 })
 

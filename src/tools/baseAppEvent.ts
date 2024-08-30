@@ -34,7 +34,7 @@ export const handleMicroData = (router: Router) => {
     }
 }
 
-export const handleRequiresAuth = () => {
+export const handleRequiresAuth = (): boolean => {
     if (window.__MICRO_APP_ENVIRONMENT__) {
         const data = window.microApp?.getData()
         if (!data?.Authorization) {
@@ -42,11 +42,14 @@ export const handleRequiresAuth = () => {
                 NeedLogin: true,
                 CreateAt: Date()
             })
+            return false
         }
     } else {
         const authService = useAuth()
         if (!authService.isAuthenticated()) {
             authService.login()
+            return false
         }
     }
+    return true
 } 
