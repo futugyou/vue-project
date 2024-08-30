@@ -39,10 +39,7 @@ watch(isSmallScreen, () => {
 </script>
 
 <template>
-    <div class="wrapper">
-        <!-- <div class="icon-control" @click="changeSidebarShowState">
-            <img src="@/assets/logo.svg" alt="logo" width="32px" height="32px">
-        </div> -->
+    <v-sheet>
         <aside :vue:is-open="isSidebarOpen" v-if="isSidebarShow">
             <ul class="sidebar-head">
                 <li>
@@ -65,7 +62,7 @@ watch(isSmallScreen, () => {
                 </li>
             </ul>
         </aside>
-    </div>
+    </v-sheet>
 </template>
 
 <style scoped lang="scss">
@@ -80,30 +77,11 @@ aside[vue\:is-open=true] {
     width: 3 * $sidebar-width;
 }
 
-.icon-control {
-    position: fixed;
-    top: 0;
-    cursor: pointer;
-    left: 0;
-    z-index: 10;
-    user-select: none;
-    width: 64px;
-    display: flex;
-    height: 50px;
-    justify-content: center;
-    align-items: center;
-
-    &:hover {
-        background-color: rgb(0 0 255 / 20%);
-    }
-}
-
 ul {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     padding-block-end: 1rem;
-    // list-style-type: none;
     padding-left: 0rem;
 }
 
@@ -111,10 +89,6 @@ img {
     object-fit: contain;
     cursor: pointer;
 }
-
-//  img:hover {
-//      box-shadow: 4px 4px 2px 1px rgb(0 0 255 / 20%);
-//  }
 
 li {
     user-select: none;
@@ -128,7 +102,6 @@ li {
     }
 
     & a {
-        // border-right: 0.25rem solid white;
         display: flex;
         color: $primary-color;
         align-items: center;
@@ -155,10 +128,9 @@ li {
 
 .sidebar-head {
     position: relative;
-    // padding-block-end: 4rem;
     margin: 0;
     padding: 0;
-    margin-top: 50px;
+    margin-top: 64px;
 
 }
 

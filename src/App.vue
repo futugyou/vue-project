@@ -98,7 +98,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
             </v-app-bar-title>
             <User></User>
         </v-app-bar>
-        <v-fab icon="$vuetify" variant="tonal" location="top start" absolute app width="40" height="40" color="success"
+        <v-fab icon="$vuetify" variant="tonal" location="top start" position="fixed" app width="40" height="40" color="primary"
             @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
         <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
             v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
@@ -116,9 +116,3 @@ const isSidebarOpen = shallowRef<Boolean>(false)
         </v-main>
     </v-app>
 </template>
-
-<style scoped>
-.subappsidebar {
-    grid-area: 'sidebar';
-}
-</style>
