@@ -22,6 +22,7 @@ import { handleGlobalData } from '@/tools/baseAppEvent'
 import DemoRoute from '@/components/vuedemo/DemoRoute.vue'
 import AwsRoute from '@/components/aws/AwsRoute.vue'
 import ToolsRoute from '@/components/tools/ToolsRoute.vue'
+import ProjectRoute from '@/components/infr-project/ProjectRoute.vue'
 
 const rootContainer = ref("nomalRootContainer")
 const onRouteChange = () => {
@@ -74,6 +75,7 @@ watchEffect(() => {
 const componentDic: Record<string, Component> = {
     'demo': DemoRoute,
     'aws': AwsRoute,
+    'project': ProjectRoute,
     'tools': ToolsRoute,
 }
 
@@ -98,8 +100,8 @@ const isSidebarOpen = shallowRef<Boolean>(false)
             </v-app-bar-title>
             <User></User>
         </v-app-bar>
-        <v-fab icon="$vuetify" variant="tonal" location="top start" position="fixed" app width="40" height="40" color="primary"
-            @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
+        <v-fab icon="$vuetify" variant="tonal" location="top start" position="fixed" app width="40" height="40"
+            color="primary" @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
         <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
             v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
             <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
