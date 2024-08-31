@@ -84,9 +84,6 @@ const changeAccount = (acc: Account) => {
         </v-toolbar>
         <TableAndPaging :items="ecsServices" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
-            <template v-slot:header_id="header">
-                <span style="color: red">{{ header.label }}</span>
-            </template>
             <template v-slot:body_service_name="body">
                 <router-link :to="'/ecs/' + body.id" page-path="" class="detail-link">
                     <span>
