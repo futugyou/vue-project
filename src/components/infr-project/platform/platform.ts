@@ -170,7 +170,7 @@ export interface ViewmodelsPlatformView {
      * @type {boolean}
      * @memberof ViewmodelsPlatformView
      */
-    isDeleted?: boolean
+    is_deleted?: boolean
     /**
      * 
      * @type {string}
@@ -194,7 +194,7 @@ export interface ViewmodelsPlatformView {
      * @type {string}
      * @memberof ViewmodelsPlatformView
      */
-    restEndpoint?: string
+    rest_endpoint?: string
     /**
      * 
      * @type {Array<string>}
