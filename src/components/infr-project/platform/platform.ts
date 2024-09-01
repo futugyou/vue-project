@@ -5,25 +5,25 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
 /**
  * 
  * @export
- * @interface ViewmodelsUpdatePlatformProjectRequest
+ * @interface UpdatePlatformProjectRequest
  */
-export interface ViewmodelsUpdatePlatformProjectRequest {
+export interface UpdatePlatformProjectRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformProjectRequest
+     * @memberof UpdatePlatformProjectRequest
      */
     name: string
     /**
      * 
      * @type {{ [key: string]: string }}
-     * @memberof ViewmodelsUpdatePlatformProjectRequest
+     * @memberof UpdatePlatformProjectRequest
      */
     property?: { [key: string]: string }
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformProjectRequest
+     * @memberof UpdatePlatformProjectRequest
      */
     url: string
 }
@@ -31,37 +31,37 @@ export interface ViewmodelsUpdatePlatformProjectRequest {
 /**
  * 
  * @export
- * @interface ViewmodelsUpdatePlatformWebhookRequest
+ * @interface UpdatePlatformWebhookRequest
  */
-export interface ViewmodelsUpdatePlatformWebhookRequest {
+export interface UpdatePlatformWebhookRequest {
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsUpdatePlatformWebhookRequest
+     * @memberof UpdatePlatformWebhookRequest
      */
     activate: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformWebhookRequest
+     * @memberof UpdatePlatformWebhookRequest
      */
     name: string
     /**
      * 
      * @type {{ [key: string]: string }}
-     * @memberof ViewmodelsUpdatePlatformWebhookRequest
+     * @memberof UpdatePlatformWebhookRequest
      */
     property?: { [key: string]: string }
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformWebhookRequest
+     * @memberof UpdatePlatformWebhookRequest
      */
     state?: WebhookStateEnum
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformWebhookRequest
+     * @memberof UpdatePlatformWebhookRequest
      */
     url: string
 }
@@ -69,43 +69,43 @@ export interface ViewmodelsUpdatePlatformWebhookRequest {
 /**
  * 
  * @export
- * @interface ViewmodelsUpdatePlatformRequest
+ * @interface UpdatePlatformRequest
  */
-export interface ViewmodelsUpdatePlatformRequest {
+export interface UpdatePlatformRequest {
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsUpdatePlatformRequest
+     * @memberof UpdatePlatformRequest
      */
     activate?: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformRequest
+     * @memberof UpdatePlatformRequest
      */
     name: string
     /**
      * 
-     * @type {Array<ViewmodelsPropertyInfo>}
-     * @memberof ViewmodelsUpdatePlatformRequest
+     * @type {Array<PropertyInfo>}
+     * @memberof UpdatePlatformRequest
      */
-    property?: Array<ViewmodelsPropertyInfo>
+    property?: Array<PropertyInfo>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformRequest
+     * @memberof UpdatePlatformRequest
      */
     rest: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsUpdatePlatformRequest
+     * @memberof UpdatePlatformRequest
      */
     tags?: Array<string>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdatePlatformRequest
+     * @memberof UpdatePlatformRequest
      */
     url: string
 }
@@ -113,25 +113,25 @@ export interface ViewmodelsUpdatePlatformRequest {
 /**
  * 
  * @export
- * @interface ViewmodelsPropertyInfo
+ * @interface PropertyInfo
  */
-export interface ViewmodelsPropertyInfo {
+export interface PropertyInfo {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsPropertyInfo
+     * @memberof PropertyInfo
      */
     key?: string
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsPropertyInfo
+     * @memberof PropertyInfo
      */
     needMask?: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsPropertyInfo
+     * @memberof PropertyInfo
      */
     value?: string
 }
@@ -146,65 +146,52 @@ export enum WebhookStateEnum {
     Ready = <any>'Ready'
 }
 
-
 /**
  * 
  * @export
- * @interface ViewmodelsPlatformView
+ * @interface PlatformView
  */
-export interface ViewmodelsPlatformView {
+ export interface PlatformView {
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     activate?: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     id?: string
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     is_deleted?: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     name?: string
     /**
      * 
-     * @type {Array<ViewmodelsPlatformProject>}
-     * @memberof ViewmodelsPlatformView
-     */
-    projects?: Array<ViewmodelsPlatformProject>
-    /**
-     * 
-     * @type {Array<ViewmodelsPropertyInfo>}
-     * @memberof ViewmodelsPlatformView
-     */
-    property?: Array<ViewmodelsPropertyInfo>
-    /**
-     * 
      * @type {string}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     rest_endpoint?: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     tags?: Array<string>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsPlatformView
+     * @memberof PlatformView
      */
     url?: string
 }
@@ -212,75 +199,61 @@ export interface ViewmodelsPlatformView {
 /**
  * 
  * @export
- * @interface ViewmodelsPlatformProject
+ * @interface PlatformDetailView
  */
-export interface ViewmodelsPlatformProject {
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewmodelsPlatformProject
-     */
-    id?: string
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewmodelsPlatformProject
-     */
-    name?: string
-    /**
-     * 
-     * @type {{ [key: string]: string }}
-     * @memberof ViewmodelsPlatformProject
-     */
-    property?: { [key: string]: string }
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewmodelsPlatformProject
-     */
-    url?: string
-    /**
-     * 
-     * @type {Array<ViewmodelsWebhook>}
-     * @memberof ViewmodelsPlatformProject
-     */
-    webhooks?: Array<ViewmodelsWebhook>
-}
-
-/**
- * 
- * @export
- * @interface ViewmodelsWebhook
- */
-export interface ViewmodelsWebhook {
+export interface PlatformDetailView {
     /**
      * 
      * @type {boolean}
-     * @memberof ViewmodelsWebhook
+     * @memberof PlatformDetailView
      */
     activate?: boolean
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsWebhook
+     * @memberof PlatformDetailView
+     */
+    id?: string
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PlatformDetailView
+     */
+    is_deleted?: boolean
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformDetailView
      */
     name?: string
     /**
      * 
-     * @type {{ [key: string]: string }}
-     * @memberof ViewmodelsWebhook
+     * @type {Array<PlatformProject>}
+     * @memberof PlatformDetailView
      */
-    property?: { [key: string]: string }
+    projects?: Array<PlatformProject>
+    /**
+     * 
+     * @type {Array<PropertyInfo>}
+     * @memberof PlatformDetailView
+     */
+    property?: Array<PropertyInfo>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsWebhook
+     * @memberof PlatformDetailView
      */
-    state?: string
+    rest_endpoint?: string
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PlatformDetailView
+     */
+    tags?: Array<string>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsWebhook
+     * @memberof PlatformDetailView
      */
     url?: string
 }
@@ -288,37 +261,113 @@ export interface ViewmodelsWebhook {
 /**
  * 
  * @export
- * @interface ViewmodelsCreatePlatformRequest
+ * @interface PlatformProject
  */
-export interface ViewmodelsCreatePlatformRequest {
+export interface PlatformProject {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreatePlatformRequest
+     * @memberof PlatformProject
+     */
+    id?: string
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    name?: string
+    /**
+     * 
+     * @type {{ [key: string]: string }}
+     * @memberof PlatformProject
+     */
+    property?: { [key: string]: string }
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    url?: string
+    /**
+     * 
+     * @type {Array<Webhook>}
+     * @memberof PlatformProject
+     */
+    webhooks?: Array<Webhook>
+}
+
+/**
+ * 
+ * @export
+ * @interface Webhook
+ */
+export interface Webhook {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Webhook
+     */
+    activate?: boolean
+    /**
+     * 
+     * @type {string}
+     * @memberof Webhook
+     */
+    name?: string
+    /**
+     * 
+     * @type {{ [key: string]: string }}
+     * @memberof Webhook
+     */
+    property?: { [key: string]: string }
+    /**
+     * 
+     * @type {string}
+     * @memberof Webhook
+     */
+    state?: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Webhook
+     */
+    url?: string
+}
+
+/**
+ * 
+ * @export
+ * @interface CreatePlatformRequest
+ */
+export interface CreatePlatformRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePlatformRequest
      */
     name: string
     /**
      * 
-     * @type {Array<ViewmodelsPropertyInfo>}
-     * @memberof ViewmodelsCreatePlatformRequest
+     * @type {Array<PropertyInfo>}
+     * @memberof CreatePlatformRequest
      */
-    property?: Array<ViewmodelsPropertyInfo>
+    property?: Array<PropertyInfo>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreatePlatformRequest
+     * @memberof CreatePlatformRequest
      */
     rest: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsCreatePlatformRequest
+     * @memberof CreatePlatformRequest
      */
     tags?: Array<string>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreatePlatformRequest
+     * @memberof CreatePlatformRequest
      */
     url: string
 }
@@ -374,11 +423,11 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
         /**
          * create platform webhook
          * @summary create platform webhook
-         * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+         * @param {UpdatePlatformProjectRequest} body Request body
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectPost(body: ViewmodelsUpdatePlatformProjectRequest, id: string, options: any = {}): FetchArgs {
+        v1PlatformIdProjectPost(body: UpdatePlatformProjectRequest, id: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1PlatformIdProjectPost.')
@@ -417,12 +466,12 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
         /**
          * update platform webhook
          * @summary update platform webhook
-         * @param {ViewmodelsUpdatePlatformWebhookRequest} body Request body
+         * @param {UpdatePlatformWebhookRequest} body Request body
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookPut(body: ViewmodelsUpdatePlatformWebhookRequest, id: string, projectId: string, options: any = {}): FetchArgs {
+        v1PlatformIdProjectProjectIdHookPut(body: UpdatePlatformWebhookRequest, id: string, projectId: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1PlatformIdProjectProjectIdHookPut.')
@@ -444,12 +493,12 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
         /**
          * update platform project
          * @summary update platform project
-         * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+         * @param {UpdatePlatformProjectRequest} body Request body
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdPut(body: ViewmodelsUpdatePlatformProjectRequest, id: string, projectId: string, options: any = {}): FetchArgs {
+        v1PlatformIdProjectProjectIdPut(body: UpdatePlatformProjectRequest, id: string, projectId: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1PlatformIdProjectProjectIdPut.')
@@ -471,11 +520,11 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
         /**
          * update platform
          * @summary update platform
-         * @param {ViewmodelsUpdatePlatformRequest} body Request body
+         * @param {UpdatePlatformRequest} body Request body
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdPut(body: ViewmodelsUpdatePlatformRequest, id: string, options: any = {}): FetchArgs {
+        v1PlatformIdPut(body: UpdatePlatformRequest, id: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1PlatformIdPut.')
@@ -492,10 +541,10 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
         /**
          * create platform
          * @summary create platform
-         * @param {ViewmodelsCreatePlatformRequest} body Request body
+         * @param {CreatePlatformRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1PlatformPost(body: ViewmodelsCreatePlatformRequest, options: any = {}): FetchArgs {
+        v1PlatformPost(body: CreatePlatformRequest, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1PlatformPost.')
@@ -519,7 +568,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @summary get all platform
          * @param {*} [options] Override http request option.
          */
-        v1PlatformGet: (options?: any) => () => fetchData<ViewmodelsPlatformView[]>(fetchParamsCreator.v1PlatformGet(options)),
+        v1PlatformGet: (options?: any) => () => fetchData<PlatformView[]>(fetchParamsCreator.v1PlatformGet(options)),
 
         /**
          * delete platform
@@ -527,7 +576,7 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdDelete: (id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdDelete(id, options)),
+        v1PlatformIdDelete: (id: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdDelete(id, options)),
 
         /**
          * get platform
@@ -535,16 +584,16 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdGet(id, options)),
+        v1PlatformIdGet: (id: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdGet(id, options)),
 
         /**
          * create platform webhook
          * @summary create platform webhook
-         * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+         * @param {UpdatePlatformProjectRequest} body Request body
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectPost: (body: ViewmodelsUpdatePlatformProjectRequest, id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectPost(body, id, options)),
+        v1PlatformIdProjectPost: (body: UpdatePlatformProjectRequest, id: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectPost(body, id, options)),
 
         /**
          * delete platform project
@@ -553,44 +602,44 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
+        v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
 
         /**
          * update platform webhook
          * @summary update platform webhook
-         * @param {ViewmodelsUpdatePlatformWebhookRequest} body Request body
+         * @param {UpdatePlatformWebhookRequest} body Request body
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookPut: (body: ViewmodelsUpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectProjectIdHookPut(body, id, projectId, options)),
+        v1PlatformIdProjectProjectIdHookPut: (body: UpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdHookPut(body, id, projectId, options)),
 
         /**
          * update platform project
          * @summary update platform project
-         * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+         * @param {UpdatePlatformProjectRequest} body Request body
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdPut: (body: ViewmodelsUpdatePlatformProjectRequest, id: string, projectId: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdProjectProjectIdPut(body, id, projectId, options)),
+        v1PlatformIdProjectProjectIdPut: (body: UpdatePlatformProjectRequest, id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdPut(body, id, projectId, options)),
 
         /**
          * update platform
          * @summary update platform
-         * @param {ViewmodelsUpdatePlatformRequest} body Request body
+         * @param {UpdatePlatformRequest} body Request body
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdPut: (body: ViewmodelsUpdatePlatformRequest, id: string, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformIdPut(body, id, options)),
+        v1PlatformIdPut: (body: UpdatePlatformRequest, id: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdPut(body, id, options)),
 
         /**
          * create platform
          * @summary create platform
-         * @param {ViewmodelsCreatePlatformRequest} body Request body
+         * @param {CreatePlatformRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1PlatformPost: (body: ViewmodelsCreatePlatformRequest, options?: any) => () => fetchData<ViewmodelsPlatformView>(fetchParamsCreator.v1PlatformPost(body, options)),
+        v1PlatformPost: (body: CreatePlatformRequest, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformPost(body, options)),
 
     }
 }
@@ -630,11 +679,11 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
         /**
          * create platform webhook
          * @summary create platform webhook
-         * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+         * @param {UpdatePlatformProjectRequest} body Request body
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectPost(body: ViewmodelsUpdatePlatformProjectRequest, id: string, options?: any) {
+        v1PlatformIdProjectPost(body: UpdatePlatformProjectRequest, id: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectPost(body, id, options)()
         },
         /**
@@ -650,42 +699,42 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
         /**
          * update platform webhook
          * @summary update platform webhook
-         * @param {ViewmodelsUpdatePlatformWebhookRequest} body Request body
+         * @param {UpdatePlatformWebhookRequest} body Request body
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookPut(body: ViewmodelsUpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) {
+        v1PlatformIdProjectProjectIdHookPut(body: UpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdHookPut(body, id, projectId, options)()
         },
         /**
          * update platform project
          * @summary update platform project
-         * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+         * @param {UpdatePlatformProjectRequest} body Request body
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdPut(body: ViewmodelsUpdatePlatformProjectRequest, id: string, projectId: string, options?: any) {
+        v1PlatformIdProjectProjectIdPut(body: UpdatePlatformProjectRequest, id: string, projectId: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdPut(body, id, projectId, options)()
         },
         /**
          * update platform
          * @summary update platform
-         * @param {ViewmodelsUpdatePlatformRequest} body Request body
+         * @param {UpdatePlatformRequest} body Request body
          * @param {string} id Platform ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdPut(body: ViewmodelsUpdatePlatformRequest, id: string, options?: any) {
+        v1PlatformIdPut(body: UpdatePlatformRequest, id: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdPut(body, id, options)()
         },
         /**
          * create platform
          * @summary create platform
-         * @param {ViewmodelsCreatePlatformRequest} body Request body
+         * @param {CreatePlatformRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1PlatformPost(body: ViewmodelsCreatePlatformRequest, options?: any) {
+        v1PlatformPost(body: CreatePlatformRequest, options?: any) {
             return PlatformApiFp(configuration).v1PlatformPost(body, options)()
         },
     }
@@ -733,12 +782,12 @@ export class PlatformApi extends BaseAPI {
     /**
      * create platform webhook
      * @summary create platform webhook
-     * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+     * @param {UpdatePlatformProjectRequest} body Request body
      * @param {string} id Platform ID
      * @param {*} [options] Override http request option.
      * @memberof PlatformApi
      */
-    public v1PlatformIdProjectPost(body: ViewmodelsUpdatePlatformProjectRequest, id: string, options?: any) {
+    public v1PlatformIdProjectPost(body: UpdatePlatformProjectRequest, id: string, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectPost(body, id, options)()
     }
 
@@ -757,49 +806,49 @@ export class PlatformApi extends BaseAPI {
     /**
      * update platform webhook
      * @summary update platform webhook
-     * @param {ViewmodelsUpdatePlatformWebhookRequest} body Request body
+     * @param {UpdatePlatformWebhookRequest} body Request body
      * @param {string} id Platform ID
      * @param {string} projectId Platform Project ID
      * @param {*} [options] Override http request option.
      * @memberof PlatformApi
      */
-    public v1PlatformIdProjectProjectIdHookPut(body: ViewmodelsUpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) {
+    public v1PlatformIdProjectProjectIdHookPut(body: UpdatePlatformWebhookRequest, id: string, projectId: string, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdHookPut(body, id, projectId, options)()
     }
 
     /**
      * update platform project
      * @summary update platform project
-     * @param {ViewmodelsUpdatePlatformProjectRequest} body Request body
+     * @param {UpdatePlatformProjectRequest} body Request body
      * @param {string} id Platform ID
      * @param {string} projectId Platform Project ID
      * @param {*} [options] Override http request option.
      * @memberof PlatformApi
      */
-    public v1PlatformIdProjectProjectIdPut(body: ViewmodelsUpdatePlatformProjectRequest, id: string, projectId: string, options?: any) {
+    public v1PlatformIdProjectProjectIdPut(body: UpdatePlatformProjectRequest, id: string, projectId: string, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdPut(body, id, projectId, options)()
     }
 
     /**
      * update platform
      * @summary update platform
-     * @param {ViewmodelsUpdatePlatformRequest} body Request body
+     * @param {UpdatePlatformRequest} body Request body
      * @param {string} id Platform ID
      * @param {*} [options] Override http request option.
      * @memberof PlatformApi
      */
-    public v1PlatformIdPut(body: ViewmodelsUpdatePlatformRequest, id: string, options?: any) {
+    public v1PlatformIdPut(body: UpdatePlatformRequest, id: string, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformIdPut(body, id, options)()
     }
 
     /**
      * create platform
      * @summary create platform
-     * @param {ViewmodelsCreatePlatformRequest} body Request body
+     * @param {CreatePlatformRequest} body Request body
      * @param {*} [options] Override http request option.
      * @memberof PlatformApi
      */
-    public v1PlatformPost(body: ViewmodelsCreatePlatformRequest, options?: any) {
+    public v1PlatformPost(body: CreatePlatformRequest, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformPost(body, options)()
     }
 

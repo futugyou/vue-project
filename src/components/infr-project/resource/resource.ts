@@ -129,25 +129,25 @@ export interface ResourceViewDetail {
 /**
  * 
  * @export
- * @interface ViewmodelsUpdateResourceRequest
+ * @interface UpdateResourceRequest
  */
-export interface ViewmodelsUpdateResourceRequest {
+export interface UpdateResourceRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateResourceRequest
+     * @memberof UpdateResourceRequest
      */
     data: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateResourceRequest
+     * @memberof UpdateResourceRequest
      */
     name: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsUpdateResourceRequest
+     * @memberof UpdateResourceRequest
      */
     tags?: Array<string>
 }
@@ -155,31 +155,31 @@ export interface ViewmodelsUpdateResourceRequest {
 /**
  * 
  * @export
- * @interface ViewmodelsCreateResourceRequest
+ * @interface CreateResourceRequest
  */
-export interface ViewmodelsCreateResourceRequest {
+export interface CreateResourceRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateResourceRequest
+     * @memberof CreateResourceRequest
      */
     data: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateResourceRequest
+     * @memberof CreateResourceRequest
      */
     name: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsCreateResourceRequest
+     * @memberof CreateResourceRequest
      */
     tags?: Array<string>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateResourceRequest
+     * @memberof CreateResourceRequest
      */
     type?: ResourceTypeEnum
 }
@@ -198,13 +198,13 @@ export enum ResourceTypeEnum {
 /**
  * 
  * @export
- * @interface ViewmodelsCreateResourceResponse
+ * @interface CreateResourceResponse
  */
-export interface ViewmodelsCreateResourceResponse {
+export interface CreateResourceResponse {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateResourceResponse
+     * @memberof CreateResourceResponse
      */
     id?: string
 }
@@ -282,12 +282,12 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
         /**
          * update resource
          * @summary update resource
-         * @param {ViewmodelsUpdateResourceRequest} body Request body
+         * @param {UpdateResourceRequest} body Request body
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options: any = {}): FetchArgs {
+        v1ResourceIdPut(body: UpdateResourceRequest, id: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ResourceIdPut.')
@@ -305,11 +305,11 @@ export const ResourceApiFetchParamCreator = (configuration?: any) => {
         /**
          * create resource
          * @summary create resource
-         * @param {ViewmodelsCreateResourceRequest} body Request body
+         * @param {CreateResourceRequest} body Request body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1ResourcePost(body: ViewmodelsCreateResourceRequest, options: any = {}): FetchArgs {
+        v1ResourcePost(body: CreateResourceRequest, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ResourcePost.')
@@ -363,19 +363,19 @@ export const ResourceApiFp = (configuration?: any) => {
         /**
          * update resource
          * @summary update resource
-         * @param {ViewmodelsUpdateResourceRequest} body Request body
+         * @param {UpdateResourceRequest} body Request body
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option. 
          */
-        v1ResourceIdPut: (body: ViewmodelsUpdateResourceRequest, id: string, options?: any) => () => fetchData<string>(fetchParamsCreator.v1ResourceIdPut(body, id, options)),
+        v1ResourceIdPut: (body: UpdateResourceRequest, id: string, options?: any) => () => fetchData<string>(fetchParamsCreator.v1ResourceIdPut(body, id, options)),
 
         /**
          * create resource
          * @summary create resource
-         * @param {ViewmodelsCreateResourceRequest} body Request body
+         * @param {CreateResourceRequest} body Request body
          * @param {*} [options] Override http request option. 
          */
-        v1ResourcePost: (body: ViewmodelsCreateResourceRequest, options?: any) => () => fetchData<ViewmodelsCreateResourceResponse>(fetchParamsCreator.v1ResourcePost(body, options)),
+        v1ResourcePost: (body: CreateResourceRequest, options?: any) => () => fetchData<CreateResourceResponse>(fetchParamsCreator.v1ResourcePost(body, options)),
 
     }
 }
@@ -428,22 +428,22 @@ export const ResourceApiFactory = (configuration?: any) => {
         /**
          * update resource
          * @summary update resource
-         * @param {ViewmodelsUpdateResourceRequest} body Request body
+         * @param {UpdateResourceRequest} body Request body
          * @param {string} id Resource ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options?: any) {
+        v1ResourceIdPut(body: UpdateResourceRequest, id: string, options?: any) {
             return ResourceApiFp(configuration).v1ResourceIdPut(body, id, options)()
         },
         /**
          * create resource
          * @summary create resource
-         * @param {ViewmodelsCreateResourceRequest} body Request body
+         * @param {CreateResourceRequest} body Request body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1ResourcePost(body: ViewmodelsCreateResourceRequest, options?: any) {
+        v1ResourcePost(body: CreateResourceRequest, options?: any) {
             return ResourceApiFp(configuration).v1ResourcePost(body, options)()
         },
     }
@@ -509,25 +509,25 @@ export class ResourceApi extends BaseAPI {
     /**
      * update resource
      * @summary update resource
-     * @param {ViewmodelsUpdateResourceRequest} body Request body
+     * @param {UpdateResourceRequest} body Request body
      * @param {string} id Resource ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ResourceApi
      */
-    public v1ResourceIdPut(body: ViewmodelsUpdateResourceRequest, id: string, options?: any) {
+    public v1ResourceIdPut(body: UpdateResourceRequest, id: string, options?: any) {
         return ResourceApiFp(this.configuration).v1ResourceIdPut(body, id, options)()
     }
 
     /**
      * create resource
      * @summary create resource
-     * @param {ViewmodelsCreateResourceRequest} body Request body
+     * @param {CreateResourceRequest} body Request body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ResourceApi
      */
-    public v1ResourcePost(body: ViewmodelsCreateResourceRequest, options?: any) {
+    public v1ResourcePost(body: CreateResourceRequest, options?: any) {
         return ResourceApiFp(this.configuration).v1ResourcePost(body, options)()
     }
 }

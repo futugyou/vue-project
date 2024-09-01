@@ -5,25 +5,25 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
 /**
  * 
  * @export
- * @interface ViewmodelsProjectDesign
+ * @interface ProjectDesign
  */
-export interface ViewmodelsProjectDesign {
+export interface ProjectDesign {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectDesign
+     * @memberof ProjectDesign
      */
     description?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectDesign
+     * @memberof ProjectDesign
      */
     name?: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsProjectDesign
+     * @memberof ProjectDesign
      */
     resources?: Array<string>
 }
@@ -31,25 +31,25 @@ export interface ViewmodelsProjectDesign {
 /**
  * 
  * @export
- * @interface ViewmodelsProjectPlatform
+ * @interface ProjectPlatform
  */
-export interface ViewmodelsProjectPlatform {
+export interface ProjectPlatform {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectPlatform
+     * @memberof ProjectPlatform
      */
     description?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectPlatform
+     * @memberof ProjectPlatform
      */
     name?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectPlatform
+     * @memberof ProjectPlatform
      */
     projectId?: string
 }
@@ -57,61 +57,61 @@ export interface ViewmodelsProjectPlatform {
 /**
  * 
  * @export
- * @interface ViewmodelsProjectView
+ * @interface ProjectView
  */
-export interface ViewmodelsProjectView {
+export interface ProjectView {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     description?: string
     /**
      * 
-     * @type {Array<ViewmodelsProjectDesign>}
-     * @memberof ViewmodelsProjectView
+     * @type {Array<ProjectDesign>}
+     * @memberof ProjectView
      */
-    designs?: Array<ViewmodelsProjectDesign>
+    designs?: Array<ProjectDesign>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     endDate?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     id?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     name?: string
     /**
      * 
-     * @type {Array<ViewmodelsProjectPlatform>}
-     * @memberof ViewmodelsProjectView
+     * @type {Array<ProjectPlatform>}
+     * @memberof ProjectView
      */
-    platforms?: Array<ViewmodelsProjectPlatform>
+    platforms?: Array<ProjectPlatform>
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     startDate?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     state?: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsProjectView
+     * @memberof ProjectView
      */
     tags?: Array<string>
 }
@@ -119,25 +119,25 @@ export interface ViewmodelsProjectView {
 /**
  * 
  * @export
- * @interface ViewmodelsUpdateProjectDesignRequest
+ * @interface UpdateProjectDesignRequest
  */
-export interface ViewmodelsUpdateProjectDesignRequest {
+export interface UpdateProjectDesignRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectDesignRequest
+     * @memberof UpdateProjectDesignRequest
      */
     description?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectDesignRequest
+     * @memberof UpdateProjectDesignRequest
      */
     name: string
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsUpdateProjectDesignRequest
+     * @memberof UpdateProjectDesignRequest
      */
     resources: Array<string>
 }
@@ -145,25 +145,25 @@ export interface ViewmodelsUpdateProjectDesignRequest {
 /**
  * 
  * @export
- * @interface ViewmodelsUpdateProjectPlatformRequest
+ * @interface UpdateProjectPlatformRequest
  */
-export interface ViewmodelsUpdateProjectPlatformRequest {
+export interface UpdateProjectPlatformRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectPlatformRequest
+     * @memberof UpdateProjectPlatformRequest
      */
     description?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectPlatformRequest
+     * @memberof UpdateProjectPlatformRequest
      */
     name: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectPlatformRequest
+     * @memberof UpdateProjectPlatformRequest
      */
     projectId: string
 }
@@ -171,43 +171,43 @@ export interface ViewmodelsUpdateProjectPlatformRequest {
 /**
  * 
  * @export
- * @interface ViewmodelsUpdateProjectRequest
+ * @interface UpdateProjectRequest
  */
-export interface ViewmodelsUpdateProjectRequest {
+export interface UpdateProjectRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectRequest
+     * @memberof UpdateProjectRequest
      */
     description?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectRequest
+     * @memberof UpdateProjectRequest
      */
     endTime?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectRequest
+     * @memberof UpdateProjectRequest
      */
     name?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectRequest
+     * @memberof UpdateProjectRequest
      */
     startTime?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsUpdateProjectRequest
+     * @memberof UpdateProjectRequest
      */
     state?: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsUpdateProjectRequest
+     * @memberof UpdateProjectRequest
      */
     tags?: Array<string>
 }
@@ -225,43 +225,43 @@ export enum ProjectStateEnum {
 /**
  * 
  * @export
- * @interface ViewmodelsCreateProjectRequest
+ * @interface CreateProjectRequest
  */
-export interface ViewmodelsCreateProjectRequest {
+export interface CreateProjectRequest {
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateProjectRequest
+     * @memberof CreateProjectRequest
      */
     description: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateProjectRequest
+     * @memberof CreateProjectRequest
      */
     endTime?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateProjectRequest
+     * @memberof CreateProjectRequest
      */
     name: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateProjectRequest
+     * @memberof CreateProjectRequest
      */
     startTime?: string
     /**
      * 
      * @type {string}
-     * @memberof ViewmodelsCreateProjectRequest
+     * @memberof CreateProjectRequest
      */
     state?: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
-     * @memberof ViewmodelsCreateProjectRequest
+     * @memberof CreateProjectRequest
      */
     tags?: Array<string>
 }
@@ -284,11 +284,11 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
         /**
          * update project design
          * @summary update project design
-         * @param {Array<ViewmodelsUpdateProjectDesignRequest>} body Request body
+         * @param {Array<UpdateProjectDesignRequest>} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdDesignPut(body: Array<ViewmodelsUpdateProjectDesignRequest>, id: string, options: any = {}): FetchArgs {
+        v1ProjectIdDesignPut(body: Array<UpdateProjectDesignRequest>, id: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ProjectIdDesignPut.')
@@ -321,11 +321,11 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
         /**
          * update project platform
          * @summary update project platform
-         * @param {Array<ViewmodelsUpdateProjectPlatformRequest>} body Request body
+         * @param {Array<UpdateProjectPlatformRequest>} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPlatformPut(body: Array<ViewmodelsUpdateProjectPlatformRequest>, id: string, options: any = {}): FetchArgs {
+        v1ProjectIdPlatformPut(body: Array<UpdateProjectPlatformRequest>, id: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ProjectIdPlatformPut.')
@@ -342,11 +342,11 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
         /**
          * update project
          * @summary update project
-         * @param {ViewmodelsUpdateProjectRequest} body Request body
+         * @param {UpdateProjectRequest} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPut(body: ViewmodelsUpdateProjectRequest, id: string, options: any = {}): FetchArgs {
+        v1ProjectIdPut(body: UpdateProjectRequest, id: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ProjectIdPut.')
@@ -363,10 +363,10 @@ export const ProjectApiFetchParamCreator = (configuration?: any) => {
         /**
          * create project
          * @summary create project
-         * @param {ViewmodelsCreateProjectRequest} body Request body
+         * @param {CreateProjectRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1ProjectPost(body: ViewmodelsCreateProjectRequest, options: any = {}): FetchArgs {
+        v1ProjectPost(body: CreateProjectRequest, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter body was null or undefined when calling v1ProjectPost.')
@@ -390,17 +390,17 @@ export const ProjectApiFp = function (configuration?: any) {
          * @summary get all project
          * @param {*} [options] Override http request option.
          */
-        v1ProjectGet: (options?: any) => () => fetchData<ViewmodelsProjectView[]>(fetchParamsCreator.v1ProjectGet(options)),
+        v1ProjectGet: (options?: any) => () => fetchData<ProjectView[]>(fetchParamsCreator.v1ProjectGet(options)),
 
         /**
         * update project design
         * @summary update project design
-        * @param {Array<ViewmodelsUpdateProjectDesignRequest>} body Request body
+        * @param {Array<UpdateProjectDesignRequest>} body Request body
         * @param {string} id Project ID
         * @param {*} [options] Override http request option.
         * @throws {RequiredError}
         */
-        v1ProjectIdDesignPut: (body: Array<ViewmodelsUpdateProjectDesignRequest>, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdDesignPut(body, id, options)),
+        v1ProjectIdDesignPut: (body: Array<UpdateProjectDesignRequest>, id: string, options?: any) => () => fetchData<ProjectView>(fetchParamsCreator.v1ProjectIdDesignPut(body, id, options)),
 
         /**
         * get project
@@ -409,33 +409,33 @@ export const ProjectApiFp = function (configuration?: any) {
         * @param {*} [options] Override http request option.
         * @throws {RequiredError}
         */
-        v1ProjectIdGet: (id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdGet(id, options)),
+        v1ProjectIdGet: (id: string, options?: any) => () => fetchData<ProjectView>(fetchParamsCreator.v1ProjectIdGet(id, options)),
 
         /**
          * update project platform
          * @summary update project platform
-         * @param {Array<ViewmodelsUpdateProjectPlatformRequest>} body Request body
+         * @param {Array<UpdateProjectPlatformRequest>} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPlatformPut: (body: Array<ViewmodelsUpdateProjectPlatformRequest>, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdPlatformPut(body, id, options)),
+        v1ProjectIdPlatformPut: (body: Array<UpdateProjectPlatformRequest>, id: string, options?: any) => () => fetchData<ProjectView>(fetchParamsCreator.v1ProjectIdPlatformPut(body, id, options)),
 
         /**
          * update project
          * @summary update project
-         * @param {ViewmodelsUpdateProjectRequest} body Request body
+         * @param {UpdateProjectRequest} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPut: (body: ViewmodelsUpdateProjectRequest, id: string, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectIdPut(body, id, options)),
+        v1ProjectIdPut: (body: UpdateProjectRequest, id: string, options?: any) => () => fetchData<ProjectView>(fetchParamsCreator.v1ProjectIdPut(body, id, options)),
 
         /**
          * create project
          * @summary create project
-         * @param {ViewmodelsCreateProjectRequest} body Request body
+         * @param {CreateProjectRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1ProjectPost: (body: ViewmodelsCreateProjectRequest, options?: any) => () => fetchData<ViewmodelsProjectView>(fetchParamsCreator.v1ProjectPost(body, options)),
+        v1ProjectPost: (body: CreateProjectRequest, options?: any) => () => fetchData<ProjectView>(fetchParamsCreator.v1ProjectPost(body, options)),
 
     }
 }
@@ -457,11 +457,11 @@ export const ProjectApiFactory = function (configuration?: any, fetch?: FetchAPI
         /**
          * update project design
          * @summary update project design
-         * @param {Array<ViewmodelsUpdateProjectDesignRequest>} body Request body
+         * @param {Array<UpdateProjectDesignRequest>} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdDesignPut(body: Array<ViewmodelsUpdateProjectDesignRequest>, id: string, options?: any) {
+        v1ProjectIdDesignPut(body: Array<UpdateProjectDesignRequest>, id: string, options?: any) {
             return ProjectApiFp(configuration).v1ProjectIdDesignPut(body, id, options)()
         },
         /**
@@ -476,30 +476,30 @@ export const ProjectApiFactory = function (configuration?: any, fetch?: FetchAPI
         /**
          * update project platform
          * @summary update project platform
-         * @param {Array<ViewmodelsUpdateProjectPlatformRequest>} body Request body
+         * @param {Array<UpdateProjectPlatformRequest>} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPlatformPut(body: Array<ViewmodelsUpdateProjectPlatformRequest>, id: string, options?: any) {
+        v1ProjectIdPlatformPut(body: Array<UpdateProjectPlatformRequest>, id: string, options?: any) {
             return ProjectApiFp(configuration).v1ProjectIdPlatformPut(body, id, options)()
         },
         /**
          * update project
          * @summary update project
-         * @param {ViewmodelsUpdateProjectRequest} body Request body
+         * @param {UpdateProjectRequest} body Request body
          * @param {string} id Project ID
          * @param {*} [options] Override http request option.
          */
-        v1ProjectIdPut(body: ViewmodelsUpdateProjectRequest, id: string, options?: any) {
+        v1ProjectIdPut(body: UpdateProjectRequest, id: string, options?: any) {
             return ProjectApiFp(configuration).v1ProjectIdPut(body, id, options)()
         },
         /**
          * create project
          * @summary create project
-         * @param {ViewmodelsCreateProjectRequest} body Request body
+         * @param {CreateProjectRequest} body Request body
          * @param {*} [options] Override http request option.
          */
-        v1ProjectPost(body: ViewmodelsCreateProjectRequest, options?: any) {
+        v1ProjectPost(body: CreateProjectRequest, options?: any) {
             return ProjectApiFp(configuration).v1ProjectPost(body, options)()
         },
     }
@@ -525,12 +525,12 @@ export class ProjectApi extends BaseAPI {
     /**
      * update project design
      * @summary update project design
-     * @param {Array<ViewmodelsUpdateProjectDesignRequest>} body Request body
+     * @param {Array<UpdateProjectDesignRequest>} body Request body
      * @param {string} id Project ID
      * @param {*} [options] Override http request option.
      * @memberof ProjectApi
      */
-    public v1ProjectIdDesignPut(body: Array<ViewmodelsUpdateProjectDesignRequest>, id: string, options?: any) {
+    public v1ProjectIdDesignPut(body: Array<UpdateProjectDesignRequest>, id: string, options?: any) {
         return ProjectApiFp(this.configuration).v1ProjectIdDesignPut(body, id, options)()
     }
 
@@ -548,35 +548,35 @@ export class ProjectApi extends BaseAPI {
     /**
      * update project platform
      * @summary update project platform
-     * @param {Array<ViewmodelsUpdateProjectPlatformRequest>} body Request body
+     * @param {Array<UpdateProjectPlatformRequest>} body Request body
      * @param {string} id Project ID
      * @param {*} [options] Override http request option.
      * @memberof ProjectApi
      */
-    public v1ProjectIdPlatformPut(body: Array<ViewmodelsUpdateProjectPlatformRequest>, id: string, options?: any) {
+    public v1ProjectIdPlatformPut(body: Array<UpdateProjectPlatformRequest>, id: string, options?: any) {
         return ProjectApiFp(this.configuration).v1ProjectIdPlatformPut(body, id, options)()
     }
 
     /**
      * update project
      * @summary update project
-     * @param {ViewmodelsUpdateProjectRequest} body Request body
+     * @param {UpdateProjectRequest} body Request body
      * @param {string} id Project ID
      * @param {*} [options] Override http request option.
      * @memberof ProjectApi
      */
-    public v1ProjectIdPut(body: ViewmodelsUpdateProjectRequest, id: string, options?: any) {
+    public v1ProjectIdPut(body: UpdateProjectRequest, id: string, options?: any) {
         return ProjectApiFp(this.configuration).v1ProjectIdPut(body, id, options)()
     }
 
     /**
      * create project
      * @summary create project
-     * @param {ViewmodelsCreateProjectRequest} body Request body
+     * @param {CreateProjectRequest} body Request body
      * @param {*} [options] Override http request option.
      * @memberof ProjectApi
      */
-    public v1ProjectPost(body: ViewmodelsCreateProjectRequest, options?: any) {
+    public v1ProjectPost(body: CreateProjectRequest, options?: any) {
         return ProjectApiFp(this.configuration).v1ProjectPost(body, options)()
     }
 

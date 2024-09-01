@@ -6,13 +6,12 @@ import _ from 'lodash-es'
 import { useMessageStore } from '@/stores/message'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { ViewmodelsPlatformView, PlatformApiFactory } from './platform'
-import { timeFormat } from '@/tools/timeFormat'
+import { PlatformView, PlatformApiFactory } from './platform'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const platforms = ref<ViewmodelsPlatformView[]>([])
+const platforms = ref<PlatformView[]>([])
 const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
