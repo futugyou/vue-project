@@ -67,7 +67,19 @@ fetchData()
                             </v-chip>
                         </v-sheet>
                     </v-list-item>
+                    <v-list-group>
+                        <template v-slot:activator="{ props }">
+                            <v-list-item v-bind="props" title="Property"></v-list-item>
+                        </template>
+                        <v-list-item v-for="pp in detail.property">
+                            <span class="text-subtitle-1 mr-1">key:</span>
+                            <span class="text-subtitle-2 mr-3">{{ pp.key }}</span>
+                            <span class="text-subtitle-1 mr-1">value:</span>
+                            <span class="text-subtitle-2">{{ pp.value }}</span>
+                        </v-list-item>
+                    </v-list-group>
                 </v-list>
+
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two" v-if="detail != undefined">
