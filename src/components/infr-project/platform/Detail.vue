@@ -54,9 +54,13 @@ fetchData()
         </v-tabs>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
-                <v-list lines="two" v-model="tab" v-if="!isLoading" grow>
+                <v-list lines="two">
                     <v-list-item title="Name" :subtitle="detail.name"></v-list-item>
-                    <v-list-item title="URL" :subtitle="detail.url"></v-list-item>
+                    <v-list-item title="URL">
+                        <template v-slot:subtitle>
+                            <a :href="detail.url" target="_blank">{{ detail.url }}</a>
+                        </template>
+                    </v-list-item>
                     <v-list-item title="Rest Endpoint" :subtitle="detail.rest_endpoint"></v-list-item>
                     <v-list-item title="Activate" :subtitle="detail.activate + ''"></v-list-item>
                     <v-list-item title="Deleted" :subtitle="detail.is_deleted + ''"></v-list-item>
@@ -82,10 +86,28 @@ fetchData()
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="detail != undefined">
-                <v-sheet>
-                    Projects Info
-                </v-sheet>
+            <v-tabs-window-item value="two" v-if="detail != undefined && detail.projects != undefined">
+                <v-row class="pa-3">
+                    <v-col v-for="project in detail.projects" :key="project.id" cols="12" md="3">
+                        <v-card v-if="!isLoading" class="d-flex flex-column pa-4" hover>
+                            <template v-slot:title>Name: {{ project.name }} </template>
+                            <template v-slot:subtitle>ID: {{ project.id }} </template>
+                            <v-card-text class="text-subtitle-2 py-2">
+                                <span class="text-subtitle-1">Url:</span>
+                                <a :href="project.url" target="_blank">{{ project.url }}</a>
+                            </v-card-text>
+                            <v-list lines="one">
+                                <v-list-subheader>Property</v-list-subheader>
+                                <v-list-item v-for="(value, key) in project.property" :key="key">
+                                    <span class="text-subtitle-1 mr-1">key:</span>
+                                    <span class="text-subtitle-2 mr-3">{{ key }}</span>
+                                    <span class="text-subtitle-1 mr-1">value:</span>
+                                    <span class="text-subtitle-2">{{ value }}</span>
+                                </v-list-item>
+                            </v-list>
+                        </v-card>
+                    </v-col>
+                </v-row>
             </v-tabs-window-item>
         </v-tabs-window>
     </v-sheet>
