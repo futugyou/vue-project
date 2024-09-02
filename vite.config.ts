@@ -27,10 +27,10 @@ export default defineConfig({
       },
     }),
     vueJsx(),
-    // topLevelAwait({
-    //   promiseExportName: '__tla',
-    //   promiseImportName: i => `__tla_${i}`,
-    // }),
+    topLevelAwait({
+      promiseExportName: '__tla',
+      promiseImportName: i => `__tla_${i}`,
+    }),
   ],
   resolve: {
     alias: {
