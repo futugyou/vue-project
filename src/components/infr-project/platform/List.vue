@@ -7,6 +7,8 @@ import { useMessageStore } from '@/stores/message'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { PlatformView, PlatformApiFactory } from './platform'
+import VuetifyModal from '@/common/VuetifyModal.vue'
+import Edit from './Edit.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -15,6 +17,7 @@ const platforms = ref<PlatformView[]>([])
 const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
+const dialog = ref(false)
 
 const fetchData = async () => {
     isLoading.value = true
@@ -71,6 +74,13 @@ const fields: TableField[] = [
 
 <template>
     <v-sheet class="d-flex flex-column" height="100%">
+        <v-toolbar color="blue-lighten-5">
+            <v-toolbar-title>Platform</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter>
+                <Edit></Edit>
+            </VuetifyModal>
+        </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>
 
         <TableAndPaging :items="platforms" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"

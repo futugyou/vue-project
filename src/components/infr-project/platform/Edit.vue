@@ -32,14 +32,13 @@ const availableTags = ref<string[]>([])
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
+    <v-sheet class="d-flex flex-column ga-3" height="100%">
         <v-text-field v-model="editModel.id" label="ID" />
         <v-text-field v-model="editModel.name" label="Name" />
         <v-text-field v-model="editModel.rest_endpoint" label="REST Endpoint" />
         <v-text-field v-model="editModel.url" label="URL" />
         <v-switch v-model="editModel.activate" label="Activate" />
         <v-switch v-model="editModel.is_deleted" label="Is Deleted" />
-        <v-autocomplete v-model="editModel.tags" :items="availableTags" label="Tags" multiple />
         <v-combobox v-model="availableTags" label="Tags" chips multiple></v-combobox>
     </v-sheet>
 </template>
