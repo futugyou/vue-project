@@ -92,10 +92,18 @@ fetchData()
                         <v-card v-if="!isLoading" class="d-flex flex-column pa-4" hover>
                             <template v-slot:title>Name: {{ project.name }} </template>
                             <template v-slot:subtitle>ID: {{ project.id }} </template>
-                            <v-card-text class="text-subtitle-2 py-2">
-                                <span class="text-subtitle-1">Url:</span>
-                                <a :href="project.url" target="_blank">{{ project.url }}</a>
-                            </v-card-text>
+
+                            <template v-slot:append>
+                                <a :href="project.url" target="_blank">
+                                    <v-hover>
+                                        <template v-slot:default="{ isHovering, props }">
+                                            <v-icon icon="md:open_in_new" v-bind="props"
+                                                :color="isHovering ? '#75FBFD' : undefined"></v-icon>
+                                        </template>
+                                    </v-hover>
+                                </a>
+                            </template>
+
                             <v-list lines="one">
                                 <v-list-subheader>Property</v-list-subheader>
                                 <v-list-item v-for="(value, key) in project.property" :key="key">
