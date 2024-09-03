@@ -78,7 +78,7 @@ const fields: TableField[] = [
             <v-toolbar-title>Platform</v-toolbar-title>
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter>
-                <Edit></Edit>
+                <Edit v-model:dialog="dialog"></Edit>
             </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>

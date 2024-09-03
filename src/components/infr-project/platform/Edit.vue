@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
@@ -15,6 +15,11 @@ const { msg } = storeToRefs(store)
 
 const route = useRoute()
 
+const props = defineProps({
+    dialog: Boolean,
+})
+
+const dialog = ref(props.dialog)
 const isLoading = ref(true)
 const editModel = ref<PlatformDetailView>({
     id: '',
@@ -29,11 +34,27 @@ const editModel = ref<PlatformDetailView>({
 })
 const availableTags = ref<string[]>([])
 
+const save = () => {
+
+}
+
+const cancel = () => {
+    dialog.value = false
+}
+
+const emit = defineEmits<{
+    (e: 'update:dialog', dialog: boolean): void
+}>()
+
+watch(dialog, (newVal) => {
+    emit('update:dialog', newVal)
+})
+
 </script>
 
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
-        <v-confirm-edit v-model="editModel">
+        <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
             <template v-slot:default="{ model: proxyModel, actions }">
                 <v-text-field v-model="proxyModel.value.id" label="ID" />
                 <v-text-field v-model="proxyModel.value.name" label="Name" />
