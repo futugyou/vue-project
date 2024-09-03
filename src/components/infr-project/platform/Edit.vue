@@ -33,13 +33,23 @@ const availableTags = ref<string[]>([])
 
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
-        <v-text-field v-model="editModel.id" label="ID" />
-        <v-text-field v-model="editModel.name" label="Name" />
-        <v-text-field v-model="editModel.rest_endpoint" label="REST Endpoint" />
-        <v-text-field v-model="editModel.url" label="URL" />
-        <v-switch v-model="editModel.activate" label="Activate" />
-        <v-switch v-model="editModel.is_deleted" label="Is Deleted" />
-        <v-combobox v-model="availableTags" label="Tags" chips multiple></v-combobox>
+        <v-confirm-edit v-model="editModel">
+            <template v-slot:default="{ model: proxyModel, actions }">
+                <v-text-field v-model="proxyModel.value.id" label="ID" />
+                <v-text-field v-model="proxyModel.value.name" label="Name" />
+                <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" />
+                <v-text-field v-model="proxyModel.value.url" label="URL" />
+                <v-switch v-model="proxyModel.value.activate" label="Activate" />
+                <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" />
+                <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
+                <v-spacer></v-spacer>
+                <v-sheet class="d-flex justify-end ga-3">
+                    <component :is="actions"></component>
+                </v-sheet>
+            </template>
+        </v-confirm-edit>
+
+
     </v-sheet>
 </template>
 
