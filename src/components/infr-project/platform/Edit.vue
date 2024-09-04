@@ -76,8 +76,8 @@ watch(dialog, (newVal) => {
     emit('update:dialog', newVal)
 })
 
-const addProperty = () => {
-    const updatedPlatformDetailView = _.cloneDeep(editModel.value)
+const addProperty = (model: PlatformDetailView) => {
+    const updatedPlatformDetailView = _.cloneDeep(model)
 
     if (!updatedPlatformDetailView.property) {
         updatedPlatformDetailView.property = []
@@ -115,7 +115,7 @@ const addProperty = () => {
                     </v-col>
                 </v-row>
 
-                <v-btn color="primary" @click="addProperty">Add Property</v-btn>
+                <v-btn color="primary" @click="addProperty(proxyModel.value)">Add Property</v-btn>
 
                 <v-spacer></v-spacer>
                 <v-sheet class="d-flex justify-end ga-3">
