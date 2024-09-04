@@ -20,7 +20,7 @@ const props = defineProps({
 })
 
 const dialog = ref(props.dialog)
-const isLoading = ref(true)
+const isLoading = ref(false)
 const editModel = ref<PlatformDetailView>({
     id: '',
     name: '',
@@ -32,18 +32,19 @@ const editModel = ref<PlatformDetailView>({
     property: [],
     projects: []
 })
-const availableTags = ref<string[]>([])
 
 const save = async () => {
     if (!editModel.value.name || !editModel.value.rest_endpoint || !editModel.value.url) {
         return
     }
+    
     isLoading.value = true
     var body: CreatePlatformRequest = {
         name: editModel.value.name,
         rest: editModel.value.rest_endpoint,
         url: editModel.value.url,
         tags: editModel.value.tags ?? [],
+        property: editModel.value.property,
     }
     const { data, error } = await PlatformApiFactory().v1PlatformPost(body)
     isLoading.value = false
@@ -70,6 +71,17 @@ watch(dialog, (newVal) => {
     emit('update:dialog', newVal)
 })
 
+const addProperty = () => {
+    const updatedPlatformDetailView = _.cloneDeep(editModel.value);
+
+    if (!updatedPlatformDetailView.property) {
+        updatedPlatformDetailView.property = [];
+    }
+
+    updatedPlatformDetailView.property.push({ key: '', value: '', needMask: false });
+    editModel.value = updatedPlatformDetailView;
+}
+
 </script>
 
 <template>
@@ -84,6 +96,22 @@ watch(dialog, (newVal) => {
                 <v-switch v-model="proxyModel.value.activate" label="Activate" />
                 <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" />
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
+
+                <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
+                    <v-col cols="5">
+                        <v-text-field v-model="property.key" label="Key" />
+                    </v-col>
+                    <v-col cols="5">
+                        <v-text-field v-model="property.value" :type="property.needMask ? 'password' : 'text'"
+                            label="Value" />
+                    </v-col>
+                    <v-col cols="2">
+                        <v-switch v-model="property.needMask" label="Mask" />
+                    </v-col>
+                </v-row>
+
+                <v-btn color="primary" @click="addProperty">Add Property</v-btn>
+
                 <v-spacer></v-spacer>
                 <v-sheet class="d-flex justify-end ga-3">
                     <component :is="actions"></component>
