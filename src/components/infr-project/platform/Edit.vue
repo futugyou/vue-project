@@ -8,7 +8,7 @@ import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
-import { PlatformApiFactory, PlatformDetailView } from './platform'
+import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest } from './platform'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -34,8 +34,28 @@ const editModel = ref<PlatformDetailView>({
 })
 const availableTags = ref<string[]>([])
 
-const save = () => {
+const save = async () => {
+    if (!editModel.value.name || !editModel.value.rest_endpoint || !editModel.value.url) {
+        return
+    }
+    isLoading.value = true
+    var body: CreatePlatformRequest = {
+        name: editModel.value.name,
+        rest: editModel.value.rest_endpoint,
+        url: editModel.value.url,
+        tags: editModel.value.tags ?? [],
+    }
+    const { data, error } = await PlatformApiFactory().v1PlatformPost(body)
+    isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
 
+        return
+    }
+    editModel.value = data!
 }
 
 const cancel = () => {
@@ -54,7 +74,8 @@ watch(dialog, (newVal) => {
 
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
-        <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
+        <Spinners v-if="isLoading"></Spinners>
+        <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
                 <v-text-field v-model="proxyModel.value.id" label="ID" />
                 <v-text-field v-model="proxyModel.value.name" label="Name" />
