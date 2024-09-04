@@ -169,7 +169,7 @@ const changeAccount = (acc: Account) => {
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_key="body">
-                <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link">
+                <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link" target="_blank">
                     <span>
                         {{ body.key }}
                     </span>

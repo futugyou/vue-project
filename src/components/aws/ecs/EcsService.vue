@@ -85,7 +85,7 @@ const changeAccount = (acc: Account) => {
         <TableAndPaging :items="ecsServices" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_service_name="body">
-                <router-link :to="'/ecs/' + body.id" page-path="" class="detail-link">
+                <router-link :to="'/ecs/' + body.id" page-path="" class="detail-link" target="_blank">
                     <span>
                         {{ body.service_name }}
                     </span>

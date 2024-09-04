@@ -86,7 +86,7 @@ const fields: TableField[] = [
         <TableAndPaging :items="platforms" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_name="body">
-                <router-link :to="'/platform/' + body.id" page-path="" class="detail-link">
+                <router-link :to="'/platform/' + body.id" page-path="" class="detail-link" target="_blank">
                     <span>
                         {{ body.name }}
                     </span>
