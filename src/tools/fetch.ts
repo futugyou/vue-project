@@ -171,7 +171,13 @@ export const fetchData = async <T>(localVarFetchArgs: FetchArgs, fetch: FetchAPI
             const data = await response.json()
             return { data }
         } else {
-            const error = await response.json()
+            const text = await response.text()
+            let error
+            try {
+                error = JSON.parse(text)
+            } catch (e) {
+                error = { message: text }
+            }
             return { error }
         }
     } catch (error) {
