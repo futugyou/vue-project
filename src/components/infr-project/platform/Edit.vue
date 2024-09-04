@@ -8,7 +8,7 @@ import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
-import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest } from './platform'
+import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, PropertyInfo } from './platform'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -37,14 +37,19 @@ const save = async () => {
     if (!editModel.value.name || !editModel.value.rest_endpoint || !editModel.value.url) {
         return
     }
-    
+
     isLoading.value = true
+    let property = _.filter(editModel.value.property, (prop: PropertyInfo) => {
+        const keyIsValid = prop.key && prop.key.trim() !== ''
+        const valueIsValid = prop.value && prop.value.trim() !== ''
+        return keyIsValid && valueIsValid
+    }) as PropertyInfo[]
     var body: CreatePlatformRequest = {
         name: editModel.value.name,
         rest: editModel.value.rest_endpoint,
         url: editModel.value.url,
         tags: editModel.value.tags ?? [],
-        property: editModel.value.property,
+        property: property,
     }
     const { data, error } = await PlatformApiFactory().v1PlatformPost(body)
     isLoading.value = false
@@ -72,14 +77,14 @@ watch(dialog, (newVal) => {
 })
 
 const addProperty = () => {
-    const updatedPlatformDetailView = _.cloneDeep(editModel.value);
+    const updatedPlatformDetailView = _.cloneDeep(editModel.value)
 
     if (!updatedPlatformDetailView.property) {
-        updatedPlatformDetailView.property = [];
+        updatedPlatformDetailView.property = []
     }
 
-    updatedPlatformDetailView.property.push({ key: '', value: '', needMask: false });
-    editModel.value = updatedPlatformDetailView;
+    updatedPlatformDetailView.property.push({ key: '', value: '', needMask: false })
+    editModel.value = updatedPlatformDetailView
 }
 
 </script>
