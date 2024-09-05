@@ -43,16 +43,39 @@ const fetchData = async () => {
 
 fetchData()
 
+const changeTab = (t: string) => {
+    tab.value = t
+}
 </script>
 
 <template>
     <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-sheet class="d-flex flex-column justify-space-between border-thin">
-            <v-tabs v-model="tab" direction="vertical" color="deep-purple-accent-4" v-if="!isLoading">
-                <v-tab prepend-icon="md:analytics" value="one" text="Base"></v-tab>
+        <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading">
+            <!-- <v-tabs v-model="tab" direction="vertical" color="deep-purple-accent-4">
+                <v-tab prepend-icon="md:analytics" value="one" text="base"></v-tab>
                 <v-tab prepend-icon="md:view_kanban" value="two" text="Projects"></v-tab>
-            </v-tabs>
+            </v-tabs> -->
+            <v-list density="compact">
+                <v-list-item slim color="primary" title="base" value="one" @click="changeTab('one')">
+                    <template v-slot:prepend>
+                        <v-icon icon="md:analytics"></v-icon>
+                    </template>
+                </v-list-item>
+                <v-list-group value="Projects">
+                    <template v-slot:activator="{ props }">
+                        <v-list-item slim v-bind="props" title="Projects" @click="changeTab('two')">
+                            <template v-slot:prepend>
+                                <v-icon icon="md:view_kanban"></v-icon>
+                            </template>
+                        </v-list-item>
+                    </template>
+                    <v-list-item slim v-for="(item, i) in detail.projects" :key="i" :value="item" color="primary"
+                        v-if="detail">
+                        <v-list-item-title v-text="item.name"></v-list-item-title>
+                    </v-list-item>
+                </v-list-group>
+            </v-list>
             <div class="pa-2">
                 <v-btn block prepend-icon="md:add">
                     Add Project
@@ -155,5 +178,9 @@ fetchData()
 .v-window-item {
     width: 100%;
     height: 100%;
+}
+
+.v-list-group__items .v-list-item {
+    padding-inline-start: var(--parent-padding) !important;
 }
 </style>
