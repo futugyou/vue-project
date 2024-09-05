@@ -5,10 +5,11 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
-import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
 import { PlatformApiFactory, PlatformDetailView } from './platform'
+import PlatformProject from './PlatformProject.vue'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -18,8 +19,9 @@ const route = useRoute()
 const isLoading = ref(true)
 const platformId = route.params.id as string
 const detail = ref<PlatformDetailView>()
+const dialog = ref(false)
 
-const tab = ref()
+const tab = ref("one")
 
 const fetchData = async () => {
     if (platformId == undefined) {
@@ -52,12 +54,8 @@ const changeTab = (t: string) => {
     <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading">
-            <!-- <v-tabs v-model="tab" direction="vertical" color="deep-purple-accent-4">
-                <v-tab prepend-icon="md:analytics" value="one" text="base"></v-tab>
-                <v-tab prepend-icon="md:view_kanban" value="two" text="Projects"></v-tab>
-            </v-tabs> -->
             <v-list density="compact">
-                <v-list-item slim color="primary" title="base" value="one" @click="changeTab('one')">
+                <v-list-item slim color="primary" title="Base" @click="changeTab('one')">
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
                     </template>
@@ -77,9 +75,9 @@ const changeTab = (t: string) => {
                 </v-list-group>
             </v-list>
             <div class="pa-2">
-                <v-btn block prepend-icon="md:add">
-                    Add Project
-                </v-btn>
+                <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
+                    <PlatformProject :platform-id="detail?.id" v-model:dialog="dialog"></PlatformProject>
+                </VuetifyModal>
             </div>
         </v-sheet>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
