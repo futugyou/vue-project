@@ -46,12 +46,19 @@ fetchData()
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
+    <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4" v-if="!isLoading">
-            <v-tab value="one" text="Base"></v-tab>
-            <v-tab value="two" text="Projects"></v-tab>
-        </v-tabs>
+        <v-sheet class="d-flex flex-column justify-space-between border-thin">
+            <v-tabs v-model="tab" direction="vertical" color="deep-purple-accent-4" v-if="!isLoading">
+                <v-tab prepend-icon="md:analytics" value="one" text="Base"></v-tab>
+                <v-tab prepend-icon="md:view_kanban" value="two" text="Projects"></v-tab>
+            </v-tabs>
+            <div class="pa-2">
+                <v-btn block prepend-icon="md:add">
+                    Add Project
+                </v-btn>
+            </div>
+        </v-sheet>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
                 <v-list lines="two">
