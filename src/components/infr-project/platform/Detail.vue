@@ -61,6 +61,7 @@ const showProject = (pro: PlatformProject) => {
 <template>
     <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
+
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
             <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false"
                 data-v-menu>
@@ -89,6 +90,7 @@ const showProject = (pro: PlatformProject) => {
                 </VuetifyModal>
             </div>
         </v-sheet>
+
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
                 <v-list lines="two">
@@ -149,36 +151,13 @@ const showProject = (pro: PlatformProject) => {
                                     <span class="text-subtitle-2">{{ value }}</span>
                                 </v-list-item>
                             </v-list>
-
-                            <v-expansion-panels>
-                                <v-expansion-panel v-for="webhook in project.webhooks" :key="webhook.name"
-                                    :title="webhook.name">
-                                    <v-expansion-panel-text>
-                                        <v-list-item title="State" :subtitle="webhook.state"></v-list-item>
-                                        <v-list-item title="Activate"
-                                            :subtitle="webhook.activate ? 'Yes' : 'No'"></v-list-item>
-                                        <v-list-item title="Url" :subtitle="webhook.url"></v-list-item>
-                                        <v-list-group>
-                                            <template v-slot:activator="{ props }">
-                                                <v-list-item v-bind="props" title="Property"></v-list-item>
-                                            </template>
-                                            <v-list-item v-for="(v, k) in webhook.property">
-                                                <span class="text-subtitle-1 mr-1">key:</span>
-                                                <span class="text-subtitle-2 mr-3">{{ v }}</span>
-                                                <span class="text-subtitle-1 mr-1">value:</span>
-                                                <span class="text-subtitle-2">{{ k }}</span>
-                                            </v-list-item>
-                                        </v-list-group>
-                                    </v-expansion-panel-text>
-                                </v-expansion-panel>
-                            </v-expansion-panels>
                         </v-card>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project != undefined" class="pa-3">
-                <v-card class="d-flex flex-column pa-2" hover>
+                <v-card class="d-flex flex-column pa-2 h-100" hover>
                     <template v-slot:title>Name: {{ project.name }} </template>
                     <template v-slot:subtitle>ID: {{ project.id }} </template>
 
