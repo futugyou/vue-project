@@ -55,8 +55,8 @@ const changeTab = (t: string) => {
     <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
-            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple">
-                <v-list-item slim color="primary" title="Base" @click="changeTab('one')">
+            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false" data-v-menu>
+                <v-list-item slim color="primary" title="Base" @click="changeTab('one')" >
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
                     </template>
@@ -179,7 +179,7 @@ const changeTab = (t: string) => {
     height: 100%;
 }
 
-.v-list-group__items .v-list-item {
+.v-list[data-v-menu] .v-list-group__items .v-list-item {
     padding-inline-start: var(--parent-padding) !important;
 }
 </style>
