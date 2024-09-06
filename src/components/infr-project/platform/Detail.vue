@@ -7,8 +7,8 @@ import _ from 'lodash-es'
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 
-import { PlatformApiFactory, PlatformDetailView } from './platform'
-import PlatformProject from './PlatformProject.vue'
+import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
+import PlatformProjectVue from './PlatformProject.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const store = useMessageStore()
@@ -20,6 +20,7 @@ const isLoading = ref(true)
 const listOpened = ref(["Projects"])
 const platformId = route.params.id as string
 const detail = ref<PlatformDetailView>()
+const project = ref<PlatformProject>()
 const dialog = ref(false)
 
 const tab = ref("one")
@@ -49,14 +50,21 @@ fetchData()
 const changeTab = (t: string) => {
     tab.value = t
 }
+
+const showProject = (pro: PlatformProject) => {
+    tab.value = "three"
+    project.value = pro
+}
+
 </script>
 
 <template>
     <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
-            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false" data-v-menu>
-                <v-list-item slim color="primary" title="Base" @click="changeTab('one')" >
+            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false"
+                data-v-menu>
+                <v-list-item slim color="primary" title="Base" @click="changeTab('one')">
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
                     </template>
@@ -70,14 +78,14 @@ const changeTab = (t: string) => {
                         </v-list-item>
                     </template>
                     <v-list-item slim v-for="(item, i) in detail.projects" :key="i" :value="item" color="primary"
-                        v-if="detail">
+                        @click="showProject(item)" v-if="detail">
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item>
                 </v-list-group>
             </v-list>
             <div class="pa-2 d-flex justify-center">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
-                    <PlatformProject :platform-id="detail?.id" v-model:dialog="dialog"></PlatformProject>
+                    <PlatformProjectVue :platform-id="detail?.id" v-model:dialog="dialog"></PlatformProjectVue>
                 </VuetifyModal>
             </div>
         </v-sheet>
@@ -167,6 +175,55 @@ const changeTab = (t: string) => {
                         </v-card>
                     </v-col>
                 </v-row>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="three" v-if="project != undefined" class="pa-3">
+                <v-card class="d-flex flex-column pa-2" hover>
+                    <template v-slot:title>Name: {{ project.name }} </template>
+                    <template v-slot:subtitle>ID: {{ project.id }} </template>
+
+                    <template v-slot:append>
+                        <a :href="project.url" target="_blank">
+                            <v-hover>
+                                <template v-slot:default="{ props }">
+                                    <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                </template>
+                            </v-hover>
+                        </a>
+                    </template>
+
+                    <v-list lines="one">
+                        <v-list-subheader>Property</v-list-subheader>
+                        <v-list-item v-for="(value, key) in project.property" :key="key">
+                            <span class="text-subtitle-1 mr-1">key:</span>
+                            <span class="text-subtitle-2 mr-3">{{ key }}</span>
+                            <span class="text-subtitle-1 mr-1">value:</span>
+                            <span class="text-subtitle-2">{{ value }}</span>
+                        </v-list-item>
+                    </v-list>
+
+                    <v-expansion-panels>
+                        <v-expansion-panel v-for="webhook in project.webhooks" :key="webhook.name"
+                            :title="webhook.name">
+                            <v-expansion-panel-text>
+                                <v-list-item title="State" :subtitle="webhook.state"></v-list-item>
+                                <v-list-item title="Activate" :subtitle="webhook.activate ? 'Yes' : 'No'"></v-list-item>
+                                <v-list-item title="Url" :subtitle="webhook.url"></v-list-item>
+                                <v-list-group>
+                                    <template v-slot:activator="{ props }">
+                                        <v-list-item v-bind="props" title="Property"></v-list-item>
+                                    </template>
+                                    <v-list-item v-for="(v, k) in webhook.property">
+                                        <span class="text-subtitle-1 mr-1">key:</span>
+                                        <span class="text-subtitle-2 mr-3">{{ v }}</span>
+                                        <span class="text-subtitle-1 mr-1">value:</span>
+                                        <span class="text-subtitle-2">{{ k }}</span>
+                                    </v-list-item>
+                                </v-list-group>
+                            </v-expansion-panel-text>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+                </v-card>
             </v-tabs-window-item>
         </v-tabs-window>
     </v-sheet>
