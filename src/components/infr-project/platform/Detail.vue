@@ -17,6 +17,7 @@ const { msg } = storeToRefs(store)
 const route = useRoute()
 
 const isLoading = ref(true)
+const listOpened = ref(["Projects"])
 const platformId = route.params.id as string
 const detail = ref<PlatformDetailView>()
 const dialog = ref(false)
@@ -53,8 +54,8 @@ const changeTab = (t: string) => {
 <template>
     <v-sheet class="d-flex" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading">
-            <v-list density="compact">
+        <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
+            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple">
                 <v-list-item slim color="primary" title="Base" @click="changeTab('one')">
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
@@ -74,7 +75,7 @@ const changeTab = (t: string) => {
                     </v-list-item>
                 </v-list-group>
             </v-list>
-            <div class="pa-2">
+            <div class="pa-2 d-flex justify-center">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
                     <PlatformProject :platform-id="detail?.id" v-model:dialog="dialog"></PlatformProject>
                 </VuetifyModal>
