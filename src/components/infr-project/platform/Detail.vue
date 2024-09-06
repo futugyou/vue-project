@@ -6,6 +6,7 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
+import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
 import PlatformProjectVue from './PlatformProject.vue'
@@ -13,6 +14,7 @@ import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const authService = useAuth()
 
 const route = useRoute()
 
@@ -84,7 +86,7 @@ const showProject = (pro: PlatformProject) => {
                     </v-list-item>
                 </v-list-group>
             </v-list>
-            <div class="pa-2 d-flex justify-center">
+            <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated()">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
                     <PlatformProjectVue :platform-id="detail?.id" v-model:dialog="dialog"></PlatformProjectVue>
                 </VuetifyModal>

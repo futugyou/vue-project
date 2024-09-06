@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import { useMessageStore } from '@/stores/message'
+import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { PlatformView, PlatformApiFactory } from './platform'
@@ -12,6 +13,7 @@ import Edit from './Edit.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const authService = useAuth()
 
 const platforms = ref<PlatformView[]>([])
 const isLoading = ref(true)
@@ -77,7 +79,8 @@ const fields: TableField[] = [
         <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Platform</v-toolbar-title>
             <v-spacer></v-spacer>
-            <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter>
+            <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter
+                v-if="authService.isAuthenticated()">
                 <Edit v-model:dialog="dialog"></Edit>
             </VuetifyModal>
         </v-toolbar>
