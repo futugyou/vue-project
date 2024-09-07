@@ -9,7 +9,7 @@ import { useAuth } from '@/plugins/auth'
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import { PlatformView, PlatformApiFactory } from './platform'
 import VuetifyModal from '@/common/VuetifyModal.vue'
-import Edit from './Edit.vue'
+import Basic from './Basic.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -81,7 +81,7 @@ const fields: TableField[] = [
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter
                 v-if="authService.isAuthenticated()">
-                <Edit @cancel="() => dialog = false"></Edit>
+                <Basic @cancel="() => dialog = false"></Basic>
             </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>
