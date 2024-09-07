@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 
-import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, PropertyInfo } from './platform'
+import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, UpdatePlatformRequest, PropertyInfo } from './platform'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -40,23 +39,33 @@ const save = async () => {
         const valueIsValid = prop.value && prop.value.trim() !== ''
         return keyIsValid && valueIsValid
     }) as PropertyInfo[]
-    var body: CreatePlatformRequest = {
+
+    let body: UpdatePlatformRequest | CreatePlatformRequest = {
         name: editModel.value.name,
         rest: editModel.value.rest_endpoint,
         url: editModel.value.url,
         tags: editModel.value.tags ?? [],
         property: property,
     }
-    const { data, error } = await PlatformApiFactory().v1PlatformPost(body)
+
+    let response
+    if (editModel.value.id) {
+        response = await PlatformApiFactory().v1PlatformIdPut(body as UpdatePlatformRequest, editModel.value.id)
+    } else {
+        response = await PlatformApiFactory().v1PlatformPost(body as CreatePlatformRequest)
+    }
+
+    const { data, error } = response
     isLoading.value = false
+
     if (error) {
         msg.value = {
             errorMessages: [error.message],
             delay: 3000,
         }
-
         return
     }
+
     editModel.value = data!
     emit('save', editModel.value)
 }
