@@ -11,6 +11,7 @@ import { useAuth } from '@/plugins/auth'
 import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
 import PlatformProjectVue from './PlatformProject.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
+import Edit from './Edit.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -95,7 +96,12 @@ const showProject = (pro: PlatformProject) => {
 
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
-                <v-list lines="two">
+
+                <v-sheet class="pa-3" v-if="authService.isAuthenticated()">
+                    <Edit v-model:model="detail"></Edit>
+                </v-sheet>
+
+                <v-list lines="two" v-if="!authService.isAuthenticated()">
                     <v-list-item title="Name" :subtitle="detail.name"></v-list-item>
                     <v-list-item title="URL">
                         <template v-slot:subtitle>
