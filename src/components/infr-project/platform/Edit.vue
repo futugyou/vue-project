@@ -93,7 +93,7 @@ const addProperty = (model: PlatformDetailView) => {
         <Spinners v-if="isLoading"></Spinners>
         <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
-                <v-text-field v-model="proxyModel.value.id" label="ID" />
+                <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id" />
                 <v-text-field v-model="proxyModel.value.name" label="Name" />
                 <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" />
                 <v-text-field v-model="proxyModel.value.url" label="URL" />
