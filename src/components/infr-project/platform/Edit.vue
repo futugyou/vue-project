@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
-import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 
 import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, PropertyInfo } from './platform'
@@ -13,15 +12,12 @@ import { PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, Property
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
-const route = useRoute()
+const props = defineProps<{
+    model?: PlatformDetailView,
+}>()
 
-const props = defineProps({
-    dialog: Boolean,
-})
-
-const dialog = ref(props.dialog)
 const isLoading = ref(false)
-const editModel = ref<PlatformDetailView>({
+const editModel = ref<PlatformDetailView>(props.model ?? {
     id: '',
     name: '',
     activate: true,
@@ -62,18 +58,21 @@ const save = async () => {
         return
     }
     editModel.value = data!
+    emit('save', editModel.value)
 }
 
 const cancel = () => {
-    dialog.value = false
+    emit('cancel')
 }
 
 const emit = defineEmits<{
-    (e: 'update:dialog', dialog: boolean): void
+    (e: 'update:model', model: PlatformDetailView): void
+    (e: 'cancel'): void
+    (e: 'save', model: PlatformDetailView): void
 }>()
 
-watch(dialog, (newVal) => {
-    emit('update:dialog', newVal)
+watch(editModel, (newVal) => {
+    emit('update:model', newVal)
 })
 
 const addProperty = (model: PlatformDetailView) => {
@@ -123,8 +122,6 @@ const addProperty = (model: PlatformDetailView) => {
                 </v-sheet>
             </template>
         </v-confirm-edit>
-
-
     </v-sheet>
 </template>
 

@@ -81,7 +81,7 @@ const fields: TableField[] = [
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter
                 v-if="authService.isAuthenticated()">
-                <Edit v-model:dialog="dialog"></Edit>
+                <Edit @cancel="() => dialog = false"></Edit>
             </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>
