@@ -7,7 +7,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { PlatformView, PlatformApiFactory } from './platform'
+import { PlatformView, PlatformApiFactory, PlatformDetailView } from './platform'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Basic from './Basic.vue'
 
@@ -72,6 +72,15 @@ const fields: TableField[] = [
         label: 'Tags',
     }
 ]
+
+const platformCreated = (view: PlatformDetailView) => {
+    dialog.value = false
+}
+
+const platformCreateCanceled = () => {
+    dialog.value = false
+}
+
 </script>
 
 <template>
@@ -81,7 +90,7 @@ const fields: TableField[] = [
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter
                 v-if="authService.isAuthenticated()">
-                <Basic @cancel="() => dialog = false"></Basic>
+                <Basic @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
             </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>
