@@ -20,7 +20,7 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     id: '',
     name: '',
     activate: true,
-    is_deleted: false,
+    is_deleted: false, // TODO, temporarily not processing deletion
     rest_endpoint: '',
     url: '',
     tags: [],
@@ -44,6 +44,7 @@ const save = async () => {
         name: editModel.value.name,
         rest: editModel.value.rest_endpoint,
         url: editModel.value.url,
+        activate: editModel.value.activate,
         tags: editModel.value.tags ?? [],
         property: property,
     }
@@ -107,7 +108,7 @@ const addProperty = (model: PlatformDetailView) => {
                 <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" />
                 <v-text-field v-model="proxyModel.value.url" label="URL" />
                 <v-switch v-model="proxyModel.value.activate" label="Activate" />
-                <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" />
+                <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
