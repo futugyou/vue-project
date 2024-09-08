@@ -121,19 +121,19 @@ export interface PropertyInfo {
      * @type {string}
      * @memberof PropertyInfo
      */
-    key?: string
+    key: string
     /**
      * 
      * @type {boolean}
      * @memberof PropertyInfo
      */
-    needMask?: boolean
+    needMask: boolean
     /**
      * 
      * @type {string}
      * @memberof PropertyInfo
      */
-    value?: string
+    value: string
 }
 
 /**
@@ -157,31 +157,31 @@ export enum WebhookStateEnum {
      * @type {boolean}
      * @memberof PlatformView
      */
-    activate?: boolean
+    activate: boolean
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    id?: string
+    id: string
     /**
      * 
      * @type {boolean}
      * @memberof PlatformView
      */
-    is_deleted?: boolean
+    is_deleted: boolean
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    rest_endpoint?: string
+    rest_endpoint: string
     /**
      * 
      * @type {Array<string>}
@@ -193,7 +193,7 @@ export enum WebhookStateEnum {
      * @type {string}
      * @memberof PlatformView
      */
-    url?: string
+    url: string
 }
 
 /**
@@ -207,25 +207,25 @@ export interface PlatformDetailView {
      * @type {boolean}
      * @memberof PlatformDetailView
      */
-    activate?: boolean
+    activate: boolean
     /**
      * 
      * @type {string}
      * @memberof PlatformDetailView
      */
-    id?: string
+    id: string
     /**
      * 
      * @type {boolean}
      * @memberof PlatformDetailView
      */
-    is_deleted?: boolean
+    is_deleted: boolean
     /**
      * 
      * @type {string}
      * @memberof PlatformDetailView
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {Array<PlatformProject>}
@@ -243,7 +243,7 @@ export interface PlatformDetailView {
      * @type {string}
      * @memberof PlatformDetailView
      */
-    rest_endpoint?: string
+    rest_endpoint: string
     /**
      * 
      * @type {Array<string>}
@@ -255,7 +255,7 @@ export interface PlatformDetailView {
      * @type {string}
      * @memberof PlatformDetailView
      */
-    url?: string
+    url: string
 }
 
 /**
@@ -269,13 +269,13 @@ export interface PlatformProject {
      * @type {string}
      * @memberof PlatformProject
      */
-    id?: string
+    id: string
     /**
      * 
      * @type {string}
      * @memberof PlatformProject
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {{ [key: string]: string }}
@@ -287,7 +287,7 @@ export interface PlatformProject {
      * @type {string}
      * @memberof PlatformProject
      */
-    url?: string
+    url: string
     /**
      * 
      * @type {Array<Webhook>}
