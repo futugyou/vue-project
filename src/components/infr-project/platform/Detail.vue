@@ -23,6 +23,7 @@ const isLoading = ref(true)
 const listOpened = ref(["Projects"])
 const platformId = route.params.id as string
 const detail = ref<PlatformDetailView>()
+let rawPlatformDetailViewData: PlatformDetailView | undefined
 const project = ref<PlatformProject>()
 const dialog = ref(false)
 
@@ -46,6 +47,7 @@ const fetchData = async () => {
     }
 
     detail.value = data
+    rawPlatformDetailViewData = data
 }
 
 fetchData()
@@ -59,6 +61,15 @@ const showProject = (pro: PlatformProject) => {
     project.value = pro
 }
 
+const platformCreateCanceled = () => {
+    detail.value = rawPlatformDetailViewData
+}
+
+const platformCreated = (view: PlatformDetailView) => {
+    detail.value = view
+    rawPlatformDetailViewData = view
+}
+
 </script>
 
 <template>
@@ -66,8 +77,7 @@ const showProject = (pro: PlatformProject) => {
         <Spinners v-if="isLoading"></Spinners>
 
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
-            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false"
-                data-v-menu>
+            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false" data-v-menu>
                 <v-list-item slim color="primary" title="Base" @click="changeTab('one')">
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
@@ -87,9 +97,9 @@ const showProject = (pro: PlatformProject) => {
                     </v-list-item>
                 </v-list-group>
             </v-list>
-            <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated()">
+            <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated() && detail != undefined">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
-                    <PlatformProjectVue :platform-id="detail?.id" v-model:dialog="dialog"></PlatformProjectVue>
+                    <PlatformProjectVue :platform-id="detail.id" v-model:dialog="dialog"></PlatformProjectVue>
                 </VuetifyModal>
             </div>
         </v-sheet>
@@ -98,7 +108,7 @@ const showProject = (pro: PlatformProject) => {
             <v-tabs-window-item value="one" v-if="detail != undefined">
 
                 <v-sheet class="pa-3" v-if="authService.isAuthenticated()">
-                    <Basic v-model:model="detail"></Basic>
+                    <Basic :model="detail" @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
                 </v-sheet>
 
                 <v-list lines="two" v-if="!authService.isAuthenticated()">
@@ -190,8 +200,7 @@ const showProject = (pro: PlatformProject) => {
                     </v-list>
 
                     <v-expansion-panels>
-                        <v-expansion-panel v-for="webhook in project.webhooks" :key="webhook.name"
-                            :title="webhook.name">
+                        <v-expansion-panel v-for="webhook in project.webhooks" :key="webhook.name" :title="webhook.name">
                             <v-expansion-panel-text>
                                 <v-list-item title="State" :subtitle="webhook.state"></v-list-item>
                                 <v-list-item title="Activate" :subtitle="webhook.activate ? 'Yes' : 'No'"></v-list-item>
