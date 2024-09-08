@@ -75,6 +75,15 @@ const fields: TableField[] = [
 
 const platformCreated = (view: PlatformDetailView) => {
     dialog.value = false
+    platforms.value = [...platforms.value, {
+        activate: view.activate,
+        id: view.id,
+        is_deleted: view.is_deleted,
+        name: view.name,
+        rest_endpoint: view.rest_endpoint,
+        url: view.url,
+        tags: view.tags,
+    }]
 }
 
 const platformCreateCanceled = () => {
