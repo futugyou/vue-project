@@ -1,37 +1,34 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 
-import { PlatformApiFactory, UpdatePlatformProjectRequest, } from './platform'
-
-const store = useMessageStore()
-const { msg } = storeToRefs(store)
-
-const route = useRoute()
-
-const props = defineProps({
-    dialog: Boolean,
-    platformId: String,
-})
-
-const dialog = ref(props.dialog)
-const isLoading = ref(false)
-const editModel = ref<PlatformProjectModel>({
-    name: '',
-    url: '',
-    property: [],
-})
+import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView } from './platform'
 
 export interface PlatformProjectModel {
     name: string
     property?: { key: string, value: string }[]
     url: string
 }
+
+const store = useMessageStore()
+const { msg } = storeToRefs(store)
+
+const props = defineProps<{
+    platformId: string,
+    projectId?: string,
+    model?: PlatformProjectModel,
+}>()
+
+const isLoading = ref(false)
+const editModel = ref<PlatformProjectModel>({
+    name: '',
+    url: '',
+    property: [],
+})
 
 const save = async () => {
     if (!editModel.value.name || !editModel.value.url || !props.platformId) {
@@ -67,19 +64,21 @@ const save = async () => {
 
         return
     }
+
+    if (data) {
+        emit('save', data)
+    }
 }
 
 const cancel = () => {
-    dialog.value = false
+    emit('cancel')
 }
 
 const emit = defineEmits<{
-    (e: 'update:dialog', dialog: boolean): void
+    (e: 'update:model', dialog: PlatformProjectModel): void
+    (e: 'cancel'): void
+    (e: 'save', model: PlatformDetailView): void
 }>()
-
-watch(dialog, (newVal) => {
-    emit('update:dialog', newVal)
-})
 
 const addProperty = (model: PlatformProjectModel) => {
     const request = _.cloneDeep(model)
@@ -91,6 +90,10 @@ const addProperty = (model: PlatformProjectModel) => {
     request.property.push({ key: '', value: '', })
     editModel.value = request
 }
+
+watch(editModel, (newVal) => {
+    emit('update:model', newVal)
+})
 
 </script>
 

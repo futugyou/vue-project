@@ -70,6 +70,15 @@ const platformCreated = (view: PlatformDetailView) => {
     rawPlatformDetailViewData = view
 }
 
+const platformProjectCreateCanceled = () => {
+    dialog.value = false
+}
+
+const platformProjectCreated = (view: PlatformDetailView) => {
+    detail.value = view
+    dialog.value = false
+}
+
 </script>
 
 <template>
@@ -99,7 +108,9 @@ const platformCreated = (view: PlatformDetailView) => {
             </v-list>
             <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated() && detail != undefined">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
-                    <PlatformProjectVue :platform-id="detail.id" v-model:dialog="dialog"></PlatformProjectVue>
+                    <PlatformProjectVue :platform-id="detail.id" @cancel="platformProjectCreateCanceled"
+                        @save="platformProjectCreated">
+                    </PlatformProjectVue>
                 </VuetifyModal>
             </div>
         </v-sheet>
