@@ -54,7 +54,14 @@ const save = async () => {
         property: property,
     }
 
-    const { data, error } = await PlatformApiFactory().v1PlatformIdProjectPost(body, props.platformId)
+    let response
+    if (props.projectId) {
+        response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, props.projectId)
+    } else {
+        response = await PlatformApiFactory().v1PlatformIdProjectPost(body, props.platformId)
+    }
+
+    const { data, error } = response
     isLoading.value = false
     if (error) {
         msg.value = {
