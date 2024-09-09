@@ -96,6 +96,15 @@ const addProperty = (model: PlatformDetailView) => {
     editModel.value = updatedPlatformDetailView
 }
 
+const removeProperty = (model: PlatformDetailView, index: number) => {
+    const updatedPlatformDetailView = _.cloneDeep(model)
+    if (!updatedPlatformDetailView.property) {
+        updatedPlatformDetailView.property = []
+    }
+
+    editModel.value = { ...updatedPlatformDetailView, property: updatedPlatformDetailView.property.filter((_, i) => i !== index) }
+}
+
 </script>
 
 <template>
@@ -112,15 +121,20 @@ const addProperty = (model: PlatformDetailView) => {
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
-                    <v-col cols="5">
+                    <v-col cols="4">
                         <v-text-field v-model="property.key" label="Key" />
                     </v-col>
-                    <v-col cols="5">
+                    <v-col cols="4">
                         <v-text-field v-model="property.value" :type="property.needMask ? 'password' : 'text'"
                             label="Value" />
                     </v-col>
                     <v-col cols="2">
                         <v-switch v-model="property.needMask" label="Mask" />
+                    </v-col>
+                    <v-col cols="2" class="d-flex align-center">
+                        <v-btn icon @click="removeProperty(proxyModel.value, index)">
+                            <v-icon icon="md:remove"></v-icon>
+                        </v-btn>
                     </v-col>
                 </v-row>
 

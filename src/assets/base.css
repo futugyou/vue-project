@@ -93,3 +93,7 @@
     margin: 0;
     font-weight: normal;
 }
+
+.v-application__wrap {
+    min-height: 100% !important;
+}
