@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
@@ -9,13 +9,14 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
-import PlatformProjectVue from './PlatformProject.vue'
+import PlatformProjectVue, { PlatformProjectModel } from './PlatformProject.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Basic from './Basic.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
+const logined = authService.isAuthenticated()
 
 const route = useRoute()
 
@@ -79,6 +80,25 @@ const platformProjectCreated = (view: PlatformDetailView) => {
     dialog.value = false
 }
 
+const projectView = computed(() => {
+    if (!project.value) {
+        return undefined
+    }
+    let property: { key: string, value: string }[] = []
+    if (project.value.property) {
+        property = _.map(project.value.property, (value, key) => ({
+            key,
+            value,
+        }))
+    }
+    const m: PlatformProjectModel = {
+        name: project.value.name,
+        url: project.value.url,
+        property: property,
+    }
+    return m
+})
+
 </script>
 
 <template>
@@ -106,7 +126,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
                     </v-list-item>
                 </v-list-group>
             </v-list>
-            <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated() && detail != undefined">
+            <div class="pa-2 d-flex justify-center" v-if="logined && detail != undefined">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
                     <PlatformProjectVue :platform-id="detail.id" @cancel="platformProjectCreateCanceled"
                         @save="platformProjectCreated">
@@ -118,11 +138,11 @@ const platformProjectCreated = (view: PlatformDetailView) => {
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
 
-                <v-sheet class="pa-3" v-if="authService.isAuthenticated()">
+                <v-sheet class="pa-3" v-if="logined">
                     <Basic :model="detail" @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
                 </v-sheet>
 
-                <v-list lines="two" v-if="!authService.isAuthenticated()">
+                <v-list lines="two" v-if="!logined">
                     <v-list-item title="Name" :subtitle="detail.name"></v-list-item>
                     <v-list-item title="URL">
                         <template v-slot:subtitle>
@@ -185,8 +205,15 @@ const platformProjectCreated = (view: PlatformDetailView) => {
                 </v-row>
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="three" v-if="project != undefined" class="pa-3">
-                <v-card class="d-flex flex-column pa-2 h-100" hover>
+            <v-tabs-window-item value="three" v-if="project != undefined && detail != undefined" class="pa-3">
+
+                <v-card class="pa-3" v-if="logined">
+                    <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="projectView"
+                        @cancel="platformProjectCreateCanceled" @save="platformProjectCreated">
+                    </PlatformProjectVue>
+                </v-card>
+
+                <v-card class="d-flex flex-column pa-2 h-100" v-if="!logined">
                     <template v-slot:title>Name: {{ project.name }} </template>
                     <template v-slot:subtitle>ID: {{ project.id }} </template>
 
@@ -231,6 +258,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
                         </v-expansion-panel>
                     </v-expansion-panels>
                 </v-card>
+
             </v-tabs-window-item>
         </v-tabs-window>
     </v-sheet>
