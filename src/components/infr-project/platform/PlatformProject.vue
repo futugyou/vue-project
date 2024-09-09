@@ -88,14 +88,23 @@ const emit = defineEmits<{
 }>()
 
 const addProperty = (model: PlatformProjectModel) => {
-    const request = _.cloneDeep(model)
+    const view = _.cloneDeep(model)
 
-    if (!request.property) {
-        request.property = []
+    if (!view.property) {
+        view.property = []
     }
 
-    request.property.push({ key: '', value: '', })
-    editModel.value = request
+    view.property.push({ key: '', value: '', })
+    editModel.value = view
+}
+
+const removeProperty = (model: PlatformProjectModel, index: number) => {
+    const view = _.cloneDeep(model)
+    if (!view.property) {
+        view.property = []
+    }
+
+    editModel.value = { ...view, property: view.property.filter((_, i) => i !== index) }
 }
 
 watch(editModel, (newVal) => {
@@ -114,11 +123,16 @@ watch(editModel, (newVal) => {
                 <v-text-field v-model="proxyModel.value.url" label="URL" />
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
-                    <v-col cols="6">
+                    <v-col cols="5">
                         <v-text-field v-model="property.key" label="Key" />
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="5">
                         <v-text-field v-model="property.value" label="Value" />
+                    </v-col>
+                    <v-col cols="2" class="d-flex align-center">
+                        <v-btn icon @click="removeProperty(proxyModel.value, index)">
+                            <v-icon icon="md:remove"></v-icon>
+                        </v-btn>
                     </v-col>
                 </v-row>
 
