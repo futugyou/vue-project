@@ -107,7 +107,7 @@ const addProperty = (model: PlatformDetailView) => {
                 <v-text-field v-model="proxyModel.value.name" label="Name" />
                 <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" />
                 <v-text-field v-model="proxyModel.value.url" label="URL" />
-                <v-switch v-model="proxyModel.value.activate" label="Activate" />
+                <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" />
                 <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 

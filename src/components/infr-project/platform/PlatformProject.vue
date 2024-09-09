@@ -24,7 +24,7 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
-const editModel = ref<PlatformProjectModel>({
+const editModel = ref<PlatformProjectModel>(props.model ?? {
     name: '',
     url: '',
     property: [],
@@ -102,6 +102,7 @@ watch(editModel, (newVal) => {
         <Spinners v-if="isLoading"></Spinners>
         <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
+                <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId" />
                 <v-text-field v-model="proxyModel.value.name" label="Name" />
                 <v-text-field v-model="proxyModel.value.url" label="URL" />
 
