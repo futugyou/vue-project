@@ -78,6 +78,13 @@ const platformProjectCreateCanceled = () => {
 const platformProjectCreated = (view: PlatformDetailView) => {
     detail.value = view
     dialog.value = false
+
+    const value = project.value
+    if (value == undefined || view.projects == undefined
+        || view.projects.length == 0 || view.projects.find(p => p.id == value.id) == undefined) {
+        project.value = undefined
+        tab.value = "one"
+    }
 }
 
 const projectView = computed(() => {
