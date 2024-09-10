@@ -107,6 +107,26 @@ const removeProperty = (model: PlatformProjectModel, index: number) => {
     editModel.value = { ...view, property: view.property.filter((_, i) => i !== index) }
 }
 
+const deleteProject = async () => {
+    if (props.platformId && props.projectId) {
+        isLoading.value = true
+        const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdDelete(props.platformId, props.projectId)
+        isLoading.value = false
+        if (error) {
+            msg.value = {
+                errorMessages: [error.message],
+                delay: 3000,
+            }
+
+            return
+        }
+
+        if (data) {
+            emit('save', data)
+        }
+    }
+}
+
 watch(() => props.model, (newVal) => {
     editModel.value = newVal ?? {
         name: '',
@@ -148,6 +168,7 @@ watch(editModel, (newVal) => {
 
                 <v-spacer></v-spacer>
                 <v-sheet class="d-flex justify-end ga-3">
+                    <v-btn variant="text" v-if="projectId" @click="deleteProject">delete</v-btn>
                     <component :is="actions"></component>
                 </v-sheet>
             </template>
