@@ -5,6 +5,7 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 
 import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView } from './platform'
 
@@ -29,6 +30,8 @@ const editModel = ref<PlatformProjectModel>(props.model ?? {
     url: '',
     property: [],
 })
+
+const dialog = ref(false)
 
 const save = async () => {
     if (!editModel.value.name || !editModel.value.url || !props.platformId) {
@@ -168,7 +171,10 @@ watch(editModel, (newVal) => {
 
                 <v-spacer></v-spacer>
                 <v-sheet class="d-flex justify-end ga-3">
-                    <v-btn variant="text" v-if="projectId" @click="deleteProject">delete</v-btn>
+                    <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel" v-model:dialog="dialog"
+                        @save="deleteProject" v-if="projectId">
+                        <v-alert text="Are you sure you want to delete?"></v-alert>
+                    </VuetifyModal>
                     <component :is="actions"></component>
                 </v-sheet>
             </template>
