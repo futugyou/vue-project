@@ -9,6 +9,8 @@ const props = defineProps({
     persistent: Boolean,
     dialog: Boolean,
     width: Number,
+    okText: String,
+    cancleText: String
 })
 
 const dialog = ref(props.dialog)
@@ -54,9 +56,9 @@ watch(dialog, (newVal) => {
             <v-card-actions v-if="!!!hideFooter">
                 <v-spacer></v-spacer>
 
-                <v-btn text="Close" @click="cancle"></v-btn>
+                <v-btn :text="cancleText ?? 'Close'" @click="cancle"></v-btn>
 
-                <v-btn color="primary" text="Save" @click="save"></v-btn>
+                <v-btn color="primary" :text="okText ?? 'Save'" @click="save"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
