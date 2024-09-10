@@ -116,7 +116,7 @@ const removeProperty = (model: PlatformDetailView, index: number) => {
                 <v-text-field v-model="proxyModel.value.name" label="Name" />
                 <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" />
                 <v-text-field v-model="proxyModel.value.url" label="URL" />
-                <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" />
+                <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info" />
                 <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 
@@ -129,7 +129,7 @@ const removeProperty = (model: PlatformDetailView, index: number) => {
                             label="Value" />
                     </v-col>
                     <v-col cols="2">
-                        <v-switch v-model="property.needMask" label="Mask" />
+                        <v-switch v-model="property.needMask" label="Mask" color="info" />
                     </v-col>
                     <v-col cols="2" class="d-flex align-center">
                         <v-btn icon @click="removeProperty(proxyModel.value, index)">

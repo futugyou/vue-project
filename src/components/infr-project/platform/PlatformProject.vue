@@ -107,6 +107,14 @@ const removeProperty = (model: PlatformProjectModel, index: number) => {
     editModel.value = { ...view, property: view.property.filter((_, i) => i !== index) }
 }
 
+watch(() => props.model, (newVal) => {
+    editModel.value = newVal ?? {
+        name: '',
+        url: '',
+        property: [],
+    }
+})
+
 watch(editModel, (newVal) => {
     emit('update:model', newVal)
 })
