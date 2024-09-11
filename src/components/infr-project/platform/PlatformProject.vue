@@ -33,6 +33,13 @@ const editModel = ref<PlatformProjectModel>(props.model ?? {
 
 const dialog = ref(false)
 
+const rules = {
+    required: (value: string) => !!value || 'Field is required',
+    max50: (value: string) => !!value && value.length <= 50 || 'Field must be less than 50 characters',
+    max150: (value: string) => !!value && value.length <= 150 || 'Field must be less than 150 characters',
+    min3: (value: string) => !!value && value.length >= 3 || 'Field must be big than 3 characters',
+}
+
 const save = async () => {
     if (!editModel.value.name || !editModel.value.url || !props.platformId) {
         return
@@ -150,15 +157,19 @@ watch(editModel, (newVal) => {
         <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
                 <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId" />
-                <v-text-field v-model="proxyModel.value.name" label="Name" />
-                <v-text-field v-model="proxyModel.value.url" label="URL" />
+                <v-text-field v-model="proxyModel.value.name" :rules="[rules.required, rules.min3, rules.max50]" label="Name"
+                    :hideDetails="false" />
+                <v-text-field v-model="proxyModel.value.url" :rules="[rules.required, rules.min3, rules.max150]" label="URL"
+                    :hideDetails="false" />
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
                     <v-col cols="5">
-                        <v-text-field v-model="property.key" label="Key" />
+                        <v-text-field v-model="property.key" label="Key" :rules="[rules.required, rules.min3]"
+                            :hideDetails="false" />
                     </v-col>
                     <v-col cols="5">
-                        <v-text-field v-model="property.value" label="Value" />
+                        <v-text-field v-model="property.value" label="Value" :rules="[rules.required, rules.min3]"
+                            :hideDetails="false" />
                     </v-col>
                     <v-col cols="2" class="d-flex align-center">
                         <v-btn icon @click="removeProperty(proxyModel.value, index)">
@@ -189,5 +200,4 @@ watch(editModel, (newVal) => {
 .v-window-item {
     width: 100%;
     height: 100%;
-}
-</style>
+}</style>
