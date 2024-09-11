@@ -28,6 +28,13 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     projects: []
 })
 
+const rules = {
+    required: (value: string) => !!value || 'Field is required',
+    max50: (value: string) => !!value && value.length <= 50 || 'Field must be less than 50 characters',
+    max150: (value: string) => !!value && value.length <= 150 || 'Field must be less than 150 characters',
+    min3: (value: string) => !!value && value.length >= 3 || 'Field must be big than 3 characters',
+}
+
 const save = async () => {
     if (!editModel.value.name || !editModel.value.rest_endpoint || !editModel.value.url) {
         return
@@ -113,20 +120,24 @@ const removeProperty = (model: PlatformDetailView, index: number) => {
         <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
                 <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id" />
-                <v-text-field v-model="proxyModel.value.name" label="Name" />
-                <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" />
-                <v-text-field v-model="proxyModel.value.url" label="URL" />
+                <v-text-field v-model="proxyModel.value.name" label="Name"
+                    :rules="[rules.required, rules.min3, rules.max50]" :hideDetails="false" />
+                <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint"
+                    :rules="[rules.required, rules.min3, rules.max150]" :hideDetails="false" />
+                <v-text-field v-model="proxyModel.value.url" label="URL" :rules="[rules.required, rules.min3, rules.max50]"
+                    :hideDetails="false" />
                 <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info" />
                 <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
                     <v-col cols="4">
-                        <v-text-field v-model="property.key" label="Key" />
+                        <v-text-field v-model="property.key" label="Key" :rules="[rules.required, rules.min3]"
+                            :hideDetails="false" />
                     </v-col>
                     <v-col cols="4">
-                        <v-text-field v-model="property.value" :type="property.needMask ? 'password' : 'text'"
-                            label="Value" />
+                        <v-text-field v-model="property.value" :type="property.needMask ? 'password' : 'text'" label="Value"
+                            :rules="[rules.required, rules.min3]" :hideDetails="false" />
                     </v-col>
                     <v-col cols="2">
                         <v-switch v-model="property.needMask" label="Mask" color="info" />
@@ -154,5 +165,4 @@ const removeProperty = (model: PlatformDetailView, index: number) => {
 .v-window-item {
     width: 100%;
     height: 100%;
-}
-</style>
+}</style>
