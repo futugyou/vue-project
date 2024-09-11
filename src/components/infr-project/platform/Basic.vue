@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
+import type { VTextField } from 'vuetify/components'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -56,8 +57,30 @@ const rules = {
         (value: string) => fieldMinLengthCheck(value, 'Property value', 3),
     ],
 }
+
+const inputRefs = ref<{ [key: string]: any }>({})
+
+const setInputRef = (el: any, key: string) => {
+    inputRefs.value[key] = el
+}
+
 const save = async () => {
-    if (!editModel.value.name || !editModel.value.rest_endpoint || !editModel.value.url) {
+    let validateMsg: string[] = []
+    for (const key in inputRefs.value) {
+        const input = inputRefs.value[key]
+        if (input) {
+            const message: string[] = await input.validate(true)
+            if (message && message.length > 0) {
+                validateMsg = [...validateMsg, ...message]
+            }
+        }
+    }
+
+    if (validateMsg.length > 0) {
+        msg.value = {
+            errorMessages: validateMsg,
+            delay: 3000,
+        }
         return
     }
 
@@ -141,21 +164,25 @@ const removeProperty = (model: PlatformDetailView, index: number) => {
         <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
                 <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id" />
-                <v-text-field v-model="proxyModel.value.name" label="Name" :rules="rules.Name" :hideDetails="false" />
-                <v-text-field v-model="proxyModel.value.rest_endpoint" label="REST Endpoint" :rules="rules.RestUrl"
-                    :hideDetails="false" />
-                <v-text-field v-model="proxyModel.value.url" label="URL" :rules="rules.Url" :hideDetails="false" />
+                <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
+                    :rules="rules.Name" :hideDetails="false" />
+                <v-text-field :ref="el => setInputRef(el, 'rest')" v-model="proxyModel.value.rest_endpoint"
+                    label="REST Endpoint" :rules="rules.RestUrl" :hideDetails="false" />
+                <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
+                    :rules="rules.Url" :hideDetails="false" />
                 <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info" />
                 <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
                 <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
                     <v-col cols="4">
-                        <v-text-field v-model="property.key" label="Key" :rules="rules.PropertyKey" :hideDetails="false" />
+                        <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
+                            :rules="rules.PropertyKey" :hideDetails="false" />
                     </v-col>
                     <v-col cols="4">
-                        <v-text-field v-model="property.value" :type="property.needMask ? 'password' : 'text'" label="Value"
-                            :rules="rules.PropertyValue" :hideDetails="false" />
+                        <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
+                            :type="property.needMask ? 'password' : 'text'" label="Value" :rules="rules.PropertyValue"
+                            :hideDetails="false" />
                     </v-col>
                     <v-col cols="2">
                         <v-switch v-model="property.needMask" label="Mask" color="info" />

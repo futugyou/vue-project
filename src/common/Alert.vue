@@ -47,6 +47,6 @@ watch(msg, checkDisplayState)
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0%);
-    z-index: 1100;
+    z-index: 3100;
 }
 </style>
