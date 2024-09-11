@@ -151,7 +151,7 @@ export enum WebhookStateEnum {
  * @export
  * @interface PlatformView
  */
- export interface PlatformView {
+export interface PlatformView {
     /**
      * 
      * @type {boolean}
@@ -852,4 +852,15 @@ export class PlatformApi extends BaseAPI {
         return PlatformApiFp(this.configuration).v1PlatformPost(body, options)()
     }
 
+}
+
+export const fieldRequiredCheck = (value: any, fieldName: string) => {
+    return !!value || (fieldName + ' field is required')
+}
+
+export const fieldMaxLengthCheck = (value: any, fieldName: string, length: number) => {
+    return !!value && value.length <= length || (fieldName + ' field must be less than ' + length + ' characters')
+}
+export const fieldMinLengthCheck = (value: any, fieldName: string, length: number) => {
+    return !!value && value.length >= length || (fieldName + ' field must be big than ' + length + ' characters')
 }

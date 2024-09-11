@@ -7,7 +7,7 @@ import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
-import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView } from './platform'
+import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
 
 export interface PlatformProjectModel {
     name: string
@@ -34,10 +34,10 @@ const editModel = ref<PlatformProjectModel>(props.model ?? {
 const dialog = ref(false)
 
 const rules = {
-    required: (value: string) => !!value || 'Field is required',
-    max50: (value: string) => !!value && value.length <= 50 || 'Field must be less than 50 characters',
-    max150: (value: string) => !!value && value.length <= 150 || 'Field must be less than 150 characters',
-    min3: (value: string) => !!value && value.length >= 3 || 'Field must be big than 3 characters',
+    Name: [(value: string) => fieldRequiredCheck(value, 'Name'), (value: string) => fieldMinLengthCheck(value, 'Name', 3), (value: string) => fieldMaxLengthCheck(value, 'Name', 50),],
+    Url: [(value: string) => fieldRequiredCheck(value, 'Url'), (value: string) => fieldMinLengthCheck(value, 'Url', 3), (value: string) => fieldMaxLengthCheck(value, 'Url', 150),],
+    PropertyKey: [(value: string) => fieldRequiredCheck(value, 'Property key'), (value: string) => fieldMinLengthCheck(value, 'Property key', 3)],
+    PropertyValue: [(value: string) => fieldRequiredCheck(value, 'Property value'), (value: string) => fieldMinLengthCheck(value, 'Property value', 3)],
 }
 
 const save = async () => {
@@ -157,18 +157,15 @@ watch(editModel, (newVal) => {
         <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
             <template v-slot:default="{ model: proxyModel, actions }">
                 <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId" />
-                <v-text-field v-model="proxyModel.value.name" :rules="[rules.required, rules.min3, rules.max50]" label="Name"
-                    :hideDetails="false" />
-                <v-text-field v-model="proxyModel.value.url" :rules="[rules.required, rules.min3, rules.max150]" label="URL"
-                    :hideDetails="false" />
+                <v-text-field v-model="proxyModel.value.name" :rules="rules.Name" label="Name" :hideDetails="false" />
+                <v-text-field v-model="proxyModel.value.url" :rules="rules.Url" label="URL" :hideDetails="false" />
 
                 <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
                     <v-col cols="5">
-                        <v-text-field v-model="property.key" label="Key" :rules="[rules.required, rules.min3]"
-                            :hideDetails="false" />
+                        <v-text-field v-model="property.key" label="Key" :rules="rules.PropertyKey" :hideDetails="false" />
                     </v-col>
                     <v-col cols="5">
-                        <v-text-field v-model="property.value" label="Value" :rules="[rules.required, rules.min3]"
+                        <v-text-field v-model="property.value" label="Value" :rules="rules.PropertyValue"
                             :hideDetails="false" />
                     </v-col>
                     <v-col cols="2" class="d-flex align-center">
@@ -200,4 +197,5 @@ watch(editModel, (newVal) => {
 .v-window-item {
     width: 100%;
     height: 100%;
-}</style>
+}
+</style>
