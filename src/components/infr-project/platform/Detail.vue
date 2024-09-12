@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
@@ -9,7 +9,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
-import PlatformProjectVue, { PlatformProjectModel } from './PlatformProject.vue'
+import PlatformProjectVue from './PlatformProject.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Basic from './Basic.vue'
 
@@ -86,25 +86,6 @@ const platformProjectCreated = (view: PlatformDetailView) => {
         tab.value = "one"
     }
 }
-
-const projectView = computed(() => {
-    if (!project.value) {
-        return undefined
-    }
-    let property: { key: string, value: string }[] = []
-    if (project.value.property) {
-        property = _.map(project.value.property, (value, key) => ({
-            key,
-            value,
-        }))
-    }
-    const m: PlatformProjectModel = {
-        name: project.value.name,
-        url: project.value.url,
-        property: property,
-    }
-    return m
-})
 
 </script>
 
@@ -215,7 +196,7 @@ const projectView = computed(() => {
             <v-tabs-window-item value="three" v-if="project != undefined && detail != undefined" class="pa-3">
 
                 <v-card class="pa-3" v-if="logined">
-                    <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="projectView"
+                    <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
                         @cancel="platformProjectCreateCanceled" @save="platformProjectCreated">
                     </PlatformProjectVue>
                 </v-card>

@@ -7,12 +7,25 @@ import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
-import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
+import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
 
-export interface PlatformProjectModel {
-    name: string
-    property?: { key: string, value: string }[]
-    url: string
+export interface PlatformProjectModel extends PlatformProject {
+    propertyArray?: { key: string, value: string }[]
+}
+
+const convertProject = (mode: PlatformProject | undefined): PlatformProjectModel => {
+    if (mode == undefined) {
+        return { id: "", name: "", url: "", propertyArray: [] }
+    }
+
+    let propertyArray: { key: string, value: string }[] = []
+    if (mode?.property) {
+        propertyArray = _.map(mode.property, (value, key) => ({ key, value }))
+    }
+    return {
+        ..._.cloneDeep(mode),
+        propertyArray: propertyArray,
+    }
 }
 
 const store = useMessageStore()
@@ -21,15 +34,11 @@ const { msg } = storeToRefs(store)
 const props = defineProps<{
     platformId: string,
     projectId?: string,
-    model?: PlatformProjectModel,
+    model?: PlatformProject,
 }>()
 
 const isLoading = ref(false)
-const editModel = ref<PlatformProjectModel>(props.model ?? {
-    name: '',
-    url: '',
-    property: [],
-})
+const editModel = ref<PlatformProjectModel>(convertProject(props.model))
 
 const dialog = ref(false)
 
@@ -64,7 +73,7 @@ const save = async () => {
 
     isLoading.value = true
 
-    let arr = _.filter(editModel.value.property, (prop) => {
+    let arr = _.filter(editModel.value.propertyArray, (prop) => {
         const keyIsValid = prop.key && prop.key.trim() !== ''
         const valueIsValid = prop.value && prop.value.trim() !== ''
         return keyIsValid && valueIsValid
@@ -117,21 +126,21 @@ const emit = defineEmits<{
 const addProperty = (model: Ref<PlatformProjectModel>) => {
     const view = _.cloneDeep(model.value)
 
-    if (!view.property) {
-        view.property = []
+    if (!view.propertyArray) {
+        view.propertyArray = []
     }
 
-    view.property.push({ key: '', value: '', })
+    view.propertyArray.push({ key: '', value: '', })
     model.value = view
 }
 
 const removeProperty = (model: Ref<PlatformProjectModel>, index: number) => {
     const view = _.cloneDeep(model.value)
-    if (!view.property) {
-        view.property = []
+    if (!view.propertyArray) {
+        view.propertyArray = []
     }
 
-    model.value = { ...view, property: view.property.filter((_, i) => i !== index) }
+    model.value = { ...view, propertyArray: view.propertyArray.filter((_, i) => i !== index) }
 }
 
 const deleteProject = async () => {
@@ -155,11 +164,7 @@ const deleteProject = async () => {
 }
 
 watch(() => props.model, (newVal) => {
-    editModel.value = newVal ?? {
-        name: '',
-        url: '',
-        property: [],
-    }
+    editModel.value = convertProject(newVal)
 })
 
 watch(editModel, (newVal) => {
@@ -179,7 +184,7 @@ watch(editModel, (newVal) => {
                 <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" :rules="rules.Url"
                     label="URL" :hideDetails="false" />
 
-                <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
+                <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
                     <v-col cols="5">
                         <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
                             :rules="rules.PropertyKey" :hideDetails="false" />
