@@ -69,7 +69,7 @@ const save = async () => {
     for (const key in inputRefs.value) {
         const input = inputRefs.value[key]
         if (input) {
-            const message: string[] = await input.validate(true)
+            const message: string[] = await input.validate(false)
             if (message && message.length > 0) {
                 validateMsg = [...validateMsg, ...message]
             }
@@ -77,10 +77,6 @@ const save = async () => {
     }
 
     if (validateMsg.length > 0) {
-        msg.value = {
-            errorMessages: validateMsg,
-            delay: 3000,
-        }
         return
     }
 
