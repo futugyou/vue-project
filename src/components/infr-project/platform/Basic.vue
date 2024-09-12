@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, Ref, watch } from 'vue'
 import type { VTextField } from 'vuetify/components'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
@@ -132,24 +132,24 @@ watch(editModel, (newVal) => {
     emit('update:model', newVal)
 })
 
-const addProperty = (model: PlatformDetailView) => {
-    const updatedPlatformDetailView = _.cloneDeep(model)
+const addProperty = (model: Ref<PlatformDetailView>) => {
+    const view = _.cloneDeep(model.value)
 
-    if (!updatedPlatformDetailView.property) {
-        updatedPlatformDetailView.property = []
+    if (!view.property) {
+        view.property = []
     }
 
-    updatedPlatformDetailView.property.push({ key: '', value: '', needMask: false })
-    editModel.value = updatedPlatformDetailView
+    view.property.push({ key: '', value: '', needMask: false })
+    model.value = view
 }
 
-const removeProperty = (model: PlatformDetailView, index: number) => {
-    const updatedPlatformDetailView = _.cloneDeep(model)
-    if (!updatedPlatformDetailView.property) {
-        updatedPlatformDetailView.property = []
+const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
+    const view = _.cloneDeep(model.value)
+    if (!view.property) {
+        view.property = []
     }
 
-    editModel.value = { ...updatedPlatformDetailView, property: updatedPlatformDetailView.property.filter((_, i) => i !== index) }
+    model.value = { ...view, property: view.property.filter((_, i) => i !== index) }
 }
 
 </script>
@@ -184,13 +184,13 @@ const removeProperty = (model: PlatformDetailView, index: number) => {
                         <v-switch v-model="property.needMask" label="Mask" color="info" />
                     </v-col>
                     <v-col cols="2" class="d-flex align-center">
-                        <v-btn icon @click="removeProperty(proxyModel.value, index)">
+                        <v-btn icon @click="removeProperty(proxyModel, index)">
                             <v-icon icon="md:remove"></v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
 
-                <v-btn color="primary" @click="addProperty(proxyModel.value)">Add Property</v-btn>
+                <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
 
                 <v-spacer></v-spacer>
                 <v-sheet class="d-flex justify-end ga-3">

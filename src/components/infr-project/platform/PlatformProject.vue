@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -114,24 +114,24 @@ const emit = defineEmits<{
     (e: 'save', model: PlatformDetailView): void
 }>()
 
-const addProperty = (model: PlatformProjectModel) => {
-    const view = _.cloneDeep(model)
+const addProperty = (model: Ref<PlatformProjectModel>) => {
+    const view = _.cloneDeep(model.value)
 
     if (!view.property) {
         view.property = []
     }
 
     view.property.push({ key: '', value: '', })
-    editModel.value = view
+    model.value = view
 }
 
-const removeProperty = (model: PlatformProjectModel, index: number) => {
-    const view = _.cloneDeep(model)
+const removeProperty = (model: Ref<PlatformProjectModel>, index: number) => {
+    const view = _.cloneDeep(model.value)
     if (!view.property) {
         view.property = []
     }
 
-    editModel.value = { ...view, property: view.property.filter((_, i) => i !== index) }
+    model.value = { ...view, property: view.property.filter((_, i) => i !== index) }
 }
 
 const deleteProject = async () => {
@@ -189,13 +189,13 @@ watch(editModel, (newVal) => {
                             label="Value" :rules="rules.PropertyValue" :hideDetails="false" />
                     </v-col>
                     <v-col cols="2" class="d-flex align-center">
-                        <v-btn icon @click="removeProperty(proxyModel.value, index)">
+                        <v-btn icon @click="removeProperty(proxyModel, index)">
                             <v-icon icon="md:remove"></v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
 
-                <v-btn color="primary" @click="addProperty(proxyModel.value)">Add Property</v-btn>
+                <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
 
                 <v-spacer></v-spacer>
                 <v-sheet class="d-flex justify-end ga-3">
@@ -217,4 +217,5 @@ watch(editModel, (newVal) => {
 .v-window-item {
     width: 100%;
     height: 100%;
-}</style>
+}
+</style>
