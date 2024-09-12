@@ -188,7 +188,7 @@ watch(editModel, (newVal) => {
                         <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
                             label="Value" :rules="rules.PropertyValue" :hideDetails="false" />
                     </v-col>
-                    <v-col cols="2" class="d-flex align-center">
+                    <v-col cols="2" class="pt-4">
                         <v-btn icon @click="removeProperty(proxyModel, index)">
                             <v-icon icon="md:remove"></v-icon>
                         </v-btn>
