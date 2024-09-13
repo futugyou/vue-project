@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import { useAuth } from '@/plugins/auth'
@@ -9,23 +9,34 @@ const route = useRoute()
 
 const authService = useAuth()
 
-const authStatus = ref(authService.isAuthenticated())
+const authStatus = ref(false)
 
-const authUser = computed(() => authService.getUser())
-
+const checkAuth = () => {
+    authStatus.value = authService.isAuthenticated()
+}
 const login = async () => {
     authService.authorize()
+    checkAuth()
 }
 
 const logout = async () => {
     await authService.logout()
 
-    authStatus.value = authService.isAuthenticated()
+    checkAuth()
 
     if (route.meta.requiresAuth) {
         router.push({ name: 'Home' });
     }
 }
+
+onMounted(() => {
+    checkAuth()
+    window.addEventListener('storage', checkAuth)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('storage', checkAuth)
+})
 
 </script>
 
