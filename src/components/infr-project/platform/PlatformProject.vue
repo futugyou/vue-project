@@ -41,6 +41,7 @@ const isLoading = ref(false)
 const editModel = ref<PlatformProjectModel>(convertProject(props.model))
 
 const dialog = ref(false)
+const tab = ref("one")
 
 const rules = {
     Name: [(value: string) => fieldRequiredCheck(value, 'Name'), (value: string) => fieldMinLengthCheck(value, 'Name', 3), (value: string) => fieldMaxLengthCheck(value, 'Name', 50),],
@@ -176,43 +177,56 @@ watch(editModel, (newVal) => {
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
-            <template v-slot:default="{ model: proxyModel, actions }">
-                <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId" />
-                <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" :rules="rules.Name"
-                    label="Name" :hideDetails="false" />
-                <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" :rules="rules.Url"
-                    label="URL" :hideDetails="false" />
 
-                <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
-                    <v-col cols="5">
-                        <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
-                            :rules="rules.PropertyKey" :hideDetails="false" />
-                    </v-col>
-                    <v-col cols="5">
-                        <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                            label="Value" :rules="rules.PropertyValue" :hideDetails="false" />
-                    </v-col>
-                    <v-col cols="2" class="pt-4">
-                        <v-btn icon @click="removeProperty(proxyModel, index)">
-                            <v-icon icon="md:remove"></v-icon>
-                        </v-btn>
-                    </v-col>
-                </v-row>
+        <v-tabs v-model="tab" >
+            <v-tab value="one">Project Basic</v-tab>
+            <v-tab value="two">Webhooks</v-tab>
+        </v-tabs>
 
-                <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
+        <v-tabs-window v-model="tab">
+            <v-tabs-window-item value="one">
+                <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
+                    <template v-slot:default="{ model: proxyModel, actions }">
+                        <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId" />
+                        <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name"
+                            :rules="rules.Name" label="Name" :hideDetails="false" />
+                        <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" :rules="rules.Url"
+                            label="URL" :hideDetails="false" />
 
-                <v-spacer></v-spacer>
-                <v-sheet class="d-flex justify-end ga-3">
-                    <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel" v-model:dialog="dialog"
-                        @save="deleteProject" v-if="projectId">
-                        <v-alert text="Are you sure you want to delete?"></v-alert>
-                    </VuetifyModal>
-                    <component :is="actions"></component>
-                </v-sheet>
-            </template>
-        </v-confirm-edit>
+                        <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
+                            <v-col cols="5">
+                                <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
+                                    label="Key" :rules="rules.PropertyKey" :hideDetails="false" />
+                            </v-col>
+                            <v-col cols="5">
+                                <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
+                                    label="Value" :rules="rules.PropertyValue" :hideDetails="false" />
+                            </v-col>
+                            <v-col cols="2" class="pt-4">
+                                <v-btn icon @click="removeProperty(proxyModel, index)">
+                                    <v-icon icon="md:remove"></v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
 
+                        <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
+
+                        <v-spacer></v-spacer>
+                        <v-sheet class="d-flex justify-end ga-3">
+                            <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
+                                v-model:dialog="dialog" @save="deleteProject" v-if="projectId">
+                                <v-alert text="Are you sure you want to delete?"></v-alert>
+                            </VuetifyModal>
+                            <component :is="actions"></component>
+                        </v-sheet>
+                    </template>
+                </v-confirm-edit>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="two">
+                Two
+            </v-tabs-window-item>
+        </v-tabs-window>
 
     </v-sheet>
 </template>
