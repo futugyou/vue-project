@@ -16,7 +16,6 @@ import Basic from './Basic.vue'
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
-const logined = authService.isAuthenticated()
 
 const route = useRoute()
 
@@ -114,7 +113,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
                     </v-list-item>
                 </v-list-group>
             </v-list>
-            <div class="pa-2 d-flex justify-center" v-if="logined && detail != undefined">
+            <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated() && detail != undefined">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
                     <PlatformProjectVue :platform-id="detail.id" @cancel="platformProjectCreateCanceled"
                         @save="platformProjectCreated">
@@ -125,41 +124,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
 
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
-
-                <v-sheet class="pa-3" v-if="logined">
-                    <Basic :model="detail" @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
-                </v-sheet>
-
-                <v-list lines="two" v-if="!logined">
-                    <v-list-item title="Name" :subtitle="detail.name"></v-list-item>
-                    <v-list-item title="URL">
-                        <template v-slot:subtitle>
-                            <a :href="detail.url" target="_blank">{{ detail.url }}</a>
-                        </template>
-                    </v-list-item>
-                    <v-list-item title="Rest Endpoint" :subtitle="detail.rest_endpoint"></v-list-item>
-                    <v-list-item title="Activate" :subtitle="detail.activate + ''"></v-list-item>
-                    <v-list-item title="Deleted" :subtitle="detail.is_deleted + ''"></v-list-item>
-                    <v-list-item>
-                        <v-sheet class="d-flex flex-wrap ga-2">
-                            <v-chip v-for="tag in detail.tags">
-                                <strong>{{ tag }}</strong>&nbsp;
-                            </v-chip>
-                        </v-sheet>
-                    </v-list-item>
-                    <v-list-group>
-                        <template v-slot:activator="{ props }">
-                            <v-list-item v-bind="props" title="Property"></v-list-item>
-                        </template>
-                        <v-list-item v-for="pp in detail.property">
-                            <span class="text-subtitle-1 mr-1">key:</span>
-                            <span class="text-subtitle-2 mr-3">{{ pp.key }}</span>
-                            <span class="text-subtitle-1 mr-1">value:</span>
-                            <span class="text-subtitle-2">{{ pp.value }}</span>
-                        </v-list-item>
-                    </v-list-group>
-                </v-list>
-
+                <Basic :model="detail" @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two" v-if="detail != undefined && detail.projects != undefined">

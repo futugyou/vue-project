@@ -6,6 +6,7 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
+import { useAuth } from '@/plugins/auth'
 
 import {
     PlatformApiFactory, PlatformDetailView, CreatePlatformRequest,
@@ -14,6 +15,7 @@ import {
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const authService = useAuth()
 
 const props = defineProps<{
     model?: PlatformDetailView,
@@ -155,49 +157,83 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column ga-3" height="100%">
+    <v-sheet>
         <Spinners v-if="isLoading"></Spinners>
-        <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save" v-if="!isLoading">
-            <template v-slot:default="{ model: proxyModel, actions }">
-                <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id" />
-                <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
-                    :rules="rules.Name" :hideDetails="false" />
-                <v-text-field :ref="el => setInputRef(el, 'rest')" v-model="proxyModel.value.rest_endpoint"
-                    label="REST Endpoint" :rules="rules.RestUrl" :hideDetails="false" />
-                <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
-                    :rules="rules.Url" :hideDetails="false" />
-                <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info" />
-                <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
-                <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple></v-combobox>
 
-                <v-row v-for="(property, index) in proxyModel.value.property" :key="index">
-                    <v-col cols="4">
-                        <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
-                            :rules="rules.PropertyKey" :hideDetails="false" />
-                    </v-col>
-                    <v-col cols="4">
-                        <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                            :type="property.needMask ? 'password' : 'text'" label="Value" :rules="rules.PropertyValue"
-                            :hideDetails="false" />
-                    </v-col>
-                    <v-col cols="2">
-                        <v-switch v-model="property.needMask" label="Mask" color="info" />
-                    </v-col>
-                    <v-col cols="2" class="pt-4">
-                        <v-btn icon @click="removeProperty(proxyModel, index)">
-                            <v-icon icon="md:remove"></v-icon>
-                        </v-btn>
-                    </v-col>
-                </v-row>
+        <v-card class="pa-3" v-if="!isLoading && authService.isAuthenticated()">
+            <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
+                <template v-slot:default="{ model: proxyModel, actions }">
+                    <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
+                        :hideDetails="false" />
+                    <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
+                        :rules="rules.Name" :hideDetails="false" />
+                    <v-text-field :ref="el => setInputRef(el, 'rest')" v-model="proxyModel.value.rest_endpoint"
+                        label="REST Endpoint" :rules="rules.RestUrl" :hideDetails="false" />
+                    <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
+                        :rules="rules.Url" :hideDetails="false" />
+                    <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info" />
+                    <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
+                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple class="mt-3"></v-combobox>
 
-                <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
+                    <v-row v-for="(property, index) in proxyModel.value.property" :key="index" class="mt-3">
+                        <v-col cols="4">
+                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
+                                :rules="rules.PropertyKey" :hideDetails="false" />
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
+                                :type="property.needMask ? 'password' : 'text'" label="Value" :rules="rules.PropertyValue"
+                                :hideDetails="false" />
+                        </v-col>
+                        <v-col cols="2">
+                            <v-switch v-model="property.needMask" label="Mask" color="info" />
+                        </v-col>
+                        <v-col cols="2" class="pt-4">
+                            <v-btn icon @click="removeProperty(proxyModel, index)">
+                                <v-icon icon="md:remove"></v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
 
-                <v-spacer></v-spacer>
-                <v-sheet class="d-flex justify-end ga-3">
-                    <component :is="actions"></component>
+                    <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
+
+                    <v-spacer></v-spacer>
+                    <v-sheet class="d-flex justify-end ga-3">
+                        <component :is="actions"></component>
+                    </v-sheet>
+                </template>
+            </v-confirm-edit>
+        </v-card>
+
+        <v-list lines="two" v-if="!isLoading && !authService.isAuthenticated()">
+            <v-list-item title="Name" :subtitle="editModel.name"></v-list-item>
+            <v-list-item title="URL">
+                <template v-slot:subtitle>
+                    <a :href="editModel.url" target="_blank">{{ editModel.url }}</a>
+                </template>
+            </v-list-item>
+            <v-list-item title="Rest Endpoint" :subtitle="editModel.rest_endpoint"></v-list-item>
+            <v-list-item title="Activate" :subtitle="editModel.activate + ''"></v-list-item>
+            <v-list-item title="Deleted" :subtitle="editModel.is_deleted + ''"></v-list-item>
+            <v-list-item>
+                <v-sheet class="d-flex flex-wrap ga-2">
+                    <v-chip v-for="tag in editModel.tags">
+                        <strong>{{ tag }}</strong>&nbsp;
+                    </v-chip>
                 </v-sheet>
-            </template>
-        </v-confirm-edit>
+            </v-list-item>
+            <v-list-group>
+                <template v-slot:activator="{ props }">
+                    <v-list-item v-bind="props" title="Property"></v-list-item>
+                </template>
+                <v-list-item v-for="pp in editModel.property">
+                    <span class="text-subtitle-1 mr-1">key:</span>
+                    <span class="text-subtitle-2 mr-3">{{ pp.key }}</span>
+                    <span class="text-subtitle-1 mr-1">value:</span>
+                    <span class="text-subtitle-2">{{ pp.value }}</span>
+                </v-list-item>
+            </v-list-group>
+        </v-list>
     </v-sheet>
 </template>
 
