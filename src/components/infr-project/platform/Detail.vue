@@ -194,59 +194,9 @@ const platformProjectCreated = (view: PlatformDetailView) => {
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project != undefined && detail != undefined" class="pa-3">
-
-                <v-card class="pa-3" v-if="logined">
-                    <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
-                        @cancel="platformProjectCreateCanceled" @save="platformProjectCreated">
-                    </PlatformProjectVue>
-                </v-card>
-
-                <v-card class="d-flex flex-column pa-2 h-100" v-if="!logined">
-                    <template v-slot:title>Name: {{ project.name }} </template>
-                    <template v-slot:subtitle>ID: {{ project.id }} </template>
-
-                    <template v-slot:append>
-                        <a :href="project.url" target="_blank">
-                            <v-hover>
-                                <template v-slot:default="{ props }">
-                                    <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                </template>
-                            </v-hover>
-                        </a>
-                    </template>
-
-                    <v-list lines="one">
-                        <v-list-subheader>Property</v-list-subheader>
-                        <v-list-item v-for="(value, key) in project.property" :key="key">
-                            <span class="text-subtitle-1 mr-1">key:</span>
-                            <span class="text-subtitle-2 mr-3">{{ key }}</span>
-                            <span class="text-subtitle-1 mr-1">value:</span>
-                            <span class="text-subtitle-2">{{ value }}</span>
-                        </v-list-item>
-                    </v-list>
-
-                    <v-expansion-panels>
-                        <v-expansion-panel v-for="webhook in project.webhooks" :key="webhook.name" :title="webhook.name">
-                            <v-expansion-panel-text>
-                                <v-list-item title="State" :subtitle="webhook.state"></v-list-item>
-                                <v-list-item title="Activate" :subtitle="webhook.activate ? 'Yes' : 'No'"></v-list-item>
-                                <v-list-item title="Url" :subtitle="webhook.url"></v-list-item>
-                                <v-list-group>
-                                    <template v-slot:activator="{ props }">
-                                        <v-list-item v-bind="props" title="Property"></v-list-item>
-                                    </template>
-                                    <v-list-item v-for="(v, k) in webhook.property">
-                                        <span class="text-subtitle-1 mr-1">key:</span>
-                                        <span class="text-subtitle-2 mr-3">{{ v }}</span>
-                                        <span class="text-subtitle-1 mr-1">value:</span>
-                                        <span class="text-subtitle-2">{{ k }}</span>
-                                    </v-list-item>
-                                </v-list-group>
-                            </v-expansion-panel-text>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
-                </v-card>
-
+                <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
+                    @cancel="platformProjectCreateCanceled" @save="platformProjectCreated">
+                </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>
     </v-sheet>
