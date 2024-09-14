@@ -178,7 +178,7 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                         :disabled="!authService.isAuthenticated()"></v-combobox>
 
                     <div>
-                        <label class="v-label mt-3">Properties</label>
+                        <label class="v-label mt-3 pl-3">Properties</label>
                     </div>
 
                     <v-row v-for="(property, index) in proxyModel.value.property" :key="index" class="mt-2">

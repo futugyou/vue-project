@@ -182,7 +182,7 @@ watch(editModel, (newVal) => {
     <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
 
-        <v-tabs v-model="tab" color="deep-purple-accent-4" >
+        <v-tabs v-model="tab" color="deep-purple-accent-4">
             <v-tab value="one">Project Basic</v-tab>
             <v-tab value="two">Webhooks</v-tab>
         </v-tabs>
@@ -190,36 +190,42 @@ watch(editModel, (newVal) => {
         <v-tabs-window v-model="tab" v-if="!isLoading">
             <v-tabs-window-item value="one">
 
-                <v-card class="h-100" v-if="logined">
+                <v-card class="h-100">
                     <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
                                 :hideDetails="false" />
                             <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name"
-                                :rules="rules.Name" label="Name" :hideDetails="false" />
+                                :disabled="!logined" :rules="rules.Name" label="Name" :hideDetails="false" />
                             <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                                :rules="rules.Url" label="URL" :hideDetails="false" />
+                                :disabled="!logined" :rules="rules.Url" label="URL" :hideDetails="false" />
+
+                            <div>
+                                <label class="v-label mt-3 pl-3">Properties</label>
+                            </div>
 
                             <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
-                                <v-col cols="5">
+                                <v-col :cols="logined ? 5 : 6">
                                     <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
-                                        label="Key" :rules="rules.PropertyKey" :hideDetails="false" />
+                                        :disabled="!logined" label="Key" :rules="rules.PropertyKey"
+                                        :hideDetails="false" />
                                 </v-col>
-                                <v-col cols="5">
-                                    <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                        label="Value" :rules="rules.PropertyValue" :hideDetails="false" />
+                                <v-col :cols="logined ? 5 : 6">
+                                    <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)"
+                                        v-model="property.value" :disabled="!logined" label="Value"
+                                        :rules="rules.PropertyValue" :hideDetails="false" />
                                 </v-col>
-                                <v-col cols="2" class="pt-4">
+                                <v-col cols="2" class="pt-4" v-if="logined">
                                     <v-btn icon @click="removeProperty(proxyModel, index)">
                                         <v-icon icon="md:remove"></v-icon>
                                     </v-btn>
                                 </v-col>
                             </v-row>
 
-                            <v-btn color="primary" @click="addProperty(proxyModel)">Add Property</v-btn>
+                            <v-btn color="primary" @click="addProperty(proxyModel)" v-if="logined">Add Property</v-btn>
 
                             <v-spacer></v-spacer>
-                            <v-sheet class="d-flex justify-end ga-3">
+                            <v-sheet class="d-flex justify-end ga-3" v-if="logined">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
                                     v-model:dialog="dialog" @save="deleteProject" v-if="projectId">
                                     <v-alert text="Are you sure you want to delete?"></v-alert>
@@ -230,39 +236,13 @@ watch(editModel, (newVal) => {
                     </v-confirm-edit>
                 </v-card>
 
-                <v-card class="h-100" v-if="!logined">
-                    <template v-slot:title>Name: {{ editModel.name }} </template>
-                    <template v-slot:subtitle>ID: {{ editModel.id }} </template>
-
-                    <template v-slot:append>
-                        <a :href="editModel.url" target="_blank">
-                            <v-hover>
-                                <template v-slot:default="{ props }">
-                                    <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                </template>
-                            </v-hover>
-                        </a>
-                    </template>
-
-                    <v-list lines="one">
-                        <v-list-subheader>Property</v-list-subheader>
-                        <v-list-item v-for="(value, key) in editModel.property" :key="key">
-                            <span class="text-subtitle-1 mr-1">key:</span>
-                            <span class="text-subtitle-2 mr-3">{{ key }}</span>
-                            <span class="text-subtitle-1 mr-1">value:</span>
-                            <span class="text-subtitle-2">{{ value }}</span>
-                        </v-list-item>
-                    </v-list>
-
-
-                </v-card>
-
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two">
                 <v-card>
                     <v-expansion-panels>
-                        <v-expansion-panel v-for="webhook in editModel.webhooks" :key="webhook.name" :title="webhook.name">
+                        <v-expansion-panel v-for="webhook in editModel.webhooks" :key="webhook.name"
+                            :title="webhook.name">
                             <v-expansion-panel-text>
                                 <v-list-item title="State" :subtitle="webhook.state"></v-list-item>
                                 <v-list-item title="Activate" :subtitle="webhook.activate ? 'Yes' : 'No'"></v-list-item>
