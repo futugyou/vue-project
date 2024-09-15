@@ -188,7 +188,9 @@ const addNewWebhook = () => {
     if (view.webhooks == undefined) {
         view = { ...view, webhooks: [{ name: "", url: "", property: {}, activate: true, state: 'Init' }] }
     } else {
-        view.webhooks.push({ name: "", url: "", property: {}, activate: true, state: 'Init' })
+        if (view.webhooks.findIndex(p => p.name == "") == -1) {
+            view.webhooks.push({ name: "", url: "", property: {}, activate: true, state: 'Init' })
+        }
     }
     editModel.value = view
 }
@@ -269,7 +271,7 @@ watch(editModel, (newVal) => {
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>
                     <v-col cols="12" md="4" v-if="logined">
-                        <v-btn @click="addNewWebhook">add new </v-btn>
+                        <v-btn icon="md:add_circle" size="x-large" @click="addNewWebhook"></v-btn>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>
