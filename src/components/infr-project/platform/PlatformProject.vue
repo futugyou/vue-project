@@ -7,6 +7,7 @@ import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
+import WebhookPage from './Webhook.vue'
 
 import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
 
@@ -19,14 +20,20 @@ const convertProject = (mode: PlatformProject | undefined): PlatformProjectModel
         return { id: "", name: "", url: "", propertyArray: [] }
     }
 
-    let propertyArray: { key: string, value: string }[] = []
-    if (mode?.property) {
-        propertyArray = _.map(mode.property, (value, key) => ({ key, value }))
-    }
+    let propertyArray = convertPropperty(mode.property)
+
     return {
         ..._.cloneDeep(mode),
         propertyArray: propertyArray,
     }
+}
+
+const convertPropperty = (property: { [key: string]: string; } | undefined): { key: string; value: string; }[] => {
+    if (property == undefined) {
+        return []
+    }
+
+    return _.map(property, (value, key) => ({ key, value }))
 }
 
 const store = useMessageStore()
@@ -168,6 +175,14 @@ const deleteProject = async () => {
     }
 }
 
+const webhookCreated = (model: PlatformDetailView) => {
+    emit('save', model)
+}
+
+const webhookCreateCanceled = () => {
+    emit('cancel')
+}
+
 watch(() => props.model, (newVal) => {
     editModel.value = convertProject(newVal)
 })
@@ -207,13 +222,12 @@ watch(editModel, (newVal) => {
                             <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
                                 <v-col :cols="logined ? 5 : 6">
                                     <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
-                                        :disabled="!logined" label="Key" :rules="rules.PropertyKey"
-                                        :hideDetails="false" />
+                                        :disabled="!logined" label="Key" :rules="rules.PropertyKey" :hideDetails="false" />
                                 </v-col>
                                 <v-col :cols="logined ? 5 : 6">
-                                    <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)"
-                                        v-model="property.value" :disabled="!logined" label="Value"
-                                        :rules="rules.PropertyValue" :hideDetails="false" />
+                                    <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
+                                        :disabled="!logined" label="Value" :rules="rules.PropertyValue"
+                                        :hideDetails="false" />
                                 </v-col>
                                 <v-col cols="2" class="pt-4" v-if="logined">
                                     <v-btn icon @click="removeProperty(proxyModel, index)">
@@ -239,29 +253,12 @@ watch(editModel, (newVal) => {
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two">
-                <v-card>
-                    <v-expansion-panels>
-                        <v-expansion-panel v-for="webhook in editModel.webhooks" :key="webhook.name"
-                            :title="webhook.name">
-                            <v-expansion-panel-text>
-                                <v-list-item title="State" :subtitle="webhook.state"></v-list-item>
-                                <v-list-item title="Activate" :subtitle="webhook.activate ? 'Yes' : 'No'"></v-list-item>
-                                <v-list-item title="Url" :subtitle="webhook.url"></v-list-item>
-                                <v-list-group>
-                                    <template v-slot:activator="{ props }">
-                                        <v-list-item v-bind="props" title="Property"></v-list-item>
-                                    </template>
-                                    <v-list-item v-for="(v, k) in webhook.property">
-                                        <span class="text-subtitle-1 mr-1">key:</span>
-                                        <span class="text-subtitle-2 mr-3">{{ v }}</span>
-                                        <span class="text-subtitle-1 mr-1">value:</span>
-                                        <span class="text-subtitle-2">{{ k }}</span>
-                                    </v-list-item>
-                                </v-list-group>
-                            </v-expansion-panel-text>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
-                </v-card>
+                <v-row class="pa-3" v-if="projectId">
+                    <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
+                        <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
+                            @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
+                    </v-col>
+                </v-row>
             </v-tabs-window-item>
         </v-tabs-window>
 
