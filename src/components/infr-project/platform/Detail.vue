@@ -79,10 +79,20 @@ const platformProjectCreated = (view: PlatformDetailView) => {
     dialog.value = false
 
     const value = project.value
+    // handle project delete
     if (value == undefined || view.projects == undefined
-        || view.projects.length == 0 || view.projects.find(p => p.id == value.id) == undefined) {
+        ||   view.projects.find(p => p.id == value.id) == undefined) {
         project.value = undefined
         tab.value = "one"
+        return
+    }
+    // handle project webhook update
+    if (value != undefined && view.projects != undefined) {
+        const pro = view.projects.find(p => p.id == value.id)
+        if (pro != undefined) {
+            project.value = pro
+            tab.value = "three"
+        }
     }
 }
 

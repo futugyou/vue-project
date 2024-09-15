@@ -184,13 +184,15 @@ const webhookCreateCanceled = () => {
 }
 
 const addNewWebhook = () => {
+    if (editModel.value.webhooks != undefined && editModel.value.webhooks.findIndex(p => p.name == "") > -1) {
+        return
+    }
+
     let view = _.cloneDeep(editModel.value)
     if (view.webhooks == undefined) {
         view = { ...view, webhooks: [{ name: "", url: "", property: {}, activate: true, state: 'Init' }] }
     } else {
-        if (view.webhooks.findIndex(p => p.name == "") == -1) {
-            view.webhooks.push({ name: "", url: "", property: {}, activate: true, state: 'Init' })
-        }
+        view.webhooks.push({ name: "", url: "", property: {}, activate: true, state: 'Init' })
     }
     editModel.value = view
 }
