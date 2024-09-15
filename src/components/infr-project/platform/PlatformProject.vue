@@ -183,6 +183,16 @@ const webhookCreateCanceled = () => {
     emit('cancel')
 }
 
+const addNewWebhook = () => {
+    let view = _.cloneDeep(editModel.value)
+    if (view.webhooks == undefined) {
+        view = { ...view, webhooks: [{ name: "", url: "", property: {}, activate: true, state: 'Init' }] }
+    } else {
+        view.webhooks.push({ name: "", url: "", property: {}, activate: true, state: 'Init' })
+    }
+    editModel.value = view
+}
+
 watch(() => props.model, (newVal) => {
     editModel.value = convertProject(newVal)
 })
@@ -257,6 +267,9 @@ watch(editModel, (newVal) => {
                     <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
                         <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
+                    </v-col>
+                    <v-col cols="12" md="4" v-if="logined">
+                        <v-btn @click="addNewWebhook">add new </v-btn>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>

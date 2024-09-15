@@ -15,7 +15,7 @@ export interface WebhookModel extends Webhook {
 
 const convertWebhook = (mode: Webhook | undefined): WebhookModel => {
     if (mode == undefined) {
-        return { name: "", url: "", propertyArray: [], state: '' }
+        return { name: "", url: "", propertyArray: [], activate: true, state: 'Init' }
     }
 
     let propertyArray: { key: string, value: string }[] = []
@@ -184,8 +184,8 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
 
                     <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index" class="mt-2">
                         <v-col :cols="authService.isAuthenticated() ? 5 : 6">
-                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
-                                label="Key" :rules="rules.PropertyKey" :hideDetails="false"
+                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
+                                :rules="rules.PropertyKey" :hideDetails="false"
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col :cols="authService.isAuthenticated() ? 5 : 6">
