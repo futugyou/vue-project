@@ -171,15 +171,14 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
                 <template v-slot:default="{ model: proxyModel, actions }">
                     <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
                         :disabled="!authService.isAuthenticated()" :rules="rules.Name" :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'state')" v-model="proxyModel.value.state"
-                        :disabled="!authService.isAuthenticated()" label="State" :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
                         :disabled="!authService.isAuthenticated()" :rules="rules.Url" :hideDetails="false" />
+                    <v-select label="State" v-model="proxyModel.value.state" :ref="el => setInputRef(el, 'state')"
+                        :items="['Init', 'Creating', 'Ready']" :hideDetails="false" class="mt-2"></v-select>
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
-                        :disabled="!authService.isAuthenticated()" />
-
+                        :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                     <div>
-                        <label class="v-label mt-3 pl-3">Properties</label>
+                        <label class="v-label  pl-3">Properties</label>
                     </div>
 
                     <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index" class="mt-2">

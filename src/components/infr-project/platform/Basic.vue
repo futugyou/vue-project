@@ -172,10 +172,10 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                     <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
                         :disabled="!authService.isAuthenticated()" :rules="rules.Url" :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
-                        :disabled="!authService.isAuthenticated()" />
+                        :disabled="!authService.isAuthenticated()" :hideDetails="false" />
                     <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
-                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple class="mt-3"
-                        :disabled="!authService.isAuthenticated()"></v-combobox>
+                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
+                        :disabled="!authService.isAuthenticated()" :hideDetails="false"></v-combobox>
 
                     <div>
                         <label class="v-label mt-3 pl-3">Properties</label>
@@ -183,15 +183,14 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
 
                     <v-row v-for="(property, index) in proxyModel.value.property" :key="index" class="mt-2">
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
-                                label="Key" :rules="rules.PropertyKey" :hideDetails="false"
+                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
+                                :rules="rules.PropertyKey" :hideDetails="false"
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                             <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                :type="property.needMask ? 'password' : 'text'" label="Value"
-                                :rules="rules.PropertyValue" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
+                                :type="property.needMask ? 'password' : 'text'" label="Value" :rules="rules.PropertyValue"
+                                :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col cols="2">
                             <v-switch v-model="property.needMask" label="Mask" color="info"

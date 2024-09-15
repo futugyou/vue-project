@@ -281,9 +281,15 @@ watch(editModel, (newVal) => {
 </template>
 
 <style scoped>
-.v-window,
+.v-window {
+    width: 100%;
+    height: 100%;
+}
+
 .v-window-item {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 </style>
