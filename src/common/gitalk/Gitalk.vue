@@ -328,7 +328,7 @@ watch(
                 </div>
                 <div class="comment">
                     <!-- <div class="comment-body"> -->
-                    <textarea id="textarea" v-if="!showMarkdown" v-model="userComment" rows="5" ref="textarearef"
+                    <textarea flag id="textarea" v-if="!showMarkdown" v-model="userComment" rows="5" ref="textarearef"
                         :disabled="isLoading"></textarea>
                     <!-- </div> -->
                     <div class="comment-body" v-if="showMarkdown" v-html="marked(userComment)">
@@ -371,7 +371,7 @@ watch(
                         </div>
                     </div>
                     <div v-if="!commentMark[index]" class="comment-body" v-html="marked(comment.body)"></div>
-                    <textarea rows="5" v-if="commentMark[index]" readonly class="comment-body"
+                    <textarea flag rows="5" v-if="commentMark[index]" readonly class="comment-body"
                         v-html="comment.body"></textarea>
                 </div>
             </div>

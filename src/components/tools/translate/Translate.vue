@@ -171,7 +171,7 @@ watchEffect(async () => {
         </div>
         <div class="body">
             <div class="text-container">
-                <textarea v-model="left" placeholder="input your text" @change="inputeChange"
+                <textarea flag v-model="left" placeholder="input your text" @change="inputeChange"
                     @mouseup="selectText"></textarea>
                 <div class="speech-btn">
                     <Speech :lang="from" :text="left"></Speech>
@@ -179,7 +179,7 @@ watchEffect(async () => {
             </div>
 
             <div class="text-container">
-                <textarea v-model="right" placeholder=""></textarea>
+                <textarea flag v-model="right" placeholder=""></textarea>
                 <div class="speech-btn">
                     <Speech :lang="to" :text="right"></Speech>
                 </div>

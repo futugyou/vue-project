@@ -331,7 +331,7 @@ defineExpose({
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>
-                    <input type="number" min="1" :max="totalPages" :value="currentPage" @change="onCurrentPageChange"
+                    <input flag type="number" min="1" :max="totalPages" :value="currentPage" @change="onCurrentPageChange"
                         :disabled="loading" />
                 </div>
                 <div>
@@ -383,7 +383,7 @@ defineExpose({
                 <Draggable selector=".target"></Draggable>
             </div>
             <div class="pdf-page" v-if="showText">
-                <textarea :value="extractedText" @input="changePdfText" placeholder="" v-if="!loading"
+                <textarea flag :value="extractedText" @input="changePdfText" placeholder="" v-if="!loading"
                     class="text-input"></textarea>
             </div>
         </div>

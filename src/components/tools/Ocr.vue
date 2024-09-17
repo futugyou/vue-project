@@ -132,7 +132,7 @@ onUnmounted(async () => {
             </div>
             <div class="text-container">
                 <div v-for="text in textList" :key="text" style="overflow:hidden ;">
-                    <textarea :value="text" placeholder=""></textarea>
+                    <textarea flag :value="text" placeholder=""></textarea>
                 </div>
             </div>
         </div>
@@ -174,7 +174,7 @@ onUnmounted(async () => {
     grid-gap: var(--grid-gap-10);
 }
 
-.image-container div{
+.image-container div {
     border: 1px solid var(--color-border-text-normal-default);
     border-radius: var(--border-radius-input);
 }
@@ -187,7 +187,8 @@ onUnmounted(async () => {
     grid-template-columns: v-bind('theme.columns');
     grid-gap: var(--grid-gap-10);
 }
-.text-container textarea{
+
+.text-container textarea {
     border-style: solid;
 }
 </style>  

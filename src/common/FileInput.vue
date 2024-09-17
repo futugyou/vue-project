@@ -106,7 +106,7 @@ onMounted(() => {
             @drop.prevent="onFileDrop" :class="{ over: isOver }">
             <form style="width: 100%;">
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
-                <input id="file-reader" type="file" name="file-reader" :multiple="Multiple" class="file-reader-input"
+                <input flag id="file-reader" type="file" name="file-reader" :multiple="Multiple" class="file-reader-input"
                     @change="onFileChange" :disabled="IsLoading" ref="fileref" :accept="Accept" />
             </form>
         </div>

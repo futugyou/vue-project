@@ -139,7 +139,7 @@ watch(
                 </Button>
             </div>
             <div class="text-container">
-                <textarea :value="translatedText" @input="changeTranslatedText" placeholder=""></textarea>
+                <textarea flag :value="translatedText" @input="changeTranslatedText" placeholder=""></textarea>
             </div>
         </div>
     </div>
