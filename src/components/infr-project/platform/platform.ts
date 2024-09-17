@@ -307,13 +307,13 @@ export interface Webhook {
      * @type {boolean}
      * @memberof Webhook
      */
-    activate?: boolean
+    activate: boolean
     /**
      * 
      * @type {string}
      * @memberof Webhook
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {{ [key: string]: string }}
@@ -325,13 +325,13 @@ export interface Webhook {
      * @type {string}
      * @memberof Webhook
      */
-    state?: string
+    state: string
     /**
      * 
      * @type {string}
      * @memberof Webhook
      */
-    url?: string
+    url: string
 }
 
 /**
