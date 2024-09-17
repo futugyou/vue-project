@@ -5,6 +5,7 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, WebhookStateEnum, PlatformDetailView, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
@@ -39,6 +40,7 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
+const dialog = ref(false)
 const editModel = ref<WebhookModel>(convertWebhook(props.model))
 
 const rules = {
@@ -109,6 +111,27 @@ const save = async () => {
 
     const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdHookPut(body, props.platformId, props.projectId)
 
+    isLoading.value = false
+
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+
+    emit('save', data!)
+}
+
+const deleteWebhook = async () => {
+    const hook_name = editModel.value.name.trim()
+    if (hook_name.length == 0) {
+        return
+    }
+
+    isLoading.value = true
+    const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdHookDelete(props.platformId, props.projectId, hook_name)
     isLoading.value = false
 
     if (error) {
@@ -204,6 +227,10 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
+                        <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
+                            v-model:dialog="dialog" @save="deleteWebhook">
+                            <v-alert text="Are you sure you want to delete?"></v-alert>
+                        </VuetifyModal>
                         <component :is="actions"></component>
                     </v-sheet>
                 </template>
