@@ -268,7 +268,8 @@ watch(editModel, (newVal) => {
 
             <v-tabs-window-item value="two">
                 <v-row class="pa-3" v-if="projectId">
-                    <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
+                    <v-col v-for="webhook in _.orderBy(editModel.webhooks, 'name', 'asc')" :key="webhook.name" cols="12"
+                        md="4">
                         <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>

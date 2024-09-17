@@ -81,7 +81,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
     const value = project.value
     // handle project delete
     if (value == undefined || view.projects == undefined
-        ||   view.projects.find(p => p.id == value.id) == undefined) {
+        || view.projects.find(p => p.id == value.id) == undefined) {
         project.value = undefined
         tab.value = "one"
         return
@@ -139,7 +139,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
 
             <v-tabs-window-item value="two" v-if="detail != undefined && detail.projects != undefined">
                 <v-row class="pa-3">
-                    <v-col v-for="project in detail.projects" :key="project.id" cols="12" md="4">
+                    <v-col v-for="project in _.orderBy(detail.projects, 'id', 'asc')" :key="project.id" cols="12" md="4">
                         <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
                             <template v-slot:title>Name: {{ project.name }} </template>
                             <template v-slot:subtitle>ID: {{ project.id }} </template>
