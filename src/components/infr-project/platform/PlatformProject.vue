@@ -217,7 +217,7 @@ watch(editModel, (newVal) => {
 
         <v-tabs v-model="tab" color="deep-purple-accent-4">
             <v-tab value="one">Project Basic</v-tab>
-            <v-tab value="two">Webhooks</v-tab>
+            <v-tab value="two" v-if="projectId">Webhooks</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="tab" v-if="!isLoading">
@@ -270,11 +270,11 @@ watch(editModel, (newVal) => {
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="editModel.webhooks != undefined">
-                <Empty v-if="projectId && editModel.webhooks.length == 0">
+            <v-tabs-window-item value="two" v-if="projectId">
+                <Empty v-if="editModel.webhooks == undefined || editModel.webhooks.length == 0">
                     <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" v-if="logined"></v-btn>
                 </Empty>
-                <v-row class="pa-3" v-if="projectId && editModel.webhooks.length > 0">
+                <v-row class="pa-3" v-else>
                     <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
                         <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>

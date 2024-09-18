@@ -35,7 +35,7 @@ const sortedPlatformDetailView = (data: PlatformDetailView | undefined) => {
         return undefined
     }
 
-    return { ...data, project: _.orderBy(data.projects, 'id', 'asc') }
+    return { ...data, projects: _.orderBy(data.projects, 'id', 'asc') }
 }
 
 const fetchData = async () => {
