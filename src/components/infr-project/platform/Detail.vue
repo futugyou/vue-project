@@ -118,8 +118,8 @@ const platformProjectCreated = (view: PlatformDetailView) => {
                             </template>
                         </v-list-item>
                     </template>
-                    <v-list-item slim v-for="(item, i) in detail.projects" :key="i" :value="item" color="primary"
-                        @click="showProject(item)" v-if="detail">
+                    <v-list-item slim v-for="(item, i) in  _.orderBy(detail.projects, 'id', 'asc')" :key="i" :value="item"
+                        color="primary" @click="showProject(item)" v-if="detail">
                         <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item>
                 </v-list-group>
