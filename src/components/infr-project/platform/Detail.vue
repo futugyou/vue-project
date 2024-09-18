@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
+import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
@@ -138,7 +139,8 @@ const platformProjectCreated = (view: PlatformDetailView) => {
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two" v-if="detail != undefined && detail.projects != undefined">
-                <v-row class="pa-3">
+                <Empty v-if="detail.projects!.length == 0"></Empty>
+                <v-row class="pa-3" v-if="detail.projects!.length > 0">
                     <v-col v-for="project in _.orderBy(detail.projects, 'id', 'asc')" :key="project.id" cols="12" md="4">
                         <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
                             <template v-slot:title>Name: {{ project.name }} </template>

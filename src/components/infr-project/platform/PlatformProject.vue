@@ -4,9 +4,11 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
+import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
+
 import WebhookPage from './Webhook.vue'
 
 import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
@@ -266,15 +268,18 @@ watch(editModel, (newVal) => {
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two">
-                <v-row class="pa-3" v-if="projectId">
+            <v-tabs-window-item value="two" v-if="editModel.webhooks != undefined">
+                <Empty v-if="projectId && editModel.webhooks.length == 0">
+                    <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" v-if="logined"></v-btn>
+                </Empty>
+                <v-row class="pa-3" v-if="projectId && editModel.webhooks.length > 0">
                     <v-col v-for="webhook in _.orderBy(editModel.webhooks, 'name', 'asc')" :key="webhook.name" cols="12"
                         md="4">
                         <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>
                     <v-col cols="12" md="4" v-if="logined">
-                        <v-btn icon="md:add_circle" size="x-large" @click="addNewWebhook"></v-btn>
+                        <v-btn icon="md:add" size="x-large" @click="addNewWebhook"></v-btn>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>
