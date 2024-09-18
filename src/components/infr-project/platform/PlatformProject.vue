@@ -17,15 +17,17 @@ export interface PlatformProjectModel extends PlatformProject {
     propertyArray?: { key: string, value: string }[]
 }
 
-const convertProject = (mode: PlatformProject | undefined): PlatformProjectModel => {
-    if (mode == undefined) {
+const convertProject = (model: PlatformProject | undefined): PlatformProjectModel => {
+    if (model == undefined) {
         return { id: "", name: "", url: "", propertyArray: [] }
     }
 
-    let propertyArray = convertPropperty(mode.property)
+    let propertyArray = convertPropperty(model.property)
+    model = _.cloneDeep(model)
 
     return {
-        ..._.cloneDeep(mode),
+        ...model,
+        webhooks: _.orderBy(model.webhooks, 'name', 'asc'),
         propertyArray: propertyArray,
     }
 }
@@ -273,8 +275,7 @@ watch(editModel, (newVal) => {
                     <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" v-if="logined"></v-btn>
                 </Empty>
                 <v-row class="pa-3" v-if="projectId && editModel.webhooks.length > 0">
-                    <v-col v-for="webhook in _.orderBy(editModel.webhooks, 'name', 'asc')" :key="webhook.name" cols="12"
-                        md="4">
+                    <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
                         <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>

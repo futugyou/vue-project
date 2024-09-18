@@ -30,6 +30,14 @@ const dialog = ref(false)
 
 const tab = ref("one")
 
+const sortedPlatformDetailView = (data: PlatformDetailView | undefined) => {
+    if (data == undefined) {
+        return undefined
+    }
+
+    return { ...data, project: _.orderBy(data.projects, 'id', 'asc') }
+}
+
 const fetchData = async () => {
     if (platformId == undefined) {
         return
@@ -47,8 +55,9 @@ const fetchData = async () => {
         return
     }
 
-    detail.value = data
-    rawPlatformDetailViewData = data
+    const sortData = sortedPlatformDetailView(data)
+    detail.value = sortData
+    rawPlatformDetailViewData = sortData
 }
 
 fetchData()
@@ -62,21 +71,16 @@ const showProject = (pro: PlatformProject) => {
     project.value = pro
 }
 
-const platformCreateCanceled = () => {
+const platformChangeCanceled = () => {
     detail.value = rawPlatformDetailViewData
-}
-
-const platformCreated = (view: PlatformDetailView) => {
-    detail.value = view
-    rawPlatformDetailViewData = view
-}
-
-const platformProjectCreateCanceled = () => {
     dialog.value = false
 }
 
-const platformProjectCreated = (view: PlatformDetailView) => {
-    detail.value = view
+const platformChanged = (view: PlatformDetailView) => {
+    const sortData = sortedPlatformDetailView(view)
+    detail.value = sortData
+    rawPlatformDetailViewData = sortData
+
     dialog.value = false
 
     const value = project.value
@@ -118,16 +122,15 @@ const platformProjectCreated = (view: PlatformDetailView) => {
                             </template>
                         </v-list-item>
                     </template>
-                    <v-list-item slim v-for="(item, i) in  _.orderBy(detail.projects, 'id', 'asc')" :key="i" :value="item"
-                        color="primary" @click="showProject(item)" v-if="detail">
-                        <v-list-item-title v-text="item.name"></v-list-item-title>
+                    <v-list-item slim v-for="(project, i) in  detail.projects " :key="i" :value="project" color="primary"
+                        @click="showProject(project)" v-if="detail">
+                        <v-list-item-title v-text="project.name"></v-list-item-title>
                     </v-list-item>
                 </v-list-group>
             </v-list>
             <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated() && detail != undefined">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
-                    <PlatformProjectVue :platform-id="detail.id" @cancel="platformProjectCreateCanceled"
-                        @save="platformProjectCreated">
+                    <PlatformProjectVue :platform-id="detail.id" @cancel="platformChangeCanceled" @save="platformChanged">
                     </PlatformProjectVue>
                 </VuetifyModal>
             </div>
@@ -135,13 +138,13 @@ const platformProjectCreated = (view: PlatformDetailView) => {
 
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail != undefined">
-                <Basic :model="detail" @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
+                <Basic :model="detail" @cancel="platformChangeCanceled" @save="platformChanged"></Basic>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="two" v-if="detail != undefined && detail.projects != undefined">
                 <Empty v-if="detail.projects!.length == 0"></Empty>
                 <v-row class="pa-3" v-if="detail.projects!.length > 0">
-                    <v-col v-for="project in _.orderBy(detail.projects, 'id', 'asc')" :key="project.id" cols="12" md="4">
+                    <v-col v-for="project in detail.projects" :key="project.id" cols="12" md="4">
                         <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
                             <template v-slot:title>Name: {{ project.name }} </template>
                             <template v-slot:subtitle>ID: {{ project.id }} </template>
@@ -172,7 +175,7 @@ const platformProjectCreated = (view: PlatformDetailView) => {
 
             <v-tabs-window-item value="three" v-if="project != undefined && detail != undefined" class="pa-3">
                 <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
-                    @cancel="platformProjectCreateCanceled" @save="platformProjectCreated">
+                    @cancel="platformChangeCanceled" @save="platformChanged">
                 </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>
