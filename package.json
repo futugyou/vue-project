@@ -38,7 +38,7 @@
     "xstate": "^5.18.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.47.1",
+    "@playwright/test": "^1.47.2",
     "@tsconfig/node18": "^18.2.4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.6.1",
