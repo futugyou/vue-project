@@ -26,7 +26,7 @@
     "marked": "^14.1.2",
     "moment": "^2.30.1",
     "octokit": "^4.0.2",
-    "pdfjs-dist": "^4.6.82",
+    "pdfjs-dist": "^4.7.76",
     "pinia": "^2.2.4",
     "tesseract.js": "^5.1.1",
     "the-new-css-reset": "^1.11.3",
