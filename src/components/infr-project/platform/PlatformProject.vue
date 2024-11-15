@@ -11,7 +11,7 @@ import { useAuth } from '@/plugins/auth'
 
 import WebhookPage from './Webhook.vue'
 
-import { PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
+import { OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
 
 export interface PlatformProjectModel extends PlatformProject {
     propertyArray?: { key: string, value: string }[]
@@ -19,16 +19,17 @@ export interface PlatformProjectModel extends PlatformProject {
 
 const convertProject = (model: PlatformProject | undefined): PlatformProjectModel => {
     if (model == undefined) {
-        return { id: "", name: "", url: "", propertyArray: [] }
+        return { id: "", name: "", url: "", propertyArray: [], followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: [] }
     }
 
-    let propertyArray = convertPropperty(model.property)
+    // TODO: fix properties
+    // let propertyArray = convertPropperty(model.properties)
     model = _.cloneDeep(model)
 
     return {
         ...model,
         webhooks: _.orderBy(model.webhooks, 'name', 'asc'),
-        propertyArray: propertyArray,
+        // propertyArray: propertyArray,
     }
 }
 
@@ -103,7 +104,11 @@ const save = async () => {
     var body: UpdatePlatformProjectRequest = {
         name: editModel.value.name,
         url: editModel.value.url,
-        property: property,
+        // fix properties
+        properties: [],
+        operate: OperateEnum.Upsert,
+        provider_project_id: '',
+        secrets: []
     }
 
     let response
@@ -194,9 +199,9 @@ const addNewWebhook = () => {
 
     let view = _.cloneDeep(editModel.value)
     if (view.webhooks == undefined) {
-        view = { ...view, webhooks: [{ name: "", url: "", property: {}, activate: true, state: 'Init' }] }
+        view = { ...view, webhooks: [{ name: "", url: "", properties: [], activate: true, state: 'Init', secrets: [] }] }
     } else {
-        view.webhooks.push({ name: "", url: "", property: {}, activate: true, state: 'Init' })
+        view.webhooks.push({ name: "", url: "", properties: [], activate: true, state: 'Init', secrets: [] })
     }
     editModel.value = view
 }

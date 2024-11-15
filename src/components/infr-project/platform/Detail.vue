@@ -109,7 +109,7 @@ const platformChanged = (view: PlatformDetailView) => {
 
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
             <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false" data-v-menu>
-                <v-list-item slim color="primary" title="Base" @click="changeTab('one')">
+                <v-list-item slim color="primary" title="Base" @click="changeTab('one')" :active="tab == 'one'">
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
                     </template>
@@ -122,9 +122,10 @@ const platformChanged = (view: PlatformDetailView) => {
                             </template>
                         </v-list-item>
                     </template>
-                    <v-list-item slim v-for="(project, i) in  detail.projects " :key="i" :value="project" color="primary"
-                        @click="showProject(project)" v-if="detail">
-                        <v-list-item-title v-text="project.name"></v-list-item-title>
+                    <v-list-item slim v-for="(pro, i) in  detail.projects " :key="i" :value="pro" color="primary"
+                        @click="showProject(pro)" v-if="detail"
+                        :active="tab == 'three' && (project != undefined && pro.id == project.id)">
+                        <v-list-item-title v-text="pro.name"></v-list-item-title>
                     </v-list-item>
                 </v-list-group>
             </v-list>
@@ -161,11 +162,11 @@ const platformChanged = (view: PlatformDetailView) => {
 
                             <v-list lines="one">
                                 <v-list-subheader>Property</v-list-subheader>
-                                <v-list-item v-for="(value, key) in project.property" :key="key">
+                                <v-list-item v-for="(value, key) in project.properties" :key="value.key">
                                     <span class="text-subtitle-1 mr-1">key:</span>
-                                    <span class="text-subtitle-2 mr-3">{{ key }}</span>
+                                    <span class="text-subtitle-2 mr-3">{{ value.key }}</span>
                                     <span class="text-subtitle-1 mr-1">value:</span>
-                                    <span class="text-subtitle-2">{{ value }}</span>
+                                    <span class="text-subtitle-2">{{ value.value }}</span>
                                 </v-list-item>
                             </v-list>
                         </v-card>

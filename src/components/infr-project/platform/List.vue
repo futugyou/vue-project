@@ -80,9 +80,9 @@ const platformCreated = (view: PlatformDetailView) => {
         id: view.id,
         is_deleted: view.is_deleted,
         name: view.name,
-        rest_endpoint: view.rest_endpoint,
         url: view.url,
         tags: view.tags,
+        provider: view.provider,
     }]
 }
 

@@ -2,6 +2,63 @@ import { BaseAPI, FetchAPI, FetchArgs, RequiredError, FetchParamCreator, fetchDa
 
 const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
 
+export enum OperateEnum {
+    Upsert = <any>'upsert',
+    Sync = <any>'sync'
+}
+
+/**
+ * 
+ * @export
+ * @interface Property
+ */
+export interface Property {
+    /**
+     * 
+     * @type {string}
+     * @memberof Property
+     */
+    key: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Property
+     */
+    value: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface Secret
+ */
+export interface Secret {
+    /**
+     * vault aliases
+     * @type {string}
+     * @memberof Secret
+     */
+    key: string;
+    /**
+     * vault id
+     * @type {string}
+     * @memberof Secret
+     */
+    vault_id: string;
+    /**
+     * vault key
+     * @type {string}
+     * @memberof Secret
+     */
+    vault_key?: string;
+    /**
+     * vault value mask
+     * @type {string}
+     * @memberof Secret
+     */
+    mask_value?: string;
+}
+
 /**
  * 
  * @export
@@ -13,19 +70,37 @@ export interface UpdatePlatformProjectRequest {
      * @type {string}
      * @memberof UpdatePlatformProjectRequest
      */
-    name: string
-    /**
-     * 
-     * @type {{ [key: string]: string }}
-     * @memberof UpdatePlatformProjectRequest
-     */
-    property?: { [key: string]: string }
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformProjectRequest
      */
-    url: string
+    operate: OperateEnum;
+    /**
+     * 
+     * @type {Array<Property>}
+     * @memberof UpdatePlatformProjectRequest
+     */
+    properties: Array<Property>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePlatformProjectRequest
+     */
+    provider_project_id: string;
+    /**
+     * only Key and VaultId in request
+     * @type {Array<Secret>}
+     * @memberof UpdatePlatformProjectRequest
+     */
+    secrets: Array<Secret>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePlatformProjectRequest
+     */
+    url: string;
 }
 
 /**
@@ -34,36 +109,56 @@ export interface UpdatePlatformProjectRequest {
  * @interface UpdatePlatformWebhookRequest
  */
 export interface UpdatePlatformWebhookRequest {
+
     /**
      * 
      * @type {boolean}
      * @memberof UpdatePlatformWebhookRequest
      */
-    activate: boolean
+    activate: boolean;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformWebhookRequest
      */
-    name: string
+    name: string;
     /**
      * 
-     * @type {{ [key: string]: string }}
+     * @type {Array<Property>}
      * @memberof UpdatePlatformWebhookRequest
      */
-    property?: { [key: string]: string }
+    properties: Array<Property>;
+    /**
+     * only Key and VaultId in request
+     * @type {Array<Secret>}
+     * @memberof UpdatePlatformWebhookRequest
+     */
+    secrets: Array<Secret>;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformWebhookRequest
      */
-    state?: WebhookStateEnum
+    state: WebhookStateEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdatePlatformWebhookRequest
+     */
+    sync: boolean;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformWebhookRequest
      */
-    url: string
+    url: string;
+}
+
+export enum ProviderEnum {
+    Vercel = <any>'vercel',
+    Github = <any>'github',
+    Circleci = <any>'circleci',
+    Other = <any>'other'
 }
 
 /**
@@ -77,64 +172,45 @@ export interface UpdatePlatformRequest {
      * @type {boolean}
      * @memberof UpdatePlatformRequest
      */
-    activate?: boolean
+    activate: boolean;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformRequest
      */
-    name: string
+    name: string;
     /**
      * 
-     * @type {Array<PropertyInfo>}
+     * @type {Array<Property>}
      * @memberof UpdatePlatformRequest
      */
-    property?: Array<PropertyInfo>
+    properties: Array<Property>;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformRequest
      */
-    rest: string
+    provider: ProviderEnum;
+    /**
+     * only Key and VaultId in request
+     * @type {Array<Secret>}
+     * @memberof UpdatePlatformRequest
+     */
+    secrets: Array<Secret>;
     /**
      * 
      * @type {Array<string>}
      * @memberof UpdatePlatformRequest
      */
-    tags?: Array<string>
+    tags: Array<string>;
     /**
      * 
      * @type {string}
      * @memberof UpdatePlatformRequest
      */
-    url: string
+    url: string;
 }
 
-/**
- * 
- * @export
- * @interface PropertyInfo
- */
-export interface PropertyInfo {
-    /**
-     * 
-     * @type {string}
-     * @memberof PropertyInfo
-     */
-    key: string
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PropertyInfo
-     */
-    needMask: boolean
-    /**
-     * 
-     * @type {string}
-     * @memberof PropertyInfo
-     */
-    value: string
-}
 
 /**
  * @export
@@ -157,43 +233,43 @@ export interface PlatformView {
      * @type {boolean}
      * @memberof PlatformView
      */
-    activate: boolean
+    activate: boolean;
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    id: string
+    id: string;
     /**
      * 
      * @type {boolean}
      * @memberof PlatformView
      */
-    is_deleted: boolean
+    is_deleted: boolean;
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    name: string
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    rest_endpoint: string
+    provider: string;
     /**
      * 
      * @type {Array<string>}
      * @memberof PlatformView
      */
-    tags?: Array<string>
+    tags: Array<string>;
     /**
      * 
      * @type {string}
      * @memberof PlatformView
      */
-    url: string
+    url: string;
 }
 
 /**
@@ -207,55 +283,61 @@ export interface PlatformDetailView {
      * @type {boolean}
      * @memberof PlatformDetailView
      */
-    activate: boolean
+    activate: boolean;
     /**
      * 
      * @type {string}
      * @memberof PlatformDetailView
      */
-    id: string
+    id: string;
     /**
      * 
      * @type {boolean}
      * @memberof PlatformDetailView
      */
-    is_deleted: boolean
+    is_deleted: boolean;
     /**
      * 
      * @type {string}
      * @memberof PlatformDetailView
      */
-    name: string
+    name: string;
     /**
      * 
      * @type {Array<PlatformProject>}
      * @memberof PlatformDetailView
      */
-    projects?: Array<PlatformProject>
+    projects: Array<PlatformProject>;
     /**
      * 
-     * @type {Array<PropertyInfo>}
+     * @type {Array<Property>}
      * @memberof PlatformDetailView
      */
-    property?: Array<PropertyInfo>
+    properties: Array<Property>;
     /**
      * 
      * @type {string}
      * @memberof PlatformDetailView
      */
-    rest_endpoint: string
+    provider: string;
+    /**
+     * 
+     * @type {Array<Secret>}
+     * @memberof PlatformDetailView
+     */
+    secrets: Array<Secret>;
     /**
      * 
      * @type {Array<string>}
      * @memberof PlatformDetailView
      */
-    tags?: Array<string>
+    tags: Array<string>;
     /**
      * 
      * @type {string}
      * @memberof PlatformDetailView
      */
-    url: string
+    url: string;
 }
 
 /**
@@ -266,34 +348,52 @@ export interface PlatformDetailView {
 export interface PlatformProject {
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PlatformProject
      */
-    id: string
+    followed: boolean;
     /**
      * 
      * @type {string}
      * @memberof PlatformProject
      */
-    name: string
-    /**
-     * 
-     * @type {{ [key: string]: string }}
-     * @memberof PlatformProject
-     */
-    property?: { [key: string]: string }
+    id: string;
     /**
      * 
      * @type {string}
      * @memberof PlatformProject
      */
-    url: string
+    name: string;
+    /**
+     * 
+     * @type {Array<Property>}
+     * @memberof PlatformProject
+     */
+    properties: Array<Property>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    provider_project_id: string;
+    /**
+     * 
+     * @type {Array<Secret>}
+     * @memberof PlatformProject
+     */
+    secrets: Array<Secret>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    url: string;
     /**
      * 
      * @type {Array<Webhook>}
      * @memberof PlatformProject
      */
-    webhooks?: Array<Webhook>
+    webhooks: Array<Webhook>;
 }
 
 /**
@@ -316,10 +416,16 @@ export interface Webhook {
     name: string
     /**
      * 
-     * @type {{ [key: string]: string }}
+     * @type {Array<Property>}
      * @memberof Webhook
      */
-    property?: { [key: string]: string }
+    properties: Array<Property>;
+    /**
+     * 
+     * @type {Array<Secret>}
+     * @memberof Webhook
+     */
+    secrets: Array<Secret>;
     /**
      * 
      * @type {string}
@@ -345,31 +451,37 @@ export interface CreatePlatformRequest {
      * @type {string}
      * @memberof CreatePlatformRequest
      */
-    name: string
+    name: string;
     /**
      * 
-     * @type {Array<PropertyInfo>}
+     * @type {Array<Property>}
      * @memberof CreatePlatformRequest
      */
-    property?: Array<PropertyInfo>
+    properties: Array<Property>;
     /**
      * 
      * @type {string}
      * @memberof CreatePlatformRequest
      */
-    rest: string
+    provider: ProviderEnum;
+    /**
+     * only Key and VaultId in request
+     * @type {Array<Secret>}
+     * @memberof CreatePlatformRequest
+     */
+    secrets: Array<Secret>;
     /**
      * 
      * @type {Array<string>}
      * @memberof CreatePlatformRequest
      */
-    tags?: Array<string>
+    tags: Array<string>;
     /**
      * 
      * @type {string}
      * @memberof CreatePlatformRequest
      */
-    url: string
+    url: string;
 }
 
 /**
@@ -581,6 +693,23 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', body, options)
         },
+        /**
+         * recovery platform
+         * @summary recovery platform
+         * @param {string} id Platform ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1PlatformIdRecoveryPost(id: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1PlatformIdRecoveryPost.');
+            }
+            const localVarPath = `/v1/platform/{id}/recovery`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', undefined, options)
+        },
     }
 }
 
@@ -679,6 +808,14 @@ export const PlatformApiFp = function (configuration?: any) {
          */
         v1PlatformPost: (body: CreatePlatformRequest, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformPost(body, options)),
 
+        /**
+         * recovery platform
+         * @summary recovery platform
+         * @param {string} id Platform ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1PlatformIdRecoveryPost: (id: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdRecoveryPost(id, options)),
     }
 }
 
@@ -786,6 +923,17 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
         v1PlatformPost(body: CreatePlatformRequest, options?: any) {
             return PlatformApiFp(configuration).v1PlatformPost(body, options)()
         },
+        /**
+         * recovery platform
+         * @summary recovery platform
+         * @param {string} id Platform ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         * @memberof PlatformApi
+         */
+        v1PlatformIdRecoveryPost(id: string, options?: any) {
+            return PlatformApiFp(configuration).v1PlatformIdRecoveryPost(id, options)()
+        }
     }
 }
 
@@ -914,6 +1062,17 @@ export class PlatformApi extends BaseAPI {
         return PlatformApiFp(this.configuration).v1PlatformPost(body, options)()
     }
 
+    /**
+     * recovery platform
+     * @summary recovery platform
+     * @param {string} id Platform ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PlatformApi
+     */
+    public v1PlatformIdRecoveryPost(id: string, options?: any) {
+        return PlatformApiFp(this.configuration).v1PlatformIdRecoveryPost(id, options)()
+    }
 }
 
 export const fieldRequiredCheck = (value: any, fieldName: string) => {

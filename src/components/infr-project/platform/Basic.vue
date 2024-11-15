@@ -8,8 +8,8 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import {
-    PlatformApiFactory, PlatformDetailView, CreatePlatformRequest,
-    UpdatePlatformRequest, PropertyInfo, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck
+    PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, ProviderEnum,
+    UpdatePlatformRequest, Property, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck
 } from './platform'
 
 const store = useMessageStore()
@@ -25,12 +25,13 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     id: '',
     name: '',
     activate: true,
-    is_deleted: false, // TODO, temporarily not processing deletion
-    rest_endpoint: '',
+    is_deleted: false, // TODO, temporarily not processing deletion 
     url: '',
     tags: [],
-    property: [],
-    projects: []
+    properties: [],
+    projects: [],
+    secrets: [],
+    provider: "",
 })
 
 const rules = {
@@ -82,19 +83,20 @@ const save = async () => {
     }
 
     isLoading.value = true
-    let property = _.filter(editModel.value.property, (prop: PropertyInfo) => {
+    let property = _.filter(editModel.value.properties, (prop: Property) => {
         const keyIsValid = prop.key && prop.key.trim() !== ''
         const valueIsValid = prop.value && prop.value.trim() !== ''
         return keyIsValid && valueIsValid
-    }) as PropertyInfo[]
+    }) as Property[]
 
     let body: UpdatePlatformRequest | CreatePlatformRequest = {
         name: editModel.value.name,
-        rest: editModel.value.rest_endpoint,
         url: editModel.value.url,
         activate: editModel.value.activate,
         tags: editModel.value.tags ?? [],
-        property: property,
+        properties: property,
+        provider: ProviderEnum.Other,
+        secrets: [],// TODO
     }
 
     let response
@@ -136,21 +138,21 @@ watch(editModel, (newVal) => {
 const addProperty = (model: Ref<PlatformDetailView>) => {
     const view = _.cloneDeep(model.value)
 
-    if (!view.property) {
-        view.property = []
+    if (!view.properties) {
+        view.properties = []
     }
 
-    view.property.push({ key: '', value: '', needMask: false })
+    view.properties.push({ key: '', value: '' })
     model.value = view
 }
 
 const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
     const view = _.cloneDeep(model.value)
-    if (!view.property) {
-        view.property = []
+    if (!view.properties) {
+        view.properties = []
     }
 
-    model.value = { ...view, property: view.property.filter((_, i) => i !== index) }
+    model.value = { ...view, properties: view.properties.filter((_, i) => i !== index) }
 }
 
 </script>
@@ -166,9 +168,6 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                         :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
                         :disabled="!authService.isAuthenticated()" :rules="rules.Name" :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'rest')" v-model="proxyModel.value.rest_endpoint"
-                        :disabled="!authService.isAuthenticated()" label="REST Endpoint" :rules="rules.RestUrl"
-                        :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
                         :disabled="!authService.isAuthenticated()" :rules="rules.Url" :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
@@ -181,7 +180,7 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                         <label class="v-label mt-3 pl-3">Properties</label>
                     </div>
 
-                    <v-row v-for="(property, index) in proxyModel.value.property" :key="index" class="mt-2">
+                    <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                             <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
                                 :rules="rules.PropertyKey" :hideDetails="false"
@@ -189,11 +188,7 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                         </v-col>
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                             <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                :type="property.needMask ? 'password' : 'text'" label="Value" :rules="rules.PropertyValue"
-                                :hideDetails="false" :disabled="!authService.isAuthenticated()" />
-                        </v-col>
-                        <v-col cols="2">
-                            <v-switch v-model="property.needMask" label="Mask" color="info"
+                                label="Value" :rules="rules.PropertyValue" :hideDetails="false"
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">

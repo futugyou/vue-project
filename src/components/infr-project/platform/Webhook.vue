@@ -16,12 +16,12 @@ export interface WebhookModel extends Webhook {
 
 const convertWebhook = (mode: Webhook | undefined): WebhookModel => {
     if (mode == undefined) {
-        return { name: "", url: "", propertyArray: [], activate: true, state: 'Init' }
+        return { name: "", url: "", propertyArray: [], activate: true, state: 'Init', properties: [], secrets: [] }
     }
 
     let propertyArray: { key: string, value: string }[] = []
-    if (mode?.property) {
-        propertyArray = _.map(mode.property, (value, key) => ({ key, value }))
+    if (mode?.properties) {
+        propertyArray = _.map(mode.properties, (value, key) => ({ key: value.key, value: value.value }))
     }
     return {
         ..._.cloneDeep(mode),
@@ -103,7 +103,10 @@ const save = async () => {
         name: editModel.value.name ?? "",
         url: editModel.value.url ?? "",
         activate: editModel.value.activate ?? true,
-        property: property,
+        //TODO: fix properties
+        properties: [],
+        secrets: [],
+        sync: false,
         state: Object.values(WebhookStateEnum).includes(state as WebhookStateEnum)
             ? (state as WebhookStateEnum)
             : WebhookStateEnum.Init,
