@@ -13,19 +13,19 @@ export interface ProjectDesign {
      * @type {string}
      * @memberof ProjectDesign
      */
-    description?: string
+    description: string
     /**
      * 
      * @type {string}
      * @memberof ProjectDesign
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {Array<ProjectResource>}
      * @memberof ProjectDesign
      */
-    resources?: Array<ProjectResource>
+    resources: Array<ProjectResource>
 }
 
 /**
@@ -33,7 +33,7 @@ export interface ProjectDesign {
  * @export
  * @interface ProjectResource
  */
- export interface ProjectResource {
+export interface ProjectResource {
     /**
      * 
      * @type {string}
@@ -45,7 +45,7 @@ export interface ProjectDesign {
      * @type {string}
      * @memberof ProjectResource
      */
-    resourceId?: string;
+    resource_id: string;
 }
 
 /**
@@ -59,19 +59,25 @@ export interface ProjectPlatform {
      * @type {string}
      * @memberof ProjectPlatform
      */
-    description?: string
+    description: string
     /**
      * 
      * @type {string}
      * @memberof ProjectPlatform
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {string}
      * @memberof ProjectPlatform
      */
-    projectId?: string
+    project_id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectPlatform
+     */
+    platform_id: string
 }
 
 /**
@@ -85,55 +91,55 @@ export interface ProjectView {
      * @type {string}
      * @memberof ProjectView
      */
-    description?: string
+    description: string
     /**
      * 
      * @type {Array<ProjectDesign>}
      * @memberof ProjectView
      */
-    designs?: Array<ProjectDesign>
+    designs: Array<ProjectDesign>
     /**
      * 
      * @type {string}
      * @memberof ProjectView
      */
-    endDate?: string
+    end_date: string
     /**
      * 
      * @type {string}
      * @memberof ProjectView
      */
-    id?: string
+    id: string
     /**
      * 
      * @type {string}
      * @memberof ProjectView
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {Array<ProjectPlatform>}
      * @memberof ProjectView
      */
-    platforms?: Array<ProjectPlatform>
+    platforms: Array<ProjectPlatform>
     /**
      * 
      * @type {string}
      * @memberof ProjectView
      */
-    startDate?: string
+    start_date: string
     /**
      * 
      * @type {string}
      * @memberof ProjectView
      */
-    state?: string
+    state: string
     /**
      * 
      * @type {Array<string>}
      * @memberof ProjectView
      */
-    tags?: Array<string>
+    tags: Array<string>
 }
 
 /**
@@ -147,7 +153,7 @@ export interface UpdateProjectDesignRequest {
      * @type {string}
      * @memberof UpdateProjectDesignRequest
      */
-    description?: string
+    description: string
     /**
      * 
      * @type {string}
@@ -173,7 +179,7 @@ export interface UpdateProjectPlatformRequest {
      * @type {string}
      * @memberof UpdateProjectPlatformRequest
      */
-    description?: string
+    description: string
     /**
      * 
      * @type {string}
@@ -185,7 +191,13 @@ export interface UpdateProjectPlatformRequest {
      * @type {string}
      * @memberof UpdateProjectPlatformRequest
      */
-    projectId: string
+    project_id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateProjectPlatformRequest
+     */
+    platform_id: string
 }
 
 /**
@@ -199,37 +211,37 @@ export interface UpdateProjectRequest {
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    description?: string
+    description: string
     /**
      * 
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    endTime?: string
+    end_date: string
     /**
      * 
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    startTime?: string
+    start_date: string
     /**
      * 
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    state?: ProjectStateEnum
+    state: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
      * @memberof UpdateProjectRequest
      */
-    tags?: Array<string>
+    tags: Array<string>
 }
 
 /**
@@ -259,7 +271,7 @@ export interface CreateProjectRequest {
      * @type {string}
      * @memberof CreateProjectRequest
      */
-    endTime?: string
+    end_date: string
     /**
      * 
      * @type {string}
@@ -271,19 +283,19 @@ export interface CreateProjectRequest {
      * @type {string}
      * @memberof CreateProjectRequest
      */
-    startTime?: string
+    start_date: string
     /**
      * 
      * @type {string}
      * @memberof CreateProjectRequest
      */
-    state?: ProjectStateEnum
+    state: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
      * @memberof CreateProjectRequest
      */
-    tags?: Array<string>
+    tags: Array<string>
 }
 
 /**

@@ -5,6 +5,78 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
 /**
  * 
  * @export
+ * @interface CreateResourceRequest
+ */
+ export interface CreateResourceRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResourceRequest
+     */
+    data: string
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResourceRequest
+     */
+    name: string
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateResourceRequest
+     */
+    tags: Array<string>
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResourceRequest
+     */
+    type: ResourceTypeEnum
+}
+
+/**
+ * 
+ * @export
+ * @interface CreateResourceResponse
+ */
+ export interface CreateResourceResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResourceResponse
+     */
+    id: string
+}
+
+/**
+ * 
+ * @export
+ * @interface UpdateResourceRequest
+ */
+ export interface UpdateResourceRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateResourceRequest
+     */
+    data: string
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateResourceRequest
+     */
+    name: string
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UpdateResourceRequest
+     */
+    tags: Array<string>
+}
+
+/**
+ * 
+ * @export
  * @interface ResourceView
  */
  export interface ResourceView {
@@ -13,55 +85,55 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
      * @type {string}
      * @memberof ResourceView
      */
-    created_at?: string
+    created_at: string
     /**
      * 
      * @type {string}
      * @memberof ResourceView
      */
-    id?: string
+    id: string
     /**
      * 
      * @type {boolean}
      * @memberof ResourceView
      */
-     is_deleted?: boolean
+    is_deleted: boolean
     /**
      * 
      * @type {string}
      * @memberof ResourceView
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {string}
      * @memberof ResourceView
      */
-    type?: string
-    /**
-     * 
-     * @type {string}
-     * @memberof ResourceViewDetail
-     */
-    data?: string
+    type: string
     /**
      * 
      * @type {string}
      * @memberof ResourceView
      */
-    updated_at?: string
+    data: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceView
+     */
+    updated_at: string
     /**
      * 
      * @type {number}
      * @memberof ResourceView
      */
-    version?: number
+    version: number
     /**
      * 
      * @type {Array<string>}
      * @memberof ResourceView
      */
-    tags?: Array<string>
+    tags: Array<string>
 }
 
 /**
@@ -69,119 +141,61 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
  * @export
  * @interface ResourceViewDetail
  */
-export interface ResourceViewDetail {
+ export interface ResourceViewDetail {
     /**
      * 
      * @type {string}
      * @memberof ResourceViewDetail
      */
-    created_at?: string
+    created_at: string
     /**
      * 
      * @type {string}
      * @memberof ResourceViewDetail
      */
-    data?: string
-    /**
-     * 
-     * @type {string}
-     * @memberof ResourceViewDetail
-     */
-    id?: string
+    id: string
     /**
      * 
      * @type {boolean}
      * @memberof ResourceViewDetail
      */
-     is_deleted?: boolean
+    is_deleted: boolean
     /**
      * 
      * @type {string}
      * @memberof ResourceViewDetail
      */
-    name?: string
+    name: string
     /**
      * 
      * @type {string}
      * @memberof ResourceViewDetail
      */
-    type?: string
+    type: string
     /**
      * 
      * @type {string}
      * @memberof ResourceViewDetail
      */
-    updated_at?: string
+    data: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    updated_at: string
     /**
      * 
      * @type {number}
      * @memberof ResourceViewDetail
      */
-    version?: number
+    version: number
     /**
      * 
      * @type {Array<string>}
      * @memberof ResourceViewDetail
      */
-    tags?: Array<string>
-}
-
-/**
- * 
- * @export
- * @interface UpdateResourceRequest
- */
-export interface UpdateResourceRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateResourceRequest
-     */
-    data: string
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateResourceRequest
-     */
-    name: string
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof UpdateResourceRequest
-     */
-    tags?: Array<string>
-}
-
-/**
- * 
- * @export
- * @interface CreateResourceRequest
- */
-export interface CreateResourceRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateResourceRequest
-     */
-    data: string
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateResourceRequest
-     */
-    name: string
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CreateResourceRequest
-     */
-    tags?: Array<string>
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateResourceRequest
-     */
-    type?: ResourceTypeEnum
+    tags: Array<string>
 }
 
 /**
@@ -195,19 +209,6 @@ export enum ResourceTypeEnum {
     Plate = <any>'Plate'
 }
 
-/**
- * 
- * @export
- * @interface CreateResourceResponse
- */
-export interface CreateResourceResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateResourceResponse
-     */
-    id?: string
-}
 
 /**
  * ResourceApi - fetch parameter creator

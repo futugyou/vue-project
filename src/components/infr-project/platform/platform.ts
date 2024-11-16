@@ -485,6 +485,20 @@ export interface CreatePlatformRequest {
 }
 
 /**
+ * 
+ * @export
+ * @interface RemoveWebhookRequest
+ */
+export interface RemoveWebhookRequest {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RemoveWebhookRequest
+     */
+    sync: boolean;
+}
+
+/**
  * PlatformApi - fetch parameter creator
  * @export
  */
@@ -608,9 +622,10 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {string} hook_name Platform Project Webhook Name
+         * @param {boolean} sync Sync delete operate to provider
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookDelete(id: string, projectId: string, hook_name: string, options: any = {}): FetchArgs {
+        v1PlatformIdProjectProjectIdHookDelete(id: string, projectId: string, hook_name: string, sync: boolean, options: any = {}): FetchArgs {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1PlatformIdProjectProjectIdHookDelete.')
@@ -628,7 +643,10 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
                 .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
                 .replace(`{${"hook_name"}}`, encodeURIComponent(String(hook_name)))
             const path = new URL(BASE_PATH + localVarPath)
-            return FetchParamCreator(configuration).BuildFetchArgs(path, 'Delete', undefined, options)
+            const request: RemoveWebhookRequest = {
+                sync: sync
+            }
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'Delete', request, options)
         },
         /**
          * update platform project
@@ -777,9 +795,10 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {string} hook_name Platform Project Webhook Name
+         * @param {boolean} sync Sync delete operate to provider
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookDelete: (id: string, projectId: string, hook_name: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdHookDelete(id, projectId, hook_name, options)),
+        v1PlatformIdProjectProjectIdHookDelete: (id: string, projectId: string, hook_name: string, sync: boolean, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdHookDelete(id, projectId, hook_name, sync, options)),
 
         /**
          * update platform project
@@ -888,10 +907,11 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
          * @param {string} id Platform ID
          * @param {string} projectId Platform Project ID
          * @param {string} hook_name Platform Project Webhook Name
+         * @param {boolean} sync Sync delete operate to provider
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdHookDelete(id: string, projectId: string, hook_name: string, options?: any) {
-            return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdHookDelete(id, projectId, hook_name, options)()
+        v1PlatformIdProjectProjectIdHookDelete(id: string, projectId: string, hook_name: string, sync: boolean = false, options?: any) {
+            return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdHookDelete(id, projectId, hook_name, sync, options)()
         },
         /**
          * update platform project
@@ -1019,11 +1039,12 @@ export class PlatformApi extends BaseAPI {
      * @param {string} id Platform ID
      * @param {string} projectId Platform Project ID
      * @param {string} hook_name Platform Project Webhook Name
+         * @param {boolean} sync Sync delete operate to provider
      * @param {*} [options] Override http request option.
      * @memberof PlatformApi
      */
-    public v1PlatformIdProjectProjectIdHookDelete(id: string, projectId: string, hook_name: string, options?: any) {
-        return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdHookDelete(id, projectId, hook_name, options)()
+    public v1PlatformIdProjectProjectIdHookDelete(id: string, projectId: string, hook_name: string, sync: boolean, options?: any) {
+        return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdHookDelete(id, projectId, hook_name, sync, options)()
     }
 
     /**
