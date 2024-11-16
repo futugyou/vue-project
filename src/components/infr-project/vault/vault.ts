@@ -388,3 +388,75 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
         },
     }
 }
+
+
+/**
+ * VaultApi - functional programming interface
+ * @export
+ */
+export const VaultApiFp = function (configuration?: any) {
+    const fetchParamsCreator = VaultApiFetchParamCreator(configuration)
+    return {
+        /**
+         * import vault from provider
+         * @summary import vault from provider
+         * @param {ImportVaultsRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1ImportVaultPost: (request: ImportVaultsRequest, options?: any) =>
+            () => fetchData<ImportVaultsResponse>(fetchParamsCreator.v1ImportVaultPost(options)),
+        /**
+         * get vault
+         * @summary get vault
+         * @param {string} [key] Key - Fuzzy Search
+         * @param {string} [storageMedia] Storage Media
+         * @param {Array<string>} [tags] Tags
+         * @param {string} [typeIdentity] Type Identity
+         * @param {string} [vaultType] Vault Type
+         * @param {number} [page] Page number
+         * @param {number} [size] Page size
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultGet: (key?: string, storageMedia?: string, tags?: Array<string>, typeIdentity?: string, vaultType?: string, page?: number, size?: number, options?: any) =>
+            () => fetchData<VaultView[]>(fetchParamsCreator.v1VaultGet(key, storageMedia, tags, typeIdentity, vaultType, page, size, options)),
+        /**
+         * delete vault
+         * @summary delete vault
+         * @param {string} id vault ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultIdDelete: (id: string, options?: any) =>
+            () => fetchData<boolean>(fetchParamsCreator.v1VaultIdDelete(id, options)),
+        /**
+         * update vault
+         * @summary update vault
+         * @param {string} id vault ID
+         * @param {ChangeVaultRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultIdPut: (id: string, request: ChangeVaultRequest, options?: any) =>
+            () => fetchData<VaultView>(fetchParamsCreator.v1VaultIdPut(id, request, options)),
+        /**
+         * show vault value
+         * @summary show vault value
+         * @param {string} id vault ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultIdShowPost: (id: string, options?: any) =>
+            () => fetchData<string>(fetchParamsCreator.v1VaultIdShowPost(id, options)),
+        /**
+         * create vault
+         * @summary create vault
+         * @param {CreateVaultsRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultPost: (request: CreateVaultsRequest, options?: any) =>
+            () => fetchData<CreateVaultsResponse>(fetchParamsCreator.v1VaultPost(request, options)),
+    }
+};
