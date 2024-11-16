@@ -13,37 +13,37 @@ export interface ChangeVaultItem {
      * @type {string}
      * @memberof ChangeVaultItem
      */
-    key: string;
+    key: string
     /**
      * 
      * @type {string}
      * @memberof ChangeVaultItem
      */
-    storage_media: StorageMediaEnum;
+    storage_media: StorageMediaEnum
     /**
      * 
      * @type {Array<string>}
      * @memberof ChangeVaultItem
      */
-    tags: Array<string>;
+    tags: Array<string>
     /**
      * 
      * @type {string}
      * @memberof ChangeVaultItem
      */
-    type_identity: string;
+    type_identity: string
     /**
      * 
      * @type {string}
      * @memberof ChangeVaultItem
      */
-    value: string;
+    value: string
     /**
      * 
      * @type {string}
      * @memberof ChangeVaultItem
      */
-    vault_type: VaultTypeEnum;
+    vault_type: VaultTypeEnum
 }
 
 /**
@@ -80,43 +80,43 @@ export interface VaultView {
      * @type {string}
      * @memberof VaultView
      */
-    id: string;
+    id: string
     /**
      * 
      * @type {string}
      * @memberof VaultView
      */
-    key: string;
+    key: string
     /**
      * 
      * @type {string}
      * @memberof VaultView
      */
-    mask_value: string;
+    mask_value: string
     /**
      * 
      * @type {string}
      * @memberof VaultView
      */
-    storage_media: string;
+    storage_media: string
     /**
      * 
      * @type {Array<string>}
      * @memberof VaultView
      */
-    tags: Array<string>;
+    tags: Array<string>
     /**
      * 
      * @type {string}
      * @memberof VaultView
      */
-    type_identity: string;
+    type_identity: string
     /**
      * 
      * @type {string}
      * @memberof VaultView
      */
-    vault_type: string;
+    vault_type: string
 }
 
 /**
@@ -130,37 +130,37 @@ export interface CreateVaultModel {
      * @type {string}
      * @memberof CreateVaultModel
      */
-    key: string;
+    key: string
     /**
      * 
      * @type {string}
      * @memberof CreateVaultModel
      */
-    storage_media: StorageMediaEnum;
+    storage_media: StorageMediaEnum
     /**
      * 
      * @type {Array<string>}
      * @memberof CreateVaultModel
      */
-    tags: Array<string>;
+    tags: Array<string>
     /**
      * 
      * @type {string}
      * @memberof CreateVaultModel
      */
-    type_identity: string;
+    type_identity: string
     /**
      * 
      * @type {string}
      * @memberof CreateVaultModel
      */
-    value: string;
+    value: string
     /**
      * 
      * @type {string}
      * @memberof CreateVaultModel
      */
-    vault_type: VaultTypeEnum;
+    vault_type: VaultTypeEnum
 }
 
 /**
@@ -174,13 +174,13 @@ export interface CreateVaultsRequest {
      * @type {boolean}
      * @memberof CreateVaultsRequest
      */
-    force_insert: boolean;
+    force_insert: boolean
     /**
      * 
      * @type {Array<CreateVaultModel>}
      * @memberof CreateVaultsRequest
      */
-    vaults: Array<CreateVaultModel>;
+    vaults: Array<CreateVaultModel>
 }
 
 /**
@@ -194,7 +194,7 @@ export interface CreateVaultsResponse {
      * @type {Array<VaultView>}
      * @memberof CreateVaultsResponse
      */
-    vaults: Array<VaultView>;
+    vaults: Array<VaultView>
 }
 
 /**
@@ -208,13 +208,13 @@ export interface ChangeVaultRequest {
      * @type {boolean}
      * @memberof ChangeVaultRequest
      */
-    force_insert: boolean;
+    force_insert: boolean
     /**
      * 
      * @type {ChangeVaultItem}
      * @memberof ChangeVaultRequest
      */
-    vaultData: ChangeVaultItem;
+    vaultData: ChangeVaultItem
 }
 
 /**
@@ -228,19 +228,19 @@ export interface ImportVaultsRequest {
      * @type {string}
      * @memberof ImportVaultsRequest
      */
-    storage_media: StorageMediaEnum;
+    storage_media: StorageMediaEnum
     /**
      * 
      * @type {string}
      * @memberof ImportVaultsRequest
      */
-    type_identity: string;
+    type_identity: string
     /**
      * 
      * @type {string}
      * @memberof ImportVaultsRequest
      */
-    vault_type: VaultTypeEnum;
+    vault_type: VaultTypeEnum
 }
 
 /**
@@ -254,7 +254,7 @@ export interface ImportVaultsResponse {
      * @type {Array<VaultView>}
      * @memberof ImportVaultsResponse
      */
-    vaults: Array<VaultView>;
+    vaults: Array<VaultView>
 }
 
 /**
@@ -294,15 +294,15 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
          */
         v1VaultGet(key?: string, storageMedia?: string, tags?: Array<string>, typeIdentity?: string, vaultType?: string, page?: number, size?: number, options: any = {}): FetchArgs {
             const localVarPath = `/v1/vault`
-            const queryParams: any = {};
+            const queryParams: any = {}
 
-            if (key) queryParams.key = key;
-            if (storageMedia) queryParams.storageMedia = storageMedia;
-            if (tags && tags.length > 0) queryParams.tags = tags.join(',');
-            if (typeIdentity) queryParams.typeIdentity = typeIdentity;
-            if (vaultType) queryParams.vaultType = vaultType;
-            if (page !== undefined) queryParams.page = page;
-            if (size !== undefined) queryParams.size = size;
+            if (key) queryParams.key = key
+            if (storageMedia) queryParams.storageMedia = storageMedia
+            if (tags && tags.length > 0) queryParams.tags = tags.join(',')
+            if (typeIdentity) queryParams.typeIdentity = typeIdentity
+            if (vaultType) queryParams.vaultType = vaultType
+            if (page !== undefined) queryParams.page = page
+            if (size !== undefined) queryParams.size = size
 
             const path = new URL(BASE_PATH + localVarPath)
             path.search = new URLSearchParams(queryParams).toString()
@@ -319,10 +319,10 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
         v1VaultIdDelete(id: string, options: any = {}): FetchArgs {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdDelete.');
+                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdDelete.')
             }
             const localVarPath = `/v1/vault/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
 
@@ -339,14 +339,14 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
         v1VaultIdPut(id: string, request: ChangeVaultRequest, options: any = {}): FetchArgs {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdPut.');
+                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdPut.')
             }
             // verify required parameter 'request' is not null or undefined
             if (request === null || request === undefined) {
-                throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultIdPut.');
+                throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultIdPut.')
             }
             const localVarPath = `/v1/vault/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', request, options)
@@ -361,10 +361,10 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
         v1VaultIdShowPost(id: string, options: any = {}): FetchArgs {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdShowPost.');
+                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdShowPost.')
             }
             const localVarPath = `/v1/vault/{id}/show`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', undefined, options)
@@ -379,9 +379,9 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
         v1VaultPost(request: CreateVaultsRequest, options: any = {}): FetchArgs {
             // verify required parameter 'request' is not null or undefined
             if (request === null || request === undefined) {
-                throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultPost.');
+                throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultPost.')
             }
-            const localVarPath = `/v1/vault`;
+            const localVarPath = `/v1/vault`
 
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', request, options)
@@ -459,4 +459,168 @@ export const VaultApiFp = function (configuration?: any) {
         v1VaultPost: (request: CreateVaultsRequest, options?: any) =>
             () => fetchData<CreateVaultsResponse>(fetchParamsCreator.v1VaultPost(request, options)),
     }
-};
+}
+
+/**
+ * VaultApi - factory interface
+ * @export
+ */
+export const VaultApiFactory = function (configuration?: any) {
+    return {
+        /**
+         * import vault from provider
+         * @summary import vault from provider
+         * @param {ImportVaultsRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1ImportVaultPost(request: ImportVaultsRequest, options?: any) {
+            return VaultApiFp(configuration).v1ImportVaultPost(request, options)()
+        },
+        /**
+         * get vault
+         * @summary get vault
+         * @param {string} [key] Key - Fuzzy Search
+         * @param {string} [storageMedia] Storage Media
+         * @param {Array<string>} [tags] Tags
+         * @param {string} [typeIdentity] Type Identity
+         * @param {string} [vaultType] Vault Type
+         * @param {number} [page] Page number
+         * @param {number} [size] Page size
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultGet(key?: string, storageMedia?: string, tags?: Array<string>, typeIdentity?: string, vaultType?: string, page?: number, size?: number, options?: any) {
+            return VaultApiFp(configuration).v1VaultGet(key, storageMedia, tags, typeIdentity, vaultType, page, size, options)()
+        },
+        /**
+         * delete vault
+         * @summary delete vault
+         * @param {string} id vault ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultIdDelete(id: string, options?: any) {
+            return VaultApiFp(configuration).v1VaultIdDelete(id, options)()
+        },
+        /**
+         * update vault
+         * @summary update vault
+         * @param {string} id vault ID
+         * @param {ChangeVaultRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultIdPut(id: string, request: ChangeVaultRequest, options?: any) {
+            return VaultApiFp(configuration).v1VaultIdPut(id, request, options)()
+        },
+        /**
+         * show vault value
+         * @summary show vault value
+         * @param {string} id vault ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultIdShowPost(id: string, options?: any) {
+            return VaultApiFp(configuration).v1VaultIdShowPost(id, options)()
+        },
+        /**
+         * create vault
+         * @summary create vault
+         * @param {CreateVaultsRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultPost(request: CreateVaultsRequest, options?: any) {
+            return VaultApiFp(configuration).v1VaultPost(request, options)()
+        },
+    }
+}
+
+/**
+ * VaultApi - object-oriented interface
+ * @export
+ * @class VaultApi
+ * @extends {BaseAPI}
+ */
+export class VaultApi extends BaseAPI {
+    /**
+     * import vault from provider
+     * @summary import vault from provider
+     * @param {ImportVaultsRequest} request Request body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1ImportVaultPost(request: ImportVaultsRequest, options?: any) {
+        return VaultApiFp(this.configuration).v1ImportVaultPost(request, options)()
+    }
+
+    /**
+     * get vault
+     * @summary get vault
+     * @param {string} [key] Key - Fuzzy Search
+     * @param {string} [storageMedia] Storage Media
+     * @param {Array<string>} [tags] Tags
+     * @param {string} [typeIdentity] Type Identity
+     * @param {string} [vaultType] Vault Type
+     * @param {number} [page] Page number
+     * @param {number} [size] Page size
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1VaultGet(key?: string, storageMedia?: string, tags?: Array<string>, typeIdentity?: string, vaultType?: string, page?: number, size?: number, options?: any) {
+        return VaultApiFp(this.configuration).v1VaultGet(key, storageMedia, tags, typeIdentity, vaultType, page, size, options)()
+    }
+
+    /**
+     * delete vault
+     * @summary delete vault
+     * @param {string} id vault ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1VaultIdDelete(id: string, options?: any) {
+        return VaultApiFp(this.configuration).v1VaultIdDelete(id, options)()
+    }
+
+    /**
+     * update vault
+     * @summary update vault
+     * @param {string} id vault ID
+     * @param {ChangeVaultRequest} request Request body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1VaultIdPut(id: string, request: ChangeVaultRequest, options?: any) {
+        return VaultApiFp(this.configuration).v1VaultIdPut(id, request, options)()
+    }
+
+    /**
+     * show vault value
+     * @summary show vault value
+     * @param {string} id vault ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1VaultIdShowPost(id: string, options?: any) {
+        return VaultApiFp(this.configuration).v1VaultIdShowPost(id, options)()
+    }
+
+    /**
+     * create vault
+     * @summary create vault
+     * @param {CreateVaultsRequest} request Request body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1VaultPost(request: CreateVaultsRequest, options?: any) {
+        return VaultApiFp(this.configuration).v1VaultPost(request, options)()
+    }
+
+}
