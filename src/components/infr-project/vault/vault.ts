@@ -275,7 +275,7 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
             if (body === null || body === undefined) {
                 throw new RequiredError('body', 'Required parameter request was null or undefined when calling v1ImportVaultPost.')
             }
-            const localVarPath = `/v1/import_vault`
+            const localVarPath = `/api/v1/import_vault`
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'PUT', body, options)
         },
@@ -293,7 +293,7 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
          * @throws {RequiredError}
          */
         v1VaultGet(key?: string, storageMedia?: string, tags?: Array<string>, typeIdentity?: string, vaultType?: string, page?: number, size?: number, options: any = {}): FetchArgs {
-            const localVarPath = `/v1/vault`
+            const localVarPath = `/api/v1/vault`
             const queryParams: any = {}
 
             if (key) queryParams.key = key
@@ -321,7 +321,7 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdDelete.')
             }
-            const localVarPath = `/v1/vault/{id}`
+            const localVarPath = `/api/v1/vault/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -345,7 +345,7 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
             if (request === null || request === undefined) {
                 throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultIdPut.')
             }
-            const localVarPath = `/v1/vault/{id}`
+            const localVarPath = `/api/v1/vault/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -363,7 +363,7 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1VaultIdShowPost.')
             }
-            const localVarPath = `/v1/vault/{id}/show`
+            const localVarPath = `/api/v1/vault/{id}/show`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
 
             const path = new URL(BASE_PATH + localVarPath)
@@ -381,7 +381,7 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
             if (request === null || request === undefined) {
                 throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultPost.')
             }
-            const localVarPath = `/v1/vault`
+            const localVarPath = `/api/v1/vault`
 
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', request, options)
