@@ -7,7 +7,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { VaultView,VaultApiFactory } from './vault'
+import { VaultView, VaultApiFactory } from './vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const store = useMessageStore()
@@ -19,6 +19,8 @@ const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const dialog = ref(false)
+
+const vaultRawDic = ref<{ key: string, value: string }[]>([])
 
 const fetchData = async () => {
     isLoading.value = true
@@ -69,9 +71,41 @@ const fields: TableField[] = [
     {
         key: 'tags',
         label: 'Tags',
+    },
+    {
+        key: 'operation',
+        label: 'Operation'
     }
 ]
- 
+
+const displayVault = async (id: string) => {
+    if (!vaultValueIcon(id)) {
+        vaultRawDic.value = vaultRawDic.value.filter(item => item.key !== id)
+        return
+    }
+
+    isLoading.value = true
+    const { data, error } = await VaultApiFactory().v1VaultIdShowPost(id)
+    isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+    vaultRawDic.value.push({ key: id, value: data! })
+}
+
+const formatVaultValue = (id: string, mask: string) => {
+    var v = vaultRawDic.value.find(p => p.key == id)
+    if (v) {
+        return v.value
+    }
+    return mask
+}
+
+const vaultValueIcon = (id: string) => vaultRawDic.value.find(p => p.key == id) == undefined
 
 </script>
 
@@ -92,6 +126,17 @@ const fields: TableField[] = [
                     </span>
                 </router-link>
             </template>
+            <template v-slot:body_mask_value="body">
+                <div class="vault_value">
+                    <span>
+                        {{ formatVaultValue(body.id, body.mask_value) }}
+                    </span>
+                    <v-icon icon="md:visibility" class="cursor-pointer" v-if="vaultValueIcon(body.id)"
+                        @click="displayVault(body.id)"></v-icon>
+                    <v-icon icon="md:visibility_off" class="cursor-pointer" v-if="!vaultValueIcon(body.id)"
+                        @click="displayVault(body.id)"></v-icon>
+                </div>
+            </template>
             <template v-slot:body_tags="body">
                 <v-sheet class="d-flex flex-wrap ga-2">
                     <v-chip v-for="tag in body.tags">
@@ -109,5 +154,11 @@ a:active,
 a:hover {
     outline-width: 0;
     background-color: transparent;
+}
+
+.vault_value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
