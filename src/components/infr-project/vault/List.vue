@@ -73,10 +73,6 @@ const fields: TableField[] = [
     {
         key: 'tags',
         label: 'Tags',
-    },
-    {
-        key: 'operation',
-        label: 'Operation'
     }
 ]
 
@@ -133,10 +129,10 @@ const vaultValueIcon = (id: string) => vaultRawDic.value.find(p => p.key == id) 
                     <span>
                         {{ formatVaultValue(body.id, body.mask_value) }}
                     </span>
-                    <v-btn v-show="vaultValueIcon(body.id)" icon="md:visibility" variant="text"
-                        @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
-                    <v-btn v-show="!vaultValueIcon(body.id)" icon="md:visibility_off" variant="text"
-                        @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
+                    <v-btn v-show="vaultValueIcon(body.id) && authService.isAuthenticated()" icon="md:visibility"
+                        variant="text" @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
+                    <v-btn v-show="!vaultValueIcon(body.id) && authService.isAuthenticated()" icon="md:visibility_off"
+                        variant="text" @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
                 </div>
             </template>
             <template v-slot:body_tags="body">
