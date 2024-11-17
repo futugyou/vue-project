@@ -7,6 +7,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import Spinners from '@/common/Spinners.vue'
 import { VaultView, VaultApiFactory } from './vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
@@ -21,6 +22,7 @@ const page = ref(1)
 const dialog = ref(false)
 
 const vaultRawDic = ref<{ key: string, value: string }[]>([])
+const loadingState = ref<Record<string, boolean>>({})
 
 const fetchData = async () => {
     isLoading.value = true
@@ -84,9 +86,9 @@ const displayVault = async (id: string) => {
         return
     }
 
-    isLoading.value = true
+    loadingState.value[id] = true
     const { data, error } = await VaultApiFactory().v1VaultIdShowPost(id)
-    isLoading.value = false
+    loadingState.value[id] = false
     if (error) {
         msg.value = {
             errorMessages: [error.message],
@@ -131,10 +133,10 @@ const vaultValueIcon = (id: string) => vaultRawDic.value.find(p => p.key == id) 
                     <span>
                         {{ formatVaultValue(body.id, body.mask_value) }}
                     </span>
-                    <v-icon icon="md:visibility" class="cursor-pointer" v-if="vaultValueIcon(body.id)"
-                        @click="displayVault(body.id)"></v-icon>
-                    <v-icon icon="md:visibility_off" class="cursor-pointer" v-if="!vaultValueIcon(body.id)"
-                        @click="displayVault(body.id)"></v-icon>
+                    <v-btn v-show="vaultValueIcon(body.id)" icon="md:visibility" variant="text"
+                        @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
+                    <v-btn v-show="!vaultValueIcon(body.id)" icon="md:visibility_off" variant="text"
+                        @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
                 </div>
             </template>
             <template v-slot:body_tags="body">
