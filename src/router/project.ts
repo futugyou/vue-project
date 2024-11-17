@@ -7,6 +7,9 @@ const ResourceDetail = () => import('@/components/infr-project/resource/Detail.v
 const PlatformList = () => import('@/components/infr-project/platform/List.vue')
 const PlatformDetail = () => import('@/components/infr-project/platform/Detail.vue')
 
+
+const VaultList = () => import('@/components/infr-project/vault/List.vue')
+
 export const ProjectRoutes = [
     {
         path: '/resource',
@@ -27,5 +30,10 @@ export const ProjectRoutes = [
         path: '/platform/:id',
         name: 'PlatformDetail',
         component: PlatformDetail,
+    },
+    {
+        path: '/vault',
+        name: 'Vault',
+        component: VaultList,
     },
 ] as RouteRecordRaw[]
