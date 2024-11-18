@@ -7,7 +7,10 @@ import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import { VaultApiFactory, VaultView } from './vault'
+import {
+    VaultApiFactory, VaultView, CreateVaultsRequest, ChangeVaultRequest, StorageMediaEnum, VaultTypeEnum,
+    CreateVaultsResponse
+} from './vault'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -25,9 +28,59 @@ const cancel = () => {
     emit('cancel')
 }
 
-const save = () => {
-    //TODO: save vault
-    emit('save', editModel.value)
+const save = async () => {
+    isLoading.value = true
+    const storage_media: unknown = editModel.value.storage_media ?? ""
+    const vault_type: unknown = editModel.value.vault_type ?? ""
+    let response
+    let item = {
+        key: editModel.value.key,
+        value: editModel.value.mask_value,
+        storage_media: Object.values(StorageMediaEnum).includes(storage_media as StorageMediaEnum)
+            ? (storage_media as StorageMediaEnum)
+            : StorageMediaEnum.Local,
+        tags: editModel.value.tags,
+        type_identity: editModel.value.type_identity,
+        vault_type: Object.values(VaultTypeEnum).includes(vault_type as VaultTypeEnum)
+            ? (vault_type as VaultTypeEnum)
+            : VaultTypeEnum.Common,
+    }
+
+    if (editModel.value.id == '') {
+        const request: CreateVaultsRequest = {
+            force_insert: false,
+            vaults: [item]
+        }
+        response = await VaultApiFactory().v1VaultPost(request)
+    } else {
+        const request: ChangeVaultRequest = {
+            force_insert: false,
+            vaultData: item
+        }
+        response = await VaultApiFactory().v1VaultIdPut(editModel.value.id, request)
+    }
+
+    const { data, error } = response
+    isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+
+    if (data) {
+        if ("vaults" in data) {
+            const vaultView = data as CreateVaultsResponse
+            if (vaultView.vaults.length > 0) {
+                emit('save', vaultView.vaults[0])
+            }
+        } else {
+            const vaultView = data as VaultView
+            emit('save', vaultView)
+        }
+    }
 }
 
 const emit = defineEmits<{
