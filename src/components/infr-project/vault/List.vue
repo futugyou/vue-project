@@ -121,9 +121,11 @@ const close = () => {
 const valut_save = (newVault: VaultView) => {
     close()
     page.value = 1
-    const index = vaults.value.findIndex(vault => vault.id === newVault.id);
+    const index = vaults.value.findIndex(vault => vault.id === newVault.id)
     if (index !== -1) {
-        vaults.value.splice(index, 1, newVault);
+        vaults.value.splice(index, 1, newVault)
+    }else{
+        vaults.value.push(newVault)
     }
 }
 </script>
