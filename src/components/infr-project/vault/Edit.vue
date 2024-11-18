@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -64,7 +64,7 @@ const save = async () => {
     isLoading.value = false
     if (error) {
         msg.value = {
-            errorMessages: [error.message],
+            errorMessages: [error.message ?? error],
             delay: 3000,
         }
         return
@@ -97,6 +97,20 @@ const setInputRef = (el: any, key: string) => {
     inputRefs.value[key] = el
 }
 
+const storageMediaOptions = computed(() =>
+    Object.values(StorageMediaEnum).map((value) => ({
+        value,
+        label: value,
+    }))
+)
+
+const vaultTypeOptions = computed(() =>
+    Object.values(VaultTypeEnum).map((value) => ({
+        value,
+        label: value,
+    }))
+)
+
 </script>
 
 <template>
@@ -111,10 +125,11 @@ const setInputRef = (el: any, key: string) => {
                         :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'mask_value')" v-model="proxyModel.value.mask_value"
                         label="Value (Mask Value)" :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'storage_media')" v-model="proxyModel.value.storage_media"
-                        label="Storage Media" :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'vault_type')" v-model="proxyModel.value.vault_type"
-                        label="Vault Type" :hideDetails="false" />
+                    <v-select :ref="el => setInputRef(el, 'storage_media')" v-model="proxyModel.value.storage_media"
+                        class="mb-5" :items="storageMediaOptions" label="Storage Media" item-value="value"
+                        item-title="label"></v-select>
+                    <v-select :ref="el => setInputRef(el, 'vault_type')" v-model="proxyModel.value.vault_type" class="mb-5"
+                        :items="vaultTypeOptions" label="Vault Type" item-value="value" item-title="label"></v-select>
                     <v-text-field :ref="el => setInputRef(el, 'type_identity')" v-model="proxyModel.value.type_identity"
                         label="Type Identity" :hideDetails="false" />
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
