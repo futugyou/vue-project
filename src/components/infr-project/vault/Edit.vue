@@ -55,7 +55,7 @@ const save = async () => {
     } else {
         const request: ChangeVaultRequest = {
             force_insert: false,
-            vaultData: item
+            vault_data: item
         }
         response = await VaultApiFactory().v1VaultIdPut(editModel.value.id, request)
     }

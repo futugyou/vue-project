@@ -215,7 +215,7 @@ export interface ChangeVaultRequest {
      * @type {ChangeVaultItem}
      * @memberof ChangeVaultRequest
      */
-    vaultData: ChangeVaultItem
+    vault_data: ChangeVaultItem
 }
 
 /**
