@@ -8,19 +8,22 @@ import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import Spinners from '@/common/Spinners.vue'
-import { VaultView, VaultApiFactory } from './vault'
+import { VaultView, VaultApiFactory, VaultDefault } from './vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
+
+import Edit from './Edit.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
 
 const vaults = ref<VaultView[]>([])
+const vault = ref<VaultView>(VaultDefault)
 const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
-const dialog = ref(false)
 
+const dialog = ref(false)
 const vaultRawDic = ref<{ key: string, value: string }[]>([])
 const loadingState = ref<Record<string, boolean>>({})
 
@@ -56,19 +59,19 @@ const fields: TableField[] = [
     },
     {
         key: 'mask_value',
-        label: 'MaskValue'
+        label: 'Value (Mask Value)'
     },
     {
         key: 'storage_media',
-        label: 'StorageMedia'
+        label: 'Storage Media'
     },
     {
         key: 'vault_type',
-        label: 'VaultType',
+        label: 'Vault Type',
     },
     {
         key: 'type_identity',
-        label: 'TypeIdentity'
+        label: 'Type Identity'
     },
     {
         key: 'tags',
@@ -105,6 +108,24 @@ const formatVaultValue = (id: string, mask: string) => {
 
 const vaultValueIcon = (id: string) => vaultRawDic.value.find(p => p.key == id) == undefined
 
+const openVaultEdit = (body: VaultView) => {
+    dialog.value = true
+    vault.value = body
+}
+
+const close = () => {
+    vault.value = VaultDefault
+    dialog.value = false
+}
+
+const valut_save = (newVault: VaultView) => {
+    close()
+    page.value = 1
+    const index = vaults.value.findIndex(vault => vault.id === newVault.id);
+    if (index !== -1) {
+        vaults.value.splice(index, 1, newVault);
+    }
+}
 </script>
 
 <template>
@@ -112,17 +133,24 @@ const vaultValueIcon = (id: string) => vaultRawDic.value.find(p => p.key == id) 
         <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Vault</v-toolbar-title>
             <v-spacer></v-spacer>
+            <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="true" title="Create Vault"
+                hideFooter v-if="authService.isAuthenticated()">
+                <Edit @save="valut_save" @cancel="close" :vault="vault"></Edit>
+            </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>
 
         <TableAndPaging :items="vaults" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_key="body">
-                <router-link :to="'/vault/' + body.id" page-path="" class="detail-link" target="_blank">
-                    <span>
+                <div>
+                    <span v-if="authService.isAuthenticated()" @click="openVaultEdit(body)" class="detail-link">
                         {{ body.key }}
                     </span>
-                </router-link>
+                    <span v-else>
+                        {{ body.key }}
+                    </span>
+                </div>
             </template>
             <template v-slot:body_mask_value="body">
                 <div class="vault_value">

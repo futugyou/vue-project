@@ -57,7 +57,7 @@ const setInputRef = (el: any, key: string) => {
                     <v-text-field :ref="el => setInputRef(el, 'key')" v-model="proxyModel.value.key" label="Key"
                         :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'mask_value')" v-model="proxyModel.value.mask_value"
-                        label="Mask Value" :hideDetails="false" />
+                        label="Value (Mask Value)" :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'storage_media')" v-model="proxyModel.value.storage_media"
                         label="Storage Media" :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'vault_type')" v-model="proxyModel.value.vault_type"
