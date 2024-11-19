@@ -8,7 +8,8 @@ import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
-import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, WebhookStateEnum, PlatformDetailView, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
+import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, WebhookStateEnum, PlatformDetailView } from './platform'
+import { fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from '@/tools/util'
 
 export interface WebhookModel extends Webhook {
     propertyArray?: { key: string, value: string }[]

@@ -11,7 +11,8 @@ import { useAuth } from '@/plugins/auth'
 
 import WebhookPage from './Webhook.vue'
 
-import { OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from './platform'
+import { OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject } from './platform'
+import { fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from '@/tools/util'
 
 export interface PlatformProjectModel extends PlatformProject {
     propertyArray?: { key: string, value: string }[]

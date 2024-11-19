@@ -9,8 +9,10 @@ import { useAuth } from '@/plugins/auth'
 
 import {
     PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, ProviderEnum,
-    UpdatePlatformRequest, Property, fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck
+    UpdatePlatformRequest, Property
 } from './platform'
+
+import { fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from '@/tools/util'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)

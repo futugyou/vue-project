@@ -87,3 +87,16 @@ export const toUrlEncoded = (obj: any): string => {
         )
         .join('&')
 }
+
+
+export const fieldRequiredCheck = (value: any, fieldName: string) => {
+    return !!value || (fieldName + ' field is required')
+}
+
+export const fieldMaxLengthCheck = (value: any, fieldName: string, length: number) => {
+    return !!value && value.length <= length || (fieldName + ' field must be less than ' + length + ' characters')
+}
+
+export const fieldMinLengthCheck = (value: any, fieldName: string, length: number) => {
+    return !!value && value.length >= length || (fieldName + ' field must be big than ' + length + ' characters')
+}

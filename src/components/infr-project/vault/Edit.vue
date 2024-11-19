@@ -11,6 +11,7 @@ import {
     VaultApiFactory, VaultView, CreateVaultsRequest, ChangeVaultRequest, StorageMediaEnum, VaultTypeEnum,
     CreateVaultsResponse
 } from './vault'
+import { fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from '@/tools/util'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -29,6 +30,21 @@ const cancel = () => {
 }
 
 const save = async () => {
+    let validateMsg: string[] = []
+    for (const key in inputRefs.value) {
+        const input = inputRefs.value[key]
+        if (input) {
+            const message: string[] = await input.validate(false)
+            if (message && message.length > 0) {
+                validateMsg = [...validateMsg, ...message]
+            }
+        }
+    }
+
+    if (validateMsg.length > 0) {
+        return
+    }
+    
     isLoading.value = true
     const storage_media: unknown = editModel.value.storage_media ?? ""
     const vault_type: unknown = editModel.value.vault_type ?? ""
@@ -110,6 +126,17 @@ const vaultTypeOptions = computed(() =>
         value: VaultTypeEnum[key as keyof typeof VaultTypeEnum],
     }))
 )
+
+
+const rules = {
+    key: [(value: string) => fieldRequiredCheck(value, 'Key'), (value: string) => fieldMinLengthCheck(value, 'Key', 3), (value: string) => fieldMaxLengthCheck(value, 'Key', 150),],
+    mask_value: [(value: string) => fieldRequiredCheck(value, 'mask value'), (value: string) => fieldMinLengthCheck(value, 'mask value', 3), (value: string) => fieldMaxLengthCheck(value, 'mask_value', 150),],
+    storage_media: [(value: string) => fieldRequiredCheck(value, 'storage media')],
+    vault_type: [(value: string) => fieldRequiredCheck(value, 'vault type')],
+    type_identity: [(value: string) => fieldRequiredCheck(value, 'type identity'), (value: string) => fieldMinLengthCheck(value, 'type identity', 3), (value: string) => fieldMaxLengthCheck(value, 'type identity', 150),],
+}
+
+
 </script>
 
 <template>
@@ -120,17 +147,18 @@ const vaultTypeOptions = computed(() =>
                 <template v-slot:default="{ model: proxyModel, actions }">
                     <v-text-field :ref="el => setInputRef(el, 'id')" v-model="proxyModel.value.id" label="Id" disabled
                         :hideDetails="false" v-if="proxyModel.value.id != ''" />
-                    <v-text-field :ref="el => setInputRef(el, 'key')" v-model="proxyModel.value.key" label="Key"
-                        :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'mask_value')" v-model="proxyModel.value.mask_value"
-                        label="Value (Mask Value)" :hideDetails="false" />
-                    <v-select :ref="el => setInputRef(el, 'storage_media')" v-model="proxyModel.value.storage_media"
-                        class="mb-5" :items="storageMediaOptions" label="Storage Media" item-value="value"
-                        item-title="label"></v-select>
-                    <v-select :ref="el => setInputRef(el, 'vault_type')" v-model="proxyModel.value.vault_type" class="mb-5"
-                        :items="vaultTypeOptions" label="Vault Type" item-value="value" item-title="label"></v-select>
-                    <v-text-field :ref="el => setInputRef(el, 'type_identity')" v-model="proxyModel.value.type_identity"
-                        label="Type Identity" :hideDetails="false" />
+                    <v-text-field :ref="el => setInputRef(el, 'key')" :rules="rules.key" v-model="proxyModel.value.key"
+                        label="Key" :hideDetails="false" />
+                    <v-text-field :ref="el => setInputRef(el, 'mask_value')" :rules="rules.mask_value"
+                        v-model="proxyModel.value.mask_value" label="Value (Mask Value)" :hideDetails="false" />
+                    <v-select :ref="el => setInputRef(el, 'storage_media')" :rules="rules.storage_media"
+                        v-model="proxyModel.value.storage_media" class="mb-5" :items="storageMediaOptions"
+                        label="Storage Media" item-value="value" item-title="label"></v-select>
+                    <v-select :ref="el => setInputRef(el, 'vault_type')" :rules="rules.vault_type"
+                        v-model="proxyModel.value.vault_type" class="mb-5" :items="vaultTypeOptions" label="Vault Type"
+                        item-value="value" item-title="label"></v-select>
+                    <v-text-field :ref="el => setInputRef(el, 'type_identity')" :rules="rules.type_identity"
+                        v-model="proxyModel.value.type_identity" label="Type Identity" :hideDetails="false" />
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
                     <v-sheet class="d-flex justify-end ga-3">
