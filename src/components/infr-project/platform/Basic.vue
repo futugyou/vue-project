@@ -129,6 +129,24 @@ const providerOptions = computed(() =>
     }))
 )
 
+const deletePlatform = async (id: string) => {
+    const answer = window.confirm('Do you really want to set the state to Deleting?')
+    if (answer) {
+        isLoading.value = true
+        const { data, error } = await PlatformApiFactory().v1PlatformIdDelete(id)
+        isLoading.value = false
+        if (error) {
+            msg.value = {
+                errorMessages: [error.message ?? error],
+                delay: 3000,
+            }
+            return
+        }
+
+        editModel.value = data!
+    }
+}
+
 </script>
 
 <template>
@@ -137,7 +155,7 @@ const providerOptions = computed(() =>
 
         <v-card class="pa-3" v-if="!isLoading">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
-                <template v-slot:default="{ model: proxyModel, actions }">
+                <template v-slot:default="{ model: proxyModel, actions, isPristine }">
                     <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
                         :hideDetails="false" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
@@ -148,7 +166,6 @@ const providerOptions = computed(() =>
                         :rules="validateManager.requiredMinMax('URL', 3, 150)" :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :disabled="!authService.isAuthenticated()" :hideDetails="false" />
-                    <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
                     <v-select :ref="el => validateManager.setInputRef(el, 'vault_type')"
                         :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
                         :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>
@@ -184,6 +201,8 @@ const providerOptions = computed(() =>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
+                        <v-btn variant="elevated" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"
+                            @click="deletePlatform(proxyModel.value.id)">Delete</v-btn>
                         <component :is="actions"></component>
                     </v-sheet>
                 </template>
