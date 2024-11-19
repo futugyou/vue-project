@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, computed, onUnmounted, Ref } from 'vue'
+import { ref, watch, watchEffect, computed, onUnmounted, Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -9,8 +9,10 @@ import { useAuth } from '@/plugins/auth'
 
 import {
     PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, ProviderEnum,
-    UpdatePlatformRequest, Property
+    UpdatePlatformRequest, Property, Secret
 } from './platform'
+
+import { VaultApiFactory, VaultView } from '../vault/vault'
 
 import { ValidateManager } from '@/tools/validate'
 
@@ -28,7 +30,7 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     id: '',
     name: '',
     activate: true,
-    is_deleted: false, // TODO, temporarily not processing deletion 
+    is_deleted: false,
     url: '',
     tags: [],
     properties: [],
@@ -37,6 +39,19 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     provider: "other",
 })
 
+const vaultList = ref<VaultView[]>([])
+const fetchVaultData = async () => {
+    const { data, error } = await VaultApiFactory().v1VaultGet()
+    if (error) {
+        vaultList.value = []
+        return
+    }
+
+    vaultList.value = _.orderBy(data, "key", "desc")
+}
+
+watchEffect(async () => fetchVaultData())
+
 const save = async () => {
     const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
@@ -44,22 +59,29 @@ const save = async () => {
     }
 
     isLoading.value = true
-    let property = _.filter(editModel.value.properties, (prop: Property) => {
+    let properties = _.filter(editModel.value.properties, (prop: Property) => {
         const keyIsValid = prop.key && prop.key.trim() !== ''
         const valueIsValid = prop.value && prop.value.trim() !== ''
         return keyIsValid && valueIsValid
     }) as Property[]
+
+    let secrets = _.filter(editModel.value.secrets, (prop: Secret) => {
+        const keyIsValid = prop.key && prop.key.trim() !== ''
+        const valueIsValid = prop.vault_id && prop.vault_id.trim() !== ''
+        return keyIsValid && valueIsValid
+    }) as Secret[]
+
     const provider: unknown = editModel.value.provider ?? ""
     let body: UpdatePlatformRequest | CreatePlatformRequest = {
         name: editModel.value.name,
         url: editModel.value.url,
         activate: editModel.value.activate,
         tags: editModel.value.tags ?? [],
-        properties: property,
+        properties: properties,
         provider: Object.values(ProviderEnum).includes(provider as ProviderEnum)
             ? (provider as ProviderEnum)
             : ProviderEnum.Other,
-        secrets: [],// TODO
+        secrets: secrets,
     }
 
     let response
@@ -109,6 +131,17 @@ const addProperty = (model: Ref<PlatformDetailView>) => {
     model.value = view
 }
 
+const addSecret = (model: Ref<PlatformDetailView>) => {
+    const view = _.cloneDeep(model.value)
+
+    if (!view.secrets) {
+        view.secrets = []
+    }
+
+    view.secrets.push({ key: '', vault_id: '' })
+    model.value = view
+}
+
 const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
     const view = _.cloneDeep(model.value)
     if (!view.properties) {
@@ -116,6 +149,15 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
     }
 
     model.value = { ...view, properties: view.properties.filter((_, i) => i !== index) }
+}
+
+const removeSecret = (model: Ref<PlatformDetailView>, index: number) => {
+    const view = _.cloneDeep(model.value)
+    if (!view.secrets) {
+        view.secrets = []
+    }
+
+    model.value = { ...view, secrets: view.secrets.filter((_, i) => i !== index) }
 }
 
 onUnmounted(() => {
@@ -126,6 +168,13 @@ const providerOptions = computed(() =>
     Object.keys(ProviderEnum).map((key) => ({
         label: key,
         value: ProviderEnum[key as keyof typeof ProviderEnum],
+    }))
+)
+
+const vaultOptions = computed(() =>
+    vaultList.value.map((vault) => ({
+        label: vault.key + " - " + vault.storage_media,
+        value: vault.id,
     }))
 )
 
@@ -172,8 +221,9 @@ const deletePlatform = async (id: string) => {
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :disabled="!authService.isAuthenticated()" :hideDetails="false"></v-combobox>
 
-                    <div>
-                        <label class="v-label mt-3 pl-3">Properties</label>
+                    <div class="d-flex align-center ga-6">
+                        <label class="v-label pl-3">Properties</label>
+                        <v-btn @click="addProperty(proxyModel)" v-if="authService.isAuthenticated()" icon="md:add"></v-btn>
                     </div>
 
                     <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
@@ -190,14 +240,33 @@ const deletePlatform = async (id: string) => {
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
-                            <v-btn icon @click="removeProperty(proxyModel, index)">
-                                <v-icon icon="md:remove"></v-icon>
-                            </v-btn>
+                            <v-btn icon="md:remove" @click="removeProperty(proxyModel, index)"></v-btn>
                         </v-col>
                     </v-row>
 
-                    <v-btn color="primary" @click="addProperty(proxyModel)" v-if="authService.isAuthenticated()">Add
-                        Property</v-btn>
+                    <div class="d-flex align-center ga-6">
+                        <label class="v-label pl-3">Secrets</label>
+                        <v-btn @click="addSecret(proxyModel)" v-if="authService.isAuthenticated()" icon="md:add"></v-btn>
+                    </div>
+
+                    <v-row v-for="(secret, index) in proxyModel.value.secrets" :key="index" class="mt-2">
+                        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
+                            <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)"
+                                v-model="secret.key" label="Key"
+                                :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
+                                :disabled="!authService.isAuthenticated()" />
+                        </v-col>
+                        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
+                            <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)"
+                                v-model="secret.vault_id" label="Value"
+                                :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
+                                :disabled="!authService.isAuthenticated()" class="mb-5" :items="vaultOptions"
+                                item-value="value" item-title="label"></v-select>
+                        </v-col>
+                        <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
+                            <v-btn icon="md:remove" @click="removeSecret(proxyModel, index)"></v-btn>
+                        </v-col>
+                    </v-row>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
