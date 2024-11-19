@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, Ref, watch } from 'vue'
+import { ref, watch, computed, onUnmounted, Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -12,11 +12,12 @@ import {
     UpdatePlatformRequest, Property
 } from './platform'
 
-import { commonRules } from '@/tools/util'
+import { ValidateManager } from '@/tools/validate'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
+const validateManager = ValidateManager()
 
 const props = defineProps<{
     model?: PlatformDetailView,
@@ -36,24 +37,8 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     provider: "",
 })
 
-const inputRefs = ref<{ [key: string]: any }>({})
-
-const setInputRef = (el: any, key: string) => {
-    inputRefs.value[key] = el
-}
-
 const save = async () => {
-    let validateMsg: string[] = []
-    for (const key in inputRefs.value) {
-        const input = inputRefs.value[key]
-        if (input) {
-            const message: string[] = await input.validate(false)
-            if (message && message.length > 0) {
-                validateMsg = [...validateMsg, ...message]
-            }
-        }
-    }
-
+    const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
     }
@@ -131,6 +116,10 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
     model.value = { ...view, properties: view.properties.filter((_, i) => i !== index) }
 }
 
+onUnmounted(() => {
+    validateManager.clearInputs()
+})
+
 </script>
 
 <template>
@@ -142,12 +131,12 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                 <template v-slot:default="{ model: proxyModel, actions }">
                     <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
                         :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
-                        :disabled="!authService.isAuthenticated()" :rules="commonRules.RequiredMinMax('Name', 3, 50)"
-                        :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
-                        :disabled="!authService.isAuthenticated()" :rules="commonRules.RequiredMinMax('URL', 3, 150)"
-                        :hideDetails="false" />
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
+                        label="Name" :disabled="!authService.isAuthenticated()"
+                        :rules="validateManager.requiredMinMax('Name', 3, 50)" :hideDetails="false" />
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
+                        label="URL" :disabled="!authService.isAuthenticated()"
+                        :rules="validateManager.requiredMinMax('URL', 3, 150)" :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :disabled="!authService.isAuthenticated()" :hideDetails="false" />
                     <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
@@ -160,14 +149,16 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
 
                     <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
-                                :rules="commonRules.RequiredMinMax('Property Key', 3, 150)" :hideDetails="false"
+                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
+                                v-model="property.key" label="Key"
+                                :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                label="Value" :rules="commonRules.RequiredMinMax('Property Value', 3, 150)"
-                                :hideDetails="false" :disabled="!authService.isAuthenticated()" />
+                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
+                                v-model="property.value" label="Value"
+                                :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
+                                :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
                             <v-btn icon @click="removeProperty(proxyModel, index)">

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, Ref, watch } from 'vue'
+import { ref, watch, computed, onUnmounted, Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -9,7 +9,8 @@ import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, WebhookStateEnum, PlatformDetailView } from './platform'
-import { commonRules } from '@/tools/util'
+
+import { ValidateManager } from '@/tools/validate'
 
 export interface WebhookModel extends Webhook {
     propertyArray?: { key: string, value: string }[]
@@ -33,6 +34,7 @@ const convertWebhook = (mode: Webhook | undefined): WebhookModel => {
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
+const validateManager = ValidateManager()
 
 const props = defineProps<{
     model?: Webhook,
@@ -44,24 +46,8 @@ const isLoading = ref(false)
 const dialog = ref(false)
 const editModel = ref<WebhookModel>(convertWebhook(props.model))
 
-const inputRefs = ref<{ [key: string]: any }>({})
-
-const setInputRef = (el: any, key: string) => {
-    inputRefs.value[key] = el
-}
-
 const save = async () => {
-    let validateMsg: string[] = []
-    for (const key in inputRefs.value) {
-        const input = inputRefs.value[key]
-        if (input) {
-            const message: string[] = await input.validate(false)
-            if (message && message.length > 0) {
-                validateMsg = [...validateMsg, ...message]
-            }
-        }
-    }
-
+    const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
     }
@@ -166,6 +152,10 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
     model.value = { ...view, propertyArray: view.propertyArray.filter((_, i) => i !== index) }
 }
 
+onUnmounted(() => {
+    validateManager.clearInputs()
+})
+
 </script>
 
 <template>
@@ -175,14 +165,15 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
         <v-card class="pa-3" v-if="!isLoading">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions }">
-                    <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
-                        :disabled="!authService.isAuthenticated()" :rules="commonRules.RequiredMinMax('Name', 3, 50)"
-                        :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
-                        :disabled="!authService.isAuthenticated()" :rules="commonRules.RequiredMinMax('URL', 3, 150)"
-                        :hideDetails="false" />
-                    <v-select label="State" v-model="proxyModel.value.state" :ref="el => setInputRef(el, 'state')"
-                        :items="['Init', 'Creating', 'Ready']" :hideDetails="false" class="mt-2"></v-select>
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
+                        label="Name" :disabled="!authService.isAuthenticated()"
+                        :rules="validateManager.requiredMinMax('Name', 3, 50)" :hideDetails="false" />
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
+                        label="URL" :disabled="!authService.isAuthenticated()"
+                        :rules="validateManager.requiredMinMax('URL', 3, 150)" :hideDetails="false" />
+                    <v-select label="State" v-model="proxyModel.value.state"
+                        :ref="el => validateManager.setInputRef(el, 'state')" :items="['Init', 'Creating', 'Ready']"
+                        :hideDetails="false" class="mt-2"></v-select>
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                     <div>
@@ -191,14 +182,16 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
 
                     <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index" class="mt-2">
                         <v-col :cols="authService.isAuthenticated() ? 5 : 6">
-                            <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
-                                :rules="commonRules.RequiredMinMax('Property Key', 3, 150)" :hideDetails="false"
+                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
+                                v-model="property.key" label="Key"
+                                :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col :cols="authService.isAuthenticated() ? 5 : 6">
-                            <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                label="Value" :rules="commonRules.RequiredMinMax('Property Value', 3, 150)"
-                                :hideDetails="false" :disabled="!authService.isAuthenticated()" />
+                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
+                                v-model="property.value" label="Value"
+                                :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
+                                :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
                             <v-btn icon @click="removeProperty(proxyModel, index)">
@@ -230,5 +223,4 @@ const removeProperty = (model: Ref<WebhookModel>, index: number) => {
 .v-window-item {
     width: 100%;
     height: 100%;
-}
-</style>
+}</style>

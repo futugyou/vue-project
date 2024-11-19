@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, Ref, watch } from 'vue'
+import { ref, Ref, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -12,7 +12,7 @@ import { useAuth } from '@/plugins/auth'
 import WebhookPage from './Webhook.vue'
 
 import { OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject } from './platform'
-import { commonRules } from '@/tools/util'
+import { ValidateManager } from '@/tools/validate'
 
 export interface PlatformProjectModel extends PlatformProject {
     propertyArray?: { key: string, value: string }[]
@@ -47,7 +47,7 @@ const { msg } = storeToRefs(store)
 
 const authService = useAuth()
 const logined = authService.isAuthenticated()
-
+const validateManager = ValidateManager()
 const props = defineProps<{
     platformId: string,
     projectId?: string,
@@ -60,24 +60,8 @@ const editModel = ref<PlatformProjectModel>(convertProject(props.model))
 const dialog = ref(false)
 const tab = ref("one")
 
-const inputRefs = ref<{ [key: string]: any }>({})
-
-const setInputRef = (el: any, key: string) => {
-    inputRefs.value[key] = el
-}
-
 const save = async () => {
-    let validateMsg: string[] = []
-    for (const key in inputRefs.value) {
-        const input = inputRefs.value[key]
-        if (input) {
-            const message: string[] = await input.validate(false)
-            if (message && message.length > 0) {
-                validateMsg = [...validateMsg, ...message]
-            }
-        }
-    }
-
+    const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
     }
@@ -208,6 +192,10 @@ watch(editModel, (newVal) => {
     emit('update:model', newVal)
 })
 
+onUnmounted(() => {
+    validateManager.clearInputs()
+})
+
 </script>
 
 <template>
@@ -227,12 +215,12 @@ watch(editModel, (newVal) => {
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
                                 :hideDetails="false" />
-                            <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name"
-                                :disabled="!logined" :rules="commonRules.RequiredMinMax('Name', 3, 50)" label="Name"
-                                :hideDetails="false" />
-                            <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                                :disabled="!logined" :rules="commonRules.RequiredMinMax('URL', 3, 150)" label="URL"
-                                :hideDetails="false" />
+                            <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
+                                v-model="proxyModel.value.name" :disabled="!logined"
+                                :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name" :hideDetails="false" />
+                            <v-text-field :ref="el => validateManager.setInputRef(el, 'url')"
+                                v-model="proxyModel.value.url" :disabled="!logined"
+                                :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL" :hideDetails="false" />
 
                             <div>
                                 <label class="v-label mt-3 pl-3">Properties</label>
@@ -240,14 +228,15 @@ watch(editModel, (newVal) => {
 
                             <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
                                 <v-col :cols="logined ? 5 : 6">
-                                    <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
-                                        :disabled="!logined" label="Key"
-                                        :rules="commonRules.RequiredMinMax('Property Key', 3, 150)" :hideDetails="false" />
+                                    <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
+                                        v-model="property.key" :disabled="!logined" label="Key"
+                                        :rules="validateManager.requiredMinMax('Property Key', 3, 150)"
+                                        :hideDetails="false" />
                                 </v-col>
                                 <v-col :cols="logined ? 5 : 6">
-                                    <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                        :disabled="!logined" label="Value"
-                                        :rules="commonRules.RequiredMinMax('Property Value', 3, 150)"
+                                    <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
+                                        v-model="property.value" :disabled="!logined" label="Value"
+                                        :rules="validateManager.requiredMinMax('Property Value', 3, 150)"
                                         :hideDetails="false" />
                                 </v-col>
                                 <v-col cols="2" class="pt-4" v-if="logined">

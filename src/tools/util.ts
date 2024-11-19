@@ -87,35 +87,3 @@ export const toUrlEncoded = (obj: any): string => {
         )
         .join('&')
 }
-
-
-export const fieldRequiredCheck = (value: any, fieldName: string) => {
-    return !!value || (fieldName + ' field is required')
-}
-
-export const fieldMaxLengthCheck = (value: any, fieldName: string, length: number) => {
-    return !!value && value.length <= length || (fieldName + ' field must be less than ' + length + ' characters')
-}
-
-export const fieldMinLengthCheck = (value: any, fieldName: string, length: number) => {
-    return !!value && value.length >= length || (fieldName + ' field must be big than ' + length + ' characters')
-}
-
-export const commonRules = {
-    Required: (title: string) => [
-        (value: string) => fieldRequiredCheck(value, title),
-    ],
-    RequiredMin: (title: string, min: number) => [
-        (value: string) => fieldRequiredCheck(value, title),
-        (value: string) => fieldMinLengthCheck(value, title, min),
-    ],
-    RequiredMax: (title: string, max: number) => [
-        (value: string) => fieldRequiredCheck(value, title),
-        (value: string) => fieldMaxLengthCheck(value, title, max),
-    ],
-    RequiredMinMax: (title: string, min: number, max: number) => [
-        (value: string) => fieldRequiredCheck(value, title),
-        (value: string) => fieldMinLengthCheck(value, title, min),
-        (value: string) => fieldMaxLengthCheck(value, title, max),
-    ],
-}

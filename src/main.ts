@@ -10,6 +10,7 @@ import { inject } from '@vercel/analytics'
 import { router, clearRouter } from './router'
 import { handleMicroData } from '@/tools/baseAppEvent'
 import { registerPlugins } from './plugins'
+import { registerDirectives } from './directives'
 // @ts-ignore
 import App from './App.vue'
 
@@ -20,6 +21,7 @@ const mount = () => {
     app.use(router!)
     
     registerPlugins(app)
+    registerDirectives(app)
 
     app.mount('#vue3-app-main')
     console.log(3, 'micro app vue demo rendered')
