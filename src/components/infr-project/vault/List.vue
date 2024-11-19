@@ -22,6 +22,7 @@ const vault = ref<VaultView>(VaultDefault)
 const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
+const editPageTitle = ref("Create Vault")
 
 const dialog = ref(false)
 const vaultRawDic = ref<{ key: string, value: string }[]>([])
@@ -109,6 +110,7 @@ const formatVaultValue = (id: string, mask: string) => {
 const vaultValueIcon = (id: string) => vaultRawDic.value.find(p => p.key == id) == undefined
 
 const openVaultEdit = (body: VaultView) => {
+    editPageTitle.value = "Edit Vault"
     dialog.value = true
     vault.value = body
 }
@@ -116,6 +118,7 @@ const openVaultEdit = (body: VaultView) => {
 const close = () => {
     vault.value = VaultDefault
     dialog.value = false
+    editPageTitle.value = "Create Vault"
 }
 
 const valut_save = (newVault: VaultView) => {
@@ -124,7 +127,7 @@ const valut_save = (newVault: VaultView) => {
     const index = vaults.value.findIndex(vault => vault.id === newVault.id)
     if (index !== -1) {
         vaults.value.splice(index, 1, newVault)
-    }else{
+    } else {
         vaults.value.push(newVault)
     }
 }
@@ -135,7 +138,7 @@ const valut_save = (newVault: VaultView) => {
         <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Vault</v-toolbar-title>
             <v-spacer></v-spacer>
-            <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="true" title="Create Vault"
+            <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="true" :title="editPageTitle"
                 hideFooter v-if="authService.isAuthenticated()">
                 <Edit @save="valut_save" @cancel="close" :vault="vault"></Edit>
             </VuetifyModal>
