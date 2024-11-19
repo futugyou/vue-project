@@ -12,7 +12,7 @@ import {
     UpdatePlatformRequest, Property
 } from './platform'
 
-import { fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from '@/tools/util'
+import { commonRules } from '@/tools/util'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -35,32 +35,6 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     secrets: [],
     provider: "",
 })
-
-const rules = {
-    Name: [
-        (value: string) => fieldRequiredCheck(value, 'Name'),
-        (value: string) => fieldMinLengthCheck(value, 'Name', 3),
-        (value: string) => fieldMaxLengthCheck(value, 'Name', 50),
-    ],
-    RestUrl: [
-        (value: string) => fieldRequiredCheck(value, 'Rest ebdpoint'),
-        (value: string) => fieldMinLengthCheck(value, 'Rest ebdpoint', 3),
-        (value: string) => fieldMaxLengthCheck(value, 'Rest ebdpoint', 50),
-    ],
-    Url: [
-        (value: string) => fieldRequiredCheck(value, 'Url'),
-        (value: string) => fieldMinLengthCheck(value, 'Url', 3),
-        (value: string) => fieldMaxLengthCheck(value, 'Url', 150),
-    ],
-    PropertyKey: [
-        (value: string) => fieldRequiredCheck(value, 'Property key'),
-        (value: string) => fieldMinLengthCheck(value, 'Property key', 3),
-    ],
-    PropertyValue: [
-        (value: string) => fieldRequiredCheck(value, 'Property value'),
-        (value: string) => fieldMinLengthCheck(value, 'Property value', 3),
-    ],
-}
 
 const inputRefs = ref<{ [key: string]: any }>({})
 
@@ -169,9 +143,11 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                     <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
                         :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name" label="Name"
-                        :disabled="!authService.isAuthenticated()" :rules="rules.Name" :hideDetails="false" />
+                        :disabled="!authService.isAuthenticated()" :rules="commonRules.RequiredMinMax('Name', 3, 50)"
+                        :hideDetails="false" />
                     <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url" label="URL"
-                        :disabled="!authService.isAuthenticated()" :rules="rules.Url" :hideDetails="false" />
+                        :disabled="!authService.isAuthenticated()" :rules="commonRules.RequiredMinMax('URL', 3, 150)"
+                        :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :disabled="!authService.isAuthenticated()" :hideDetails="false" />
                     <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
@@ -185,13 +161,13 @@ const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
                     <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                             <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
-                                :rules="rules.PropertyKey" :hideDetails="false"
+                                :rules="commonRules.RequiredMinMax('Property Key', 3, 150)" :hideDetails="false"
                                 :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                             <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                label="Value" :rules="rules.PropertyValue" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
+                                label="Value" :rules="commonRules.RequiredMinMax('Property Value', 3, 150)"
+                                :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                         </v-col>
                         <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
                             <v-btn icon @click="removeProperty(proxyModel, index)">

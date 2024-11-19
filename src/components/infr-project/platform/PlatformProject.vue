@@ -12,7 +12,7 @@ import { useAuth } from '@/plugins/auth'
 import WebhookPage from './Webhook.vue'
 
 import { OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject } from './platform'
-import { fieldRequiredCheck, fieldMaxLengthCheck, fieldMinLengthCheck } from '@/tools/util'
+import { commonRules } from '@/tools/util'
 
 export interface PlatformProjectModel extends PlatformProject {
     propertyArray?: { key: string, value: string }[]
@@ -59,13 +59,6 @@ const editModel = ref<PlatformProjectModel>(convertProject(props.model))
 
 const dialog = ref(false)
 const tab = ref("one")
-
-const rules = {
-    Name: [(value: string) => fieldRequiredCheck(value, 'Name'), (value: string) => fieldMinLengthCheck(value, 'Name', 3), (value: string) => fieldMaxLengthCheck(value, 'Name', 50),],
-    Url: [(value: string) => fieldRequiredCheck(value, 'Url'), (value: string) => fieldMinLengthCheck(value, 'Url', 3), (value: string) => fieldMaxLengthCheck(value, 'Url', 150),],
-    PropertyKey: [(value: string) => fieldRequiredCheck(value, 'Property key'), (value: string) => fieldMinLengthCheck(value, 'Property key', 3)],
-    PropertyValue: [(value: string) => fieldRequiredCheck(value, 'Property value'), (value: string) => fieldMinLengthCheck(value, 'Property value', 3)],
-}
 
 const inputRefs = ref<{ [key: string]: any }>({})
 
@@ -235,9 +228,11 @@ watch(editModel, (newVal) => {
                             <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
                                 :hideDetails="false" />
                             <v-text-field :ref="el => setInputRef(el, 'name')" v-model="proxyModel.value.name"
-                                :disabled="!logined" :rules="rules.Name" label="Name" :hideDetails="false" />
+                                :disabled="!logined" :rules="commonRules.RequiredMinMax('Name', 3, 50)" label="Name"
+                                :hideDetails="false" />
                             <v-text-field :ref="el => setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                                :disabled="!logined" :rules="rules.Url" label="URL" :hideDetails="false" />
+                                :disabled="!logined" :rules="commonRules.RequiredMinMax('URL', 3, 150)" label="URL"
+                                :hideDetails="false" />
 
                             <div>
                                 <label class="v-label mt-3 pl-3">Properties</label>
@@ -246,11 +241,13 @@ watch(editModel, (newVal) => {
                             <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
                                 <v-col :cols="logined ? 5 : 6">
                                     <v-text-field :ref="el => setInputRef(el, `p-key-${index}`)" v-model="property.key"
-                                        :disabled="!logined" label="Key" :rules="rules.PropertyKey" :hideDetails="false" />
+                                        :disabled="!logined" label="Key"
+                                        :rules="commonRules.RequiredMinMax('Property Key', 3, 150)" :hideDetails="false" />
                                 </v-col>
                                 <v-col :cols="logined ? 5 : 6">
                                     <v-text-field :ref="el => setInputRef(el, `p-value-${index}`)" v-model="property.value"
-                                        :disabled="!logined" label="Value" :rules="rules.PropertyValue"
+                                        :disabled="!logined" label="Value"
+                                        :rules="commonRules.RequiredMinMax('Property Value', 3, 150)"
                                         :hideDetails="false" />
                                 </v-col>
                                 <v-col cols="2" class="pt-4" v-if="logined">
