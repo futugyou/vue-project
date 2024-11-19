@@ -52,6 +52,10 @@ const fields: TableField[] = [
         label: 'Name'
     },
     {
+        key: 'provider',
+        label: 'Provider',
+    },
+    {
         key: 'url',
         label: 'URL'
     },
@@ -62,10 +66,6 @@ const fields: TableField[] = [
     {
         key: 'is_deleted',
         label: 'Deleted'
-    },
-    {
-        key: 'rest_endpoint',
-        label: 'RestEndpoint',
     },
     {
         key: 'tags',

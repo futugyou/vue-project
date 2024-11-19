@@ -2,7 +2,7 @@ import { BaseAPI, FetchAPI, FetchArgs, RequiredError, FetchParamCreator, fetchDa
 
 const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
 
-export const VaultDefault: VaultView = { id: "", key: "", mask_value: "", storage_media: "", tags: [], type_identity: "", vault_type: "", }
+export const VaultDefault: VaultView = { id: "", key: "", mask_value: "", storage_media: "Local", tags: [], type_identity: "common", vault_type: "common", }
 /**
  * 
  * @export

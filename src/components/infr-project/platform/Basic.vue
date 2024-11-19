@@ -34,7 +34,7 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     properties: [],
     projects: [],
     secrets: [],
-    provider: "",
+    provider: "other",
 })
 
 const save = async () => {
@@ -49,14 +49,16 @@ const save = async () => {
         const valueIsValid = prop.value && prop.value.trim() !== ''
         return keyIsValid && valueIsValid
     }) as Property[]
-
+    const provider: unknown = editModel.value.provider ?? ""
     let body: UpdatePlatformRequest | CreatePlatformRequest = {
         name: editModel.value.name,
         url: editModel.value.url,
         activate: editModel.value.activate,
         tags: editModel.value.tags ?? [],
         properties: property,
-        provider: ProviderEnum.Other,
+        provider: Object.values(ProviderEnum).includes(provider as ProviderEnum)
+            ? (provider as ProviderEnum)
+            : ProviderEnum.Other,
         secrets: [],// TODO
     }
 
@@ -72,7 +74,7 @@ const save = async () => {
 
     if (error) {
         msg.value = {
-            errorMessages: [error.message],
+            errorMessages: [error.message ?? error],
             delay: 3000,
         }
         return
@@ -120,6 +122,13 @@ onUnmounted(() => {
     validateManager.clearInputs()
 })
 
+const providerOptions = computed(() =>
+    Object.keys(ProviderEnum).map((key) => ({
+        label: key,
+        value: ProviderEnum[key as keyof typeof ProviderEnum],
+    }))
+)
+
 </script>
 
 <template>
@@ -140,6 +149,9 @@ onUnmounted(() => {
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :disabled="!authService.isAuthenticated()" :hideDetails="false" />
                     <!-- <v-switch v-model="proxyModel.value.is_deleted" label="Is Deleted" /> -->
+                    <v-select :ref="el => validateManager.setInputRef(el, 'vault_type')"
+                        :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
+                        :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :disabled="!authService.isAuthenticated()" :hideDetails="false"></v-combobox>
 
