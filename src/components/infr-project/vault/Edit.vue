@@ -99,18 +99,17 @@ const setInputRef = (el: any, key: string) => {
 
 const storageMediaOptions = computed(() =>
     Object.values(StorageMediaEnum).map((value) => ({
-        value,
         label: value,
+        value,
     }))
 )
 
 const vaultTypeOptions = computed(() =>
-    Object.values(VaultTypeEnum).map((value) => ({
-        value,
-        label: value,
+    Object.keys(VaultTypeEnum).map((key) => ({
+        label: key,
+        value: VaultTypeEnum[key as keyof typeof VaultTypeEnum],
     }))
 )
-
 </script>
 
 <template>
