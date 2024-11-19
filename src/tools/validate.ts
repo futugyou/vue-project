@@ -1,34 +1,34 @@
 export const ValidateManager = () => {
     const inputRefs: Record<string, any> = {}
 
-    const fieldRequiredCheck = (value: any, fieldName: string) => {
+    const requiredRule = (value: any, fieldName: string) => {
         return !!value || `${fieldName} field is required`
     }
 
-    const fieldMaxLengthCheck = (value: any, fieldName: string, length: number) => {
+    const maxRule = (value: any, fieldName: string, length: number) => {
         return !!value && value.length <= length || `${fieldName} field must be less than ${length} characters`
     }
 
-    const fieldMinLengthCheck = (value: any, fieldName: string, length: number) => {
+    const minRule = (value: any, fieldName: string, length: number) => {
         return !!value && value.length >= length || `${fieldName} field must be greater than ${length} characters`
     }
 
     const commonRules = {
         Required: (title: string) => [
-            (value: string) => fieldRequiredCheck(value, title),
+            (value: string) => requiredRule(value, title),
         ],
         RequiredMin: (title: string, min: number) => [
-            (value: string) => fieldRequiredCheck(value, title),
-            (value: string) => fieldMinLengthCheck(value, title, min),
+            (value: string) => requiredRule(value, title),
+            (value: string) => minRule(value, title, min),
         ],
         RequiredMax: (title: string, max: number) => [
-            (value: string) => fieldRequiredCheck(value, title),
-            (value: string) => fieldMaxLengthCheck(value, title, max),
+            (value: string) => requiredRule(value, title),
+            (value: string) => maxRule(value, title, max),
         ],
         RequiredMinMax: (title: string, min: number, max: number) => [
-            (value: string) => fieldRequiredCheck(value, title),
-            (value: string) => fieldMinLengthCheck(value, title, min),
-            (value: string) => fieldMaxLengthCheck(value, title, max),
+            (value: string) => requiredRule(value, title),
+            (value: string) => minRule(value, title, min),
+            (value: string) => maxRule(value, title, max),
         ],
     }
 
@@ -58,5 +58,23 @@ export const ValidateManager = () => {
         }
     }
 
-    return { setInputRef, validateInputs, clearInputs, commonRules }
+    const createRule = (title: string, { min, max, required }: { min?: number; max?: number; required?: boolean }) => {
+        const rules: ((value: string) => string | boolean)[] = []
+        if (required) rules.push((value) => requiredRule(value, title))
+        if (min !== undefined) rules.push((value) => minRule(value, title, min))
+        if (max !== undefined) rules.push((value) => maxRule(value, title, max))
+        return rules
+    }
+
+    return {
+        setInputRef,
+        validateInputs,
+        clearInputs,
+        commonRules,
+        required: commonRules.Required,
+        requiredMin: commonRules.RequiredMin,
+        requiredMax: commonRules.RequiredMax,
+        requiredMinMax: commonRules.RequiredMinMax,
+        createRule
+    }
 }

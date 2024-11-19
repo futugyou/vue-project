@@ -128,21 +128,20 @@ onUnmounted(() => {
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'id')" v-model="proxyModel.value.id"
                         label="Id" disabled :hideDetails="false" v-if="proxyModel.value.id != ''" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'key')"
-                        :rules="validateManager.commonRules.RequiredMinMax('Key', 3, 150)" v-model="proxyModel.value.key"
-                        label="Key" :hideDetails="false" />
+                        :rules="validateManager.requiredMinMax('Key', 3, 150)" v-model="proxyModel.value.key" label="Key"
+                        :hideDetails="false" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'mask_value')"
-                        :rules="validateManager.commonRules.RequiredMinMax('Value', 3, 150)"
-                        v-model="proxyModel.value.mask_value" label="Value (Mask Value)" :hideDetails="false" />
+                        :rules="validateManager.requiredMinMax('Value', 3, 150)" v-model="proxyModel.value.mask_value"
+                        label="Value (Mask Value)" :hideDetails="false" />
                     <v-select :ref="el => validateManager.setInputRef(el, 'storage_media')"
-                        :rules="validateManager.commonRules.Required('Storage Media')"
-                        v-model="proxyModel.value.storage_media" class="mb-5" :items="storageMediaOptions"
-                        label="Storage Media" item-value="value" item-title="label"></v-select>
-                    <v-select :ref="el => validateManager.setInputRef(el, 'vault_type')"
-                        :rules="validateManager.commonRules.Required('Vault Type')" v-model="proxyModel.value.vault_type"
-                        class="mb-5" :items="vaultTypeOptions" label="Vault Type" item-value="value"
+                        :rules="validateManager.required('Storage Media')" v-model="proxyModel.value.storage_media"
+                        class="mb-5" :items="storageMediaOptions" label="Storage Media" item-value="value"
                         item-title="label"></v-select>
+                    <v-select :ref="el => validateManager.setInputRef(el, 'vault_type')"
+                        :rules="validateManager.required('Vault Type')" v-model="proxyModel.value.vault_type" class="mb-5"
+                        :items="vaultTypeOptions" label="Vault Type" item-value="value" item-title="label"></v-select>
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'type_identity')"
-                        :rules="validateManager.commonRules.RequiredMinMax('Type Identity', 3, 150)"
+                        :rules="validateManager.createRule('Type Identity', { min: 3, max: 150, required: true })"
                         v-model="proxyModel.value.type_identity" label="Type Identity" :hideDetails="false" />
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
