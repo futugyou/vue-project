@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -11,13 +11,14 @@ import {
     VaultApiFactory, VaultView, CreateVaultsRequest, ChangeVaultRequest, StorageMediaEnum, VaultTypeEnum,
     CreateVaultsResponse
 } from './vault'
-import { commonRules } from '@/tools/util'
+
+import { ValidateManager } from '@/tools/validate'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
 const authService = useAuth()
-
+const validateManager = ValidateManager()
 const isLoading = ref(false)
 
 const props = defineProps<{
@@ -30,17 +31,7 @@ const cancel = () => {
 }
 
 const save = async () => {
-    let validateMsg: string[] = []
-    for (const key in inputRefs.value) {
-        const input = inputRefs.value[key]
-        if (input) {
-            const message: string[] = await input.validate(false)
-            if (message && message.length > 0) {
-                validateMsg = [...validateMsg, ...message]
-            }
-        }
-    }
-
+    const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
     }
@@ -108,11 +99,6 @@ watch(() => props.vault, (newVal) => {
     editModel.value = _.cloneDeep(newVal)
 })
 
-const inputRefs = ref<{ [key: string]: any }>({})
-const setInputRef = (el: any, key: string) => {
-    inputRefs.value[key] = el
-}
-
 const storageMediaOptions = computed(() =>
     Object.values(StorageMediaEnum).map((value) => ({
         label: value,
@@ -127,6 +113,10 @@ const vaultTypeOptions = computed(() =>
     }))
 )
 
+onUnmounted(() => {
+    validateManager.clearInputs()
+})
+
 </script>
 
 <template>
@@ -135,21 +125,24 @@ const vaultTypeOptions = computed(() =>
         <v-card class="h-100" v-if="!isLoading && authService.isAuthenticated()">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions }">
-                    <v-text-field :ref="el => setInputRef(el, 'id')" v-model="proxyModel.value.id" label="Id" disabled
-                        :hideDetails="false" v-if="proxyModel.value.id != ''" />
-                    <v-text-field :ref="el => setInputRef(el, 'key')" :rules="commonRules.RequiredMinMax('Key', 3, 150)"
-                        v-model="proxyModel.value.key" label="Key" :hideDetails="false" />
-                    <v-text-field :ref="el => setInputRef(el, 'mask_value')"
-                        :rules="commonRules.RequiredMinMax('Value', 3, 150)" v-model="proxyModel.value.mask_value"
-                        label="Value (Mask Value)" :hideDetails="false" />
-                    <v-select :ref="el => setInputRef(el, 'storage_media')" :rules="commonRules.Required('Storage Media')"
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'id')" v-model="proxyModel.value.id"
+                        label="Id" disabled :hideDetails="false" v-if="proxyModel.value.id != ''" />
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'key')"
+                        :rules="validateManager.commonRules.RequiredMinMax('Key', 3, 150)" v-model="proxyModel.value.key"
+                        label="Key" :hideDetails="false" />
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'mask_value')"
+                        :rules="validateManager.commonRules.RequiredMinMax('Value', 3, 150)"
+                        v-model="proxyModel.value.mask_value" label="Value (Mask Value)" :hideDetails="false" />
+                    <v-select :ref="el => validateManager.setInputRef(el, 'storage_media')"
+                        :rules="validateManager.commonRules.Required('Storage Media')"
                         v-model="proxyModel.value.storage_media" class="mb-5" :items="storageMediaOptions"
                         label="Storage Media" item-value="value" item-title="label"></v-select>
-                    <v-select :ref="el => setInputRef(el, 'vault_type')" :rules="commonRules.Required('Vault Type')"
-                        v-model="proxyModel.value.vault_type" class="mb-5" :items="vaultTypeOptions" label="Vault Type"
-                        item-value="value" item-title="label"></v-select>
-                    <v-text-field :ref="el => setInputRef(el, 'type_identity')"
-                        :rules="commonRules.RequiredMinMax('Type Identity', 3, 150)"
+                    <v-select :ref="el => validateManager.setInputRef(el, 'vault_type')"
+                        :rules="validateManager.commonRules.Required('Vault Type')" v-model="proxyModel.value.vault_type"
+                        class="mb-5" :items="vaultTypeOptions" label="Vault Type" item-value="value"
+                        item-title="label"></v-select>
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'type_identity')"
+                        :rules="validateManager.commonRules.RequiredMinMax('Type Identity', 3, 150)"
                         v-model="proxyModel.value.type_identity" label="Type Identity" :hideDetails="false" />
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
