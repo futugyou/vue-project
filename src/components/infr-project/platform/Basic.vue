@@ -5,6 +5,7 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
+import { useVaultStore } from '@/stores/vault'
 import { useAuth } from '@/plugins/auth'
 
 import {
@@ -18,6 +19,8 @@ import { ValidateManager } from '@/tools/validate'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const vaultStore = useVaultStore()
+const { vaultList } = storeToRefs(vaultStore)
 const authService = useAuth()
 const validateManager = ValidateManager()
 
@@ -39,8 +42,10 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     provider: "other",
 })
 
-const vaultList = ref<VaultView[]>([])
 const fetchVaultData = async () => {
+    if (vaultList.value.length > 0) {
+        return
+    }
     const { data, error } = await VaultApiFactory().v1VaultGet()
     if (error) {
         vaultList.value = []

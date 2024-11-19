@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import { useMessageStore } from '@/stores/message'
+import { useVaultStore } from '@/stores/vault'
 import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
@@ -15,9 +16,11 @@ import Edit from './Edit.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const vaultStore = useVaultStore()
+const { vaultList: vaults } = storeToRefs(vaultStore)
 const authService = useAuth()
 
-const vaults = ref<VaultView[]>([])
+// const vaults = ref<VaultView[]>([])
 const vault = ref<VaultView>(VaultDefault)
 const isLoading = ref(true)
 const limit = ref(30)
