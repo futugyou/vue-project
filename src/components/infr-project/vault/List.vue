@@ -134,6 +134,15 @@ const valut_save = (newVault: VaultView) => {
         vaults.value.push(newVault)
     }
 }
+
+const vault_delete = (vault_id: string) => {
+    close()
+    page.value = 1
+    const index = vaults.value.findIndex(vault => vault.id === vault_id)
+    if (index !== -1) {
+        vaults.value.splice(index, 1)
+    }
+}
 </script>
 
 <template>
@@ -143,7 +152,7 @@ const valut_save = (newVault: VaultView) => {
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="true" :title="editPageTitle"
                 hideFooter v-if="authService.isAuthenticated()">
-                <Edit @save="valut_save" @cancel="close" :vault="vault"></Edit>
+                <Edit @save="valut_save" @cancel="close" :vault="vault" @delete="vault_delete"></Edit>
             </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>

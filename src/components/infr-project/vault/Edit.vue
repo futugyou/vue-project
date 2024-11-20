@@ -93,6 +93,7 @@ const save = async () => {
 const emit = defineEmits<{
     (e: 'cancel'): void
     (e: 'save', model: VaultView): void
+    (e: 'delete', id: string): void
 }>()
 
 watch(() => props.vault, (newVal) => {
@@ -118,8 +119,9 @@ onUnmounted(() => {
 })
 
 const deleteVault = async (id: string) => {
-    const answer = window.confirm('Do you really want to delete?')
+    const answer = window.confirm('Are you sure you want to delete?')
     if (!answer) return
+    isLoading.value = true
     const { data, error } = await VaultApiFactory().v1VaultIdDelete(editModel.value.id)
     isLoading.value = false
     if (error) {
@@ -128,6 +130,10 @@ const deleteVault = async (id: string) => {
             delay: 3000,
         }
         return
+    }
+
+    if (data) {
+        emit('delete', id)
     }
 }
 
