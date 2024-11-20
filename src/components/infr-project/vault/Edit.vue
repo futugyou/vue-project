@@ -117,6 +117,20 @@ onUnmounted(() => {
     validateManager.clearInputs()
 })
 
+const deleteVault = async (id: string) => {
+    const answer = window.confirm('Do you really want to delete?')
+    if (!answer) return
+    const { data, error } = await VaultApiFactory().v1VaultIdDelete(editModel.value.id)
+    isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message ?? error],
+            delay: 3000,
+        }
+        return
+    }
+}
+
 </script>
 
 <template>
@@ -146,6 +160,8 @@ onUnmounted(() => {
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
                     <v-sheet class="d-flex justify-end ga-3">
+                        <v-btn variant="elevated" v-if="proxyModel.value.id"
+                            @click="deleteVault(proxyModel.value.id)">Delete</v-btn>
                         <component :is="actions"></component>
                     </v-sheet>
                 </template>
