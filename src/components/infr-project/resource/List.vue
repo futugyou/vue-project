@@ -1,16 +1,20 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
+import { useAuth } from '@/plugins/auth'
 
 import { ResourceView, ResourceApiFactory } from './resource'
 import ResourceData from './ResourceData.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const authService = useAuth()
+const router = useRouter()
 
 const resources = ref<ResourceView[]>([])
 const isLoading = ref(true)
@@ -33,12 +37,25 @@ const fetchData = async () => {
 watchEffect(async () => fetchData())
 
 const buildUrl = (id: string) => '/resource/' + id
+
+const createResource = () => {
+    window.open(router.resolve({ path: '/resource/edit' }).href, '_blank')
+}
 </script>
 
 <template>
     <v-sheet class="d-flex flex-wrap justify-center ga-3 pa-3 overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-row v-if="!isLoading">
+            <v-col cols="12" md="1" v-if="authService.isAuthenticated()">
+                <v-card class="d-flex flex-column" hover>
+                    <v-card-text class="d-flex flex-column align-center ga-3">
+                        <v-sheet>New Resource</v-sheet>
+                        <v-btn icon="md:add" @click="createResource"></v-btn>
+                        <v-sheet></v-sheet>
+                    </v-card-text>
+                </v-card>
+            </v-col>
             <v-col v-for="resource in resources" :key="resource.id" cols="12" md="3">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ resource.name }} </template>

@@ -1,20 +1,23 @@
 <script lang="ts" setup>
 import { ref, } from 'vue'
-import { useRoute, } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
-import ResourceData from './ResourceData.vue'
+import { useAuth } from '@/plugins/auth'
 
+import ResourceData from './ResourceData.vue'
 import { ResourceApiFactory, ResourceViewDetail } from './resource'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const authService = useAuth()
 
 const route = useRoute()
+const router = useRouter()
 
 const isLoading = ref(true)
 const resourceId = route.params.id as string
@@ -50,12 +53,25 @@ const dispalyTime = (history: ResourceViewDetail) => {
     return t
 }
 
+const newResourceVersion = () => {
+    window.open(router.resolve({ path: '/resource/edit', query: { id: resourceId } }).href, '_blank')
+}
+
 </script>
 
 <template>
     <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-timeline v-if="!isLoading" align="start" justify="center">
+            <v-timeline-item dot-color="indigo-lighten-2" icon="md:schedule" v-if="authService.isAuthenticated()">
+                <v-card v-if="!isLoading" class="d-flex flex-column" hover>
+                    <v-card-text class="d-flex flex-column align-center ga-3">
+                        <v-sheet>New Version</v-sheet>
+                        <v-btn icon="md:add" @click="newResourceVersion"></v-btn>
+                        <v-sheet></v-sheet>
+                    </v-card-text>
+                </v-card>
+            </v-timeline-item>
             <v-timeline-item v-for="(history, i) in histories" :key="i" dot-color="indigo-lighten-2" icon="md:schedule">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ dispalyTime(history) }} </template>
