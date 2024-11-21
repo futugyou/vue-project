@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, computed, onUnmounted } from 'vue'
+import { ref, watchEffect, computed, onUnmounted } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
@@ -36,7 +36,7 @@ interface ResourceEditModel {
 const DefaultResourceEditModel: ResourceEditModel = {
     id: resourceId,
     name: "",
-    type: "",
+    type: "Markdown",
     data: "",
     tags: []
 }
@@ -46,6 +46,35 @@ const editModel = ref<ResourceEditModel>(DefaultResourceEditModel)
 const cancel = () => {
     emit('cancel')
 }
+
+const fetchData = async () => {
+    if (resourceId.length == 0) {
+        return
+    }
+
+    isLoading.value = true
+    const { data, error } = await ResourceApiFactory().v1ResourceIdGet(editModel.value.id)
+    isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+
+    if (data) {
+        editModel.value = {
+            id: data.id,
+            name: data.name,
+            type: data.type,
+            data: data.data,
+            tags: data.tags,
+        }
+    }
+
+}
+fetchData()
 
 const save = async () => {
     const validateMsg = await validateManager.validateInputs()
