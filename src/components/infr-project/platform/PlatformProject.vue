@@ -199,7 +199,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column ga-3" minHeight="100%">
+    <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
 
         <v-tabs v-model="tab" color="deep-purple-accent-4">

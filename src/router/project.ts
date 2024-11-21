@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
 
 const ResourceList = () => import('@/components/infr-project/resource/List.vue')
+const ResourceEdit = () => import('@/components/infr-project/resource/Edit.vue')
 const ResourceDetail = () => import('@/components/infr-project/resource/Detail.vue')
 
 
@@ -20,6 +21,11 @@ export const ProjectRoutes = [
         path: '/resource/:id',
         name: 'ResourceDetail',
         component: ResourceDetail,
+    },
+    {
+        path: '/resource/edit',
+        name: 'ResourceEdit',
+        component: ResourceEdit,
     },
     {
         path: '/platform',

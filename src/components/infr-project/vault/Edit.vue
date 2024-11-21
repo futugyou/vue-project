@@ -140,7 +140,7 @@ const deleteVault = async (id: string) => {
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column ga-3" minHeight="100%">
+    <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
         <v-card class="h-100" v-if="!isLoading && authService.isAuthenticated()">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
