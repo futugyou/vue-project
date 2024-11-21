@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onUnmounted } from 'vue'
-import { useRoute, } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -9,7 +9,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import {
-    ResourceApiFactory, CreateResourceRequest, ResourceViewDetail, ResourceTypeEnum
+    ResourceApiFactory, CreateResourceRequest, ResourceViewDetail, ResourceTypeEnum, UpdateResourceRequest
 } from './resource'
 
 import { ValidateManager } from '@/tools/validate'
@@ -20,6 +20,7 @@ const { msg } = storeToRefs(store)
 const authService = useAuth()
 
 const route = useRoute()
+const router = useRouter()
 const validateManager = ValidateManager()
 const isLoading = ref(false)
 
@@ -44,7 +45,11 @@ const DefaultResourceEditModel: ResourceEditModel = {
 const editModel = ref<ResourceEditModel>(DefaultResourceEditModel)
 
 const cancel = () => {
-    emit('cancel')
+    if (resourceId.length == 0) {
+        router.push({ name: "Resource", force: true, })
+    } else {
+        router.push({ name: "ResourceDetail", force: true, params: { id: resourceId } })
+    }
 }
 
 const fetchData = async () => {
@@ -83,9 +88,41 @@ const save = async () => {
     }
 
     isLoading.value = true
+    let response
+    if (resourceId.length == 0) {
+        const r_type: unknown = editModel.value.type ?? ""
+        const res_type = Object.values(ResourceTypeEnum).includes(r_type as ResourceTypeEnum)
+            ? (r_type as ResourceTypeEnum)
+            : ResourceTypeEnum.Markdown
+        const request: CreateResourceRequest = {
+            data: editModel.value.data,
+            name: editModel.value.name,
+            tags: editModel.value.tags,
+            type: res_type,
+        }
+        response = await ResourceApiFactory().v1ResourcePost(request)
+    } else {
+        const request: UpdateResourceRequest = {
+            data: editModel.value.data,
+            name: editModel.value.name,
+            tags: editModel.value.tags,
+        }
+        response = await ResourceApiFactory().v1ResourceIdPut(request, resourceId)
+    }
 
+    const { data, error } = response
     isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message ?? error],
+            delay: 3000,
+        }
+        return
+    }
 
+    if (data) {
+        cancel()
+    }
 }
 
 const emit = defineEmits<{
