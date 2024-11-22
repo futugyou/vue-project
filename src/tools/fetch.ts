@@ -176,8 +176,14 @@ export const fetchData = async <T>(localVarFetchArgs: FetchArgs, fetch: FetchAPI
             try {
                 error = JSON.parse(text)
             } catch (e) {
-                error = { message: text }
+                error = text
             }
+
+            if (error.message) {
+                return { error }
+            }
+            
+            error = { message: error }
             return { error }
         }
     } catch (error) {

@@ -114,7 +114,7 @@ const save = async () => {
     isLoading.value = false
     if (error) {
         msg.value = {
-            errorMessages: [error.message ?? error],
+            errorMessages: [error.message],
             delay: 3000,
         }
         return

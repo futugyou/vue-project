@@ -80,7 +80,7 @@ const save = async () => {
 
     if (error) {
         msg.value = {
-            errorMessages: [error.message ?? error],
+            errorMessages: [error.message],
             delay: 3000,
         }
         return
@@ -123,7 +123,7 @@ const deletePlatform = async (id: string) => {
         isLoading.value = false
         if (error) {
             msg.value = {
-                errorMessages: [error.message ?? error],
+                errorMessages: [error.message],
                 delay: 3000,
             }
             return
