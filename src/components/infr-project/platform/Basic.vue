@@ -10,7 +10,7 @@ import { useAuth } from '@/plugins/auth'
 
 import {
     PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, ProviderEnum,
-    UpdatePlatformRequest, Property, Secret
+    UpdatePlatformRequest, Property, Secret, checkPlatfromPropertySecret
 } from './platform'
 
 import { VaultApiFactory, VaultView } from '../vault/vault'
@@ -62,31 +62,28 @@ const save = async () => {
     if (validateMsg.length > 0) {
         return
     }
+    const provider: unknown = editModel.value.provider ?? ""
+    const providerEnum = Object.values(ProviderEnum).includes(provider as ProviderEnum)
+        ? (provider as ProviderEnum)
+        : ProviderEnum.Other
+    const checkMsg = checkPlatfromPropertySecret(providerEnum, editModel.value.properties, editModel.value.secrets)
+    if (checkMsg) {
+        msg.value = {
+            errorMessages: [checkMsg],
+            delay: 3000,
+        }
+        return
+    }
 
     isLoading.value = true
-    let properties = _.filter(editModel.value.properties, (prop: Property) => {
-        const keyIsValid = prop.key && prop.key.trim() !== ''
-        const valueIsValid = prop.value && prop.value.trim() !== ''
-        return keyIsValid && valueIsValid
-    }) as Property[]
-
-    let secrets = _.filter(editModel.value.secrets, (prop: Secret) => {
-        const keyIsValid = prop.key && prop.key.trim() !== ''
-        const valueIsValid = prop.vault_id && prop.vault_id.trim() !== ''
-        return keyIsValid && valueIsValid
-    }) as Secret[]
-
-    const provider: unknown = editModel.value.provider ?? ""
     let body: UpdatePlatformRequest | CreatePlatformRequest = {
         name: editModel.value.name,
         url: editModel.value.url,
         activate: editModel.value.activate,
         tags: editModel.value.tags ?? [],
-        properties: properties,
-        provider: Object.values(ProviderEnum).includes(provider as ProviderEnum)
-            ? (provider as ProviderEnum)
-            : ProviderEnum.Other,
-        secrets: secrets,
+        properties: editModel.value.properties,
+        provider: providerEnum,
+        secrets: editModel.value.secrets,
     }
 
     let response

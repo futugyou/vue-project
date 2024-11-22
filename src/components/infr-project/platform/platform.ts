@@ -7,6 +7,34 @@ export enum OperateEnum {
     Sync = <any>'sync'
 }
 
+export const checkPlatfromPropertySecret = (provider: ProviderEnum, properties: Array<Property>, secrets: Array<Secret>): string => {
+    switch (provider) {
+        case ProviderEnum.Circleci:
+            if (secrets.findIndex(p => p.key == "CIRCLECI_TOKEN") == -1) {
+                return "Circleci NEED CIRCLECI_TOKEN In Secret"
+            }
+            if (properties.findIndex(p => p.key == "org_slug") == -1) {
+                return "Circleci NEED org_slug In Property"
+            }
+            break;
+        case ProviderEnum.Vercel:
+            if (secrets.findIndex(p => p.key == "VERCEL_TOKEN") == -1) {
+                return "Vercel NEED VERCEL_TOKEN In Secret"
+            }
+            break;
+        case ProviderEnum.Github:
+            if (secrets.findIndex(p => p.key == "GITHUB_TOKEN") == -1) {
+                return "Github NEED GITHUB_TOKEN In Secret"
+            }
+            if (properties.findIndex(p => p.key == "GITHUB_OWNER") == -1) {
+                return "Github NEED GITHUB_OWNER In Property"
+            }
+            break;
+    }
+
+    return ""
+}
+
 /**
  * 
  * @export
