@@ -228,7 +228,8 @@ const deletePlatform = async (id: string) => {
 
                     <div class="d-flex align-center ga-6">
                         <label class="v-label pl-3">Properties</label>
-                        <v-btn @click="addProperty(proxyModel)" v-if="authService.isAuthenticated()" icon="md:add"></v-btn>
+                        <v-btn @click="addProperty(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
+                            icon="md:add"></v-btn>
                     </div>
 
                     <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
@@ -251,7 +252,8 @@ const deletePlatform = async (id: string) => {
 
                     <div class="d-flex align-center ga-6">
                         <label class="v-label pl-3">Secrets</label>
-                        <v-btn @click="addSecret(proxyModel)" v-if="authService.isAuthenticated()" icon="md:add"></v-btn>
+                        <v-btn @click="addSecret(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
+                            icon="md:add"></v-btn>
                     </div>
 
                     <v-row v-for="(secret, index) in proxyModel.value.secrets" :key="index" class="mt-2">

@@ -7,6 +7,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import Spinners from '@/common/Spinners.vue'
 import { PlatformView, PlatformApiFactory, PlatformDetailView } from './platform'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Basic from './Basic.vue'
