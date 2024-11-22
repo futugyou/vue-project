@@ -78,3 +78,5 @@ export const ValidateManager = () => {
         createRule
     }
 }
+
+export type ValidateManagerType = ReturnType<typeof ValidateManager>

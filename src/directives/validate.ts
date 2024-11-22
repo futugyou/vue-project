@@ -1,7 +1,7 @@
 import { Directive, DirectiveBinding, inject } from 'vue'
-import { ValidateManager } from '@/tools/validate'
+import { ValidateManager, ValidateManagerType } from '@/tools/validate'
 
-type ValidateManagerType = ReturnType<typeof ValidateManager>
+
 export const validateDirective: Directive = {
     beforeMount(el, binding, vnode) {
         const { value } = binding
