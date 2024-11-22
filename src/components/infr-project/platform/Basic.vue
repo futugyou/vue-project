@@ -220,7 +220,7 @@ const deletePlatform = async (id: string) => {
                         :rules="validateManager.requiredMinMax('URL', 3, 150)" :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :disabled="!authService.isAuthenticated()" :hideDetails="false" />
-                    <v-select :ref="el => validateManager.setInputRef(el, 'vault_type')"
+                    <v-select :ref="el => validateManager.setInputRef(el, 'provider')"
                         :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
                         :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple

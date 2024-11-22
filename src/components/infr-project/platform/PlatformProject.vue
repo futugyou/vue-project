@@ -18,14 +18,21 @@ import {
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
-const convertProject = (model: PlatformProject | undefined): PlatformProject => {
+interface PlatformProjectView extends PlatformProject {
+    operate: OperateEnum
+}
+
+const convertProject = (model: PlatformProject | undefined): PlatformProjectView => {
     if (model == undefined) {
-        return { id: "", name: "", url: "", followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: [] }
+        return {
+            id: "", operate: OperateEnum.Upsert,
+            name: "", url: "", followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: []
+        }
     }
 
     model = _.cloneDeep(model)
 
-    return model
+    return { ...model, operate: OperateEnum.Upsert }
 }
 
 const store = useMessageStore()
@@ -43,7 +50,7 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
-const editModel = ref<PlatformProject>(convertProject(props.model))
+const editModel = ref<PlatformProjectView>(convertProject(props.model))
 
 const dialog = ref(false)
 const tab = ref("one")
@@ -60,7 +67,7 @@ const save = async () => {
         name: editModel.value.name,
         url: editModel.value.url,
         properties: editModel.value.properties,
-        operate: OperateEnum.Upsert,
+        operate: editModel.value.operate,
         provider_project_id: editModel.value.provider_project_id,
         secrets: editModel.value.secrets,
     }
@@ -199,6 +206,12 @@ const vaultOptions = computed(() =>
     }))
 )
 
+const operateOptions = computed(() =>
+    Object.keys(OperateEnum).map((key) => ({
+        label: key,
+        value: OperateEnum[key as keyof typeof OperateEnum],
+    }))
+)
 </script>
 
 <template>
@@ -229,6 +242,9 @@ const vaultOptions = computed(() =>
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
                                 :disabled="!logined" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
+                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')"
+                                :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
+                                :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
 
                             <div class="d-flex align-center ga-6">
                                 <label class="v-label pl-3">Properties</label>
