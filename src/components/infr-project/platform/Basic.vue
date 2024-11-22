@@ -5,22 +5,19 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
-import { useVaultStore } from '@/stores/vault'
 import { useAuth } from '@/plugins/auth'
 
 import {
     PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, ProviderEnum,
-    UpdatePlatformRequest, Property, Secret, checkPlatfromPropertySecret
+    UpdatePlatformRequest, checkPlatfromPropertySecret
 } from './platform'
 
-import { VaultApiFactory, VaultView } from '../vault/vault'
-
 import { ValidateManager } from '@/tools/validate'
+import PropertyPage from './Property.vue'
+import SecretPage from './Secret.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
-const vaultStore = useVaultStore()
-const { vaultList } = storeToRefs(vaultStore)
 const authService = useAuth()
 const validateManager = ValidateManager()
 
@@ -41,21 +38,6 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     secrets: [],
     provider: "other",
 })
-
-const fetchVaultData = async () => {
-    if (vaultList.value.length > 0) {
-        return
-    }
-    const { data, error } = await VaultApiFactory().v1VaultGet()
-    if (error) {
-        vaultList.value = []
-        return
-    }
-
-    vaultList.value = _.orderBy(data, "key", "desc")
-}
-
-watchEffect(async () => fetchVaultData())
 
 const save = async () => {
     const validateMsg = await validateManager.validateInputs()
@@ -122,46 +104,6 @@ watch(editModel, (newVal) => {
     emit('update:model', newVal)
 })
 
-const addProperty = (model: Ref<PlatformDetailView>) => {
-    const view = _.cloneDeep(model.value)
-
-    if (!view.properties) {
-        view.properties = []
-    }
-
-    view.properties.push({ key: '', value: '' })
-    model.value = view
-}
-
-const addSecret = (model: Ref<PlatformDetailView>) => {
-    const view = _.cloneDeep(model.value)
-
-    if (!view.secrets) {
-        view.secrets = []
-    }
-
-    view.secrets.push({ key: '', vault_id: '' })
-    model.value = view
-}
-
-const removeProperty = (model: Ref<PlatformDetailView>, index: number) => {
-    const view = _.cloneDeep(model.value)
-    if (!view.properties) {
-        view.properties = []
-    }
-
-    model.value = { ...view, properties: view.properties.filter((_, i) => i !== index) }
-}
-
-const removeSecret = (model: Ref<PlatformDetailView>, index: number) => {
-    const view = _.cloneDeep(model.value)
-    if (!view.secrets) {
-        view.secrets = []
-    }
-
-    model.value = { ...view, secrets: view.secrets.filter((_, i) => i !== index) }
-}
-
 onUnmounted(() => {
     validateManager.clearInputs()
 })
@@ -170,13 +112,6 @@ const providerOptions = computed(() =>
     Object.keys(ProviderEnum).map((key) => ({
         label: key,
         value: ProviderEnum[key as keyof typeof ProviderEnum],
-    }))
-)
-
-const vaultOptions = computed(() =>
-    vaultList.value.map((vault) => ({
-        label: vault.key + " - " + vault.storage_media,
-        value: vault.id,
     }))
 )
 
@@ -218,59 +153,14 @@ const deletePlatform = async (id: string) => {
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :disabled="!authService.isAuthenticated()" :hideDetails="false" />
                     <v-select :ref="el => validateManager.setInputRef(el, 'provider')"
-                        :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
-                        :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>
+                        :disabled="!authService.isAuthenticated()" :rules="validateManager.required('Provider')"
+                        v-model="proxyModel.value.provider" class="mb-5" :items="providerOptions" label="Provider"
+                        item-value="value" item-title="label"></v-select>
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :disabled="!authService.isAuthenticated()" :hideDetails="false"></v-combobox>
 
-                    <div class="d-flex align-center ga-6">
-                        <label class="v-label pl-3">Properties</label>
-                        <v-btn @click="addProperty(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
-                            icon="md:add"></v-btn>
-                    </div>
-
-                    <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
-                        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
-                                v-model="property.key" label="Key"
-                                :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
-                        </v-col>
-                        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
-                                v-model="property.value" label="Value"
-                                :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
-                        </v-col>
-                        <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
-                            <v-btn icon="md:remove" @click="removeProperty(proxyModel, index)"></v-btn>
-                        </v-col>
-                    </v-row>
-
-                    <div class="d-flex align-center ga-6">
-                        <label class="v-label pl-3">Secrets</label>
-                        <v-btn @click="addSecret(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
-                            icon="md:add"></v-btn>
-                    </div>
-
-                    <v-row v-for="(secret, index) in proxyModel.value.secrets" :key="index" class="mt-2">
-                        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)"
-                                v-model="secret.key" label="Key"
-                                :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
-                        </v-col>
-                        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                            <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)"
-                                v-model="secret.vault_id" label="Value"
-                                :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" class="mb-5" :items="vaultOptions"
-                                item-value="value" item-title="label"></v-select>
-                        </v-col>
-                        <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
-                            <v-btn icon="md:remove" @click="removeSecret(proxyModel, index)"></v-btn>
-                        </v-col>
-                    </v-row>
+                    <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager"></PropertyPage>
+                    <SecretPage :model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
