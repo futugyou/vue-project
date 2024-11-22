@@ -1,49 +1,37 @@
 <script lang="ts" setup>
-import { ref, Ref, watch, onUnmounted } from 'vue'
+import { ref, Ref, watch, onUnmounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
+import { useVaultStore } from '@/stores/vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
 import WebhookPage from './Webhook.vue'
 
-import { OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject } from './platform'
+import {
+    OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
+    PlatformDetailView, PlatformProject, Secret, Property
+} from './platform'
 import { ValidateManager } from '@/tools/validate'
 
-export interface PlatformProjectModel extends PlatformProject {
-    propertyArray?: { key: string, value: string }[]
-}
-
-const convertProject = (model: PlatformProject | undefined): PlatformProjectModel => {
+const convertProject = (model: PlatformProject | undefined): PlatformProject => {
     if (model == undefined) {
-        return { id: "", name: "", url: "", propertyArray: [], followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: [] }
+        return { id: "", name: "", url: "", followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: [] }
     }
 
-    // TODO: fix properties
-    // let propertyArray = convertPropperty(model.properties)
     model = _.cloneDeep(model)
 
-    return {
-        ...model,
-        webhooks: _.orderBy(model.webhooks, 'name', 'asc'),
-        // propertyArray: propertyArray,
-    }
-}
-
-const convertPropperty = (property: { [key: string]: string; } | undefined): { key: string; value: string; }[] => {
-    if (property == undefined) {
-        return []
-    }
-
-    return _.map(property, (value, key) => ({ key, value }))
+    return model
 }
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const vaultStore = useVaultStore()
+const { vaultList } = storeToRefs(vaultStore)
 
 const authService = useAuth()
 const logined = authService.isAuthenticated()
@@ -55,7 +43,7 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
-const editModel = ref<PlatformProjectModel>(convertProject(props.model))
+const editModel = ref<PlatformProject>(convertProject(props.model))
 
 const dialog = ref(false)
 const tab = ref("one")
@@ -68,25 +56,13 @@ const save = async () => {
 
     isLoading.value = true
 
-    let arr = _.filter(editModel.value.propertyArray, (prop) => {
-        const keyIsValid = prop.key && prop.key.trim() !== ''
-        const valueIsValid = prop.value && prop.value.trim() !== ''
-        return keyIsValid && valueIsValid
-    }) as { key: string, value: string }[]
-
-    const property = arr.reduce((acc: { [key: string]: string }, item: { key: string, value: string }) => {
-        acc[item.key] = item.value
-        return acc
-    }, {})
-
     var body: UpdatePlatformProjectRequest = {
         name: editModel.value.name,
         url: editModel.value.url,
-        // fix properties
-        properties: [],
+        properties: editModel.value.properties,
         operate: OperateEnum.Upsert,
-        provider_project_id: '',
-        secrets: []
+        provider_project_id: editModel.value.provider_project_id,
+        secrets: editModel.value.secrets,
     }
 
     let response
@@ -117,29 +93,49 @@ const cancel = () => {
 }
 
 const emit = defineEmits<{
-    (e: 'update:model', dialog: PlatformProjectModel): void
+    (e: 'update:model', dialog: PlatformProject): void
     (e: 'cancel'): void
     (e: 'save', model: PlatformDetailView): void
 }>()
 
-const addProperty = (model: Ref<PlatformProjectModel>) => {
+const addProperty = (model: Ref<PlatformProject>) => {
     const view = _.cloneDeep(model.value)
 
-    if (!view.propertyArray) {
-        view.propertyArray = []
+    if (!view.properties) {
+        view.properties = []
     }
 
-    view.propertyArray.push({ key: '', value: '', })
+    view.properties.push({ key: '', value: '' })
     model.value = view
 }
 
-const removeProperty = (model: Ref<PlatformProjectModel>, index: number) => {
+const removeProperty = (model: Ref<PlatformProject>, index: number) => {
     const view = _.cloneDeep(model.value)
-    if (!view.propertyArray) {
-        view.propertyArray = []
+    if (!view.properties) {
+        view.properties = []
     }
 
-    model.value = { ...view, propertyArray: view.propertyArray.filter((_, i) => i !== index) }
+    model.value = { ...view, properties: view.properties.filter((_, i) => i !== index) }
+}
+
+const addSecret = (model: Ref<PlatformProject>) => {
+    const view = _.cloneDeep(model.value)
+
+    if (!view.secrets) {
+        view.secrets = []
+    }
+
+    view.secrets.push({ key: '', vault_id: '' })
+    model.value = view
+}
+
+const removeSecret = (model: Ref<PlatformProject>, index: number) => {
+    const view = _.cloneDeep(model.value)
+    if (!view.secrets) {
+        view.secrets = []
+    }
+
+    model.value = { ...view, secrets: view.secrets.filter((_, i) => i !== index) }
 }
 
 const deleteProject = async () => {
@@ -196,6 +192,13 @@ onUnmounted(() => {
     validateManager.clearInputs()
 })
 
+const vaultOptions = computed(() =>
+    vaultList.value.map((vault) => ({
+        label: vault.key + " - " + vault.storage_media,
+        value: vault.id,
+    }))
+)
+
 </script>
 
 <template>
@@ -215,38 +218,66 @@ onUnmounted(() => {
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
                                 :hideDetails="false" />
+                            <v-text-field :model-value="proxyModel.value.provider_project_id" label="Provider ProjectID"
+                                disabled v-if="proxyModel.value.provider_project_id" :hideDetails="false" />
+                            <v-switch v-model="proxyModel.value.followed" label="Followed" class="pl-2" color="info"
+                                disabled :hideDetails="false" />
+
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
                                 v-model="proxyModel.value.name" :disabled="!logined"
                                 :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name" :hideDetails="false" />
-                            <v-text-field :ref="el => validateManager.setInputRef(el, 'url')"
-                                v-model="proxyModel.value.url" :disabled="!logined"
-                                :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL" :hideDetails="false" />
+                            <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
+                                :disabled="!logined" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
+                                :hideDetails="false" />
 
-                            <div>
-                                <label class="v-label mt-3 pl-3">Properties</label>
+                            <div class="d-flex align-center ga-6">
+                                <label class="v-label pl-3">Properties</label>
+                                <v-btn @click="addProperty(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
+                                    icon="md:add"></v-btn>
                             </div>
 
-                            <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index">
-                                <v-col :cols="logined ? 5 : 6">
+                            <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
+                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                                     <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
-                                        v-model="property.key" :disabled="!logined" label="Key"
-                                        :rules="validateManager.requiredMinMax('Property Key', 3, 150)"
-                                        :hideDetails="false" />
+                                        v-model="property.key" label="Key"
+                                        :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
+                                        :disabled="!authService.isAuthenticated()" />
                                 </v-col>
-                                <v-col :cols="logined ? 5 : 6">
+                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
                                     <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
-                                        v-model="property.value" :disabled="!logined" label="Value"
+                                        v-model="property.value" label="Value"
                                         :rules="validateManager.requiredMinMax('Property Value', 3, 150)"
-                                        :hideDetails="false" />
+                                        :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                                 </v-col>
-                                <v-col cols="2" class="pt-4" v-if="logined">
-                                    <v-btn icon @click="removeProperty(proxyModel, index)">
-                                        <v-icon icon="md:remove"></v-icon>
-                                    </v-btn>
+                                <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
+                                    <v-btn icon="md:remove" @click="removeProperty(proxyModel, index)"></v-btn>
                                 </v-col>
                             </v-row>
 
-                            <v-btn color="primary" @click="addProperty(proxyModel)" v-if="logined">Add Property</v-btn>
+                            <div class="d-flex align-center ga-6">
+                                <label class="v-label pl-3">Secrets</label>
+                                <v-btn @click="addSecret(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
+                                    icon="md:add"></v-btn>
+                            </div>
+
+                            <v-row v-for="(secret, index) in proxyModel.value.secrets" :key="index" class="mt-2">
+                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
+                                    <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)"
+                                        v-model="secret.key" label="Key"
+                                        :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
+                                        :disabled="!authService.isAuthenticated()" />
+                                </v-col>
+                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
+                                    <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)"
+                                        v-model="secret.vault_id" label="Value"
+                                        :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
+                                        :disabled="!authService.isAuthenticated()" class="mb-5" :items="vaultOptions"
+                                        item-value="value" item-title="label"></v-select>
+                                </v-col>
+                                <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
+                                    <v-btn icon="md:remove" @click="removeSecret(proxyModel, index)"></v-btn>
+                                </v-col>
+                            </v-row>
 
                             <v-spacer></v-spacer>
                             <v-sheet class="d-flex justify-end ga-3" v-if="logined">
