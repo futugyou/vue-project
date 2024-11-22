@@ -1,20 +1,21 @@
 <script lang="ts" setup>
-import { ref, Ref, watch, onUnmounted, computed } from 'vue'
+import { ref, watch, onUnmounted, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
-import { useVaultStore } from '@/stores/vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
 import WebhookPage from './Webhook.vue'
+import PropertyPage from './Property.vue'
+import SecretPage from './Secret.vue'
 
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
-    PlatformDetailView, PlatformProject, Secret, Property
+    PlatformDetailView, PlatformProject,
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
@@ -37,8 +38,6 @@ const convertProject = (model: PlatformProject | undefined): PlatformProjectView
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
-const vaultStore = useVaultStore()
-const { vaultList } = storeToRefs(vaultStore)
 
 const authService = useAuth()
 const logined = authService.isAuthenticated()
@@ -105,46 +104,6 @@ const emit = defineEmits<{
     (e: 'save', model: PlatformDetailView): void
 }>()
 
-const addProperty = (model: Ref<PlatformProject>) => {
-    const view = _.cloneDeep(model.value)
-
-    if (!view.properties) {
-        view.properties = []
-    }
-
-    view.properties.push({ key: '', value: '' })
-    model.value = view
-}
-
-const removeProperty = (model: Ref<PlatformProject>, index: number) => {
-    const view = _.cloneDeep(model.value)
-    if (!view.properties) {
-        view.properties = []
-    }
-
-    model.value = { ...view, properties: view.properties.filter((_, i) => i !== index) }
-}
-
-const addSecret = (model: Ref<PlatformProject>) => {
-    const view = _.cloneDeep(model.value)
-
-    if (!view.secrets) {
-        view.secrets = []
-    }
-
-    view.secrets.push({ key: '', vault_id: '' })
-    model.value = view
-}
-
-const removeSecret = (model: Ref<PlatformProject>, index: number) => {
-    const view = _.cloneDeep(model.value)
-    if (!view.secrets) {
-        view.secrets = []
-    }
-
-    model.value = { ...view, secrets: view.secrets.filter((_, i) => i !== index) }
-}
-
 const deleteProject = async () => {
     if (props.platformId && props.projectId) {
         isLoading.value = true
@@ -199,13 +158,6 @@ onUnmounted(() => {
     validateManager.clearInputs()
 })
 
-const vaultOptions = computed(() =>
-    vaultList.value.map((vault) => ({
-        label: vault.key + " - " + vault.storage_media,
-        value: vault.id,
-    }))
-)
-
 const operateOptions = computed(() =>
     Object.keys(OperateEnum).map((key) => ({
         label: key,
@@ -243,57 +195,13 @@ const operateOptions = computed(() =>
                                 :disabled="!logined" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')"
-                                :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
-                                :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
+                                :disabled="!authService.isAuthenticated()" :rules="validateManager.required('operate')"
+                                v-model="proxyModel.value.operate" class="mb-5" :items="operateOptions" label="Operate"
+                                item-value="value" item-title="label"></v-select>
 
-                            <div class="d-flex align-center ga-6">
-                                <label class="v-label pl-3">Properties</label>
-                                <v-btn @click="addProperty(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
-                                    icon="md:add"></v-btn>
-                            </div>
-
-                            <v-row v-for="(property, index) in proxyModel.value.properties" :key="index" class="mt-2">
-                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                                    <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
-                                        v-model="property.key" label="Key"
-                                        :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
-                                        :disabled="!authService.isAuthenticated()" />
-                                </v-col>
-                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                                    <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
-                                        v-model="property.value" label="Value"
-                                        :rules="validateManager.requiredMinMax('Property Value', 3, 150)"
-                                        :hideDetails="false" :disabled="!authService.isAuthenticated()" />
-                                </v-col>
-                                <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
-                                    <v-btn icon="md:remove" @click="removeProperty(proxyModel, index)"></v-btn>
-                                </v-col>
-                            </v-row>
-
-                            <div class="d-flex align-center ga-6">
-                                <label class="v-label pl-3">Secrets</label>
-                                <v-btn @click="addSecret(proxyModel)" variant="text" v-if="authService.isAuthenticated()"
-                                    icon="md:add"></v-btn>
-                            </div>
-
-                            <v-row v-for="(secret, index) in proxyModel.value.secrets" :key="index" class="mt-2">
-                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                                    <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)"
-                                        v-model="secret.key" label="Key"
-                                        :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
-                                        :disabled="!authService.isAuthenticated()" />
-                                </v-col>
-                                <v-col :cols="authService.isAuthenticated() ? 4 : 5">
-                                    <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)"
-                                        v-model="secret.vault_id" label="Value"
-                                        :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
-                                        :disabled="!authService.isAuthenticated()" class="mb-5" :items="vaultOptions"
-                                        item-value="value" item-title="label"></v-select>
-                                </v-col>
-                                <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
-                                    <v-btn icon="md:remove" @click="removeSecret(proxyModel, index)"></v-btn>
-                                </v-col>
-                            </v-row>
+                            <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager">
+                            </PropertyPage>
+                            <SecretPage :model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
 
                             <v-spacer></v-spacer>
                             <v-sheet class="d-flex justify-end ga-3" v-if="logined">
