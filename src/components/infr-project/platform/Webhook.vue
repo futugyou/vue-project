@@ -10,24 +10,23 @@ import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, WebhookStateEnum, PlatformDetailView } from './platform'
 
+import PropertyPage from './Property.vue'
+import SecretPage from './Secret.vue'
+
 import { ValidateManager } from '@/tools/validate'
 
 export interface WebhookModel extends Webhook {
-    propertyArray?: { key: string, value: string }[]
+    sync: boolean
 }
 
 const convertWebhook = (mode: Webhook | undefined): WebhookModel => {
     if (mode == undefined) {
-        return { name: "", url: "", propertyArray: [], activate: true, state: 'Init', properties: [], secrets: [] }
+        return { name: "", url: "", sync: false, activate: true, state: 'Init', properties: [], secrets: [] }
     }
 
-    let propertyArray: { key: string, value: string }[] = []
-    if (mode?.properties) {
-        propertyArray = _.map(mode.properties, (value, key) => ({ key: value.key, value: value.value }))
-    }
     return {
         ..._.cloneDeep(mode),
-        propertyArray: propertyArray,
+        sync: false,
     }
 }
 
@@ -53,26 +52,15 @@ const save = async () => {
     }
 
     isLoading.value = true
-    let arr = _.filter(editModel.value.propertyArray, (prop) => {
-        const keyIsValid = prop.key && prop.key.trim() !== ''
-        const valueIsValid = prop.value && prop.value.trim() !== ''
-        return keyIsValid && valueIsValid
-    }) as { key: string, value: string }[]
-
-    const property = arr.reduce((acc: { [key: string]: string }, item: { key: string, value: string }) => {
-        acc[item.key] = item.value
-        return acc
-    }, {})
 
     const state: unknown = editModel.value.state ?? ""
     let body: UpdatePlatformWebhookRequest = {
         name: editModel.value.name ?? "",
         url: editModel.value.url ?? "",
         activate: editModel.value.activate ?? true,
-        //TODO: fix properties
-        properties: [],
-        secrets: [],
-        sync: false,
+        properties: editModel.value.properties,
+        secrets: editModel.value.secrets,
+        sync: editModel.value.sync,
         state: Object.values(WebhookStateEnum).includes(state as WebhookStateEnum)
             ? (state as WebhookStateEnum)
             : WebhookStateEnum.Init,
@@ -132,26 +120,6 @@ watch(() => props.model, (newVal) => {
     editModel.value = convertWebhook(newVal)
 })
 
-const addProperty = (model: Ref<WebhookModel>) => {
-    const view = _.cloneDeep(model.value)
-
-    if (!view.propertyArray) {
-        view.propertyArray = []
-    }
-
-    view.propertyArray.push({ key: '', value: '', })
-    model.value = view
-}
-
-const removeProperty = (model: Ref<WebhookModel>, index: number) => {
-    const view = _.cloneDeep(model.value)
-    if (!view.propertyArray) {
-        view.propertyArray = []
-    }
-
-    model.value = { ...view, propertyArray: view.propertyArray.filter((_, i) => i !== index) }
-}
-
 onUnmounted(() => {
     validateManager.clearInputs()
 })
@@ -174,34 +142,14 @@ onUnmounted(() => {
                     <v-select label="State" v-model="proxyModel.value.state"
                         :ref="el => validateManager.setInputRef(el, 'state')" :items="['Init', 'Creating', 'Ready']"
                         :hideDetails="false" class="mt-2"></v-select>
+                    <v-switch v-model="proxyModel.value.sync" label="Forcs Sync" class="pl-2" color="info"
+                        :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :hideDetails="false" :disabled="!authService.isAuthenticated()" />
-                    <div>
-                        <label class="v-label  pl-3">Properties</label>
-                    </div>
 
-                    <v-row v-for="(property, index) in proxyModel.value.propertyArray" :key="index" class="mt-2">
-                        <v-col :cols="authService.isAuthenticated() ? 5 : 6">
-                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)"
-                                v-model="property.key" label="Key"
-                                :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
-                        </v-col>
-                        <v-col :cols="authService.isAuthenticated() ? 5 : 6">
-                            <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)"
-                                v-model="property.value" label="Value"
-                                :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
-                                :disabled="!authService.isAuthenticated()" />
-                        </v-col>
-                        <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
-                            <v-btn icon @click="removeProperty(proxyModel, index)">
-                                <v-icon icon="md:remove"></v-icon>
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-
-                    <v-btn color="primary" @click="addProperty(proxyModel)" v-if="authService.isAuthenticated()">Add
-                        Property</v-btn>
+                    <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager">
+                    </PropertyPage>
+                    <SecretPage :model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
@@ -223,4 +171,5 @@ onUnmounted(() => {
 .v-window-item {
     width: 100%;
     height: 100%;
-}</style>
+}
+</style>
