@@ -41,7 +41,7 @@
     "@playwright/test": "^1.49.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^22.10.0",
+    "@types/node": "^22.10.1",
     "@types/offscreencanvas": "^2019.7.3",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
