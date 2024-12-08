@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -119,9 +119,7 @@ const openVaultEdit = (body: VaultView) => {
 }
 
 const close = () => {
-    vault.value = VaultDefault
     dialog.value = false
-    editPageTitle.value = "Create Vault"
 }
 
 const valut_save = (newVault: VaultView) => {
@@ -143,6 +141,13 @@ const vault_delete = (vault_id: string) => {
         vaults.value.splice(index, 1)
     }
 }
+
+watch(dialog, (d) => {
+    if (!d) {
+        vault.value = VaultDefault
+        editPageTitle.value = "Create Vault"
+    }
+})
 </script>
 
 <template>
@@ -150,8 +155,8 @@ const vault_delete = (vault_id: string) => {
         <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Vault</v-toolbar-title>
             <v-spacer></v-spacer>
-            <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="true" :title="editPageTitle"
-                hideFooter v-if="authService.isAuthenticated()">
+            <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="false"
+                :title="editPageTitle" hideFooter v-if="authService.isAuthenticated()">
                 <Edit @save="valut_save" @cancel="close" :vault="vault" @delete="vault_delete"></Edit>
             </VuetifyModal>
         </v-toolbar>
