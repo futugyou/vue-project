@@ -109,6 +109,7 @@ const showSubResource = async (r: S3BucketItem) => {
             text: getBreadcrumbText(r.key)
         }
         itemPerfix.value.push(bitem)
+        itemPerfix.value = [...itemPerfix.value]
         perfix.value = r.key
     }
 }

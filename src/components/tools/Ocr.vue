@@ -47,6 +47,7 @@ const onFileChange = async (fileList: FileList) => {
     Array.from(fileList).map((file) => {
         const objectUrl = URL.createObjectURL(file)
         imageList.value.push(objectUrl)
+        imageList.value = [...imageList.value]
     })
 
     fileref.value = fileList
@@ -83,6 +84,7 @@ const transform = async () => {
         scheduler.addJob('recognize', file, { rotateAuto: true, })
             .then((x) => {
                 textList.value.push(x.data.text)
+                textList.value = [...textList.value]
             })
     }))
 

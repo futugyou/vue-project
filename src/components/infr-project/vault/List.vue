@@ -100,6 +100,7 @@ const displayVault = async (id: string) => {
         return
     }
     vaultRawDic.value.push({ key: id, value: data! })
+    vaultRawDic.value = [...vaultRawDic.value]
 }
 
 const formatVaultValue = (id: string, mask: string) => {
@@ -131,6 +132,7 @@ const valut_save = (newVault: VaultView) => {
     } else {
         vaults.value.push(newVault)
     }
+    vaults.value = [...vaults.value]
 }
 
 const vault_delete = (vault_id: string) => {
@@ -140,6 +142,7 @@ const vault_delete = (vault_id: string) => {
     if (index !== -1) {
         vaults.value.splice(index, 1)
     }
+    vaults.value = [...vaults.value]
 }
 
 watch(dialog, (d) => {

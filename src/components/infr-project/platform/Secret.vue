@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, computed,watchEffect } from 'vue'
+import { ref, watch, computed, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -17,10 +17,10 @@ const { vaultList } = storeToRefs(vaultStore)
 
 const props = defineProps<{
     model: Secret[],
-    validateManager: ValidateManagerType, 
+    validateManager: ValidateManagerType,
 }>()
 
-const editModel = ref<Secret[]>(props.model) 
+const editModel = ref<Secret[]>(props.model)
 
 const emit = defineEmits<{
     (e: 'update:model', model: Secret[]): void
@@ -28,10 +28,11 @@ const emit = defineEmits<{
 
 watch(editModel, (newVal) => {
     emit('update:model', newVal)
-})
- 
+}, { deep: true })
+
 const addSecret = () => {
     editModel.value.push({ key: '', vault_id: '' })
+    editModel.value = [...editModel.value]
 }
 
 const removeSecret = (index: number) => {
@@ -60,6 +61,10 @@ const fetchVaultData = async () => {
 }
 
 watchEffect(async () => fetchVaultData())
+
+watch(() => props.model, (newVal) => {
+    editModel.value = newVal
+})
 
 </script>
 

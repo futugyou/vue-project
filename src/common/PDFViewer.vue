@@ -75,6 +75,7 @@ const onFileChange = (fileList: FileList) => {
                 currentPage.value = storagePdf.page
             } else {
                 pdfinfo.value.push({ name: pagePrefix.value, page: 1 })
+                pdfinfo.value = [...pdfinfo.value]
                 currentPage.value = 1
             }
         }
@@ -227,6 +228,7 @@ const changePage = (i: number) => {
         storagePdf.page = pageNumber
     } else {
         pdfinfo.value.push({ name: pagePrefix.value, page: 1 })
+        pdfinfo.value = [...pdfinfo.value]
     }
 }
 

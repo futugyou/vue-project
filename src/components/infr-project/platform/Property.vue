@@ -22,15 +22,20 @@ const emit = defineEmits<{
 
 watch(editModel, (newVal) => {
     emit('update:model', newVal)
-})
+}, { deep: true })
 
 const addProperty = () => {
     editModel.value.push({ key: '', value: '' })
+    editModel.value = [...editModel.value]
 }
 
 const removeProperty = (index: number) => {
     editModel.value = [...editModel.value.filter((_, i) => i !== index)]
 }
+
+watch(() => props.model, (newVal) => {
+    editModel.value = newVal
+})
 
 </script>
 
