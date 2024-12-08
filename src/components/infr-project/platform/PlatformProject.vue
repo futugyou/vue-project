@@ -178,7 +178,7 @@ const operateOptions = computed(() =>
         <v-tabs-window v-model="tab" v-if="!isLoading">
             <v-tabs-window-item value="one">
 
-                <v-card class="h-100">
+                <v-card class="h-100 overflow-y-auto">
                     <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
@@ -194,10 +194,9 @@ const operateOptions = computed(() =>
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
                                 :disabled="!logined" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
-                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')"
-                                :disabled="!authService.isAuthenticated()" :rules="validateManager.required('operate')"
-                                v-model="proxyModel.value.operate" class="mb-5" :items="operateOptions" label="Operate"
-                                item-value="value" item-title="label"></v-select>
+                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="!logined"
+                                :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
+                                :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
 
                             <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager">
                             </PropertyPage>
