@@ -54,7 +54,7 @@ const editModel = ref<PlatformProjectView>(convertProject(props.model))
 const dialog = ref(false)
 const tab = ref("one")
 
-const save = async () => {
+const save = async (f: boolean | undefined) => {
     const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
@@ -71,6 +71,14 @@ const save = async () => {
         secrets: editModel.value.secrets,
     }
 
+    if (f) {
+        if (body.provider_project_id == "") {
+            body.provider_project_id = props.projectId ?? ""
+        }
+    }
+    if (f == false) {
+        body.provider_project_id = ""
+    }
     let response
     if (props.projectId) {
         response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, props.projectId)
@@ -164,6 +172,7 @@ const operateOptions = computed(() =>
         value: OperateEnum[key as keyof typeof OperateEnum],
     }))
 )
+
 </script>
 
 <template>
@@ -179,7 +188,7 @@ const operateOptions = computed(() =>
             <v-tabs-window-item value="one">
 
                 <v-card class="h-100 overflow-y-auto">
-                    <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
+                    <v-confirm-edit v-model="editModel" @cancel="cancel" @save="() => save(undefined)">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
                                 :hideDetails="false" />
@@ -208,6 +217,10 @@ const operateOptions = computed(() =>
                                     v-model:dialog="dialog" @save="deleteProject" v-if="projectId">
                                     <v-alert text="Are you sure you want to delete?"></v-alert>
                                 </VuetifyModal>
+                                <v-btn variant="elevated" v-if="proxyModel.value.id"
+                                    @click="save(!proxyModel.value.followed)">
+                                    {{ proxyModel.value.followed ? "Unlink" : "Link" }}
+                                </v-btn>
                                 <component :is="actions"></component>
                             </v-sheet>
                         </template>
