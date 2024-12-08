@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
@@ -101,6 +101,14 @@ const platformChanged = (view: PlatformDetailView) => {
     }
 }
 
+const selfProjects = computed(() =>
+    detail.value?.projects.filter(p => p.provider_project_id == "" || p.followed)
+)
+
+const providerProjects = computed(() =>
+    detail.value?.projects.filter(p => p.provider_project_id != "" && !p.followed)
+)
+
 </script>
 
 <template>
@@ -122,7 +130,7 @@ const platformChanged = (view: PlatformDetailView) => {
                             </template>
                         </v-list-item>
                     </template>
-                    <v-list-item slim v-for="(pro, i) in  detail.projects " :key="i" :value="pro" color="primary"
+                    <v-list-item slim v-for="(pro, i) in selfProjects" :key="i" :value="pro" color="primary"
                         @click="showProject(pro)" v-if="detail"
                         :active="tab == 'three' && (project != undefined && pro.id == project.id)">
                         <v-list-item-title v-text="pro.name"></v-list-item-title>
@@ -142,36 +150,52 @@ const platformChanged = (view: PlatformDetailView) => {
                 <Basic :model="detail" @cancel="platformChangeCanceled" @save="platformChanged"></Basic>
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="detail != undefined && detail.projects != undefined">
+            <v-tabs-window-item class="pa-3 h-100 overflow-y-auto" value="two"
+                v-if="detail != undefined && detail.projects != undefined">
                 <Empty v-if="detail.projects!.length == 0"></Empty>
-                <v-row class="pa-3" v-if="detail.projects!.length > 0">
-                    <v-col v-for="project in detail.projects" :key="project.id" cols="12" md="4">
-                        <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
-                            <template v-slot:title>Name: {{ project.name }} </template>
-                            <template v-slot:subtitle>ID: {{ project.id }} </template>
+                <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i">
+                    <v-row>
+                        <v-col class="pa-3" cols="12">
+                            <span class="text-h4 pl-3">
+                                {{ i == 0 ? "Self Projects" : "Provider Projects" }}
+                            </span>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col class="pa-3" v-for="project in projects" :key="project.id" cols="12" md="4">
+                            <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
+                                <template v-slot:title>Name: {{ project.name }} </template>
+                                <template v-slot:subtitle>ID: {{ project.id }} </template>
 
-                            <template v-slot:append>
-                                <a :href="project.url" target="_blank">
-                                    <v-hover>
-                                        <template v-slot:default="{ props }">
-                                            <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                        </template>
-                                    </v-hover>
-                                </a>
-                            </template>
+                                <template v-slot:append>
+                                    <a :href="project.url" target="_blank">
+                                        <v-hover>
+                                            <template v-slot:default="{ props }">
+                                                <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                            </template>
+                                        </v-hover>
+                                    </a>
+                                </template>
 
-                            <v-list lines="one">
-                                <v-list-subheader>Property</v-list-subheader>
-                                <v-list-item v-for="(value, key) in project.properties" :key="value.key">
-                                    <span class="text-subtitle-1 mr-1">key:</span>
-                                    <span class="text-subtitle-2 mr-3">{{ value.key }}</span>
-                                    <span class="text-subtitle-1 mr-1">value:</span>
-                                    <span class="text-subtitle-2">{{ value.value }}</span>
-                                </v-list-item>
-                            </v-list>
-                        </v-card>
-                    </v-col>
-                </v-row>
+                                <v-list lines="one">
+                                    <v-list-subheader>Property</v-list-subheader>
+                                    <v-list-item v-for="(value, key) in project.properties" :key="value.key">
+                                        <span class="text-subtitle-1 mr-1">key:</span>
+                                        <span class="text-subtitle-2 mr-3">{{ value.key }}</span>
+                                        <span class="text-subtitle-1 mr-1">value:</span>
+                                        <span class="text-subtitle-2">{{ value.value }}</span>
+                                    </v-list-item>
+                                </v-list>
+                                <v-sheet>
+                                    <v-btn variant="tonal">
+                                        {{ project.followed ? "Unlink" : "Link" }}
+                                    </v-btn>
+                                </v-sheet>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-sheet>
+
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project != undefined && detail != undefined" class="pa-3">
