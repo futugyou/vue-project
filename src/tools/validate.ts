@@ -38,6 +38,10 @@ export const ValidateManager = () => {
         }
     }
 
+    const removeInputRef = (key: string) => {
+        delete inputRefs[key]
+    }
+
     const validateInputs = async (): Promise<string[]> => {
         let validateMsg: string[] = []
         for (const key in inputRefs) {
@@ -67,6 +71,7 @@ export const ValidateManager = () => {
     }
 
     return {
+        removeInputRef,
         setInputRef,
         validateInputs,
         clearInputs,

@@ -37,6 +37,8 @@ const addSecret = () => {
 
 const removeSecret = (index: number) => {
     editModel.value = [...editModel.value.filter((_, i) => i !== index)]
+    props.validateManager.removeInputRef(`s-key-${index}`)
+    props.validateManager.removeInputRef(`s-value-${index}`)
 }
 
 const vaultOptions = computed(() =>

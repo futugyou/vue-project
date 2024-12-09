@@ -31,6 +31,8 @@ const addProperty = () => {
 
 const removeProperty = (index: number) => {
     editModel.value = [...editModel.value.filter((_, i) => i !== index)]
+    props.validateManager.removeInputRef(`p-key-${index}`)
+    props.validateManager.removeInputRef(`p-value-${index}`)
 }
 
 watch(() => props.model, (newVal) => {
