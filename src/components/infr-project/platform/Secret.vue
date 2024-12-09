@@ -18,6 +18,7 @@ const { vaultList } = storeToRefs(vaultStore)
 const props = defineProps<{
     modelValue: Secret[],
     validateManager: ValidateManagerType,
+    disabled?: boolean,
 }>()
 
 const editModel = ref<Secret[]>(props.modelValue)
@@ -48,7 +49,6 @@ const vaultOptions = computed(() =>
     }))
 )
 
-
 const fetchVaultData = async () => {
     if (vaultList.value.length > 0) {
         return
@@ -68,27 +68,34 @@ watch(() => props.modelValue, (newVal) => {
     editModel.value = newVal
 })
 
+const disabled = computed(() => {
+    if (props.disabled != undefined) {
+        return props.disabled
+    }
+    return !authService.isAuthenticated()
+})
+
 </script>
 
 <template>
     <div class="d-flex align-center ga-6">
         <label class="v-label pl-3">Secrets</label>
-        <v-btn @click="addSecret()" variant="text" v-if="authService.isAuthenticated()" icon="md:add"></v-btn>
+        <v-btn @click="addSecret()" variant="text" v-if="!disabled" icon="md:add"></v-btn>
     </div>
 
     <v-row v-for="(secret, index) in editModel" :key="index" class="mt-2">
-        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
+        <v-col :cols="!disabled ? 4 : 5">
             <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key" label="Key"
                 :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
-                :disabled="!authService.isAuthenticated()" />
+                :disabled="disabled" />
         </v-col>
-        <v-col :cols="authService.isAuthenticated() ? 4 : 5">
+        <v-col :cols="!disabled ? 4 : 5">
             <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
                 label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
-                :disabled="!authService.isAuthenticated()" class="mb-5" :items="vaultOptions" item-value="value"
+                :disabled="disabled" class="mb-5" :items="vaultOptions" item-value="value"
                 item-title="label"></v-select>
         </v-col>
-        <v-col cols="2" class="pt-4" v-if="authService.isAuthenticated()">
+        <v-col cols="2" class="pt-4" v-if="!disabled">
             <v-btn icon="md:remove" @click="removeSecret(index)"></v-btn>
         </v-col>
     </v-row>
