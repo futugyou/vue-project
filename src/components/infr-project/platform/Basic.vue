@@ -143,7 +143,11 @@ const deletePlatform = async (id: string) => {
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions, isPristine }">
                     <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
-                        :hideDetails="false" />
+                        :hideDetails="false">
+                        <template v-slot:append v-if="proxyModel.value.is_deleted">
+                            <v-badge color="error" content="Deleted" inline></v-badge>
+                        </template>
+                    </v-text-field>
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
                         label="Name" :disabled="!authService.isAuthenticated()"
                         :rules="validateManager.requiredMinMax('Name', 3, 50)" :hideDetails="false" />
