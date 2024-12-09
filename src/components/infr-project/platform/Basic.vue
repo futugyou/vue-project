@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect, computed, onUnmounted, Ref } from 'vue'
+import { ref, watch, watchEffect, computed, onUnmounted, Ref, toRaw } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -159,8 +159,9 @@ const deletePlatform = async (id: string) => {
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :disabled="!authService.isAuthenticated()" :hideDetails="false"></v-combobox>
 
-                    <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager"></PropertyPage>
-                    <SecretPage :model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
+                    <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager">
+                    </PropertyPage>
+                    <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">

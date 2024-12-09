@@ -10,18 +10,18 @@ import { ValidateManagerType } from '@/tools/validate'
 const authService = useAuth()
 
 const props = defineProps<{
-    model: Property[],
+    modelValue: Property[],
     validateManager: ValidateManagerType,
 }>()
 
-const editModel = ref<Property[]>(props.model)
+const editModel = ref<Property[]>(props.modelValue)
 
 const emit = defineEmits<{
-    (e: 'update:model', model: Property[]): void
+    (e: 'update:modelValue', model: Property[]): void
 }>()
 
 watch(editModel, (newVal) => {
-    emit('update:model', newVal)
+    emit('update:modelValue', newVal)
 }, { deep: true })
 
 const addProperty = () => {
@@ -35,7 +35,7 @@ const removeProperty = (index: number) => {
     props.validateManager.removeInputRef(`p-value-${index}`)
 }
 
-watch(() => props.model, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
     editModel.value = newVal
 })
 

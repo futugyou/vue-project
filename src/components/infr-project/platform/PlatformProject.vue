@@ -207,9 +207,9 @@ const operateOptions = computed(() =>
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
                                 :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
 
-                            <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager">
+                            <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager">
                             </PropertyPage>
-                            <SecretPage :model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
+                            <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
 
                             <v-spacer></v-spacer>
                             <v-sheet class="d-flex justify-end ga-3" v-if="logined">

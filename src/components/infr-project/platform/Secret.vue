@@ -16,18 +16,18 @@ const vaultStore = useVaultStore()
 const { vaultList } = storeToRefs(vaultStore)
 
 const props = defineProps<{
-    model: Secret[],
+    modelValue: Secret[],
     validateManager: ValidateManagerType,
 }>()
 
-const editModel = ref<Secret[]>(props.model)
+const editModel = ref<Secret[]>(props.modelValue)
 
 const emit = defineEmits<{
-    (e: 'update:model', model: Secret[]): void
+    (e: 'update:modelValue', model: Secret[]): void
 }>()
 
 watch(editModel, (newVal) => {
-    emit('update:model', newVal)
+    emit('update:modelValue', newVal)
 }, { deep: true })
 
 const addSecret = () => {
@@ -64,7 +64,7 @@ const fetchVaultData = async () => {
 
 watchEffect(async () => fetchVaultData())
 
-watch(() => props.model, (newVal) => {
+watch(() => props.modelValue, (newVal) => {
     editModel.value = newVal
 })
 

@@ -147,9 +147,9 @@ onUnmounted(() => {
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :hideDetails="false" :disabled="!authService.isAuthenticated()" />
 
-                    <PropertyPage :model="proxyModel.value.properties" :validate-manager="validateManager">
+                    <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager">
                     </PropertyPage>
-                    <SecretPage :model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
+                    <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
