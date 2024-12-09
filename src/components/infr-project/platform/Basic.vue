@@ -133,6 +133,21 @@ const deletePlatform = async (id: string) => {
     }
 }
 
+const recoveryPlatform = async (id: string) => {
+    isLoading.value = true
+    const { data, error } = await PlatformApiFactory().v1PlatformIdRecoveryPost(id)
+    isLoading.value = false
+    if (error) {
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+        return
+    }
+
+    editModel.value = data!
+}
+
 </script>
 
 <template>
@@ -169,6 +184,8 @@ const deletePlatform = async (id: string) => {
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
+                        <v-btn variant="elevated" v-if="proxyModel.value.id && proxyModel.value.is_deleted"
+                            @click="recoveryPlatform(proxyModel.value.id)">Recovery</v-btn>
                         <v-btn variant="elevated" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"
                             @click="deletePlatform(proxyModel.value.id)">Delete</v-btn>
                         <component :is="actions"></component>

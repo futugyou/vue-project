@@ -751,7 +751,7 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1PlatformIdRecoveryPost.');
             }
-            const localVarPath = `/v1/platform/{id}/recovery`
+            const localVarPath = `/api/v1/platform/{id}/recovery`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', undefined, options)
