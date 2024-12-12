@@ -60,6 +60,7 @@ fetchData()
 
 const changeTab = (t: string) => {
     tab.value = t
+    project.value = undefined
 }
 
 const showProject = (pro: PlatformProject) => {
