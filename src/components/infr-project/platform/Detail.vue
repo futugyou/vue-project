@@ -98,11 +98,11 @@ const platformChanged = (view: PlatformDetailView) => {
 }
 
 const selfProjects = computed(() =>
-    detail.value?.projects.filter(p => p.provider_project_id == "" || p.followed)
+    detail.value?.projects.filter(p => p.provider_project_id == "" || p.followed) ?? []
 )
 
 const providerProjects = computed(() =>
-    detail.value?.projects.filter(p => p.provider_project_id != "" && !p.followed)
+    detail.value?.projects.filter(p => p.provider_project_id != "" && !p.followed) ?? []
 )
 
 const disabled = computed(() =>
@@ -156,13 +156,22 @@ const logined = computed(() =>
                 <Basic :model="detail" @cancel="platformChangeCanceled" @save="platformChanged"></Basic>
             </v-tabs-window-item>
 
-            <v-tabs-window-item class="pa-3 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">
+            <v-tabs-window-item class="pa-4 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">
                 <Empty v-if="detail.projects!.length == 0"></Empty>
-                <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i">
-                    <v-row>
-                        <v-col class="pa-3" cols="12">
+                <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i" class="mx-auto px-3 ma-6"
+                    elevation="10" rounded>
+                    <v-row class="elevation-1">
+                        <v-col cols="12" class="pa-3">
                             <span class="text-h4 pl-3">
                                 {{ i == 0 ? "Self Projects" : "Provider Projects" }}
+                            </span>
+                        </v-col>
+                    </v-row>
+
+                    <v-row v-if="projects.length == 0" class="pa-5">
+                        <v-col>
+                            <span class="text-h6">
+                                There is no data in the current category
                             </span>
                         </v-col>
                     </v-row>
