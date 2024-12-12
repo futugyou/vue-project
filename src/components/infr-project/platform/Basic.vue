@@ -61,7 +61,6 @@ const save = async () => {
     let body: UpdatePlatformRequest | CreatePlatformRequest = {
         name: editModel.value.name,
         url: editModel.value.url,
-        activate: editModel.value.activate,
         tags: editModel.value.tags ?? [],
         properties: editModel.value.properties,
         provider: providerEnum,
@@ -169,8 +168,10 @@ const logined = computed(() =>
                 <template v-slot:default="{ model: proxyModel, actions, isPristine }">
                     <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
                         :hideDetails="false">
-                        <template v-slot:append v-if="proxyModel.value.is_deleted">
-                            <v-badge color="error" content="Deleted" inline></v-badge>
+                        <template v-slot:append>
+                            <v-badge :color="proxyModel.value.activate ? 'green' : 'orange'"
+                                :content="proxyModel.value.activate ? 'Connected' : 'Not Ready'" inline></v-badge>
+                            <v-badge color="error" content="Deleted" inline v-if="proxyModel.value.is_deleted"></v-badge>
                         </template>
                     </v-text-field>
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
@@ -179,8 +180,6 @@ const logined = computed(() =>
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
                         label="URL" :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)"
                         :hideDetails="false" />
-                    <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
-                        :disabled="disabled" :hideDetails="false" />
                     <v-select :ref="el => validateManager.setInputRef(el, 'provider')" :disabled="disabled"
                         :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
                         :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>

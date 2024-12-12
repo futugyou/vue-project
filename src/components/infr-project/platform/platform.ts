@@ -197,12 +197,6 @@ export enum ProviderEnum {
 export interface UpdatePlatformRequest {
     /**
      * 
-     * @type {boolean}
-     * @memberof UpdatePlatformRequest
-     */
-    activate: boolean;
-    /**
-     * 
      * @type {string}
      * @memberof UpdatePlatformRequest
      */
