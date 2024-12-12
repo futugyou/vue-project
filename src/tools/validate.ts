@@ -35,6 +35,8 @@ export const ValidateManager = () => {
     const setInputRef = (el: any, key: string) => {
         if (el) {
             inputRefs[key] = el
+        } else {
+            delete inputRefs[key]
         }
     }
 
