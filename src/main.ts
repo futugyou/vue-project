@@ -5,7 +5,7 @@ import { HoneycombSDK } from './tools/honeycomb'
 HoneycombSDK.start()
 
 import { createApp, App as AppInstance } from 'vue'
-// import { inject } from '@vercel/analytics'
+import { inject } from '@vercel/analytics'
 
 import { router, clearRouter } from './router'
 import { handleMicroData } from '@/tools/baseAppEvent'
@@ -27,7 +27,7 @@ const mount = () => {
     console.log(3, 'micro app vue demo rendered')
 
     handleMicroData(router!)
-    // inject()
+    inject()
 }
 
 const unmount = () => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, shallowRef, watchEffect } from 'vue'
 import type { Component } from 'vue'
-// import { SpeedInsights } from '@vercel/speed-insights/vue'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
@@ -85,7 +85,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
 </script>
 
 <template>
-    <!-- <SpeedInsights /> -->
+    <SpeedInsights />
     <Alert></Alert>
     <v-app>
         <v-app-bar density="compact" :elevation="2" @click="onRouteChange" v-if="rootContainer == 'nomalRootContainer'">
