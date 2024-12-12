@@ -28,16 +28,20 @@ const emit = defineEmits<{
 }>()
 
 watch(editModel, (newVal) => {
-    emit('update:modelValue', newVal)
+    if (!_.isEqual(newVal, editModel)) {
+        emit('update:modelValue', _.cloneDeep(newVal))
+    }
 }, { deep: true })
 
 const addSecret = () => {
-    editModel.value.push({ key: '', vault_id: '' })
-    editModel.value = [...editModel.value]
+    const m = editModel.value
+    m.push({ key: '', vault_id: '' })
+    editModel.value = m
 }
 
 const removeSecret = (index: number) => {
-    editModel.value = [...editModel.value.filter((_, i) => i !== index)]
+    const m = editModel.value
+    editModel.value = m.filter((_, i) => i !== index)
     props.validateManager.removeInputRef(`s-key-${index}`)
     props.validateManager.removeInputRef(`s-value-${index}`)
 }
@@ -65,8 +69,10 @@ const fetchVaultData = async () => {
 watchEffect(async () => fetchVaultData())
 
 watch(() => props.modelValue, (newVal) => {
-    editModel.value = newVal
-})
+    if (!_.isEqual(editModel.value, newVal)) {
+        editModel.value = newVal
+    }
+}, { deep: true })
 
 const disabled = computed(() => {
     if (props.disabled != undefined) {

@@ -22,23 +22,29 @@ const emit = defineEmits<{
 }>()
 
 watch(editModel, (newVal) => {
-    emit('update:modelValue', newVal)
+    if (!_.isEqual(newVal, editModel)) {
+        emit('update:modelValue', _.cloneDeep(newVal))
+    }
 }, { deep: true })
 
 const addProperty = () => {
-    editModel.value.push({ key: '', value: '' })
-    editModel.value = [...editModel.value]
+    const m = editModel.value
+    m.push({ key: '', value: '' })
+    editModel.value = m
 }
 
 const removeProperty = (index: number) => {
-    editModel.value = [...editModel.value.filter((_, i) => i !== index)]
+    const m = editModel.value
+    editModel.value = m.filter((_, i) => i !== index)
     props.validateManager.removeInputRef(`p-key-${index}`)
     props.validateManager.removeInputRef(`p-value-${index}`)
 }
 
 watch(() => props.modelValue, (newVal) => {
-    editModel.value = newVal
-})
+    if (!_.isEqual(editModel.value, newVal)) {
+        editModel.value = newVal
+    }
+}, { deep: true })
 
 const disabled = computed(() => {
     if (props.disabled != undefined) {
