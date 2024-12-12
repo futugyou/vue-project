@@ -72,31 +72,33 @@ const disabled = computed(() => {
     if (props.disabled != undefined) {
         return props.disabled
     }
-    return !authService.isAuthenticated()
+    return !logined.value
 })
+
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
 
 </script>
 
 <template>
     <div class="d-flex align-center ga-6">
         <label class="v-label pl-3">Secrets</label>
-        <v-btn @click="addSecret()" variant="text" v-if="!disabled" icon="md:add"></v-btn>
+        <v-btn @click="addSecret()" variant="text" v-if="logined" icon="md:add" :disabled="disabled"></v-btn>
     </div>
 
     <v-row v-for="(secret, index) in editModel" :key="index" class="mt-2">
         <v-col :cols="!disabled ? 4 : 5">
             <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key" label="Key"
-                :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
-                :disabled="disabled" />
+                :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false" :disabled="disabled" />
         </v-col>
         <v-col :cols="!disabled ? 4 : 5">
             <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
                 label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
-                :disabled="disabled" class="mb-5" :items="vaultOptions" item-value="value"
-                item-title="label"></v-select>
+                :disabled="disabled" class="mb-5" :items="vaultOptions" item-value="value" item-title="label"></v-select>
         </v-col>
-        <v-col cols="2" class="pt-4" v-if="!disabled">
-            <v-btn icon="md:remove" @click="removeSecret(index)"></v-btn>
+        <v-col cols="2" class="pt-4" v-if="logined">
+            <v-btn icon="md:remove" @click="removeSecret(index)" :disabled="disabled"></v-btn>
         </v-col>
     </v-row>
 </template>

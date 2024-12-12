@@ -44,15 +44,19 @@ const disabled = computed(() => {
     if (props.disabled != undefined) {
         return props.disabled
     }
-    return !authService.isAuthenticated()
+    return !logined.value
 })
+
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
 
 </script>
 
 <template>
     <div class="d-flex align-center ga-6">
         <label class="v-label pl-3">Properties</label>
-        <v-btn @click="addProperty()" variant="text" v-if="!disabled" icon="md:add"></v-btn>
+        <v-btn @click="addProperty()" variant="text" v-if="logined" :disabled="disabled" icon="md:add"></v-btn>
     </div>
 
     <v-row v-for="(property, index) in editModel" :key="index" class="mt-2">
@@ -65,8 +69,8 @@ const disabled = computed(() => {
                 label="Value" :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
                 :disabled="disabled" />
         </v-col>
-        <v-col cols="2" class="pt-4" v-if="!disabled">
-            <v-btn icon="md:remove" @click="removeProperty(index)"></v-btn>
+        <v-col cols="2" class="pt-4" v-if="logined">
+            <v-btn icon="md:remove" @click="removeProperty(index)" :disabled="disabled"></v-btn>
         </v-col>
     </v-row>
 </template>

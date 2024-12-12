@@ -37,7 +37,7 @@ const editModel = ref<PlatformDetailView>(props.model ?? {
     projects: [],
     secrets: [],
     provider: "other",
-})
+}) as Ref<PlatformDetailView>
 
 const save = async () => {
     const validateMsg = await validateManager.validateInputs()
@@ -130,6 +130,7 @@ const deletePlatform = async (id: string) => {
         }
 
         editModel.value = data!
+        emit('save', editModel.value)
     }
 }
 
@@ -146,7 +147,16 @@ const recoveryPlatform = async (id: string) => {
     }
 
     editModel.value = data!
+    emit('save', editModel.value)
 }
+
+const disabled = computed(() =>
+    editModel.value.is_deleted || !logined.value
+)
+
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
 
 </script>
 
@@ -164,31 +174,32 @@ const recoveryPlatform = async (id: string) => {
                         </template>
                     </v-text-field>
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
-                        label="Name" :disabled="!authService.isAuthenticated()"
-                        :rules="validateManager.requiredMinMax('Name', 3, 50)" :hideDetails="false" />
+                        label="Name" :disabled="disabled" :rules="validateManager.requiredMinMax('Name', 3, 50)"
+                        :hideDetails="false" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                        label="URL" :disabled="!authService.isAuthenticated()"
-                        :rules="validateManager.requiredMinMax('URL', 3, 150)" :hideDetails="false" />
+                        label="URL" :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)"
+                        :hideDetails="false" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
-                        :disabled="!authService.isAuthenticated()" :hideDetails="false" />
-                    <v-select :ref="el => validateManager.setInputRef(el, 'provider')"
-                        :disabled="!authService.isAuthenticated()" :rules="validateManager.required('Provider')"
-                        v-model="proxyModel.value.provider" class="mb-5" :items="providerOptions" label="Provider"
-                        item-value="value" item-title="label"></v-select>
-                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
-                        :disabled="!authService.isAuthenticated()" :hideDetails="false"></v-combobox>
+                        :disabled="disabled" :hideDetails="false" />
+                    <v-select :ref="el => validateManager.setInputRef(el, 'provider')" :disabled="disabled"
+                        :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
+                        :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>
+                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple :disabled="disabled"
+                        :hideDetails="false"></v-combobox>
 
-                    <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager">
+                    <PropertyPage :disabled="disabled" v-model="proxyModel.value.properties"
+                        :validate-manager="validateManager">
                     </PropertyPage>
-                    <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
+                    <SecretPage :disabled="disabled" v-model="proxyModel.value.secrets" :validate-manager="validateManager">
+                    </SecretPage>
 
                     <v-spacer></v-spacer>
-                    <v-sheet class="d-flex justify-end ga-3" v-if="authService.isAuthenticated()">
+                    <v-sheet class="d-flex justify-end ga-3" v-if="logined">
                         <v-btn variant="elevated" v-if="proxyModel.value.id && proxyModel.value.is_deleted"
                             @click="recoveryPlatform(proxyModel.value.id)">Recovery</v-btn>
                         <v-btn variant="elevated" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"
                             @click="deletePlatform(proxyModel.value.id)">Delete</v-btn>
-                        <component :is="actions"></component>
+                        <component :is="actions" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"></component>
                     </v-sheet>
                 </template>
             </v-confirm-edit>

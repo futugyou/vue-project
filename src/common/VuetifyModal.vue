@@ -10,7 +10,8 @@ const props = defineProps({
     dialog: Boolean,
     width: Number,
     okText: String,
-    cancleText: String
+    cancleText: String,
+    disabled: Boolean,
 })
 
 const dialog = ref(props.dialog)
@@ -41,9 +42,10 @@ watch(dialog, (newVal) => {
 
 </script>
 <template>
-    <v-dialog v-model="dialog" :max-width="width" :persistent="persistent">
+    <v-dialog v-model="dialog" :max-width="width" :persistent="persistent" :disabled="disabled">
         <template v-slot:activator="{ props: activatorProps }" v-if="!activator">
-            <v-btn class="text-none font-weight-regular" variant="outlined" :text="text" v-bind="activatorProps"></v-btn>
+            <v-btn class="text-none font-weight-regular" variant="outlined" :text="text" v-bind="activatorProps"
+                :disabled="disabled"></v-btn>
         </template>
 
         <v-card :title="title">
@@ -56,9 +58,9 @@ watch(dialog, (newVal) => {
             <v-card-actions v-if="!!!hideFooter">
                 <v-spacer></v-spacer>
 
-                <v-btn :text="cancleText ?? 'Close'" @click="cancle"></v-btn>
+                <v-btn :text="cancleText ?? 'Close'" @click="cancle" :disabled="disabled"></v-btn>
 
-                <v-btn color="primary" :text="okText ?? 'Save'" @click="save"></v-btn>
+                <v-btn color="primary" :text="okText ?? 'Save'" @click="save" :disabled="disabled"></v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

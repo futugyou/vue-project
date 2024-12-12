@@ -40,12 +40,12 @@ const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
 const authService = useAuth()
-const logined = authService.isAuthenticated()
 const validateManager = ValidateManager()
 const props = defineProps<{
     platformId: string,
     projectId?: string,
     model?: PlatformProject,
+    disabled?: boolean,
 }>()
 
 const isLoading = ref(false)
@@ -173,6 +173,17 @@ const operateOptions = computed(() =>
     }))
 )
 
+const disabled = computed(() => {
+    if (props.disabled != undefined) {
+        return props.disabled
+    }
+    return !authService.isAuthenticated()
+})
+
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
+
 </script>
 
 <template>
@@ -198,30 +209,32 @@ const operateOptions = computed(() =>
                                 disabled :hideDetails="false" />
 
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
-                                v-model="proxyModel.value.name" :disabled="!logined"
+                                v-model="proxyModel.value.name" :disabled="disabled"
                                 :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name" :hideDetails="false" />
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                                :disabled="!logined" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
+                                :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
-                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="!logined"
+                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
                                 :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
 
-                            <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager">
+                            <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
+                                :disabled="disabled">
                             </PropertyPage>
-                            <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"></SecretPage>
+                            <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"
+                                :disabled="disabled"></SecretPage>
 
                             <v-spacer></v-spacer>
                             <v-sheet class="d-flex justify-end ga-3" v-if="logined">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
-                                    v-model:dialog="dialog" @save="deleteProject" v-if="projectId">
+                                    v-model:dialog="dialog" @save="deleteProject" v-if="projectId" :disabled="disabled">
                                     <v-alert text="Are you sure you want to delete?"></v-alert>
                                 </VuetifyModal>
-                                <v-btn variant="elevated" v-if="proxyModel.value.id"
+                                <v-btn variant="elevated" v-if="proxyModel.value.id" :disabled="disabled"
                                     @click="save(!proxyModel.value.followed)">
                                     {{ proxyModel.value.followed ? "Unlink" : "Link" }}
                                 </v-btn>
-                                <component :is="actions"></component>
+                                <component :is="actions" :disabled="disabled"></component>
                             </v-sheet>
                         </template>
                     </v-confirm-edit>
@@ -231,7 +244,7 @@ const operateOptions = computed(() =>
 
             <v-tabs-window-item value="two" v-if="projectId">
                 <Empty v-if="editModel.webhooks == undefined || editModel.webhooks.length == 0">
-                    <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" v-if="logined"></v-btn>
+                    <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" :disabled="disabled"></v-btn>
                 </Empty>
                 <v-row class="pa-3" v-else>
                     <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
@@ -239,7 +252,7 @@ const operateOptions = computed(() =>
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>
                     <v-col cols="12" md="4" v-if="logined">
-                        <v-btn icon="md:add" size="x-large" @click="addNewWebhook"></v-btn>
+                        <v-btn icon="md:add" size="x-large" @click="addNewWebhook" :disabled="disabled"></v-btn>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>

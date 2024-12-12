@@ -39,10 +39,6 @@ const sortedPlatformDetailView = (data: PlatformDetailView | undefined) => {
 }
 
 const fetchData = async () => {
-    if (platformId == undefined) {
-        return
-    }
-
     isLoading.value = true
     const { data, error } = await PlatformApiFactory().v1PlatformIdGet(platformId)
     isLoading.value = false
@@ -92,9 +88,9 @@ const platformChanged = (view: PlatformDetailView) => {
         return
     }
     // handle project webhook update
-    if (value != undefined && view.projects != undefined) {
+    if (value && view.projects) {
         const pro = view.projects.find(p => p.id == value.id)
-        if (pro != undefined) {
+        if (pro) {
             project.value = pro
             tab.value = "three"
         }
@@ -107,6 +103,14 @@ const selfProjects = computed(() =>
 
 const providerProjects = computed(() =>
     detail.value?.projects.filter(p => p.provider_project_id != "" && !p.followed)
+)
+
+const disabled = computed(() =>
+    detail.value?.is_deleted || !logined.value
+)
+
+const logined = computed(() =>
+    authService.isAuthenticated()
 )
 
 </script>
@@ -132,26 +136,27 @@ const providerProjects = computed(() =>
                     </template>
                     <v-list-item slim v-for="(pro, i) in selfProjects" :key="i" :value="pro" color="primary"
                         @click="showProject(pro)" v-if="detail"
-                        :active="tab == 'three' && (project != undefined && pro.id == project.id)">
+                        :active="tab == 'three' && (project && pro.id == project.id)">
                         <v-list-item-title v-text="pro.name"></v-list-item-title>
                     </v-list-item>
                 </v-list-group>
             </v-list>
-            <div class="pa-2 d-flex justify-center" v-if="authService.isAuthenticated() && detail != undefined">
-                <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter>
-                    <PlatformProjectVue :platform-id="detail.id" @cancel="platformChangeCanceled" @save="platformChanged">
+            <div class="pa-2 d-flex justify-center" v-if="logined && detail">
+                <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter
+                    :disabled="disabled">
+                    <PlatformProjectVue :platform-id="detail.id" @cancel="platformChangeCanceled" @save="platformChanged"
+                        :disabled="disabled">
                     </PlatformProjectVue>
                 </VuetifyModal>
             </div>
         </v-sheet>
 
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
-            <v-tabs-window-item value="one" v-if="detail != undefined">
+            <v-tabs-window-item value="one" v-if="detail">
                 <Basic :model="detail" @cancel="platformChangeCanceled" @save="platformChanged"></Basic>
             </v-tabs-window-item>
 
-            <v-tabs-window-item class="pa-3 h-100 overflow-y-auto" value="two"
-                v-if="detail != undefined && detail.projects != undefined">
+            <v-tabs-window-item class="pa-3 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">
                 <Empty v-if="detail.projects!.length == 0"></Empty>
                 <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i">
                     <v-row>
@@ -198,9 +203,9 @@ const providerProjects = computed(() =>
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="three" v-if="project != undefined && detail != undefined" class="pa-3">
+            <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
                 <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
-                    @cancel="platformChangeCanceled" @save="platformChanged">
+                    @cancel="platformChangeCanceled" @save="platformChanged" :disabled="disabled">
                 </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>
