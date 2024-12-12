@@ -1,57 +1,11 @@
 {
     "rewrites": [
         {
-            "source": "/_vercel/(.*)",
-            "destination": "/_vercel/$1"
-        },
-        {
             "source": "/(.*)",
             "destination": "/"
         }
     ],
     "headers": [
-        {
-            "source": "/_vercel/speed-insights/script.js",
-            "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "https://react-vishel.vercel.app"
-                },
-                {
-                    "key": "Access-Control-Allow-Methods",
-                    "value": "HEAD,GET,OPTIONS,PATCH,DELETE,POST,PUT"
-                },
-                {
-                    "key": "Access-Control-Allow-Headers",
-                    "value": "traceparent, Accept, Origin, Content-Type, Content-Length, Accept-Encoding, Authorization, X-CSRF-Token, x-requested-with, account-id"
-                },
-                {
-                    "key": "Access-Control-Expose-Headers",
-                    "value": "Token, Content-Length, Content-Type"
-                }
-            ]
-        },
-        {
-            "source": "/_vercel/insights/script.js",
-            "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "https://react-vishel.vercel.app"
-                },
-                {
-                    "key": "Access-Control-Allow-Methods",
-                    "value": "HEAD,GET,OPTIONS,PATCH,DELETE,POST,PUT"
-                },
-                {
-                    "key": "Access-Control-Allow-Headers",
-                    "value": "traceparent, Accept, Origin, Content-Type, Content-Length, Accept-Encoding, Authorization, X-CSRF-Token, x-requested-with, account-id"
-                },
-                {
-                    "key": "Access-Control-Expose-Headers",
-                    "value": "Token, Content-Length, Content-Type"
-                }
-            ]
-        },
         {
             "source": "/(.*)",
             "headers": [
