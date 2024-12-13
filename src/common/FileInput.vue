@@ -61,6 +61,8 @@ const handlerFile = (fileList: FileList) => {
             }
             labels.push(file.name)
         }
+    } else {
+        Array.from(fileList).map((file) => { labels.push(file.name) })
     }
 
     labeltext.value = labels.join(",")
