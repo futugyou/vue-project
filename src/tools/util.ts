@@ -1,3 +1,5 @@
+import _ from 'lodash-es'
+
 export const imageBitmapToCanvas = async (imageBitmap: ImageBitmap): Promise<HTMLCanvasElement> => {
     // Create an offscreen canvas
     const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height)
@@ -86,4 +88,14 @@ export const toUrlEncoded = (obj: any): string => {
                 encodeURIComponent(toSnakeCase(k)) + '=' + encodeURIComponent(obj[k])
         )
         .join('&')
+}
+
+export const getModifiedData = <T extends object, P extends Partial<T>>(currentData: T, originalData: T): P => {
+    const filtered = _.pickBy<T>(currentData, (value, key) => !_.isEqual(value, originalData[key as keyof T]))
+    return Object.keys(filtered).reduce((result, key) => {
+        if (key in originalData) {
+            (result as any)[key] = filtered[key as keyof T]
+        }
+        return result
+    }, {} as P)
 }

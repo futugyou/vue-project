@@ -165,7 +165,7 @@ const deleteVault = async (id: string) => {
                         v-model="proxyModel.value.type_identity" label="Type Identity" :hideDetails="false" />
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
-                    <v-sheet class="d-flex justify-end ga-3">
+                    <v-sheet class="d-flex justify-end ga-3 pb-3">
                         <v-btn variant="elevated" v-if="proxyModel.value.id"
                             @click="deleteVault(proxyModel.value.id)">Delete</v-btn>
                         <component :is="actions"></component>
