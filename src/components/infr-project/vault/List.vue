@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, watch } from 'vue'
+import { ref, watchEffect, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -13,6 +13,7 @@ import { VaultView, VaultApiFactory, VaultDefault } from './vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
 import Edit from './Edit.vue'
+import Import from './Import.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -20,7 +21,6 @@ const vaultStore = useVaultStore()
 const { vaultList: vaults } = storeToRefs(vaultStore)
 const authService = useAuth()
 
-// const vaults = ref<VaultView[]>([])
 const vault = ref<VaultView>(VaultDefault)
 const isLoading = ref(true)
 const limit = ref(30)
@@ -28,6 +28,7 @@ const page = ref(1)
 const editPageTitle = ref("Create Vault")
 
 const dialog = ref(false)
+const dialogImport = ref(false)
 const vaultRawDic = ref<{ key: string, value: string }[]>([])
 const loadingState = ref<Record<string, boolean>>({})
 
@@ -121,6 +122,7 @@ const openVaultEdit = (body: VaultView) => {
 
 const close = () => {
     dialog.value = false
+    dialogImport.value = false
 }
 
 const valut_save = (newVault: VaultView) => {
@@ -140,6 +142,15 @@ const valut_save = (newVault: VaultView) => {
     }
 }
 
+const valut_import = (newVaults: VaultView[]) => {
+    close()
+    page.value = 1
+    Array.from(newVaults).map((newVault) => {
+        vaults.value.push(newVault)
+    })
+    vaults.value = [...vaults.value]
+}
+
 const vault_delete = (vault_id: string) => {
     close()
     page.value = 1
@@ -156,6 +167,11 @@ watch(dialog, (d) => {
         editPageTitle.value = "Create Vault"
     }
 })
+
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
+
 </script>
 
 <template>
@@ -163,8 +179,13 @@ watch(dialog, (d) => {
         <v-toolbar color="blue-lighten-5">
             <v-toolbar-title>Vault</v-toolbar-title>
             <v-spacer></v-spacer>
+            <VuetifyModal v-model:dialog="dialogImport" text="Import Vaults" :width="700" :persistent="false"
+                title="Import Vaults" hideFooter v-if="logined">
+                <Import @save="valut_import" @cancel="close"></Import>
+            </VuetifyModal>
+            <div class="ml-4"></div>
             <VuetifyModal v-model:dialog="dialog" text="Create Vault" :width="700" :persistent="false"
-                :title="editPageTitle" hideFooter v-if="authService.isAuthenticated()">
+                :title="editPageTitle" hideFooter v-if="logined">
                 <Edit @save="valut_save" @cancel="close" :vault="vault" @delete="vault_delete"></Edit>
             </VuetifyModal>
         </v-toolbar>
@@ -174,7 +195,7 @@ watch(dialog, (d) => {
             @updatePage="updatePage">
             <template v-slot:body_key="body">
                 <div>
-                    <span v-if="authService.isAuthenticated()" @click="openVaultEdit(body)" class="detail-link">
+                    <span v-if="logined" @click="openVaultEdit(body)" class="detail-link">
                         {{ body.key }}
                     </span>
                     <span v-else>
@@ -187,10 +208,10 @@ watch(dialog, (d) => {
                     <span>
                         {{ formatVaultValue(body.id, body.mask_value) }}
                     </span>
-                    <v-btn v-show="vaultValueIcon(body.id) && authService.isAuthenticated()" icon="md:visibility"
-                        variant="text" @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
-                    <v-btn v-show="!vaultValueIcon(body.id) && authService.isAuthenticated()" icon="md:visibility_off"
-                        variant="text" @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
+                    <v-btn v-show="vaultValueIcon(body.id) && logined" icon="md:visibility" variant="text"
+                        @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
+                    <v-btn v-show="!vaultValueIcon(body.id) && logined" icon="md:visibility_off" variant="text"
+                        @click="displayVault(body.id)" :loading="loadingState[body.id]"></v-btn>
                 </div>
             </template>
             <template v-slot:body_tags="body">
