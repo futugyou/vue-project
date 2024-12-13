@@ -133,6 +133,11 @@ const valut_save = (newVault: VaultView) => {
         vaults.value.push(newVault)
     }
     vaults.value = [...vaults.value]
+    const i = vaultRawDic.value.findIndex(p => p.key == newVault.id)
+    if (i !== -1) {
+        vaultRawDic.value.splice(index, 1)
+        vaultRawDic.value = [...vaultRawDic.value]
+    }
 }
 
 const vault_delete = (vault_id: string) => {
