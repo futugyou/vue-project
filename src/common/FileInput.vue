@@ -104,17 +104,14 @@ onMounted(() => {
 
 <template>
     <div class="file-container">
-        <div style="flex:1" @dragover.prevent="onFileDropover" @dragleave.prevent="onFileDropleave"
+        <div style="width: 100%" @dragover.prevent="onFileDropover" @dragleave.prevent="onFileDropleave"
             @drop.prevent="onFileDrop" :class="{ over: isOver }">
-            <form style="width: 100%;position: relative">
+            <form>
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
                 <input flag id="file-reader" type="file" name="file-reader" :multiple="Multiple" class="file-reader-input"
                     @change="onFileChange" :disabled="IsLoading" ref="fileref" :accept="Accept" />
             </form>
         </div>
-        <!-- <div style="display: flex;align-items: center;padding-left: 10px;">
-                <Spinners v-if="IsLoading" width="20px" height="20px"></Spinners>
-            </div> -->
         <div class="file-cancel">
             <Button @click="clearFile" v-if="hasFile && !IsLoading" Tip="clear file" :Disabled="IsLoading">
                 <Close></Close>
@@ -161,6 +158,10 @@ onMounted(() => {
     position: absolute;
     width: 0.1px;
     z-index: -1;
+    padding-block: 0 !important;
+    padding-inline: 0 !important;
+    line-height: 0 !important;
+    border: 0 !important;
 }
 
 .over {
