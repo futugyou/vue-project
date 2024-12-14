@@ -81,6 +81,7 @@ const onFileDropleave = () => {
 const clearFile = () => {
     if (fileref.value) {
         fileref.value.files = null
+        fileref.value.value = ""
         labeltext.value = "choose or drag a file"
         hasFile.value = false
         emit('clear')
@@ -104,7 +105,7 @@ onMounted(() => {
 
 <template>
     <div class="file-container">
-        <div style="width: 100%" @dragover.prevent="onFileDropover" @dragleave.prevent="onFileDropleave"
+        <div style="width: 100%;overflow: hidden;" @dragover.prevent="onFileDropover" @dragleave.prevent="onFileDropleave"
             @drop.prevent="onFileDrop" :class="{ over: isOver }">
             <form>
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
@@ -127,6 +128,7 @@ onMounted(() => {
     width: 100%;
     grid-gap: var(--grid-gap-10);
     position: relative;
+    overflow: hidden;
 }
 
 .file-reader-label {
@@ -162,6 +164,7 @@ onMounted(() => {
     padding-inline: 0 !important;
     line-height: 0 !important;
     border: 0 !important;
+    display: inline;
 }
 
 .over {
@@ -172,5 +175,6 @@ onMounted(() => {
     position: absolute;
     right: 10px;
     top: 8px;
+    overflow: hidden;
 }
 </style>
