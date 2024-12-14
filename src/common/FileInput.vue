@@ -106,16 +106,16 @@ onMounted(() => {
     <div class="file-container">
         <div style="flex:1" @dragover.prevent="onFileDropover" @dragleave.prevent="onFileDropleave"
             @drop.prevent="onFileDrop" :class="{ over: isOver }">
-            <form style="width: 100%;">
+            <form style="width: 100%;position: relative">
                 <label for="file-reader" class="file-reader-label">{{ labeltext }}</label>
                 <input flag id="file-reader" type="file" name="file-reader" :multiple="Multiple" class="file-reader-input"
                     @change="onFileChange" :disabled="IsLoading" ref="fileref" :accept="Accept" />
             </form>
         </div>
-        <div style="display: flex;align-items: center;padding-left: 10px;">
-            <Spinners v-if="IsLoading" width="20px" height="20px"></Spinners>
-        </div>
-        <div style="display: flex;align-items: center;padding-left: 10px;">
+        <!-- <div style="display: flex;align-items: center;padding-left: 10px;">
+                <Spinners v-if="IsLoading" width="20px" height="20px"></Spinners>
+            </div> -->
+        <div class="file-cancel">
             <Button @click="clearFile" v-if="hasFile && !IsLoading" Tip="clear file" :Disabled="IsLoading">
                 <Close></Close>
             </Button>
@@ -129,6 +129,7 @@ onMounted(() => {
     flex-direction: row;
     width: 100%;
     grid-gap: var(--grid-gap-10);
+    position: relative;
 }
 
 .file-reader-label {
@@ -164,5 +165,11 @@ onMounted(() => {
 
 .over {
     background-color: var(--color-background-mute);
+}
+
+.file-cancel {
+    position: absolute;
+    right: 10px;
+    top: 8px;
 }
 </style>
