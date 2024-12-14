@@ -58,7 +58,7 @@ export const shaString = async (str: string): Promise<string> => {
     // Convert hash value to Base64 string
     const base64String = window.btoa(String.fromCharCode(...hashArray))
 
-    return base64String;
+    return base64String
 }
 
 export const btoa = (str: string): string => {
@@ -103,7 +103,12 @@ export const getModifiedData = <T extends object, P extends Partial<T>>(currentD
 export const flattenObject = (obj: Record<string, any>, parentKey = '', result: Record<string, string> = {}): Record<string, string> => {
     for (const [key, value] of Object.entries(obj)) {
         const newKey = parentKey ? `${parentKey}__${key}` : key
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
+        if (Array.isArray(value)) {
+            value.forEach((item, index) => {
+                const arrayKey = `${newKey}__${index}`
+                flattenObject(item, arrayKey, result)
+            })
+        } else if (value && typeof value === 'object') {
             flattenObject(value, newKey, result)
         } else {
             result[newKey] = String(value)
