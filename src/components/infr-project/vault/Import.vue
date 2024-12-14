@@ -15,14 +15,33 @@ import {
 import { ValidateManager } from '@/tools/validate'
 import FileInput from '@/common/FileInput.vue'
 
+export interface VaultImportView {
+    id: string
+    storage_media: string
+    tags: Array<string>
+    type_identity: string
+    vault_type: string
+    force_insert: boolean
+}
+
+const DefaultVaultImportView: VaultImportView = {
+    id: "",
+    storage_media: "Local",
+    tags: ["import"],
+    type_identity: "common",
+    vault_type: "common",
+    force_insert: false,
+}
+
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+
 
 const authService = useAuth()
 const validateManager = ValidateManager()
 const isLoading = ref(false)
 
-const editModel = ref<VaultView>(VaultDefault)
+const editModel = ref<VaultImportView>(DefaultVaultImportView)
 const parsedData = ref<Record<string, string>>({})
 
 const cancel = () => {
@@ -59,7 +78,7 @@ const save = async () => {
     })
 
     const request: CreateVaultsRequest = {
-        force_insert: false,
+        force_insert: editModel.value.force_insert,
         vaults: vaults,
     }
 
@@ -153,6 +172,9 @@ const onFileChange = async (fileList: FileList) => {
                     <v-sheet class="pb-5">
                         <FileInput @fileLoad="onFileChange" :IsLoading="isLoading" @clear="clear"></FileInput>
                     </v-sheet>
+
+                    <v-switch v-model="proxyModel.value.force_insert" label="Forcs Insert" class="pl-2" color="info"
+                        :hideDetails="false" />
 
                     <v-select :ref="el => validateManager.setInputRef(el, 'storage_media')"
                         :rules="validateManager.required('Storage Media')" v-model="proxyModel.value.storage_media"
