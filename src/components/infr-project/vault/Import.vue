@@ -169,9 +169,18 @@ const onFileChange = async (fileList: FileList) => {
         <v-card class="h-100" v-if="!isLoading && authService.isAuthenticated()">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions }">
-                    <v-sheet class="pb-5">
+                    <v-sheet class="mb-5">
                         <FileInput @fileLoad="onFileChange" :IsLoading="isLoading" @clear="clear"></FileInput>
                     </v-sheet>
+
+                    <v-table density="compact" v-if="parsedData">
+                        <tbody>
+                            <tr v-for="(value, key) in parsedData" :key="key">
+                                <td>{{ key }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        </tbody>
+                    </v-table>
 
                     <v-sheet class="d-flex align-center justify-space-between mb-4">
                         <v-switch v-model="proxyModel.value.force_insert" label="Force Insert" class="pl-2" color="info"
