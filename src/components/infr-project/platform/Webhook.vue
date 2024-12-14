@@ -142,7 +142,7 @@ onUnmounted(() => {
                     <v-select label="State" v-model="proxyModel.value.state"
                         :ref="el => validateManager.setInputRef(el, 'state')" :items="['Init', 'Creating', 'Ready']"
                         :hideDetails="false" class="mt-2"></v-select>
-                    <v-switch v-model="proxyModel.value.sync" label="Forcs Sync" class="pl-2" color="info"
+                    <v-switch v-model="proxyModel.value.sync" label="Force Sync" class="pl-2" color="info"
                         :hideDetails="false" :disabled="!authService.isAuthenticated()" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
                         :hideDetails="false" :disabled="!authService.isAuthenticated()" />

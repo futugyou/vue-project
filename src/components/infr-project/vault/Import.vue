@@ -173,8 +173,16 @@ const onFileChange = async (fileList: FileList) => {
                         <FileInput @fileLoad="onFileChange" :IsLoading="isLoading" @clear="clear"></FileInput>
                     </v-sheet>
 
-                    <v-switch v-model="proxyModel.value.force_insert" label="Forcs Insert" class="pl-2" color="info"
-                        :hideDetails="false" />
+                    <v-sheet class="d-flex align-center justify-space-between mb-4">
+                        <v-switch v-model="proxyModel.value.force_insert" label="Force Insert" class="pl-2" color="info"
+                            :hideDetails="true" />
+                        <v-tooltip text="Force insert will allow the same key!" location="start">
+                            <template v-slot:activator="{ props }">
+                                <v-icon icon="md:info" v-bind="props" color="green-darken-2"></v-icon>
+                            </template>
+                        </v-tooltip>
+                    </v-sheet>
+
 
                     <v-select :ref="el => validateManager.setInputRef(el, 'storage_media')"
                         :rules="validateManager.required('Storage Media')" v-model="proxyModel.value.storage_media"
