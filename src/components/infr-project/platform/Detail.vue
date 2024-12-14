@@ -179,7 +179,7 @@ const logined = computed(() =>
                     <v-row>
                         <v-col class="pa-3" v-for="project in projects" :key="project.id" cols="12" md="4">
                             <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
-                                <template v-slot:title>Name: {{ project.name }} </template>
+                                <template v-slot:title>{{ project.name }} </template>
                                 <template v-slot:subtitle>ID: {{ project.id }} </template>
 
                                 <template v-slot:append>
@@ -192,15 +192,16 @@ const logined = computed(() =>
                                     </a>
                                 </template>
 
-                                <v-list lines="one">
-                                    <v-list-subheader>Property</v-list-subheader>
-                                    <v-list-item v-for="(value, key) in project.properties" :key="value.key">
-                                        <span class="text-subtitle-1 mr-1">key:</span>
-                                        <span class="text-subtitle-2 mr-3">{{ value.key }}</span>
-                                        <span class="text-subtitle-1 mr-1">value:</span>
-                                        <span class="text-subtitle-2">{{ value.value }}</span>
-                                    </v-list-item>
-                                </v-list>
+                                <span class="text-subtitle-1 pl-4" v-if="project.properties.length > 0">Property</span>
+                                <v-table density="compact">
+                                    <tbody>
+                                        <tr v-for="(value, key) in project.properties" :key="value.key">
+                                            <td class="">{{ value.key }}</td>
+                                            <td>{{ value.value }}</td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+
                                 <v-sheet>
                                     <v-btn variant="tonal">
                                         {{ project.followed ? "Unlink" : "Link" }}
@@ -231,5 +232,9 @@ const logined = computed(() =>
 
 .v-list[data-v-menu] .v-list-group__items .v-list-item {
     padding-inline-start: var(--parent-padding) !important;
+}
+
+tr>td {
+    vertical-align: middle;
 }
 </style>

@@ -213,3 +213,9 @@ const onFileChange = async (fileList: FileList) => {
         </v-card>
     </v-sheet>
 </template>
+
+<style scoped>
+tr>td {
+     vertical-align: middle;
+}
+</style>
