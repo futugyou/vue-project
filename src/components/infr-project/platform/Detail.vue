@@ -13,6 +13,7 @@ import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platf
 import PlatformProjectVue from './PlatformProject.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Basic from './Basic.vue'
+import PlatformProjectList from './PlatformProjectList.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -158,60 +159,7 @@ const logined = computed(() =>
             </v-tabs-window-item>
 
             <v-tabs-window-item class="pa-4 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">
-                <Empty v-if="detail.projects!.length == 0"></Empty>
-                <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i" class="mx-auto px-3 ma-6"
-                    elevation="10" rounded>
-                    <v-row class="elevation-1">
-                        <v-col cols="12" class="pa-3">
-                            <span class="text-h4 pl-3">
-                                {{ i == 0 ? "Self Projects" : "Provider Projects" }}
-                            </span>
-                        </v-col>
-                    </v-row>
-
-                    <v-row v-if="projects.length == 0" class="pa-5">
-                        <v-col>
-                            <span class="text-h6">
-                                There is no data in the current category
-                            </span>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col class="pa-3" v-for="project in projects" :key="project.id" cols="12" md="4">
-                            <v-card v-if="!isLoading" class="d-flex flex-column pa-2" hover>
-                                <template v-slot:title>{{ project.name }} </template>
-                                <template v-slot:subtitle>ID: {{ project.id }} </template>
-
-                                <template v-slot:append>
-                                    <a :href="project.url" target="_blank">
-                                        <v-hover>
-                                            <template v-slot:default="{ props }">
-                                                <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                            </template>
-                                        </v-hover>
-                                    </a>
-                                </template>
-
-                                <span class="text-subtitle-1 pl-4" v-if="project.properties.length > 0">Property</span>
-                                <v-table density="compact">
-                                    <tbody>
-                                        <tr v-for="(value, key) in project.properties" :key="value.key">
-                                            <td class="">{{ value.key }}</td>
-                                            <td>{{ value.value }}</td>
-                                        </tr>
-                                    </tbody>
-                                </v-table>
-
-                                <v-sheet>
-                                    <v-btn variant="tonal">
-                                        {{ project.followed ? "Unlink" : "Link" }}
-                                    </v-btn>
-                                </v-sheet>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-sheet>
-
+                <PlatformProjectList :model-value="detail.projects" :disabled="disabled"></PlatformProjectList>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
