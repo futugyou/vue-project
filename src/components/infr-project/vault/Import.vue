@@ -14,6 +14,7 @@ import {
 
 import { ValidateManager } from '@/tools/validate'
 import FileInput from '@/common/FileInput.vue'
+import { flattenObject } from '@/tools/util'
 
 export interface VaultImportView {
     id: string
@@ -138,23 +139,40 @@ const onFileChange = async (fileList: FileList) => {
 
     Array.from(fileList).map(async (file) => {
         const content = await file.text()
-        if (file.name !== ".env") {
+        const fileName = file.name.toLowerCase()
+        if (fileName !== ".env" && !fileName.endsWith(".json")) {
             msg.value = {
-                errorMessages: ["only support .env"],
+                errorMessages: ["only support .env and .json"],
                 delay: 3000,
             }
             return
         }
 
-        parsedData.value = content
-            .toString()
-            .split('\n')
-            .filter(line => line.trim() && !line.startsWith('#'))
-            .reduce((acc, line) => {
-                const [key, ...value] = line.split('=')
-                acc[key.trim()] = value.join('=').trim()
-                return acc;
-            }, {} as Record<string, string>)
+        // TODO: we can insert YAML to support yaml/yml
+        if (fileName.endsWith(".json")) {
+            try {
+                parsedData.value = flattenObject(JSON.parse(content))
+            } catch (error) {
+                msg.value = {
+                    errorMessages: ["read json file error, please check."],
+                    delay: 3000,
+                }
+                return
+            }
+        }
+
+        if (file.name == ".env") {
+            parsedData.value = content
+                .toString()
+                .split('\n')
+                .filter(line => line.trim() && !line.startsWith('#'))
+                .reduce((acc, line) => {
+                    const [key, ...value] = line.split('=')
+                    acc[key.trim()] = value.join('=').trim()
+                    return acc;
+                }, {} as Record<string, string>)
+        }
+
         // targer confirm-edit
         editModel.value.id = Date.now().toString()
 
@@ -216,6 +234,6 @@ const onFileChange = async (fileList: FileList) => {
 
 <style scoped>
 tr>td {
-     vertical-align: middle;
+    vertical-align: middle;
 }
 </style>
