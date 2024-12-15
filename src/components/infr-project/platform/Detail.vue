@@ -21,7 +21,6 @@ const authService = useAuth()
 const route = useRoute()
 
 const isLoading = ref(true)
-const listOpened = ref(["Projects"])
 const platformId = route.params.id as string
 const detail = ref<PlatformDetailView>()
 let rawPlatformDetailViewData: PlatformDetailView | undefined
@@ -121,26 +120,27 @@ const logined = computed(() =>
         <Spinners v-if="isLoading"></Spinners>
 
         <v-sheet class="d-flex flex-column justify-space-between border-thin" v-if="!isLoading" width="200">
-            <v-list density="compact" v-model:opened="listOpened" open-strategy="multiple" nav :lines="false" data-v-menu>
-                <v-list-item slim color="primary" title="Base" @click="changeTab('one')" :active="tab == 'one'">
+            <v-list density="compact" open-strategy="multiple" nav :lines="false" data-v-menu>
+                <v-list-item slim color="primary" title="Platfrom" @click="changeTab('one')" :active="tab == 'one'">
                     <template v-slot:prepend>
                         <v-icon icon="md:analytics"></v-icon>
                     </template>
                 </v-list-item>
-                <v-list-group value="Projects">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item slim v-bind="props" title="Projects" @click="changeTab('two')">
-                            <template v-slot:prepend>
-                                <v-icon icon="md:view_kanban"></v-icon>
-                            </template>
-                        </v-list-item>
+            </v-list>
+            <v-list density="compact" open-strategy="multiple" nav :lines="false" data-v-menu>
+                <v-list-item slim color="primary" title="Projects" @click="changeTab('two')" :active="tab == 'two'">
+                    <template v-slot:prepend>
+                        <v-icon icon="md:view_kanban"></v-icon>
                     </template>
-                    <v-list-item slim v-for="(pro, i) in selfProjects" :key="i" :value="pro" color="primary"
-                        @click="showProject(pro)" v-if="detail"
-                        :active="tab == 'three' && (project && pro.id == project.id)">
-                        <v-list-item-title v-text="pro.name"></v-list-item-title>
-                    </v-list-item>
-                </v-list-group>
+                </v-list-item>
+            </v-list>
+            <v-list density="compact" class="flex-fill" open-strategy="multiple" nav :lines="false" data-v-menu>
+                <v-list-item slim v-for="(pro, i) in selfProjects" :key="i" :value="pro" color="primary"
+                    @click="showProject(pro)" v-if="detail" :active="tab == 'three' && (project && pro.id == project.id)">
+                    <v-list-item-title>
+                        <span class="pl-5 text-subtitle-2">{{ pro.name }} </span>
+                    </v-list-item-title>
+                </v-list-item>
             </v-list>
             <div class="pa-2 d-flex justify-center" v-if="logined && detail">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter
