@@ -147,7 +147,7 @@ const logined = computed(() =>
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter
                     :disabled="disabled">
                     <PlatformProjectVue :platform-id="detail.id" @cancel="platformChangeCanceled" @save="platformChanged"
-                        :disabled="disabled">
+                        :disabled="disabled" :provider="detail.provider">
                     </PlatformProjectVue>
                 </VuetifyModal>
             </div>
@@ -164,7 +164,8 @@ const logined = computed(() =>
 
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
                 <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
-                    @cancel="platformChangeCanceled" @save="platformChanged" :disabled="disabled">
+                    :provider="detail.provider" @cancel="platformChangeCanceled" @save="platformChanged"
+                    :disabled="disabled">
                 </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>
@@ -180,9 +181,5 @@ const logined = computed(() =>
 
 .v-list[data-v-menu] .v-list-group__items .v-list-item {
     padding-inline-start: var(--parent-padding) !important;
-}
-
-tr>td {
-    vertical-align: middle;
 }
 </style>

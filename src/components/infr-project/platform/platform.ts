@@ -11,23 +11,39 @@ export const checkPlatfromPropertySecret = (provider: ProviderEnum, properties: 
     switch (provider) {
         case ProviderEnum.Circleci:
             if (secrets.findIndex(p => p.key == "CIRCLECI_TOKEN") == -1) {
-                return "Circleci NEED CIRCLECI_TOKEN In Secret"
+                return "Circleci Provider NEED CIRCLECI_TOKEN In Secret"
             }
             if (properties.findIndex(p => p.key == "org_slug") == -1) {
-                return "Circleci NEED org_slug In Property"
+                return "Circleci Provider NEED org_slug In Property"
             }
             break;
         case ProviderEnum.Vercel:
             if (secrets.findIndex(p => p.key == "VERCEL_TOKEN") == -1) {
-                return "Vercel NEED VERCEL_TOKEN In Secret"
+                return "Vercel Provider NEED VERCEL_TOKEN In Secret"
             }
             break;
         case ProviderEnum.Github:
             if (secrets.findIndex(p => p.key == "GITHUB_TOKEN") == -1) {
-                return "Github NEED GITHUB_TOKEN In Secret"
+                return "Github Provider NEED GITHUB_TOKEN In Secret"
             }
             if (properties.findIndex(p => p.key == "GITHUB_OWNER") == -1) {
-                return "Github NEED GITHUB_OWNER In Property"
+                return "Github Provider NEED GITHUB_OWNER In Property"
+            }
+            break;
+    }
+
+    return ""
+}
+
+export const checkPlatfromProjectProperty = (provider: ProviderEnum, properties: Array<Property>): string => {
+    switch (provider) {
+        case ProviderEnum.Circleci:
+            break;
+        case ProviderEnum.Vercel:
+            break;
+        case ProviderEnum.Github:
+            if (properties.findIndex(p => p.key == "GITHUB_REPO") == -1) {
+                return "Github Provider NEED GITHUB_REPO In Property"
             }
             break;
     }

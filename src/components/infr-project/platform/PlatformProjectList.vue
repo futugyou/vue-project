@@ -93,4 +93,8 @@ const logined = computed(() =>
     </v-sheet>
 </template>
 
-<style scoped></style>
+<style scoped>
+tr>td {
+    vertical-align: middle;
+}
+</style>

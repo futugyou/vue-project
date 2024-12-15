@@ -15,7 +15,7 @@ import SecretPage from './Secret.vue'
 
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
-    PlatformDetailView, PlatformProject,
+    PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
@@ -43,6 +43,7 @@ const authService = useAuth()
 const validateManager = ValidateManager()
 const props = defineProps<{
     platformId: string,
+    provider: string,
     projectId?: string,
     model?: PlatformProject,
     disabled?: boolean,
@@ -57,6 +58,19 @@ const tab = ref("one")
 const save = async (f: boolean | undefined) => {
     const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
+        return
+    }
+
+    const provider: unknown = props.provider
+    const providerEnum = Object.values(ProviderEnum).includes(provider as ProviderEnum)
+        ? (provider as ProviderEnum)
+        : ProviderEnum.Other
+    const checkMsg = checkPlatfromProjectProperty(providerEnum, editModel.value.properties)
+    if (checkMsg) {
+        msg.value = {
+            errorMessages: [checkMsg],
+            delay: 3000,
+        }
         return
     }
 
