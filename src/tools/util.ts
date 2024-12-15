@@ -101,18 +101,19 @@ export const getModifiedData = <T extends object, P extends Partial<T>>(currentD
 }
 
 export const flattenObject = (obj: Record<string, any>, parentKey = '', result: Record<string, string> = {}): Record<string, string> => {
-    for (const [key, value] of Object.entries(obj)) {
+    const processEntry = (key: string, value: any) => {
         const newKey = parentKey ? `${parentKey}__${key}` : key
-        if (Array.isArray(value)) {
-            value.forEach((item, index) => {
-                const arrayKey = `${newKey}__${index}`
-                flattenObject(item, arrayKey, result)
-            })
-        } else if (value && typeof value === 'object') {
-            flattenObject(value, newKey, result)
+        if (value && typeof value === 'object') {
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => processEntry(`${key}__${index}`, item))
+            } else {
+                flattenObject(value, newKey, result)
+            }
         } else {
             result[newKey] = String(value)
         }
     }
+
+    Object.entries(obj).forEach(([key, value]) => processEntry(key, value))
     return result
 }
