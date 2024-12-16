@@ -163,7 +163,7 @@ const logined = computed(() =>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
-                <PlatformProjectVue :platform-id="detail.id" :project-id="project.id" :model="project"
+                <PlatformProjectVue :platform-id="detail.id" :model="project"
                     :provider="detail.provider" @cancel="platformChangeCanceled" @save="platformChanged"
                     :disabled="disabled">
                 </PlatformProjectVue>

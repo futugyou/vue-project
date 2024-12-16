@@ -44,7 +44,6 @@ const validateManager = ValidateManager()
 const props = defineProps<{
     platformId: string,
     provider: string,
-    projectId?: string,
     model?: PlatformProject,
     disabled?: boolean,
 }>()
@@ -87,15 +86,15 @@ const save = async (f: boolean | undefined) => {
 
     if (f) {
         if (body.provider_project_id == "") {
-            body.provider_project_id = props.projectId ?? ""
+            body.provider_project_id = editModel.value.id ?? ""
         }
     }
     if (f == false) {
         body.provider_project_id = ""
     }
     let response
-    if (props.projectId) {
-        response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, props.projectId)
+    if (editModel.value.id) {
+        response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, editModel.value.id)
     } else {
         response = await PlatformApiFactory().v1PlatformIdProjectPost(body, props.platformId)
     }
@@ -127,9 +126,9 @@ const emit = defineEmits<{
 }>()
 
 const deleteProject = async () => {
-    if (props.platformId && props.projectId) {
+    if (props.platformId && editModel.value.id) {
         isLoading.value = true
-        const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdDelete(props.platformId, props.projectId)
+        const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdDelete(props.platformId, editModel.value.id)
         isLoading.value = false
         if (error) {
             msg.value = {
@@ -206,7 +205,7 @@ const logined = computed(() =>
 
         <v-tabs v-model="tab" color="deep-purple-accent-4">
             <v-tab value="one">Project Basic</v-tab>
-            <v-tab value="two" v-if="projectId">Webhooks</v-tab>
+            <v-tab value="two" v-if="editModel.id">Webhooks</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="tab" v-if="!isLoading">
@@ -215,7 +214,7 @@ const logined = computed(() =>
                 <v-card class="h-100 overflow-y-auto">
                     <v-confirm-edit v-model="editModel" @cancel="cancel" @save="() => save(undefined)">
                         <template v-slot:default="{ model: proxyModel, actions }">
-                            <v-text-field :model-value="projectId" label="Id" disabled v-if="projectId"
+                            <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
                                 :hideDetails="false" />
                             <v-text-field :model-value="proxyModel.value.provider_project_id" label="Provider ProjectID"
                                 disabled v-if="proxyModel.value.provider_project_id" :hideDetails="false" />
@@ -241,7 +240,8 @@ const logined = computed(() =>
                             <v-spacer></v-spacer>
                             <v-sheet class="d-flex justify-end ga-3" v-if="logined">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
-                                    v-model:dialog="dialog" @save="deleteProject" v-if="projectId" :disabled="disabled">
+                                    v-model:dialog="dialog" @save="deleteProject" v-if="proxyModel.value.id"
+                                    :disabled="disabled">
                                     <v-alert text="Are you sure you want to delete?"></v-alert>
                                 </VuetifyModal>
                                 <v-btn variant="elevated" v-if="proxyModel.value.id" :disabled="disabled"
@@ -256,13 +256,13 @@ const logined = computed(() =>
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="projectId">
+            <v-tabs-window-item value="two" v-if="editModel.id">
                 <Empty v-if="editModel.webhooks == undefined || editModel.webhooks.length == 0">
                     <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" :disabled="disabled"></v-btn>
                 </Empty>
                 <v-row class="pa-3" v-else>
                     <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
-                        <WebhookPage :platform-id="platformId" :project-id="projectId" :model="webhook"
+                        <WebhookPage :platform-id="platformId" :project-id="editModel.id" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>
                     <v-col cols="12" md="4" v-if="logined">
