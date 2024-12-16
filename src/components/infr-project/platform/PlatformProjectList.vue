@@ -5,6 +5,7 @@ import _ from 'lodash-es'
 import { useAuth } from '@/plugins/auth'
 
 import { PlatformProject } from './platform'
+import Empty from '@/common/EmptyStates.vue'
 
 const authService = useAuth()
 
@@ -33,6 +34,19 @@ const disabled = computed(() => {
 const logined = computed(() =>
     authService.isAuthenticated()
 )
+
+watch(() => props.modelValue, (newVal) => {
+    projects.value = newVal
+})
+
+const emit = defineEmits<{
+    (e: 'follow', project: PlatformProject): void
+}>()
+
+const HandleFollow = (project: PlatformProject) => {
+    emit('follow', project)
+}
+
 </script>
 
 <template>
@@ -81,8 +95,8 @@ const logined = computed(() =>
                             </tbody>
                         </v-table>
 
-                        <v-sheet v-if="logined">
-                            <v-btn variant="tonal" :disabled="disabled">
+                        <v-sheet v-if="logined && i == 1">
+                            <v-btn variant="tonal" :disabled="disabled" @click="HandleFollow(project)">
                                 {{ project.followed ? "unfollow" : "follow" }}
                             </v-btn>
                         </v-sheet>

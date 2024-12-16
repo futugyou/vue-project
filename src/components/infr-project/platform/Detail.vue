@@ -114,6 +114,11 @@ const logined = computed(() =>
     authService.isAuthenticated()
 )
 
+const HandleProjectFollow = (pro: PlatformProject) => {
+    tab.value = "three"
+    project.value = pro
+}
+
 </script>
 
 <template>
@@ -159,7 +164,8 @@ const logined = computed(() =>
             </v-tabs-window-item>
 
             <v-tabs-window-item class="pa-4 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">
-                <PlatformProjectList :model-value="detail.projects" :disabled="disabled"></PlatformProjectList>
+                <PlatformProjectList :model-value="detail.projects" :disabled="disabled" @follow="HandleProjectFollow">
+                </PlatformProjectList>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
