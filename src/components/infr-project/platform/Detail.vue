@@ -147,7 +147,7 @@ const logined = computed(() =>
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter
                     :disabled="disabled">
                     <PlatformProjectVue :platform-id="detail.id" @cancel="platformChangeCanceled" @save="platformChanged"
-                        :disabled="disabled" :provider="detail.provider">
+                        :disabled="disabled" :provider="detail.provider" :projects="providerProjects">
                     </PlatformProjectVue>
                 </VuetifyModal>
             </div>
@@ -163,9 +163,9 @@ const logined = computed(() =>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
-                <PlatformProjectVue :platform-id="detail.id" :model="project"
-                    :provider="detail.provider" @cancel="platformChangeCanceled" @save="platformChanged"
-                    :disabled="disabled">
+                <PlatformProjectVue :platform-id="detail.id" :model="project" :provider="detail.provider"
+                    @cancel="platformChangeCanceled" @save="platformChanged" :disabled="disabled"
+                    :projects="providerProjects">
                 </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>

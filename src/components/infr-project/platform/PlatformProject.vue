@@ -45,6 +45,7 @@ const props = defineProps<{
     platformId: string,
     provider: string,
     model?: PlatformProject,
+    projects?: PlatformProject[],
     disabled?: boolean,
 }>()
 
@@ -54,7 +55,7 @@ const editModel = ref<PlatformProjectView>(convertProject(props.model))
 const dialog = ref(false)
 const tab = ref("one")
 
-const save = async (f: boolean | undefined) => {
+const save = async () => {
     const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
@@ -84,14 +85,6 @@ const save = async (f: boolean | undefined) => {
         secrets: editModel.value.secrets,
     }
 
-    if (f) {
-        if (body.provider_project_id == "") {
-            body.provider_project_id = editModel.value.id ?? ""
-        }
-    }
-    if (f == false) {
-        body.provider_project_id = ""
-    }
     let response
     if (editModel.value.id) {
         response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, editModel.value.id)
@@ -186,6 +179,13 @@ const operateOptions = computed(() =>
     }))
 )
 
+const projectsOptions = computed(() =>
+    (props.projects ?? []).map((project) => ({
+        label: project.name,
+        value: project.provider_project_id,
+    }))
+)
+
 const disabled = computed(() => {
     if (props.disabled != undefined) {
         return props.disabled
@@ -212,12 +212,11 @@ const logined = computed(() =>
             <v-tabs-window-item value="one">
 
                 <v-card class="h-100 overflow-y-auto">
-                    <v-confirm-edit v-model="editModel" @cancel="cancel" @save="() => save(undefined)">
+                    <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
                                 :hideDetails="false" />
-                            <v-text-field :model-value="proxyModel.value.provider_project_id" label="Provider ProjectID"
-                                disabled v-if="proxyModel.value.provider_project_id" :hideDetails="false" />
+
                             <v-switch v-model="proxyModel.value.followed" label="Followed" class="pl-2" color="info"
                                 disabled :hideDetails="false" />
 
@@ -230,6 +229,10 @@ const logined = computed(() =>
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
                                 :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
+
+                            <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
+                                :hideDetails="false" :disabled="disabled" :items="projectsOptions" item-value="value"
+                                clearable item-title="label"></v-select>
 
                             <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
                                 :disabled="disabled">
@@ -244,10 +247,6 @@ const logined = computed(() =>
                                     :disabled="disabled">
                                     <v-alert text="Are you sure you want to delete?"></v-alert>
                                 </VuetifyModal>
-                                <v-btn variant="elevated" v-if="proxyModel.value.id" :disabled="disabled"
-                                    @click="save(!proxyModel.value.followed)">
-                                    {{ proxyModel.value.followed ? "Unlink" : "Link" }}
-                                </v-btn>
                                 <component :is="actions" :disabled="disabled"></component>
                             </v-sheet>
                         </template>
