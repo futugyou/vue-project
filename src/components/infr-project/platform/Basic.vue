@@ -198,7 +198,7 @@ const logined = computed(() =>
                             @click="recoveryPlatform(proxyModel.value.id)">Recovery</v-btn>
                         <v-btn variant="elevated" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"
                             @click="deletePlatform(proxyModel.value.id)">Delete</v-btn>
-                        <component :is="actions" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"></component>
+                        <component :is="actions" ></component>
                     </v-sheet>
                 </template>
             </v-confirm-edit>
