@@ -222,10 +222,12 @@ const logined = computed(() =>
                     <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
-                                :hideDetails="false" />
-
-                            <v-switch v-model="proxyModel.value.followed" label="Followed" class="pl-2" color="info"
-                                disabled :hideDetails="false" />
+                                :hideDetails="false">
+                                <template v-slot:append>
+                                    <v-badge :color="proxyModel.value.followed ? 'green' : 'orange'"
+                                        :content="proxyModel.value.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+                                </template>
+                            </v-text-field>
 
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
                                 v-model="proxyModel.value.name" :disabled="disabled"
