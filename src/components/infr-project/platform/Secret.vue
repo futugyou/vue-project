@@ -94,11 +94,11 @@ const logined = computed(() =>
     </div>
 
     <v-row v-for="(secret, index) in editModel" :key="index" class="mt-2">
-        <v-col :cols="!disabled ? 5 : 6">
+        <v-col :cols="logined ? 5 : 6">
             <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key" label="Key"
                 :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false" :disabled="disabled" />
         </v-col>
-        <v-col :cols="!disabled ? 5 : 6">
+        <v-col :cols="logined ? 5 : 6">
             <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
                 label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
                 :disabled="disabled" class="mb-5" :items="vaultOptions" item-value="value" item-title="label"></v-select>

@@ -66,11 +66,11 @@ const logined = computed(() =>
     </div>
 
     <v-row v-for="(property, index) in editModel" :key="index" class="mt-2">
-        <v-col :cols="!disabled ? 5 : 6">
+        <v-col :cols="logined ? 5 : 6">
             <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
                 :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false" :disabled="disabled" />
         </v-col>
-        <v-col :cols="!disabled ? 5 : 6">
+        <v-col :cols="logined ? 5 : 6">
             <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)" v-model="property.value"
                 label="Value" :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
                 :disabled="disabled" />
