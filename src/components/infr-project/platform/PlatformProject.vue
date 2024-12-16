@@ -61,11 +61,18 @@ const save = async () => {
         return
     }
 
+    var projectModel = editModel.value
+    const providerProject = (props.projects ?? []).find(p => p.provider_project_id == projectModel.provider_project_id)
+    if (providerProject) {
+        const properties = _.unionBy(providerProject.properties, editModel.value.properties, "key")
+        projectModel.properties = properties
+    }
+
     const provider: unknown = props.provider
     const providerEnum = Object.values(ProviderEnum).includes(provider as ProviderEnum)
         ? (provider as ProviderEnum)
         : ProviderEnum.Other
-    const checkMsg = checkPlatfromProjectProperty(providerEnum, editModel.value.properties)
+    const checkMsg = checkPlatfromProjectProperty(providerEnum, projectModel.properties)
     if (checkMsg) {
         msg.value = {
             errorMessages: [checkMsg],
@@ -77,17 +84,17 @@ const save = async () => {
     isLoading.value = true
 
     var body: UpdatePlatformProjectRequest = {
-        name: editModel.value.name,
-        url: editModel.value.url,
-        properties: editModel.value.properties,
-        operate: editModel.value.operate,
-        provider_project_id: editModel.value.provider_project_id,
-        secrets: editModel.value.secrets,
+        name: projectModel.name,
+        url: projectModel.url,
+        properties: projectModel.properties,
+        operate: projectModel.operate,
+        provider_project_id: projectModel.provider_project_id,
+        secrets: projectModel.secrets,
     }
 
     let response
-    if (editModel.value.id) {
-        response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, editModel.value.id)
+    if (projectModel.id) {
+        response = await PlatformApiFactory().v1PlatformIdProjectProjectIdPut(body, props.platformId, projectModel.id)
     } else {
         response = await PlatformApiFactory().v1PlatformIdProjectPost(body, props.platformId)
     }
