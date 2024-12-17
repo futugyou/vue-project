@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, onUnmounted, computed } from 'vue'
+import { ref, watch, onUnmounted, computed, watchEffect, toRef, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
@@ -21,6 +21,7 @@ import { ValidateManager } from '@/tools/validate'
 
 interface PlatformProjectView extends PlatformProject {
     operate: OperateEnum
+    markfollow?: string
 }
 
 const convertProject = (model: PlatformProject | undefined): PlatformProjectView => {
@@ -47,6 +48,7 @@ const props = defineProps<{
     model?: PlatformProject,
     projects?: PlatformProject[],
     disabled?: boolean,
+    follow?: boolean,
 }>()
 
 const isLoading = ref(false)
@@ -179,6 +181,13 @@ onUnmounted(() => {
     validateManager.clearInputs()
 })
 
+const followRef = toRef(props, 'follow')
+onMounted(() => {
+    if (followRef.value) {
+        editModel.value.markfollow = Date.now().toString()
+    }
+})
+
 const operateOptions = computed(() =>
     Object.keys(OperateEnum).map((key) => ({
         label: key,
@@ -252,8 +261,8 @@ const logined = computed(() =>
                             <v-spacer></v-spacer>
                             <v-sheet class="d-flex justify-end ga-3" v-if="logined">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
-                                    v-model:dialog="dialog" @save="deleteProject" v-if="proxyModel.value.id"
-                                    :disabled="disabled">
+                                    v-model:dialog="dialog" @save="deleteProject"
+                                    v-if="proxyModel.value.id && followRef == undefined" :disabled="disabled">
                                     <v-alert text="Are you sure you want to delete?"></v-alert>
                                 </VuetifyModal>
                                 <component :is="actions" :disabled="disabled"></component>

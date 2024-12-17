@@ -29,6 +29,7 @@ const project = ref<PlatformProject>()
 const dialog = ref(false)
 
 const tab = ref("one")
+const targerByFollow = ref<boolean>()
 
 const sortedPlatformDetailView = (data: PlatformDetailView | undefined) => {
     if (data == undefined) {
@@ -66,6 +67,7 @@ const changeTab = (t: string) => {
 const showProject = (pro: PlatformProject) => {
     tab.value = "three"
     project.value = pro
+    targerByFollow.value = undefined
 }
 
 const platformChangeCanceled = () => {
@@ -79,6 +81,7 @@ const platformChanged = (view: PlatformDetailView) => {
     rawPlatformDetailViewData = sortData
 
     dialog.value = false
+    targerByFollow.value = undefined
 
     const value = project.value
     // handle project delete
@@ -117,6 +120,7 @@ const logined = computed(() =>
 const HandleProjectFollow = (pro: PlatformProject) => {
     tab.value = "three"
     project.value = pro
+    targerByFollow.value = true
 }
 
 </script>
@@ -171,7 +175,7 @@ const HandleProjectFollow = (pro: PlatformProject) => {
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
                 <PlatformProjectVue :platform-id="detail.id" :model="project" :provider="detail.provider"
                     @cancel="platformChangeCanceled" @save="platformChanged" :disabled="disabled"
-                    :projects="providerProjects">
+                    :projects="providerProjects" :follow="targerByFollow">
                 </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>
