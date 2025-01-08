@@ -28,7 +28,7 @@
     "octokit": "^4.0.3",
     "pdfjs-dist": "^4.10.38",
     "pinia": "^2.3.0",
-    "tesseract.js": "^5.1.1",
+    "tesseract.js": "^6.0.0",
     "the-new-css-reset": "^1.11.3",
     "v-code-diff": "^1.13.1",
     "vue": "^3.5.13",
