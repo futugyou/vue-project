@@ -16,25 +16,51 @@ import SecretPage from './Secret.vue'
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
     PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty,
-    DefaultWebhook, DefaultPlatformProject
+    DefaultWebhook, Property, Secret, Webhook
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
-interface PlatformProjectView extends PlatformProject {
+interface ConfirmEditModel {
     operate: OperateEnum
     markfollow?: string
+    followed: boolean;
+    id: string;
+    name: string;
+    properties: Array<Property>;
+    provider_project_id: string;
+    secrets: Array<Secret>;
+    url: string;
+    description: string;
 }
 
-const convertProject = (model: PlatformProject | undefined): PlatformProjectView => {
+const convertToConfirmEditModel = (model: PlatformProject | undefined): ConfirmEditModel => {
     if (model == undefined) {
         return {
-            operate: OperateEnum.Upsert, ...DefaultPlatformProject
+            operate: OperateEnum.Upsert,
+            followed: false,
+            id: "",
+            name: "",
+            properties: [],
+            provider_project_id: "",
+            secrets: [],
+            url: "",
+            description: ""
         }
     }
 
-    model = _.cloneDeep(model)
+    var confirmEditModel = _.cloneDeep({
+        operate: OperateEnum.Upsert,
+        followed: model.followed,
+        id: model.id,
+        name: model.name,
+        properties: model.properties,
+        provider_project_id: model.provider_project_id,
+        secrets: model.secrets,
+        url: model.url,
+        description: model.description
+    })
 
-    return { ...model, operate: OperateEnum.Upsert }
+    return { ...confirmEditModel }
 }
 
 const store = useMessageStore()
@@ -52,7 +78,8 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
-const editModel = ref<PlatformProjectView>(convertProject(props.model))
+const webhookDatas = ref<Webhook[]>(props.model?.webhooks ?? [])
+const confirmEditModel = ref<ConfirmEditModel>(convertToConfirmEditModel(props.model))
 
 const dialog = ref(false)
 const tab = ref("one")
@@ -63,10 +90,10 @@ const save = async () => {
         return
     }
 
-    var projectModel = editModel.value
+    var projectModel = confirmEditModel.value
     const providerProject = (props.projects ?? []).find(p => p.provider_project_id == projectModel.provider_project_id)
     if (providerProject) {
-        const properties = _.unionBy(providerProject.properties, editModel.value.properties, "key")
+        const properties = _.unionBy(providerProject.properties, confirmEditModel.value.properties, "key")
         projectModel.properties = properties
     }
 
@@ -129,9 +156,9 @@ const emit = defineEmits<{
 }>()
 
 const deleteProject = async () => {
-    if (props.platformId && editModel.value.id) {
+    if (props.platformId && confirmEditModel.value.id) {
         isLoading.value = true
-        const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdDelete(props.platformId, editModel.value.id)
+        const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdDelete(props.platformId, confirmEditModel.value.id)
         isLoading.value = false
         if (error) {
             msg.value = {
@@ -157,26 +184,16 @@ const webhookCreateCanceled = () => {
 }
 
 const addNewWebhook = () => {
-    if (editModel.value.webhooks != undefined && editModel.value.webhooks.findIndex(p => p.name == "") > -1) {
-        return
-    }
-
-    let view = _.cloneDeep(editModel.value)
-    if (view.webhooks == undefined) {
-        view = { ...view, webhooks: [DefaultWebhook] }
-    } else {
-        view.webhooks.push(DefaultWebhook)
-    }
-    editModel.value = view
+    let view = webhookDatas.value
+    view.push(DefaultWebhook)
+    webhookDatas.value = view
 }
 
 watch(() => props.model, (newVal) => {
-    editModel.value = convertProject(newVal)
+    webhookDatas.value = props.model?.webhooks ?? []
+    confirmEditModel.value = convertToConfirmEditModel(props.model)
 })
 
-watch(editModel, (newVal) => {
-    emit('update:model', newVal)
-})
 
 onUnmounted(() => {
     validateManager.clearInputs()
@@ -185,7 +202,7 @@ onUnmounted(() => {
 const followRef = toRef(props, 'follow')
 onMounted(() => {
     if (followRef.value) {
-        editModel.value.markfollow = Date.now().toString()
+        confirmEditModel.value.markfollow = Date.now().toString()
     }
 })
 
@@ -222,14 +239,14 @@ const logined = computed(() =>
 
         <v-tabs v-model="tab" color="deep-purple-accent-4">
             <v-tab value="one">Project Basic</v-tab>
-            <v-tab value="two" v-if="editModel.id">Webhooks</v-tab>
+            <v-tab value="two" v-if="confirmEditModel.id">Webhooks</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="tab" v-if="!isLoading">
             <v-tabs-window-item value="one">
 
                 <v-card class="h-100 overflow-y-auto">
-                    <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
+                    <v-confirm-edit v-model="confirmEditModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
                                 :hideDetails="false">
@@ -248,7 +265,7 @@ const logined = computed(() =>
                             <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
                                 v-model="proxyModel.value.description" :disabled="disabled"
                                 :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
-                                :hideDetails="false"  class="mb-3" />
+                                :hideDetails="false" class="mb-3" />
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
                                 :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
@@ -278,13 +295,13 @@ const logined = computed(() =>
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="editModel.id">
-                <Empty v-if="editModel.webhooks == undefined || editModel.webhooks.length == 0">
+            <v-tabs-window-item value="two" v-if="confirmEditModel.id">
+                <Empty v-if="webhookDatas.length == 0">
                     <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" :disabled="disabled"></v-btn>
                 </Empty>
                 <v-row class="pa-3" v-else>
-                    <v-col v-for="webhook in editModel.webhooks" :key="webhook.name" cols="12" md="4">
-                        <WebhookPage :platform-id="platformId" :project-id="editModel.id" :model="webhook"
+                    <v-col v-for="webhook in webhookDatas" :key="webhook.name" cols="12" md="4">
+                        <WebhookPage :platform-id="platformId" :project-id="confirmEditModel.id" :model="webhook"
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>
                     <v-col cols="12" md="4" v-if="logined">
