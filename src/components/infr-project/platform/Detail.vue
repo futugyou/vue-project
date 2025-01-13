@@ -168,7 +168,7 @@ const HandleProjectFollow = (pro: PlatformProject) => {
             </v-tabs-window-item>
 
             <v-tabs-window-item class="pa-4 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">
-                <PlatformProjectList :model-value="detail.projects" :disabled="disabled" @follow="HandleProjectFollow">
+                <PlatformProjectList :disabled="disabled" @follow="HandleProjectFollow" :projects="detail.projects">
                 </PlatformProjectList>
             </v-tabs-window-item>
 

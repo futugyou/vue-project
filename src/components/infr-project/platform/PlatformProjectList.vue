@@ -10,18 +10,16 @@ import Empty from '@/common/EmptyStates.vue'
 const authService = useAuth()
 
 const props = defineProps<{
-    modelValue: PlatformProject[],
+    projects: PlatformProject[],
     disabled?: boolean,
 }>()
 
-const projects = ref<PlatformProject[]>(props.modelValue)
-
 const selfProjects = computed(() =>
-    projects.value.filter(p => p.provider_project_id == "" || p.followed) ?? []
+    props.projects.filter(p => p.provider_project_id == "" || p.followed) ?? []
 )
 
 const providerProjects = computed(() =>
-    projects.value.filter(p => p.provider_project_id != "" && !p.followed) ?? []
+    props.projects.filter(p => p.provider_project_id != "" && !p.followed) ?? []
 )
 
 const disabled = computed(() => {
@@ -34,10 +32,6 @@ const disabled = computed(() => {
 const logined = computed(() =>
     authService.isAuthenticated()
 )
-
-watch(() => props.modelValue, (newVal) => {
-    projects.value = newVal
-})
 
 const emit = defineEmits<{
     (e: 'follow', project: PlatformProject): void
