@@ -150,7 +150,7 @@ export interface UpdatePlatformProjectRequest {
      * @type {string}
      * @memberof UpdatePlatformProjectRequest
      */
-    description: string;          
+    description: string;
 }
 
 /**

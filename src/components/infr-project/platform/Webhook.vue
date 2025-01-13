@@ -8,7 +8,7 @@ import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
-import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, WebhookStateEnum, PlatformDetailView } from './platform'
+import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, DefaultWebhook, WebhookStateEnum, PlatformDetailView } from './platform'
 
 import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
@@ -21,7 +21,7 @@ export interface WebhookModel extends Webhook {
 
 const convertWebhook = (mode: Webhook | undefined): WebhookModel => {
     if (mode == undefined) {
-        return { name: "", url: "", sync: false, activate: true, state: 'Init', properties: [], secrets: [] }
+        return { sync: false, ...DefaultWebhook }
     }
 
     return {

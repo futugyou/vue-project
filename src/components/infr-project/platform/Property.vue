@@ -15,7 +15,7 @@ const props = defineProps<{
     disabled?: boolean,
 }>()
 
-const editModel = ref<Property[]>(props.modelValue)
+const editModel = ref<Property[]>(props.modelValue ?? [])
 
 const emit = defineEmits<{
     (e: 'update:modelValue', model: Property[]): void
@@ -75,7 +75,7 @@ const logined = computed(() =>
                 label="Value" :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
                 :disabled="disabled" />
         </v-col>
-        <v-col cols="2" class="pt-2" v-if="logined" >
+        <v-col cols="2" class="pt-2" v-if="logined">
             <v-btn icon="md:remove" @click="removeProperty(index)" :disabled="disabled"></v-btn>
         </v-col>
     </v-row>

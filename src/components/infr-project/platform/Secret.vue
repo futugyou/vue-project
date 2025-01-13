@@ -21,17 +21,11 @@ const props = defineProps<{
     disabled?: boolean,
 }>()
 
-const editModel = ref<Secret[]>(props.modelValue)
+const editModel = ref<Secret[]>(props.modelValue ?? [])
 
 const emit = defineEmits<{
     (e: 'update:modelValue', model: Secret[]): void
 }>()
-
-watch(editModel, (newVal) => {
-    if (!_.isEqual(newVal, editModel)) {
-        emit('update:modelValue', _.cloneDeep(newVal))
-    }
-}, { deep: true })
 
 const addSecret = () => {
     const m = editModel.value
@@ -71,6 +65,12 @@ watchEffect(async () => fetchVaultData())
 watch(() => props.modelValue, (newVal) => {
     if (!_.isEqual(editModel.value, newVal)) {
         editModel.value = newVal
+    }
+}, { deep: true })
+
+watch(editModel, (newVal) => {
+    if (!_.isEqual(newVal, editModel)) {
+        emit('update:modelValue', _.cloneDeep(newVal))
     }
 }, { deep: true })
 
