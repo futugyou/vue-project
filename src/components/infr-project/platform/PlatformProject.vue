@@ -92,6 +92,7 @@ const save = async () => {
         operate: projectModel.operate,
         provider_project_id: projectModel.provider_project_id,
         secrets: projectModel.secrets,
+        description: projectModel.description,
     }
 
     let response
@@ -245,9 +246,9 @@ const logined = computed(() =>
                                 :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
                             <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
-                                :rules="validateManager.requiredMinMax('Name', 3, 250)" label="Description"
-                                :model-value="proxyModel.value.description" name="input-7-1" variant="filled"
-                                :hideDetails="false" auto-grow />
+                                v-model="proxyModel.value.description" :disabled="disabled"
+                                :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
+                                :hideDetails="false"  class="mb-3" />
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
                                 :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>

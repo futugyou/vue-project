@@ -145,6 +145,12 @@ export interface UpdatePlatformProjectRequest {
      * @memberof UpdatePlatformProjectRequest
      */
     url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePlatformProjectRequest
+     */
+    description: string;          
 }
 
 /**
