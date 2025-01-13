@@ -244,6 +244,10 @@ const logined = computed(() =>
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
                                 :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
+                            <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
+                                :rules="validateManager.requiredMinMax('Name', 3, 250)" label="Description"
+                                :model-value="proxyModel.value.description" name="input-7-1" variant="filled"
+                                :hideDetails="false" auto-grow />
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
                                 :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
