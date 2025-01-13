@@ -432,6 +432,256 @@ export interface PlatformProject {
      * @memberof PlatformProject
      */
     webhooks: Array<Webhook>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    description: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PlatformProject
+     */
+    environments: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    badge_url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    badge_markdown: string;
+    /**
+     * 
+     * @type {Array<EnvironmentVariable>}
+     * @memberof PlatformProject
+     */
+    environment_variables: Array<EnvironmentVariable>;
+    /**
+     * 
+     * @type {Array<Workflow>}
+     * @memberof PlatformProject
+     */
+    workflows: Array<Workflow>;
+    /**
+     * 
+     * @type {Array<WorkflowRun>}
+     * @memberof PlatformProject
+     */
+    workflow_runs: Array<WorkflowRun>;
+    /**
+     * 
+     * @type {Array<Deployment>}
+     * @memberof PlatformProject
+     */
+    deployments: Array<Deployment>;
+}
+
+/**
+ * 
+ * @export
+ * @interface Deployment
+ */
+export interface Deployment {
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    name: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    createdAt: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    environment: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    readyState: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    readySubstate: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    badge_url: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    badge_markdown: string
+}
+
+/**
+ * 
+ * @export
+ * @interface WorkflowRun
+ */
+export interface WorkflowRun {
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
+    id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
+    name: string
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
+    createdAt: string
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
+    status: string
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
+    badge_url: string
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
+    badge_markdown: string
+}
+
+/**
+ * 
+ * @export
+ * @interface Workflow
+ */
+export interface Workflow {
+    /**
+     * 
+     * @type {string}
+     * @memberof Workflow
+     */
+    id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Workflow
+     */
+    name: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Workflow
+     */
+    createdAt: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Workflow
+     */
+    status: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Workflow
+     */
+    badge_url: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Workflow
+     */
+    badge_markdown: string
+}
+
+/**
+ * 
+ * @export
+ * @interface EnvironmentVariable
+ */
+export interface EnvironmentVariable {
+    /**
+     * 
+     * @type {string}
+     * @memberof EnvironmentVariable
+     */
+    id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof EnvironmentVariable
+     */
+    key: string
+    /**
+     * 
+     * @type {string}
+     * @memberof EnvironmentVariable
+     */
+    createdAt: string
+    /**
+     * 
+     * @type {string}
+     * @memberof EnvironmentVariable
+     */
+    updatedAt: string
+    /**
+     * 
+     * @type {string}
+     * @memberof EnvironmentVariable
+     */
+    type: string
+    /**
+     * 
+     * @type {string}
+     * @memberof EnvironmentVariable
+     */
+    value: string
+}
+
+export const DefaultWebhook: Webhook = {
+    name: "", url: "", properties: [], activate: true, state: 'Init', secrets: [],
+    id: "",
+    events: [],
+    followed: false
+}
+
+export const DefaultPlatformProject: PlatformProject = {
+    id: "",
+    name: "", url: "", followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: [],
+    description: "", environments: [], badge_url: "", badge_markdown: "",
+    environment_variables: [], workflows: [], workflow_runs: [], deployments: []
 }
 
 /**
@@ -440,6 +690,30 @@ export interface PlatformProject {
  * @interface Webhook
  */
 export interface Webhook {
+    /**
+     * 
+     * @type {string}
+     * @memberof Webhook
+     */
+    id: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Webhook
+     */
+    name: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Webhook
+     */
+    url: string
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Webhook
+     */
+    events: Array<string>;
     /**
      * 
      * @type {boolean}
@@ -451,7 +725,7 @@ export interface Webhook {
      * @type {string}
      * @memberof Webhook
      */
-    name: string
+    state: string
     /**
      * 
      * @type {Array<Property>}
@@ -466,16 +740,10 @@ export interface Webhook {
     secrets: Array<Secret>;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Webhook
      */
-    state: string
-    /**
-     * 
-     * @type {string}
-     * @memberof Webhook
-     */
-    url: string
+    followed: boolean
 }
 
 /**

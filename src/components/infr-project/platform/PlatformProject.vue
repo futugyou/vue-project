@@ -15,7 +15,8 @@ import SecretPage from './Secret.vue'
 
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
-    PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty
+    PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty,
+    DefaultWebhook, DefaultPlatformProject
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
@@ -27,8 +28,7 @@ interface PlatformProjectView extends PlatformProject {
 const convertProject = (model: PlatformProject | undefined): PlatformProjectView => {
     if (model == undefined) {
         return {
-            id: "", operate: OperateEnum.Upsert,
-            name: "", url: "", followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: []
+            operate: OperateEnum.Upsert, ...DefaultPlatformProject
         }
     }
 
@@ -162,9 +162,9 @@ const addNewWebhook = () => {
 
     let view = _.cloneDeep(editModel.value)
     if (view.webhooks == undefined) {
-        view = { ...view, webhooks: [{ name: "", url: "", properties: [], activate: true, state: 'Init', secrets: [] }] }
+        view = { ...view, webhooks: [DefaultWebhook] }
     } else {
-        view.webhooks.push({ name: "", url: "", properties: [], activate: true, state: 'Init', secrets: [] })
+        view.webhooks.push(DefaultWebhook)
     }
     editModel.value = view
 }
