@@ -65,7 +65,7 @@ const logined = computed(() =>
         <v-btn @click="addProperty()" variant="text" v-if="logined" :disabled="disabled" icon="md:add"></v-btn>
     </div>
 
-    <v-row v-for="(property, index) in editModel" :key="index" class="mt-2">
+    <v-row v-for="(property, index) in editModel" :key="index" class="mt-2" v-if="logined">
         <v-col :cols="logined ? 5 : 6" class="pt-0">
             <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)" v-model="property.key" label="Key"
                 :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false" :disabled="disabled" />
@@ -79,6 +79,26 @@ const logined = computed(() =>
             <v-btn icon="md:remove" @click="removeProperty(index)" :disabled="disabled"></v-btn>
         </v-col>
     </v-row>
+
+    <v-table v-if="!logined" class="mt-2">
+        <thead>
+            <tr>
+                <th class="text-left">
+                    Key
+                </th>
+                <th class="text-left">
+                    Value
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(value, key) in editModel" :key="value.key">
+                <td class="">{{ value.key }}</td>
+                <td>{{ value.value }}</td>
+            </tr>
+        </tbody>
+    </v-table>
+
     <v-row v-if="editModel.length == 0" class="mt-2">
         <v-col>
         </v-col>
