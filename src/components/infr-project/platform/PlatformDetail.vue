@@ -10,10 +10,10 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
-import PlatformProjectVue from './PlatformProject.vue'
+import PlatformProjectVue from './Project.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
-import Basic from './Basic.vue'
-import PlatformProjectList from './PlatformProjectList.vue'
+import PlatformBasic from './PlatformBasic.vue'
+import PlatformProjectList from './ProjectList.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -164,7 +164,7 @@ const HandleProjectFollow = (pro: PlatformProject) => {
 
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
             <v-tabs-window-item value="one" v-if="detail">
-                <Basic :model="detail" @cancel="platformChangeCanceled" @save="platformChanged"></Basic>
+                <PlatformBasic :model="detail" @cancel="platformChangeCanceled" @save="platformChanged"></PlatformBasic>
             </v-tabs-window-item>
 
             <v-tabs-window-item class="pa-4 h-100 overflow-y-auto" value="two" v-if="detail && detail.projects">

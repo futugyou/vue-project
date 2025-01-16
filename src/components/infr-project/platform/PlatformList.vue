@@ -10,7 +10,7 @@ import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
 import Spinners from '@/common/Spinners.vue'
 import { PlatformView, PlatformApiFactory, PlatformDetailView } from './platform'
 import VuetifyModal from '@/common/VuetifyModal.vue'
-import Basic from './Basic.vue'
+import PlatformBasic from './PlatformBasic.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -100,7 +100,7 @@ const platformCreateCanceled = () => {
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Platform" :width="700" title="Create Platform" hideFooter
                 v-if="authService.isAuthenticated()">
-                <Basic @cancel="platformCreateCanceled" @save="platformCreated"></Basic>
+                <PlatformBasic @cancel="platformCreateCanceled" @save="platformCreated"></PlatformBasic>
             </VuetifyModal>
         </v-toolbar>
         <Spinners v-if="isLoading"></Spinners>

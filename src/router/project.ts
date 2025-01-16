@@ -5,8 +5,8 @@ const ResourceEdit = () => import('@/components/infr-project/resource/Edit.vue')
 const ResourceDetail = () => import('@/components/infr-project/resource/Detail.vue')
 
 
-const PlatformList = () => import('@/components/infr-project/platform/List.vue')
-const PlatformDetail = () => import('@/components/infr-project/platform/Detail.vue')
+const PlatformList = () => import('@/components/infr-project/platform/PlatformList.vue')
+const PlatformDetail = () => import('@/components/infr-project/platform/PlatformDetail.vue')
 
 
 const VaultList = () => import('@/components/infr-project/vault/List.vue')
