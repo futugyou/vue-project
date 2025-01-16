@@ -94,7 +94,7 @@ const disabled = computed(() => {
 
 <template>
     <v-sheet class="elevation-3">
-        <div class="d-flex align-center align-center ga-6 pa-3">
+        <div class="d-flex align-center ga-6 pa-3">
             <label class="v-label">Secrets</label>
             <v-btn @click="addSecret()" variant="text" v-if="logined" icon="md:add" :disabled="disabled"></v-btn>
         </div>
@@ -105,11 +105,16 @@ const disabled = computed(() => {
                     label="Key" :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
                     :disabled="disabled" />
             </v-col>
-            <v-col :cols="logined ? 5 : 6" class="pt-0">
+            <v-col :cols="logined ? 5 : 6" class="pt-0 d-flex align-start">
                 <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
                     label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
                     :disabled="disabled" class="mb-5" :items="vaultOptions" item-value="value"
                     item-title="label"></v-select>
+                <v-tooltip :text="secret.mask_value">
+                    <template v-slot:activator="{ props }">
+                        <v-icon icon="md:info" v-bind="props" class="ma-2"></v-icon>
+                    </template>
+                </v-tooltip>
             </v-col>
             <v-col cols="2" class="pt-2" v-if="logined">
                 <v-btn icon="md:remove" @click="removeSecret(index)" :disabled="disabled"></v-btn>
@@ -125,12 +130,16 @@ const disabled = computed(() => {
                     <th class="text-left">
                         Value
                     </th>
+                    <th class="text-left">
+                        Masked Value
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(value, key) in editModel" :key="value.key">
                     <td class="">{{ value.key }}</td>
                     <td>{{ value.vault_key }}</td>
+                    <td>{{ value.mask_value }}</td>
                 </tr>
             </tbody>
         </v-table>

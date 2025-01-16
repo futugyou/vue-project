@@ -61,7 +61,7 @@ const logined = computed(() =>
 
 <template>
     <v-sheet class="elevation-3">
-        <div class="d-flex align-center align-center ga-6 pa-3">
+        <div class="d-flex align-center ga-6 pa-3">
             <label class="v-label">Properties</label>
             <v-btn @click="addProperty()" variant="text" v-if="logined" :disabled="disabled" icon="md:add"></v-btn>
         </div>
