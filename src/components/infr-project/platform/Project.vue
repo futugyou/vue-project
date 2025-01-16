@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
+import MarkdownBadge from '@/common/MarkdownBadge.vue'
 import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
@@ -77,6 +78,10 @@ const props = defineProps<{
     follow?: boolean,
 }>()
 
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
+
 const isLoading = ref(false)
 const webhookDatas = ref<Webhook[]>(props.model?.webhooks ?? [])
 const confirmEditModel = ref<ConfirmEditModel>(convertToConfirmEditModel(props.model))
@@ -85,6 +90,10 @@ const dialog = ref(false)
 const tab = ref("one")
 
 const save = async () => {
+    if (!logined.value) {
+        return
+    }
+
     const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
@@ -156,6 +165,10 @@ const emit = defineEmits<{
 }>()
 
 const deleteProject = async () => {
+    if (!logined.value) {
+        return
+    }
+
     if (props.platformId && confirmEditModel.value.id) {
         isLoading.value = true
         const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdDelete(props.platformId, confirmEditModel.value.id)
@@ -227,10 +240,6 @@ const disabled = computed(() => {
     return !authService.isAuthenticated()
 })
 
-const logined = computed(() =>
-    authService.isAuthenticated()
-)
-
 </script>
 
 <template>
@@ -244,8 +253,7 @@ const logined = computed(() =>
 
         <v-tabs-window v-model="tab" v-if="!isLoading">
             <v-tabs-window-item value="one">
-
-                <v-card class="h-100 overflow-y-auto">
+                <v-card class="h-100 overflow-y-auto" v-if="logined">
                     <v-confirm-edit v-model="confirmEditModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
                             <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
@@ -281,7 +289,7 @@ const logined = computed(() =>
                                 :disabled="disabled"></SecretPage>
 
                             <v-spacer></v-spacer>
-                            <v-sheet class="d-flex justify-end ga-3" v-if="logined">
+                            <v-sheet class="d-flex justify-end ga-3">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
                                     v-model:dialog="dialog" @save="deleteProject"
                                     v-if="proxyModel.value.id && followRef == undefined" :disabled="disabled">
@@ -291,6 +299,45 @@ const logined = computed(() =>
                             </v-sheet>
                         </template>
                     </v-confirm-edit>
+                </v-card>
+
+                <v-card class="h-100 overflow-y-auto" v-if="!logined">
+                    <template v-slot:title>
+                        <p class="text-h4 font-weight-black">{{ model?.name }}</p>
+                    </template>
+                    <template v-slot:subtitle>
+                        <v-sheet class="d-flex align-center">
+                            <a :href="confirmEditModel.url" target="_blank" class="ga-6 py-1 px-2">
+                                <v-hover>
+                                    <template v-slot:default="{ props }">
+                                        {{ model?.url }}
+                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                    </template>
+                                </v-hover>
+                            </a>
+                        </v-sheet>
+                    </template>
+                    <template v-slot:append>
+                        <v-badge :color="model?.followed ? 'green' : 'orange'"
+                            :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+                    </template>
+                    <template v-slot:text>
+                        <v-sheet class="d-flex flex-column ga-3">
+                            <div class="text-medium-emphasis" v-if="model?.description">
+                                {{ model?.description }}
+                            </div>
+
+                            <MarkdownBadge :badgeMarkdown="model?.badge_markdown ?? ''" v-if="model?.badge_markdown">
+                            </MarkdownBadge>
+
+                            <PropertyPage :modelValue="model?.properties ?? []" :validate-manager="validateManager"
+                                :disabled="disabled">
+                            </PropertyPage>
+                            <SecretPage :modelValue="model?.secrets ?? []" :validate-manager="validateManager"
+                                :disabled="disabled">
+                            </SecretPage>
+                        </v-sheet>
+                    </template>
                 </v-card>
 
             </v-tabs-window-item>
