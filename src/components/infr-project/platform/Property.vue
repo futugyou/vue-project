@@ -80,7 +80,7 @@ const logined = computed(() =>
         </v-col>
     </v-row>
 
-    <v-table v-if="!logined" class="mt-2">
+    <v-table v-if="!logined && editModel.length > 0" class="mt-2">
         <thead>
             <tr>
                 <th class="text-left">

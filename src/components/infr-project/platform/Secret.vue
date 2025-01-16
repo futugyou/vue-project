@@ -21,6 +21,10 @@ const props = defineProps<{
     disabled?: boolean,
 }>()
 
+const logined = computed(() =>
+    authService.isAuthenticated()
+)
+
 const editModel = ref<Secret[]>(props.modelValue ?? [])
 
 const emit = defineEmits<{
@@ -48,6 +52,10 @@ const vaultOptions = computed(() =>
 )
 
 const fetchVaultData = async () => {
+    if (!logined.value) {
+        return
+    }
+
     if (vaultList.value.length > 0) {
         return
     }
@@ -81,9 +89,6 @@ const disabled = computed(() => {
     return !logined.value
 })
 
-const logined = computed(() =>
-    authService.isAuthenticated()
-)
 
 </script>
 
@@ -93,7 +98,7 @@ const logined = computed(() =>
         <v-btn @click="addSecret()" variant="text" v-if="logined" icon="md:add" :disabled="disabled"></v-btn>
     </div>
 
-    <v-row v-for="(secret, index) in editModel" :key="index" class="mt-2">
+    <v-row v-for="(secret, index) in editModel" :key="index" class="mt-2" v-if="logined">
         <v-col :cols="logined ? 5 : 6" class="pt-0">
             <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key" label="Key"
                 :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false" :disabled="disabled" />
@@ -107,6 +112,26 @@ const logined = computed(() =>
             <v-btn icon="md:remove" @click="removeSecret(index)" :disabled="disabled"></v-btn>
         </v-col>
     </v-row>
+
+    <v-table v-if="!logined && editModel.length > 0" class="mt-2">
+        <thead>
+            <tr>
+                <th class="text-left">
+                    Key
+                </th>
+                <th class="text-left">
+                    Value
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(value, key) in editModel" :key="value.key">
+                <td class="">{{ value.key }}</td>
+                <td>{{ value.vault_key }}</td>
+            </tr>
+        </tbody>
+    </v-table>
+
     <v-row v-if="editModel.length == 0" class="mt-2">
         <v-col>
         </v-col>
