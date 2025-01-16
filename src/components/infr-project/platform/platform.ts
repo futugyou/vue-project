@@ -902,6 +902,28 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'DELETE', undefined, options)
         },
         /**
+         * get platform project
+         * @summary get platform project
+         * @param {string} id Platform ID
+         * @param {string} projectId Platform Project ID
+         * @param {*} [options] Override http request option.
+         */
+         v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1PlatformIdProjectProjectIdGet.')
+            }
+            // verify required parameter 'projectId' is not null or undefined
+            if (projectId === null || projectId === undefined) {
+                throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling v1PlatformIdProjectProjectIdGet.')
+            }
+            const localVarPath = `/api/v1/platform/{id}/project/{project_id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
+        },
+        /**
          * update platform webhook
          * @summary update platform webhook
          * @param {UpdatePlatformWebhookRequest} body Request body
@@ -1089,7 +1111,16 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-        v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
+         v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
+        
+         /**
+         * get platform project
+         * @summary delete platform project
+         * @param {string} id Platform ID
+         * @param {string} projectId Platform Project ID
+         * @param {*} [options] Override http request option.
+         */
+        v1PlatformIdProjectProjectIdGet: (id: string, projectId: string, options?: any) => () => fetchData<PlatformProject>(fetchParamsCreator.v1PlatformIdProjectProjectIdGet(id, projectId, options)),
 
         /**
          * update platform webhook
@@ -1201,6 +1232,16 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
          */
         v1PlatformIdProjectProjectIdDelete(id: string, projectId: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdDelete(id, projectId, options)()
+        },
+        /**
+         * get platform project
+         * @summary get platform project
+         * @param {string} id Platform ID
+         * @param {string} projectId Platform Project ID
+         * @param {*} [options] Override http request option.
+         */
+         v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
+            return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
         },
         /**
          * update platform webhook
@@ -1332,6 +1373,18 @@ export class PlatformApi extends BaseAPI {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdDelete(id, projectId, options)()
     }
 
+    /**
+     * get platform project
+     * @summary get platform project
+     * @param {string} id Platform ID
+     * @param {string} projectId Platform Project ID
+     * @param {*} [options] Override http request option.
+     * @memberof PlatformApi
+     */
+    public v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
+        return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
+    }
+    
     /**
      * update platform webhook
      * @summary update platform webhook
