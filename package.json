@@ -1,6 +1,6 @@
 {
-  "name": "aws-resource-project",
-  "version": "1.0.0",
+  "name": "vue-project",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {

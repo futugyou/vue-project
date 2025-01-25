@@ -84,7 +84,7 @@ const save = async () => {
     }
 
     isLoading.value = true
-    const { data, error } = await VaultApiFactory().v1VaultPost(request)
+    const { data, error } = await VaultApiFactory().v1VaultBatchPost(request)
     isLoading.value = false
 
     clear()

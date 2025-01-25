@@ -8,7 +8,7 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import {
-    VaultApiFactory, VaultView, CreateVaultsRequest, ChangeVaultRequest, StorageMediaEnum, VaultTypeEnum,
+    VaultApiFactory, VaultView, CreateVaultRequest, ChangeVaultRequest, StorageMediaEnum, VaultTypeEnum,
     CreateVaultsResponse
 } from './vault'
 
@@ -54,11 +54,11 @@ const save = async () => {
     }
 
     if (editModel.value.id == '') {
-        const request: CreateVaultsRequest = {
+        const request: CreateVaultRequest = {
             force_insert: false,
-            vaults: [item]
+            ...item
         }
-        response = await VaultApiFactory().v1VaultBatchPost(request)
+        response = await VaultApiFactory().v1VaultPost(request)
     } else {
         const request: ChangeVaultRequest = {
             force_insert: false,
