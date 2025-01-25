@@ -65,7 +65,7 @@ const fetchVaultData = async () => {
         return
     }
 
-    vaultList.value = _.orderBy(data, "key", "desc")
+    vaultList.value = _.orderBy((data ?? []).filter(p => p.vault_type != "system"), "key", "desc")
 }
 
 watchEffect(async () => fetchVaultData())
