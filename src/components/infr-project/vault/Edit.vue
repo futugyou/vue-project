@@ -58,7 +58,7 @@ const save = async () => {
             force_insert: false,
             vaults: [item]
         }
-        response = await VaultApiFactory().v1VaultPost(request)
+        response = await VaultApiFactory().v1VaultBatchPost(request)
     } else {
         const request: ChangeVaultRequest = {
             force_insert: false,
