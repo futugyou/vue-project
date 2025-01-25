@@ -401,6 +401,23 @@ export const VaultApiFetchParamCreator = (configuration?: any) => {
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', request, options)
         },
+        /**
+         * create vault 
+         * @summary create vault 
+         * @param {CreateVaultsRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultPost(request: CreateVaultRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'request' is not null or undefined
+            if (request === null || request === undefined) {
+                throw new RequiredError('request', 'Required parameter request was null or undefined when calling v1VaultPost.')
+            }
+            const localVarPath = `/api/v1/vault`
+
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'POST', request, options)
+        },
     }
 }
 
@@ -471,8 +488,17 @@ export const VaultApiFp = function (configuration?: any) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-         v1VaultBatchPost: (request: CreateVaultsRequest, options?: any) =>
+        v1VaultBatchPost: (request: CreateVaultsRequest, options?: any) =>
             () => fetchData<CreateVaultsResponse>(fetchParamsCreator.v1VaultBatchPost(request, options)),
+        /**
+         * create vault
+         * @summary create vault
+         * @param {CreateVaultRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultPost: (request: CreateVaultRequest, options?: any) =>
+            () => fetchData<VaultView>(fetchParamsCreator.v1VaultPost(request, options)),
     }
 }
 
@@ -548,6 +574,16 @@ export const VaultApiFactory = function (configuration?: any) {
          */
         v1VaultBatchPost(request: CreateVaultsRequest, options?: any) {
             return VaultApiFp(configuration).v1VaultBatchPost(request, options)()
+        },
+        /**
+         * create vault
+         * @summary create vault
+         * @param {CreateVaultRequest} request Request body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        v1VaultPost(request: CreateVaultRequest, options?: any) {
+            return VaultApiFp(configuration).v1VaultPost(request, options)()
         },
     }
 }
@@ -636,6 +672,18 @@ export class VaultApi extends BaseAPI {
      */
     public v1VaultBatchPost(request: CreateVaultsRequest, options?: any) {
         return VaultApiFp(this.configuration).v1VaultBatchPost(request, options)()
+    }
+
+    /**
+     * create vault
+     * @summary create vault
+     * @param {CreateVaultRequest} request Request body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VaultApi
+     */
+    public v1VaultPost(request: CreateVaultRequest, options?: any) {
+        return VaultApiFp(this.configuration).v1VaultPost(request, options)()
     }
 
 }
