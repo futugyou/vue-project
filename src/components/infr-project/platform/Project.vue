@@ -16,7 +16,7 @@ import SecretPage from './Secret.vue'
 
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
-    PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty,
+    PlatformDetailView, PlatformProject, PlatformProviderProject, ProviderEnum, checkPlatfromProjectProperty,
     DefaultWebhook, Property, Secret, Webhook
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
@@ -85,6 +85,7 @@ const logined = computed(() =>
 const isLoading = ref(false)
 const webhookDatas = ref<Webhook[]>(props.model?.webhooks ?? [])
 const confirmEditModel = ref<ConfirmEditModel>(convertToConfirmEditModel(props.model))
+const platformProjectDetail = ref<PlatformProviderProject>()
 
 const dialog = ref(false)
 const tab = ref("one")
@@ -154,6 +155,29 @@ const save = async () => {
     }
 }
 
+const loadDetail = async () => {
+    if (isLoading.value || props.model == undefined) {
+        return
+    }
+
+    isLoading.value = true
+    const { data, error } = await PlatformApiFactory().v2PlatformIdProjectProjectIdGet(props.platformId, props.model.id)
+    isLoading.value = false
+    if (error) {
+        platformProjectDetail.value = undefined
+        msg.value = {
+            errorMessages: [error.message],
+            delay: 3000,
+        }
+
+        return
+    }
+
+    if (data && data.provider_project) {
+        platformProjectDetail.value = data.provider_project
+    }
+}
+
 const cancel = () => {
     emit('cancel')
 }
@@ -207,6 +231,12 @@ watch(() => props.model, (newVal) => {
     confirmEditModel.value = convertToConfirmEditModel(props.model)
 })
 
+watch(() => tab.value, async (newVal) => {
+    if (newVal == "three") {
+        await loadDetail()
+    }
+})
+
 
 onUnmounted(() => {
     validateManager.clearInputs()
@@ -249,6 +279,7 @@ const disabled = computed(() => {
         <v-tabs v-model="tab" color="deep-purple-accent-4">
             <v-tab value="one">Project Basic</v-tab>
             <v-tab value="two" v-if="confirmEditModel.id">Webhooks</v-tab>
+            <v-tab value="three" v-if="confirmEditModel.id">Details</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="tab" v-if="!isLoading">
@@ -355,6 +386,34 @@ const disabled = computed(() => {
                         <v-btn icon="md:add" size="x-large" @click="addNewWebhook" :disabled="disabled"></v-btn>
                     </v-col>
                 </v-row>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="three" v-if="platformProjectDetail">
+                <!-- TODO: show more detail info -->
+                <v-card class="h-100 overflow-y-auto">
+                    <template v-slot:title>
+                        <p class="text-h4 font-weight-black">{{ platformProjectDetail.name }}</p>
+                    </template>
+                    <template v-slot:subtitle>
+                        <v-sheet class="d-flex align-center">
+                            <a :href="platformProjectDetail.url" target="_blank" class="ga-6 py-1 px-2">
+                                <v-hover>
+                                    <template v-slot:default="{ props }">
+                                        {{ platformProjectDetail.url }}
+                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                    </template>
+                                </v-hover>
+                            </a>
+                        </v-sheet>
+                    </template>
+                    <template v-slot:text>
+                        <v-sheet class="d-flex flex-column ga-3">
+                            <div class="text-medium-emphasis" v-if="model?.description">
+                                {{ platformProjectDetail.description }}
+                            </div>
+                        </v-sheet>
+                    </template>
+                </v-card>
             </v-tabs-window-item>
         </v-tabs-window>
 
