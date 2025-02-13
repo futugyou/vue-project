@@ -67,7 +67,9 @@ export enum VaultTypeEnum {
     Common = <any>'common',
     Project = <any>'project',
     Resource = <any>'resource',
-    Platform = <any>'platform'
+    Platform = <any>'platform',
+    PlatformProject = <any>'platform_project',
+    PlatformWebhook = <any>'platform_webhook',
 }
 
 /**
