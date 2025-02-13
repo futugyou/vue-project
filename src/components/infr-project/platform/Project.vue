@@ -13,6 +13,7 @@ import { useAuth } from '@/plugins/auth'
 import WebhookPage from './Webhook.vue'
 import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
+import { timeFormat } from '@/tools/timeFormat'
 
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
@@ -227,6 +228,7 @@ const addNewWebhook = () => {
 }
 
 watch(() => props.model, (newVal) => {
+    tab.value = "one"
     webhookDatas.value = props.model?.webhooks ?? []
     confirmEditModel.value = convertToConfirmEditModel(props.model)
 })
@@ -408,10 +410,36 @@ const disabled = computed(() => {
                     </template>
                     <template v-slot:text>
                         <v-sheet class="d-flex flex-column ga-3">
-                            <div class="text-medium-emphasis" v-if="model?.description">
+                            <div class="text-medium-emphasis" v-if="platformProjectDetail.description">
                                 {{ platformProjectDetail.description }}
                             </div>
                         </v-sheet>
+
+                        <v-timeline v-if="platformProjectDetail.workflow_runs" align="center" justify="center">
+                            <v-timeline-item v-for="(workflowRun, i) in platformProjectDetail.workflow_runs" :key="i"
+                                dot-color="indigo-lighten-2" icon="md:schedule">
+                                <v-card v-if="!isLoading" class="d-flex flex-column" hover>
+                                    <template v-slot:title> {{ timeFormat(workflowRun.createdAt) }} </template>
+
+                                    <template v-slot:subtitle> {{ workflowRun.name }} </template>
+
+                                    <v-card-text class="d-flex flex-column ga-3 text-truncate">
+                                        <v-sheet class="d-flex flex-wrap ga-2">
+                                            <v-chip>
+                                                <strong>{{ workflowRun.status }}</strong>&nbsp;
+                                            </v-chip>
+                                        </v-sheet>
+
+                                        <v-divider></v-divider>
+
+                                        <MarkdownBadge :badgeMarkdown="workflowRun.badge_markdown ?? ''"
+                                            v-if="workflowRun.badge_markdown">
+                                        </MarkdownBadge>
+                                    </v-card-text>
+                                </v-card>
+                            </v-timeline-item>
+                        </v-timeline>
+
                     </template>
                 </v-card>
             </v-tabs-window-item>
