@@ -491,6 +491,155 @@ export interface PlatformProject {
 /**
  * 
  * @export
+ * @interface PlatformProjectV2
+ */
+export interface PlatformProjectV2 {
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProjectV2
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProjectV2
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProjectV2
+     */
+    url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProjectV2
+     */
+    description: string;
+    /**
+     * 
+     * @type {Array<Property>}
+     * @memberof PlatformProjectV2
+     */
+    properties: Array<Property>;
+    /**
+     * 
+     * @type {Array<Secret>}
+     * @memberof PlatformProjectV2
+     */
+    secrets: Array<Secret>;
+    /**
+     * 
+     * @type {Array<Webhook>}
+     * @memberof PlatformProjectV2
+     */
+    webhooks: Array<Webhook>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProjectV2
+     */
+    provider_project_id: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PlatformProjectV2
+     */
+    followed: boolean;
+    /**
+     * 
+     * @type {PlatformProviderProject}
+     * @memberof PlatformProjectV2
+     */
+    provider_project: PlatformProviderProject;
+}
+
+export interface PlatformProviderProject {
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProviderProject
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProviderProject
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProviderProject
+     */
+    url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProviderProject
+     */
+    description: string;
+    /**
+     * 
+     * @type {Array<Property>}
+     * @memberof PlatformProviderProject
+     */
+    properties: Array<Property>;
+    /**
+     * 
+     * @type {Array<Webhook>}
+     * @memberof PlatformProviderProject
+     */
+    webhooks: Array<Webhook>;
+    /**
+     * 
+     * @type {Array<EnvironmentVariable>}
+     * @memberof PlatformProviderProject
+     */
+    environment_variables: Array<EnvironmentVariable>;
+    /**
+    * 
+    * @type {Array<string>}
+    * @memberof PlatformProviderProject
+    */
+    environments: Array<string>;
+    /**
+     * 
+     * @type {Array<Workflow>}
+     * @memberof PlatformProviderProject
+     */
+    workflows: Array<Workflow>;
+    /**
+     * 
+     * @type {Array<WorkflowRun>}
+     * @memberof PlatformProviderProject
+     */
+    workflow_runs: Array<WorkflowRun>;
+    /**
+     * 
+     * @type {Array<Deployment>}
+     * @memberof PlatformProviderProject
+     */
+    deployments: Array<Deployment>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProviderProject
+     */
+    badge_url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProviderProject
+     */
+    badge_markdown: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Deployment
  */
 export interface Deployment {
@@ -908,7 +1057,7 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-         v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options: any = {}): FetchArgs {
+        v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options: any = {}): FetchArgs {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
                 throw new RequiredError('id', 'Required parameter id was null or undefined when calling v1PlatformIdProjectProjectIdGet.')
@@ -1111,15 +1260,15 @@ export const PlatformApiFp = function (configuration?: any) {
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-         v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
-        
-         /**
-         * get platform project
-         * @summary delete platform project
-         * @param {string} id Platform ID
-         * @param {string} projectId Platform Project ID
-         * @param {*} [options] Override http request option.
-         */
+        v1PlatformIdProjectProjectIdDelete: (id: string, projectId: string, options?: any) => () => fetchData<PlatformDetailView>(fetchParamsCreator.v1PlatformIdProjectProjectIdDelete(id, projectId, options)),
+
+        /**
+        * get platform project
+        * @summary delete platform project
+        * @param {string} id Platform ID
+        * @param {string} projectId Platform Project ID
+        * @param {*} [options] Override http request option.
+        */
         v1PlatformIdProjectProjectIdGet: (id: string, projectId: string, options?: any) => () => fetchData<PlatformProject>(fetchParamsCreator.v1PlatformIdProjectProjectIdGet(id, projectId, options)),
 
         /**
@@ -1240,7 +1389,7 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
          * @param {string} projectId Platform Project ID
          * @param {*} [options] Override http request option.
          */
-         v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
+        v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
         },
         /**
@@ -1384,7 +1533,7 @@ export class PlatformApi extends BaseAPI {
     public v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
     }
-    
+
     /**
      * update platform webhook
      * @summary update platform webhook
