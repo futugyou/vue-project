@@ -1073,6 +1073,28 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
         /**
+         * get platform project v2
+         * @summary get platform project v2
+         * @param {string} id Platform ID
+         * @param {string} projectId Platform Project ID
+         * @param {*} [options] Override http request option.
+         */
+        v2PlatformIdProjectProjectIdGet(id: string, projectId: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v2PlatformIdProjectProjectIdGet.')
+            }
+            // verify required parameter 'projectId' is not null or undefined
+            if (projectId === null || projectId === undefined) {
+                throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling v2PlatformIdProjectProjectIdGet.')
+            }
+            const localVarPath = `/api/v2/platform/{id}/project/{project_id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
+            const path = new URL(BASE_PATH + localVarPath)
+            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
+        },
+        /**
          * update platform webhook
          * @summary update platform webhook
          * @param {UpdatePlatformWebhookRequest} body Request body
@@ -1272,6 +1294,15 @@ export const PlatformApiFp = function (configuration?: any) {
         v1PlatformIdProjectProjectIdGet: (id: string, projectId: string, options?: any) => () => fetchData<PlatformProject>(fetchParamsCreator.v1PlatformIdProjectProjectIdGet(id, projectId, options)),
 
         /**
+        * get platform project v2
+        * @summary delete platform project v2
+        * @param {string} id Platform ID
+        * @param {string} projectId Platform Project ID
+        * @param {*} [options] Override http request option.
+        */
+        v2PlatformIdProjectProjectIdGet: (id: string, projectId: string, options?: any) => () => fetchData<PlatformProjectV2>(fetchParamsCreator.v2PlatformIdProjectProjectIdGet(id, projectId, options)),
+
+        /**
          * update platform webhook
          * @summary update platform webhook
          * @param {UpdatePlatformWebhookRequest} body Request body
@@ -1391,6 +1422,16 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
          */
         v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
+        },
+        /**
+         * get platform project v2
+         * @summary get platform project v2
+         * @param {string} id Platform ID
+         * @param {string} projectId Platform Project ID
+         * @param {*} [options] Override http request option.
+         */
+        v2PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
+            return PlatformApiFp(configuration).v2PlatformIdProjectProjectIdGet(id, projectId, options)()
         },
         /**
          * update platform webhook
@@ -1532,6 +1573,18 @@ export class PlatformApi extends BaseAPI {
      */
     public v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
+    }
+
+    /**
+     * get platform project v2
+     * @summary get platform project v2
+     * @param {string} id Platform ID
+     * @param {string} projectId Platform Project ID
+     * @param {*} [options] Override http request option.
+     * @memberof PlatformApi
+     */
+    public v2PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
+        return PlatformApiFp(this.configuration).v2PlatformIdProjectProjectIdGet(id, projectId, options)()
     }
 
     /**
