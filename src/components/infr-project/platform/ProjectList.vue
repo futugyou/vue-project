@@ -19,7 +19,16 @@ const selfProjects = computed(() =>
 )
 
 const providerProjects = computed(() =>
-    props.projects.filter(p => p.provider_project_id != "" && !p.followed) ?? []
+    _.map(props.projects.filter(p => p.id == "" && p.provider_project), p => ({
+        id: p.provider_project!.id,
+        name: p.provider_project!.name,
+        url: p.provider_project!.url,
+        followed: false,
+        properties: p.provider_project!.properties,
+        provider_project_id: p.provider_project!.id,
+        secrets: [], webhooks: [],
+        description: p.provider_project!.description,
+    }))
 )
 
 const disabled = computed(() => {
@@ -46,8 +55,8 @@ const HandleFollow = (project: PlatformProject) => {
 <template>
     <v-sheet>
         <Empty v-if="projects!.length == 0"></Empty>
-        <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i" class="mx-auto px-3 ma-6" elevation="10"
-            rounded>
+        <v-sheet v-for="projects, i in [selfProjects, providerProjects]" :key="i" class="mx-auto px-3 ma-6"
+            elevation="10" rounded>
             <v-row class="elevation-1">
                 <v-col cols="12" class="pa-3">
                     <span class="text-h5 pl-3">

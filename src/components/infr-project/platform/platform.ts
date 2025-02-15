@@ -392,12 +392,6 @@ export interface PlatformDetailView {
 export interface PlatformProject {
     /**
      * 
-     * @type {boolean}
-     * @memberof PlatformProject
-     */
-    followed: boolean;
-    /**
-     * 
      * @type {string}
      * @memberof PlatformProject
      */
@@ -410,28 +404,28 @@ export interface PlatformProject {
     name: string;
     /**
      * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    url: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PlatformProject
+     */
+    description: string;
+    /**
+     * 
      * @type {Array<Property>}
      * @memberof PlatformProject
      */
     properties: Array<Property>;
     /**
      * 
-     * @type {string}
-     * @memberof PlatformProject
-     */
-    provider_project_id: string;
-    /**
-     * 
      * @type {Array<Secret>}
      * @memberof PlatformProject
      */
     secrets: Array<Secret>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProject
-     */
-    url: string;
     /**
      * 
      * @type {Array<Webhook>}
@@ -442,118 +436,20 @@ export interface PlatformProject {
      * 
      * @type {string}
      * @memberof PlatformProject
-     */
-    description: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PlatformProject
-     */
-    environments: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProject
-     */
-    badge_url: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProject
-     */
-    badge_markdown: string;
-    /**
-     * 
-     * @type {Array<EnvironmentVariable>}
-     * @memberof PlatformProject
-     */
-    environment_variables: Array<EnvironmentVariable>;
-    /**
-     * 
-     * @type {Array<Workflow>}
-     * @memberof PlatformProject
-     */
-    workflows: Array<Workflow>;
-    /**
-     * 
-     * @type {Array<WorkflowRun>}
-     * @memberof PlatformProject
-     */
-    workflow_runs: Array<WorkflowRun>;
-    /**
-     * 
-     * @type {Array<Deployment>}
-     * @memberof PlatformProject
-     */
-    deployments: Array<Deployment>;
-}
-
-/**
- * 
- * @export
- * @interface PlatformProjectV2
- */
-export interface PlatformProjectV2 {
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProjectV2
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProjectV2
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProjectV2
-     */
-    url: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProjectV2
-     */
-    description: string;
-    /**
-     * 
-     * @type {Array<Property>}
-     * @memberof PlatformProjectV2
-     */
-    properties: Array<Property>;
-    /**
-     * 
-     * @type {Array<Secret>}
-     * @memberof PlatformProjectV2
-     */
-    secrets: Array<Secret>;
-    /**
-     * 
-     * @type {Array<Webhook>}
-     * @memberof PlatformProjectV2
-     */
-    webhooks: Array<Webhook>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PlatformProjectV2
      */
     provider_project_id: string;
     /**
      * 
      * @type {boolean}
-     * @memberof PlatformProjectV2
+     * @memberof PlatformProject
      */
     followed: boolean;
     /**
      * 
      * @type {PlatformProviderProject}
-     * @memberof PlatformProjectV2
+     * @memberof PlatformProjec
      */
-    provider_project: PlatformProviderProject;
+    provider_project?: PlatformProviderProject;
 }
 
 export interface PlatformProviderProject {
@@ -832,13 +728,6 @@ export const DefaultWebhook: Webhook = {
     followed: false
 }
 
-export const DefaultPlatformProject: PlatformProject = {
-    id: "",
-    name: "", url: "", followed: false, properties: [], provider_project_id: "", secrets: [], webhooks: [],
-    description: "", environments: [], badge_url: "", badge_markdown: "",
-    environment_variables: [], workflows: [], workflow_runs: [], deployments: []
-}
-
 /**
  * 
  * @export
@@ -1072,28 +961,7 @@ export const PlatformApiFetchParamCreator = function (configuration?: any) {
             const path = new URL(BASE_PATH + localVarPath)
             return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
         },
-        /**
-         * get platform project v2
-         * @summary get platform project v2
-         * @param {string} id Platform ID
-         * @param {string} projectId Platform Project ID
-         * @param {*} [options] Override http request option.
-         */
-        v2PlatformIdProjectProjectIdGet(id: string, projectId: string, options: any = {}): FetchArgs {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id', 'Required parameter id was null or undefined when calling v2PlatformIdProjectProjectIdGet.')
-            }
-            // verify required parameter 'projectId' is not null or undefined
-            if (projectId === null || projectId === undefined) {
-                throw new RequiredError('projectId', 'Required parameter projectId was null or undefined when calling v2PlatformIdProjectProjectIdGet.')
-            }
-            const localVarPath = `/api/v2/platform/{id}/project/{project_id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"project_id"}}`, encodeURIComponent(String(projectId)))
-            const path = new URL(BASE_PATH + localVarPath)
-            return FetchParamCreator(configuration).BuildFetchArgs(path, 'GET', undefined, options)
-        },
+
         /**
          * update platform webhook
          * @summary update platform webhook
@@ -1293,14 +1161,6 @@ export const PlatformApiFp = function (configuration?: any) {
         */
         v1PlatformIdProjectProjectIdGet: (id: string, projectId: string, options?: any) => () => fetchData<PlatformProject>(fetchParamsCreator.v1PlatformIdProjectProjectIdGet(id, projectId, options)),
 
-        /**
-        * get platform project v2
-        * @summary delete platform project v2
-        * @param {string} id Platform ID
-        * @param {string} projectId Platform Project ID
-        * @param {*} [options] Override http request option.
-        */
-        v2PlatformIdProjectProjectIdGet: (id: string, projectId: string, options?: any) => () => fetchData<PlatformProjectV2>(fetchParamsCreator.v2PlatformIdProjectProjectIdGet(id, projectId, options)),
 
         /**
          * update platform webhook
@@ -1422,16 +1282,6 @@ export const PlatformApiFactory = function (configuration?: any, fetch?: FetchAP
          */
         v1PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
             return PlatformApiFp(configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
-        },
-        /**
-         * get platform project v2
-         * @summary get platform project v2
-         * @param {string} id Platform ID
-         * @param {string} projectId Platform Project ID
-         * @param {*} [options] Override http request option.
-         */
-        v2PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
-            return PlatformApiFp(configuration).v2PlatformIdProjectProjectIdGet(id, projectId, options)()
         },
         /**
          * update platform webhook
@@ -1575,17 +1425,6 @@ export class PlatformApi extends BaseAPI {
         return PlatformApiFp(this.configuration).v1PlatformIdProjectProjectIdGet(id, projectId, options)()
     }
 
-    /**
-     * get platform project v2
-     * @summary get platform project v2
-     * @param {string} id Platform ID
-     * @param {string} projectId Platform Project ID
-     * @param {*} [options] Override http request option.
-     * @memberof PlatformApi
-     */
-    public v2PlatformIdProjectProjectIdGet(id: string, projectId: string, options?: any) {
-        return PlatformApiFp(this.configuration).v2PlatformIdProjectProjectIdGet(id, projectId, options)()
-    }
 
     /**
      * update platform webhook

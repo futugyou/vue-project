@@ -162,7 +162,7 @@ const loadDetail = async () => {
     }
 
     isLoading.value = true
-    const { data, error } = await PlatformApiFactory().v2PlatformIdProjectProjectIdGet(props.platformId, props.model.id)
+    const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdGet(props.platformId, props.model.id)
     isLoading.value = false
     if (error) {
         platformProjectDetail.value = undefined
@@ -289,27 +289,31 @@ const disabled = computed(() => {
                 <v-card class="h-100 overflow-y-auto" v-if="logined">
                     <v-confirm-edit v-model="confirmEditModel" @cancel="cancel" @save="save">
                         <template v-slot:default="{ model: proxyModel, actions }">
-                            <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
-                                :hideDetails="false">
+                            <v-text-field :model-value="proxyModel.value.id" label="Id" disabled
+                                v-if="proxyModel.value.id" :hideDetails="false">
                                 <template v-slot:append>
                                     <v-badge :color="proxyModel.value.followed ? 'green' : 'orange'"
-                                        :content="proxyModel.value.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+                                        :content="proxyModel.value.followed ? 'Followed' : 'Unfollowed'"
+                                        inline></v-badge>
                                 </template>
                             </v-text-field>
 
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
                                 v-model="proxyModel.value.name" :disabled="disabled"
-                                :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name" :hideDetails="false" />
-                            <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                                :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
+                                :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name"
+                                :hideDetails="false" />
+                            <v-text-field :ref="el => validateManager.setInputRef(el, 'url')"
+                                v-model="proxyModel.value.url" :disabled="disabled"
+                                :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
                             <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
                                 v-model="proxyModel.value.description" :disabled="disabled"
                                 :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
                                 :hideDetails="false" class="mb-3" />
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
-                                :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
-                                :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
+                                :rules="validateManager.required('operate')" v-model="proxyModel.value.operate"
+                                class="mb-5" :items="operateOptions" label="Operate" item-value="value"
+                                item-title="label"></v-select>
 
                             <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
                                 :hideDetails="false" :disabled="disabled" :items="projectsOptions" item-value="value"
@@ -359,11 +363,7 @@ const disabled = computed(() => {
                             <div class="text-medium-emphasis" v-if="model?.description">
                                 {{ model?.description }}
                             </div>
-
-                            <MarkdownBadge :badgeMarkdown="model?.badge_markdown ?? ''" v-if="model?.badge_markdown">
-                            </MarkdownBadge>
-
-                            <PropertyPage :modelValue="model?.properties ?? []" :validate-manager="validateManager"
+                             <PropertyPage :modelValue="model?.properties ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </PropertyPage>
                             <SecretPage :modelValue="model?.secrets ?? []" :validate-manager="validateManager"
@@ -377,7 +377,8 @@ const disabled = computed(() => {
 
             <v-tabs-window-item value="two" v-if="confirmEditModel.id">
                 <Empty v-if="webhookDatas.length == 0">
-                    <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8" :disabled="disabled"></v-btn>
+                    <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8"
+                        :disabled="disabled"></v-btn>
                 </Empty>
                 <v-row class="pa-3" v-else>
                     <v-col v-for="webhook in webhookDatas" :key="webhook.name" cols="12" md="4">
