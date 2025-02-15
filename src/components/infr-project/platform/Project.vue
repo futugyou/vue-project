@@ -363,7 +363,7 @@ const disabled = computed(() => {
                             <div class="text-medium-emphasis" v-if="model?.description">
                                 {{ model?.description }}
                             </div>
-                             <PropertyPage :modelValue="model?.properties ?? []" :validate-manager="validateManager"
+                            <PropertyPage :modelValue="model?.properties ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </PropertyPage>
                             <SecretPage :modelValue="model?.secrets ?? []" :validate-manager="validateManager"
@@ -416,19 +416,22 @@ const disabled = computed(() => {
                             </div>
                         </v-sheet>
 
-                        <v-timeline v-if="platformProjectDetail.workflow_runs" align="center" justify="center">
+                        <v-timeline v-if="platformProjectDetail.workflow_runs">
                             <v-timeline-item v-for="(workflowRun, i) in platformProjectDetail.workflow_runs" :key="i"
-                                dot-color="indigo-lighten-2" icon="md:schedule">
+                                dot-color="indigo-lighten-2" icon="md:schedule" fill-dot>
                                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
-                                    <template v-slot:title> {{ timeFormat(workflowRun.createdAt) }} </template>
+                                    <v-card-title class="text-h6">
+                                        {{ timeFormat(workflowRun.createdAt) }}
+                                    </v-card-title>
+                                    <v-card-subtitle>
+                                        <span class="d-inline-block text-truncate" style="max-width: 300px;">
+                                            {{ workflowRun.name }}
+                                        </span>
+                                    </v-card-subtitle>
 
-                                    <template v-slot:subtitle> {{ workflowRun.name }} </template>
-
-                                    <v-card-text class="d-flex flex-column ga-3 text-truncate">
-                                        <v-sheet class="d-flex flex-wrap ga-2">
-                                            <v-chip>
-                                                <strong>{{ workflowRun.status }}</strong>&nbsp;
-                                            </v-chip>
+                                    <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
+                                        <v-sheet>
+                                            {{ workflowRun.description }}
                                         </v-sheet>
 
                                         <v-divider></v-divider>

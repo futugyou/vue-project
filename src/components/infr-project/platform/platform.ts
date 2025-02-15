@@ -624,6 +624,12 @@ export interface WorkflowRun {
      * @type {string}
      * @memberof WorkflowRun
      */
+    description: string
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkflowRun
+     */
     badge_url: string
     /**
      * 
