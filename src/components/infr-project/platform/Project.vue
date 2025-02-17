@@ -318,7 +318,7 @@ const disabled = computed(() => {
                                 :disabled="disabled"></SecretPage>
 
                             <v-spacer></v-spacer>
-                            <v-sheet class="d-flex justify-end mt-3 ga-3">
+                            <v-sheet class="d-flex justify-end ma-4 ga-3">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
                                     v-model:dialog="dialog" @save="deleteProject"
                                     v-if="proxyModel.value.id && followRef == undefined" :disabled="disabled">
@@ -352,23 +352,31 @@ const disabled = computed(() => {
                     </template>
                     <template v-slot:text>
                         <v-sheet class="d-flex flex-column ga-3">
-                            <div class="text-medium-emphasis">
-                                {{ model?.description }}
-                            </div>
+                            <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
+                                <label class="v-label">Description</label>
+                                <div class="text-medium-emphasis">{{ model?.description }}</div>
+                            </v-sheet>
+
                             <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </PropertyPage>
                             <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </SecretPage>
-                            <v-sheet v-if="model.webhooks" class="d-flex flex-column pa-3 ga-3 elevation-3">
-                                <label class="v-label">Webhooks</label>
-                                <v-row>
-                                    <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12" md="4">
-                                        <WebhookPage :model="webhook"></WebhookPage>
-                                    </v-col>
-                                </v-row>
-                            </v-sheet>
+
+                            <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
+                                <v-expansion-panel title="Webhooks">
+                                    <v-expansion-panel-text>
+                                        <v-row>
+                                            <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12"
+                                                md="4">
+                                                <WebhookPage :model="webhook"></WebhookPage>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-text>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+
                         </v-sheet>
                     </template>
                 </v-card>
