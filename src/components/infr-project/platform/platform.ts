@@ -151,6 +151,12 @@ export interface UpdatePlatformProjectRequest {
      * @memberof UpdatePlatformProjectRequest
      */
     description: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdatePlatformProjectRequest
+     */
+    import_webhooks: boolean;
 }
 
 /**

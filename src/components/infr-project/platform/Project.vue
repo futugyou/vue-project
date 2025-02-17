@@ -33,6 +33,7 @@ interface ConfirmEditModel {
     secrets: Array<Secret>;
     url: string;
     description: string;
+    import_webhooks: boolean;
 }
 
 const convertToConfirmEditModel = (model: PlatformProject | undefined): ConfirmEditModel => {
@@ -46,7 +47,8 @@ const convertToConfirmEditModel = (model: PlatformProject | undefined): ConfirmE
             provider_project_id: "",
             secrets: [],
             url: "",
-            description: ""
+            description: "",
+            import_webhooks: false,
         }
     }
 
@@ -59,7 +61,8 @@ const convertToConfirmEditModel = (model: PlatformProject | undefined): ConfirmE
         provider_project_id: model.provider_project_id,
         secrets: model.secrets,
         url: model.url,
-        description: model.description
+        description: model.description,
+        import_webhooks: false,
     })
 
     return { ...confirmEditModel }
@@ -131,6 +134,7 @@ const save = async () => {
         provider_project_id: projectModel.provider_project_id,
         secrets: projectModel.secrets,
         description: projectModel.description,
+        import_webhooks: projectModel.import_webhooks,
     }
 
     let response
@@ -310,14 +314,18 @@ const disabled = computed(() => {
                                 v-model="proxyModel.value.description" :disabled="disabled"
                                 :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
                                 :hideDetails="false" class="mb-3" />
+
+                            <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
+                                :hideDetails="false" :disabled="disabled" :items="projectsOptions" item-value="value"
+                                clearable item-title="label"></v-select>
+
                             <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate"
                                 class="mb-5" :items="operateOptions" label="Operate" item-value="value"
                                 item-title="label"></v-select>
 
-                            <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
-                                :hideDetails="false" :disabled="disabled" :items="projectsOptions" item-value="value"
-                                clearable item-title="label"></v-select>
+                            <v-switch v-model="proxyModel.value.import_webhooks" color="secondary" class="pl-3 mb-3"
+                                label="Auto Import Webhooks" :disabled="disabled"></v-switch>
 
                             <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
                                 :disabled="disabled">
@@ -338,9 +346,9 @@ const disabled = computed(() => {
                     </v-confirm-edit>
                 </v-card>
 
-                <v-card class="h-100 overflow-y-auto" v-if="!logined">
+                <v-card class="h-100 overflow-y-auto" v-if="!logined && model">
                     <template v-slot:title>
-                        <p class="text-h4 font-weight-black">{{ model?.name }}</p>
+                        <p class="text-h4 font-weight-black">{{ model.name }}</p>
                     </template>
                     <template v-slot:subtitle>
                         <v-sheet class="d-flex align-center">
@@ -360,13 +368,13 @@ const disabled = computed(() => {
                     </template>
                     <template v-slot:text>
                         <v-sheet class="d-flex flex-column ga-3">
-                            <div class="text-medium-emphasis" v-if="model?.description">
+                            <div class="text-medium-emphasis" v-if="model.description">
                                 {{ model?.description }}
                             </div>
-                            <PropertyPage :modelValue="model?.properties ?? []" :validate-manager="validateManager"
+                            <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </PropertyPage>
-                            <SecretPage :modelValue="model?.secrets ?? []" :validate-manager="validateManager"
+                            <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </SecretPage>
                         </v-sheet>
