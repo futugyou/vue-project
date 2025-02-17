@@ -63,22 +63,22 @@ const logined = computed(() =>
     <v-sheet class="elevation-3">
         <div class="d-flex align-center ga-6 pa-3">
             <label class="v-label">Properties</label>
-            <v-btn @click="addProperty()" variant="text" v-if="logined" :disabled="disabled" icon="md:add"></v-btn>
+            <v-btn @click="addProperty()" variant="text" v-if="logined" :readonly="disabled" icon="md:add"></v-btn>
         </div>
 
         <v-row v-for="(property, index) in editModel" :key="index" class="mb-2" v-if="logined">
             <v-col :cols="logined ? 5 : 6" class="pt-0">
                 <v-text-field :ref="el => validateManager.setInputRef(el, `p-key-${index}`)" v-model="property.key"
                     label="Key" :rules="validateManager.requiredMinMax('Property Key', 3, 150)" :hideDetails="false"
-                    :disabled="disabled" />
+                    :readonly="disabled" />
             </v-col>
             <v-col :cols="logined ? 5 : 6" class="pt-0">
                 <v-text-field :ref="el => validateManager.setInputRef(el, `p-value-${index}`)" v-model="property.value"
                     label="Value" :rules="validateManager.requiredMinMax('Property Value', 3, 150)" :hideDetails="false"
-                    :disabled="disabled" />
+                    :readonly="disabled" />
             </v-col>
             <v-col cols="2" class="pt-2" v-if="logined">
-                <v-btn icon="md:remove" @click="removeProperty(index)" :disabled="disabled"></v-btn>
+                <v-btn icon="md:remove" @click="removeProperty(index)" :readonly="disabled"></v-btn>
             </v-col>
         </v-row>
 

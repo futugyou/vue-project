@@ -134,18 +134,18 @@ onUnmounted(() => {
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions }">
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
-                        label="Name" :disabled="!authService.isAuthenticated()"
+                        label="Name" :readonly="!authService.isAuthenticated()"
                         :rules="validateManager.requiredMinMax('Name', 3, 50)" :hideDetails="false" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                        label="URL" :disabled="!authService.isAuthenticated()"
+                        label="URL" :readonly="!authService.isAuthenticated()"
                         :rules="validateManager.requiredMinMax('URL', 3, 150)" :hideDetails="false" />
                     <v-select label="State" v-model="proxyModel.value.state"
                         :ref="el => validateManager.setInputRef(el, 'state')" :items="['Init', 'Creating', 'Ready']"
                         :hideDetails="false" class="mt-2"></v-select>
                     <v-switch v-model="proxyModel.value.sync" label="Force Sync" class="pl-2" color="info"
-                        :hideDetails="false" :disabled="!authService.isAuthenticated()" />
+                        :hideDetails="false" :readonly="!authService.isAuthenticated()" />
                     <v-switch v-model="proxyModel.value.activate" label="Activate" class="pl-2" color="info"
-                        :hideDetails="false" :disabled="!authService.isAuthenticated()" />
+                        :hideDetails="false" :readonly="!authService.isAuthenticated()" />
 
                     <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager">
                     </PropertyPage>

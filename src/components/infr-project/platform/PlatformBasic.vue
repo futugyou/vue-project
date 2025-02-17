@@ -166,7 +166,7 @@ const logined = computed(() =>
         <v-card class="pa-3" v-if="!isLoading">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions, isPristine }">
-                    <v-text-field v-model="proxyModel.value.id" label="ID" disabled v-if="proxyModel.value.id"
+                    <v-text-field v-model="proxyModel.value.id" label="ID" readonly v-if="proxyModel.value.id"
                         :hideDetails="false">
                         <template v-slot:append>
                             <v-badge :color="proxyModel.value.activate ? 'green' : 'orange'"
@@ -175,15 +175,15 @@ const logined = computed(() =>
                         </template>
                     </v-text-field>
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
-                        label="Name" :disabled="disabled" :rules="validateManager.requiredMinMax('Name', 3, 50)"
+                        label="Name" :readonly="disabled" :rules="validateManager.requiredMinMax('Name', 3, 50)"
                         :hideDetails="false" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
-                        label="URL" :disabled="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)"
+                        label="URL" :readonly="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)"
                         :hideDetails="false" />
-                    <v-select :ref="el => validateManager.setInputRef(el, 'provider')" :disabled="disabled"
+                    <v-select :ref="el => validateManager.setInputRef(el, 'provider')" :readonly="disabled"
                         :rules="validateManager.required('Provider')" v-model="proxyModel.value.provider" class="mb-5"
                         :items="providerOptions" label="Provider" item-value="value" item-title="label"></v-select>
-                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple :disabled="disabled"
+                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple :readonly="disabled"
                         :hideDetails="false"></v-combobox>
 
                     <PropertyPage :disabled="disabled" v-model="proxyModel.value.properties"
@@ -193,7 +193,7 @@ const logined = computed(() =>
                     </SecretPage>
 
                     <v-spacer></v-spacer>
-                    <v-sheet class="d-flex justify-end ga-3" v-if="logined">
+                    <v-sheet class="d-flex justify-end mt-3 ga-3" v-if="logined">
                         <v-btn variant="elevated" v-if="proxyModel.value.id && proxyModel.value.is_deleted"
                             @click="recoveryPlatform(proxyModel.value.id)">Recovery</v-btn>
                         <v-btn variant="elevated" v-if="proxyModel.value.id && !proxyModel.value.is_deleted"

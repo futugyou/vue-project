@@ -99,7 +99,7 @@ const HandleFollow = (project: PlatformProject) => {
                         </v-table>
 
                         <v-sheet v-if="logined && i == 1">
-                            <v-btn variant="tonal" :disabled="disabled" @click="HandleFollow(project)">
+                            <v-btn variant="tonal" :readonly="disabled" @click="HandleFollow(project)">
                                 {{ project.followed ? "unfollow" : "follow" }}
                             </v-btn>
                         </v-sheet>

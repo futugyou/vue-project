@@ -62,7 +62,7 @@ const convertToConfirmEditModel = (model: PlatformProject | undefined): ConfirmE
         secrets: model.secrets,
         url: model.url,
         description: model.description,
-        import_webhooks: false,
+        import_webhooks: model.webhooks?.length > 0,
     })
 
     return { ...confirmEditModel }
@@ -303,29 +303,29 @@ const disabled = computed(() => {
                             </v-text-field>
 
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
-                                v-model="proxyModel.value.name" :disabled="disabled"
+                                v-model="proxyModel.value.name" :readonly="disabled"
                                 :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name"
                                 :hideDetails="false" />
                             <v-text-field :ref="el => validateManager.setInputRef(el, 'url')"
-                                v-model="proxyModel.value.url" :disabled="disabled"
+                                v-model="proxyModel.value.url" :readonly="disabled"
                                 :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
                                 :hideDetails="false" />
                             <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
-                                v-model="proxyModel.value.description" :disabled="disabled"
+                                v-model="proxyModel.value.description" :readonly="disabled"
                                 :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
                                 :hideDetails="false" class="mb-3" />
 
                             <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
-                                :hideDetails="false" :disabled="disabled" :items="projectsOptions" item-value="value"
+                                :hideDetails="false" :readonly="disabled" :items="projectsOptions" item-value="value"
                                 clearable item-title="label"></v-select>
 
-                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :disabled="disabled"
+                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :readonly="disabled"
                                 :rules="validateManager.required('operate')" v-model="proxyModel.value.operate"
                                 class="mb-5" :items="operateOptions" label="Operate" item-value="value"
                                 item-title="label"></v-select>
 
                             <v-switch v-model="proxyModel.value.import_webhooks" color="secondary" class="pl-3 mb-3"
-                                label="Auto Import Webhooks" :disabled="disabled"></v-switch>
+                                label="Auto Import Webhooks" :readonly="disabled"></v-switch>
 
                             <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
                                 :disabled="disabled">
@@ -334,7 +334,7 @@ const disabled = computed(() => {
                                 :disabled="disabled"></SecretPage>
 
                             <v-spacer></v-spacer>
-                            <v-sheet class="d-flex justify-end ga-3">
+                            <v-sheet class="d-flex justify-end mt-3 ga-3">
                                 <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
                                     v-model:dialog="dialog" @save="deleteProject"
                                     v-if="proxyModel.value.id && followRef == undefined" :disabled="disabled">
@@ -386,7 +386,7 @@ const disabled = computed(() => {
             <v-tabs-window-item value="two" v-if="confirmEditModel.id">
                 <Empty v-if="webhookDatas.length == 0">
                     <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8"
-                        :disabled="disabled"></v-btn>
+                        :readonly="disabled"></v-btn>
                 </Empty>
                 <v-row class="pa-3" v-else>
                     <v-col v-for="webhook in webhookDatas" :key="webhook.name" cols="12" md="4">
@@ -394,7 +394,7 @@ const disabled = computed(() => {
                             @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
                     </v-col>
                     <v-col cols="12" md="4" v-if="logined">
-                        <v-btn icon="md:add" size="x-large" @click="addNewWebhook" :disabled="disabled"></v-btn>
+                        <v-btn icon="md:add" size="x-large" @click="addNewWebhook" :readonly="disabled"></v-btn>
                     </v-col>
                 </v-row>
             </v-tabs-window-item>
