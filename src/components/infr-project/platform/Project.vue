@@ -5,12 +5,11 @@ import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import MarkdownBadge from '@/common/MarkdownBadge.vue'
-import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
-import WebhookPage from './Webhook.vue'
+import WebhookPage from './WebhookV2.vue'
 import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
 import { timeFormat } from '@/tools/timeFormat'
@@ -217,28 +216,14 @@ const deleteProject = async () => {
     }
 }
 
-const webhookCreated = (model: PlatformDetailView) => {
-    emit('save', model)
-}
-
-const webhookCreateCanceled = () => {
-    emit('cancel')
-}
-
-const addNewWebhook = () => {
-    let view = webhookDatas.value
-    view.push(DefaultWebhook)
-    webhookDatas.value = view
-}
-
 watch(() => props.model, (newVal) => {
     tab.value = "one"
-    webhookDatas.value = props.model?.webhooks ?? []
-    confirmEditModel.value = convertToConfirmEditModel(props.model)
+    webhookDatas.value = newVal?.webhooks ?? []
+    confirmEditModel.value = convertToConfirmEditModel(newVal)
 })
 
 watch(() => tab.value, async (newVal) => {
-    if (newVal == "three") {
+    if (newVal == "two") {
         await loadDetail()
     }
 })
@@ -284,8 +269,7 @@ const disabled = computed(() => {
 
         <v-tabs v-model="tab" color="deep-purple-accent-4">
             <v-tab value="one">Project Basic</v-tab>
-            <v-tab value="two" v-if="confirmEditModel.id">Webhooks</v-tab>
-            <v-tab value="three" v-if="confirmEditModel.id">Details</v-tab>
+            <v-tab value="two" v-if="confirmEditModel.id">Details</v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="tab" v-if="!isLoading">
@@ -368,7 +352,7 @@ const disabled = computed(() => {
                     </template>
                     <template v-slot:text>
                         <v-sheet class="d-flex flex-column ga-3">
-                            <div class="text-medium-emphasis" v-if="model.description">
+                            <div class="text-medium-emphasis">
                                 {{ model?.description }}
                             </div>
                             <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
@@ -377,29 +361,21 @@ const disabled = computed(() => {
                             <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
                                 :disabled="disabled">
                             </SecretPage>
+                            <v-sheet v-if="model.webhooks" class="d-flex flex-column pa-3 ga-3 elevation-3">
+                                <label class="v-label">Webhooks</label>
+                                <v-row>
+                                    <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12" md="4">
+                                        <WebhookPage :model="webhook"></WebhookPage>
+                                    </v-col>
+                                </v-row>
+                            </v-sheet>
                         </v-sheet>
                     </template>
                 </v-card>
 
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="confirmEditModel.id">
-                <Empty v-if="webhookDatas.length == 0">
-                    <v-btn icon="md:add" size="x-large" @click="addNewWebhook" elevation="8"
-                        :readonly="disabled"></v-btn>
-                </Empty>
-                <v-row class="pa-3" v-else>
-                    <v-col v-for="webhook in webhookDatas" :key="webhook.name" cols="12" md="4">
-                        <WebhookPage :platform-id="platformId" :project-id="confirmEditModel.id" :model="webhook"
-                            @cancel="webhookCreateCanceled" @save="webhookCreated"></WebhookPage>
-                    </v-col>
-                    <v-col cols="12" md="4" v-if="logined">
-                        <v-btn icon="md:add" size="x-large" @click="addNewWebhook" :readonly="disabled"></v-btn>
-                    </v-col>
-                </v-row>
-            </v-tabs-window-item>
-
-            <v-tabs-window-item value="three" v-if="platformProjectDetail">
+            <v-tabs-window-item value="two" v-if="platformProjectDetail">
                 <!-- TODO: show more detail info -->
                 <v-card class="h-100 overflow-y-auto">
                     <template v-slot:title>
