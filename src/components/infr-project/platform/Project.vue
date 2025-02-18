@@ -332,14 +332,12 @@ const disabled = computed(() => {
 
                 <v-card class="h-100 overflow-y-auto" v-if="!logined && model">
                     <template v-slot:title>
-                        <p class="text-h4 font-weight-black">{{ model.name }}</p>
-                    </template>
-                    <template v-slot:subtitle>
-                        <v-sheet class="d-flex align-center">
+                        <v-sheet class="d-flex ga-3">
+                            <p class="text-h5 font-weight-black">{{ model.name }}</p>
                             <a :href="confirmEditModel.url" target="_blank" class="ga-6 py-1 px-2">
                                 <v-hover>
                                     <template v-slot:default="{ props }">
-                                        {{ model?.url }}
+                                        <!-- {{ model?.url }} -->
                                         <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
                                     </template>
                                 </v-hover>
@@ -350,7 +348,7 @@ const disabled = computed(() => {
                         <v-badge :color="model?.followed ? 'green' : 'orange'"
                             :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
                     </template>
-                    <template v-slot:text>
+                    <v-card-text>
                         <v-sheet class="d-flex flex-column ga-3">
                             <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
                                 <label class="v-label">Description</label>
@@ -378,7 +376,7 @@ const disabled = computed(() => {
                             </v-expansion-panels>
 
                         </v-sheet>
-                    </template>
+                    </v-card-text>
                 </v-card>
 
             </v-tabs-window-item>
