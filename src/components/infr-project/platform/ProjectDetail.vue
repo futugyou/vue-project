@@ -155,6 +155,48 @@ const operateOptions = computed(() =>
                         </PropertyPage>
 
                         <v-expansion-panels class="elevation-3" :static="true">
+                            <v-expansion-panel title="Environment Variables">
+                                <v-expansion-panel-text v-if="model.provider_project.environment_variables">
+                                    <v-table>
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">
+                                                    Id
+                                                </th>
+                                                <th class="text-left">
+                                                    Key
+                                                </th>
+                                                <th class="text-left">
+                                                    Type
+                                                </th>
+                                                <th class="text-left">
+                                                    Value
+                                                </th>
+                                                <th class="text-left">
+                                                    Created At
+                                                </th>
+                                                <th class="text-left">
+                                                    Updated At
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="item in model.provider_project.environment_variables"
+                                                :key="item.id">
+                                                <td>{{ item.id }}</td>
+                                                <td>{{ item.key }}</td>
+                                                <td>{{ item.type }}</td>
+                                                <td>{{ item.value }}</td>
+                                                <td>{{ timeFormat(item.createdAt) }}</td>
+                                                <td>{{ timeFormat(item.updatedAt) }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </v-table>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+
+                        <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Webhooks">
                                 <v-expansion-panel-text v-if="model.provider_project.webhooks">
                                     <v-row>
