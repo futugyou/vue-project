@@ -129,7 +129,7 @@ const operateOptions = computed(() =>
                 <!-- TODO: show more detail info -->
                 <v-card class="h-100 overflow-y-auto d-flex flex-column">
                     <template v-slot:title>
-                        <v-sheet class="d-flex ga-3">
+                        <v-sheet class="d-flex ga-3 align-center">
                             <p class="text-h5 font-weight-black">{{ model.provider_project.name }}</p>
                             <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
                                 <v-hover>
@@ -160,7 +160,7 @@ const operateOptions = computed(() =>
                                     <v-timeline v-if="model.provider_project.workflow_runs">
                                         <v-timeline-item
                                             v-for="(workflowRun, i) in model.provider_project.workflow_runs" :key="i"
-                                            dot-color="indigo-lighten-2" icon="md:schedule" fill-dot>
+                                            dot-color="indigo-lighten-2" icon="md:schedule" fill-dot width="100%">
                                             <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                                                 <v-card-title class="text-h6">
                                                     {{ timeFormat(workflowRun.createdAt) }}

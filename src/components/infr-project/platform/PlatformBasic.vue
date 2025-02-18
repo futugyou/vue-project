@@ -160,10 +160,10 @@ const logined = computed(() =>
 </script>
 
 <template>
-    <v-sheet>
+    <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
 
-        <v-card class="pa-3" v-if="!isLoading">
+        <v-card class="h-100 overflow-y-auto pa-3" v-if="!isLoading">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions, isPristine }">
                     <v-text-field v-model="proxyModel.value.id" label="ID" readonly v-if="proxyModel.value.id"

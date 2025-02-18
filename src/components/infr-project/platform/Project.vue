@@ -4,7 +4,6 @@ import { storeToRefs } from 'pinia'
 import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
-import MarkdownBadge from '@/common/MarkdownBadge.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
@@ -12,12 +11,10 @@ import { useAuth } from '@/plugins/auth'
 import WebhookPage from './WebhookV2.vue'
 import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
-import { timeFormat } from '@/tools/timeFormat'
 
 import {
     OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
-    PlatformDetailView, PlatformProject, PlatformProviderProject, ProviderEnum, checkPlatfromProjectProperty,
-    DefaultWebhook, Property, Secret, Webhook
+    PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty, Property, Secret, Webhook
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
@@ -88,10 +85,8 @@ const logined = computed(() =>
 const isLoading = ref(false)
 const webhookDatas = ref<Webhook[]>(props.model?.webhooks ?? [])
 const confirmEditModel = ref<ConfirmEditModel>(convertToConfirmEditModel(props.model))
-const platformProjectDetail = ref<PlatformProviderProject>()
 
 const dialog = ref(false)
-const tab = ref("one")
 
 const save = async () => {
     if (!logined.value) {
@@ -159,29 +154,6 @@ const save = async () => {
     }
 }
 
-const loadDetail = async () => {
-    if (isLoading.value || props.model == undefined) {
-        return
-    }
-
-    isLoading.value = true
-    const { data, error } = await PlatformApiFactory().v1PlatformIdProjectProjectIdGet(props.platformId, props.model.id)
-    isLoading.value = false
-    if (error) {
-        platformProjectDetail.value = undefined
-        msg.value = {
-            errorMessages: [error.message],
-            delay: 3000,
-        }
-
-        return
-    }
-
-    if (data && data.provider_project) {
-        platformProjectDetail.value = data.provider_project
-    }
-}
-
 const cancel = () => {
     emit('cancel')
 }
@@ -217,17 +189,9 @@ const deleteProject = async () => {
 }
 
 watch(() => props.model, (newVal) => {
-    tab.value = "one"
     webhookDatas.value = newVal?.webhooks ?? []
     confirmEditModel.value = convertToConfirmEditModel(newVal)
 })
-
-watch(() => tab.value, async (newVal) => {
-    if (newVal == "two") {
-        await loadDetail()
-    }
-})
-
 
 onUnmounted(() => {
     validateManager.clearInputs()
@@ -261,184 +225,133 @@ const disabled = computed(() => {
     return !authService.isAuthenticated()
 })
 
+const getDetailUrl = (platformId: string, projectId: string) => {
+    return "/platform/" + platformId + "/" + projectId
+}
+
 </script>
 
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
 
-        <v-tabs v-model="tab" color="deep-purple-accent-4">
-            <v-tab value="one">Project Basic</v-tab>
-            <v-tab value="two" v-if="confirmEditModel.id">Details</v-tab>
-        </v-tabs>
-
-        <v-tabs-window v-model="tab" v-if="!isLoading">
-            <v-tabs-window-item value="one">
-                <v-card class="h-100 overflow-y-auto" v-if="logined">
-                    <v-confirm-edit v-model="confirmEditModel" @cancel="cancel" @save="save">
-                        <template v-slot:default="{ model: proxyModel, actions }">
-                            <v-text-field :model-value="proxyModel.value.id" label="Id" disabled
-                                v-if="proxyModel.value.id" :hideDetails="false">
-                                <template v-slot:append>
-                                    <v-badge :color="proxyModel.value.followed ? 'green' : 'orange'"
-                                        :content="proxyModel.value.followed ? 'Followed' : 'Unfollowed'"
-                                        inline></v-badge>
-                                </template>
-                            </v-text-field>
-
-                            <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
-                                v-model="proxyModel.value.name" :readonly="disabled"
-                                :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name"
-                                :hideDetails="false" />
-                            <v-text-field :ref="el => validateManager.setInputRef(el, 'url')"
-                                v-model="proxyModel.value.url" :readonly="disabled"
-                                :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
-                                :hideDetails="false" />
-                            <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
-                                v-model="proxyModel.value.description" :readonly="disabled"
-                                :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
-                                :hideDetails="false" class="mb-3" />
-
-                            <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
-                                :hideDetails="false" :readonly="disabled" :items="projectsOptions" item-value="value"
-                                clearable item-title="label"></v-select>
-
-                            <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :readonly="disabled"
-                                :rules="validateManager.required('operate')" v-model="proxyModel.value.operate"
-                                class="mb-5" :items="operateOptions" label="Operate" item-value="value"
-                                item-title="label"></v-select>
-
-                            <v-switch v-model="proxyModel.value.import_webhooks" color="secondary" class="pl-3 mb-3"
-                                label="Auto Import Webhooks" :readonly="disabled"></v-switch>
-
-                            <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
-                                :disabled="disabled">
-                            </PropertyPage>
-                            <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"
-                                :disabled="disabled"></SecretPage>
-
-                            <v-spacer></v-spacer>
-                            <v-sheet class="d-flex justify-end ma-4 ga-3">
-                                <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
-                                    v-model:dialog="dialog" @save="deleteProject"
-                                    v-if="proxyModel.value.id && followRef == undefined" :disabled="disabled">
-                                    <v-alert text="Are you sure you want to delete?"></v-alert>
-                                </VuetifyModal>
-                                <component :is="actions" :disabled="disabled"></component>
-                            </v-sheet>
+        <v-card class="h-100 overflow-y-auto" v-if="!isLoading && logined">
+            <v-confirm-edit v-model="confirmEditModel" @cancel="cancel" @save="save">
+                <template v-slot:default="{ model: proxyModel, actions }">
+                    <v-text-field :model-value="proxyModel.value.id" label="Id" disabled v-if="proxyModel.value.id"
+                        :hideDetails="false">
+                        <template v-slot:append>
+                            <v-badge :color="proxyModel.value.followed ? 'green' : 'orange'"
+                                :content="proxyModel.value.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
                         </template>
-                    </v-confirm-edit>
-                </v-card>
+                    </v-text-field>
 
-                <v-card class="h-100 overflow-y-auto" v-if="!logined && model">
-                    <template v-slot:title>
-                        <v-sheet class="d-flex ga-3">
-                            <p class="text-h5 font-weight-black">{{ model.name }}</p>
-                            <a :href="confirmEditModel.url" target="_blank" class="ga-6 py-1 px-2">
-                                <v-hover>
-                                    <template v-slot:default="{ props }">
-                                        <!-- {{ model?.url }} -->
-                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                    </template>
-                                </v-hover>
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
+                        :readonly="disabled" :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name"
+                        :hideDetails="false">
+                        <template v-slot:append>
+                            <v-tooltip text="togo project detail page" location="start"
+                                v-if="model && model.id && platformId">
+                                <template v-slot:activator="{ props }">
+                                    <a :href="getDetailUrl(platformId, model.id)" target="_blank">
+                                        <v-icon icon="md:info" v-bind="props"></v-icon>
+                                    </a>
+                                </template>
+                            </v-tooltip>
+                        </template>
+                    </v-text-field>
+                    <v-text-field :ref="el => validateManager.setInputRef(el, 'url')" v-model="proxyModel.value.url"
+                        :readonly="disabled" :rules="validateManager.requiredMinMax('URL', 3, 150)" label="URL"
+                        :hideDetails="false" />
+                    <v-textarea :ref="el => validateManager.setInputRef(el, 'description')"
+                        v-model="proxyModel.value.description" :readonly="disabled"
+                        :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
+                        :hideDetails="false" class="mb-3" />
+
+                    <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
+                        :hideDetails="false" :readonly="disabled" :items="projectsOptions" item-value="value" clearable
+                        item-title="label"></v-select>
+
+                    <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :readonly="disabled"
+                        :rules="validateManager.required('operate')" v-model="proxyModel.value.operate" class="mb-5"
+                        :items="operateOptions" label="Operate" item-value="value" item-title="label"></v-select>
+
+                    <v-switch v-model="proxyModel.value.import_webhooks" color="secondary" class="pl-3 mb-3"
+                        label="Auto Import Webhooks" :readonly="disabled"></v-switch>
+
+                    <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
+                        :disabled="disabled">
+                    </PropertyPage>
+                    <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"
+                        :disabled="disabled"></SecretPage>
+
+                    <v-spacer></v-spacer>
+                    <v-sheet class="d-flex justify-end ma-4 ga-3">
+                        <VuetifyModal title="DELETE" text="Delete" ok-text="Delete" cancle-text="Cancel"
+                            v-model:dialog="dialog" @save="deleteProject"
+                            v-if="proxyModel.value.id && followRef == undefined" :disabled="disabled">
+                            <v-alert text="Are you sure you want to delete?"></v-alert>
+                        </VuetifyModal>
+                        <component :is="actions" :disabled="disabled"></component>
+                    </v-sheet>
+                </template>
+            </v-confirm-edit>
+        </v-card>
+
+        <v-card class="h-100 overflow-y-auto" v-if="!isLoading && !logined && model">
+            <template v-slot:title>
+                <v-sheet class="d-flex ga-3 align-center">
+                    <p class="text-h5 font-weight-black">{{ model.name }}</p>
+                    <a :href="model.url" target="_blank">
+                        <v-hover>
+                            <template v-slot:default="{ props }">
+                                <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                            </template>
+                        </v-hover>
+                    </a>
+                    <v-spacer></v-spacer>
+                    <v-tooltip text="togo project detail page" location="start" v-if="model && model.id && platformId">
+                        <template v-slot:activator="{ props }">
+                            <a :href="getDetailUrl(platformId, model.id)" target="_blank">
+                                <v-icon icon="md:info" v-bind="props"></v-icon>
                             </a>
-                        </v-sheet>
-                    </template>
-                    <template v-slot:append>
-                        <v-badge :color="model?.followed ? 'green' : 'orange'"
-                            :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
-                    </template>
-                    <v-card-text>
-                        <v-sheet class="d-flex flex-column ga-3">
-                            <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
-                                <label class="v-label">Description</label>
-                                <div class="text-medium-emphasis">{{ model?.description }}</div>
-                            </v-sheet>
+                        </template>
+                    </v-tooltip>
+                </v-sheet>
+            </template>
+            <template v-slot:append>
+                <v-badge :color="model?.followed ? 'green' : 'orange'"
+                    :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+            </template>
+            <v-card-text>
+                <v-sheet class="d-flex flex-column ga-3">
+                    <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
+                        <label class="v-label">Description</label>
+                        <div class="text-medium-emphasis">{{ model?.description }}</div>
+                    </v-sheet>
 
-                            <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
-                                :disabled="disabled">
-                            </PropertyPage>
-                            <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
-                                :disabled="disabled">
-                            </SecretPage>
+                    <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
+                        :disabled="disabled">
+                    </PropertyPage>
+                    <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
+                        :disabled="disabled">
+                    </SecretPage>
 
-                            <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
-                                <v-expansion-panel title="Webhooks">
-                                    <v-expansion-panel-text>
-                                        <v-row>
-                                            <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12"
-                                                md="4">
-                                                <WebhookPage :model="webhook"></WebhookPage>
-                                            </v-col>
-                                        </v-row>
-                                    </v-expansion-panel-text>
-                                </v-expansion-panel>
-                            </v-expansion-panels>
+                    <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
+                        <v-expansion-panel title="Webhooks">
+                            <v-expansion-panel-text>
+                                <v-row>
+                                    <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12" md="4">
+                                        <WebhookPage :model="webhook"></WebhookPage>
+                                    </v-col>
+                                </v-row>
+                            </v-expansion-panel-text>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
 
-                        </v-sheet>
-                    </v-card-text>
-                </v-card>
-
-            </v-tabs-window-item>
-
-            <v-tabs-window-item value="two" v-if="platformProjectDetail">
-                <!-- TODO: show more detail info -->
-                <v-card class="h-100 overflow-y-auto">
-                    <template v-slot:title>
-                        <p class="text-h4 font-weight-black">{{ platformProjectDetail.name }}</p>
-                    </template>
-                    <template v-slot:subtitle>
-                        <v-sheet class="d-flex align-center">
-                            <a :href="platformProjectDetail.url" target="_blank" class="ga-6 py-1 px-2">
-                                <v-hover>
-                                    <template v-slot:default="{ props }">
-                                        {{ platformProjectDetail.url }}
-                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                    </template>
-                                </v-hover>
-                            </a>
-                        </v-sheet>
-                    </template>
-                    <template v-slot:text>
-                        <v-sheet class="d-flex flex-column ga-3">
-                            <div class="text-medium-emphasis" v-if="platformProjectDetail.description">
-                                {{ platformProjectDetail.description }}
-                            </div>
-                        </v-sheet>
-
-                        <v-timeline v-if="platformProjectDetail.workflow_runs">
-                            <v-timeline-item v-for="(workflowRun, i) in platformProjectDetail.workflow_runs" :key="i"
-                                dot-color="indigo-lighten-2" icon="md:schedule" fill-dot>
-                                <v-card v-if="!isLoading" class="d-flex flex-column" hover>
-                                    <v-card-title class="text-h6">
-                                        {{ timeFormat(workflowRun.createdAt) }}
-                                    </v-card-title>
-                                    <v-card-subtitle>
-                                        <span class="d-inline-block text-truncate" style="max-width: 300px;">
-                                            {{ workflowRun.name }}
-                                        </span>
-                                    </v-card-subtitle>
-
-                                    <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
-                                        <v-sheet>
-                                            {{ workflowRun.description }}
-                                        </v-sheet>
-
-                                        <v-divider></v-divider>
-
-                                        <MarkdownBadge :badgeMarkdown="workflowRun.badge_markdown ?? ''"
-                                            v-if="workflowRun.badge_markdown">
-                                        </MarkdownBadge>
-                                    </v-card-text>
-                                </v-card>
-                            </v-timeline-item>
-                        </v-timeline>
-
-                    </template>
-                </v-card>
-            </v-tabs-window-item>
-        </v-tabs-window>
-
+                </v-sheet>
+            </v-card-text>
+        </v-card>
     </v-sheet>
 </template>
 
