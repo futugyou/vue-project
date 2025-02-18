@@ -27,6 +27,7 @@ const validateManager = ValidateManager()
 const platformId = route.params.id as string
 const projectId = route.params.projectId as string
 
+const tab = ref("one")
 const isLoading = ref(false)
 const model = ref<PlatformProject>()
 
@@ -47,6 +48,7 @@ const loadDetail = async () => {
         return
     }
 
+    tab.value = "one"
     model.value = data
 }
 
@@ -66,55 +68,133 @@ const operateOptions = computed(() =>
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column ga-3" height="100%">
+    <v-sheet class="d-flex flex-column ga-3 pa-3" height="100%">
+        <v-tabs v-model="tab" color="deep-purple-accent-4">
+            <v-tab value="one">Basic</v-tab>
+            <v-tab value="two">Provider</v-tab>
+        </v-tabs>
         <Spinners v-if="isLoading"></Spinners>
+        <v-tabs-window v-model="tab" v-if="!isLoading && model">
+            <v-tabs-window-item value="one">
+                <v-card class="h-100 overflow-y-auto d-flex flex-column">
+                    <template v-slot:title>
+                        <v-sheet class="d-flex ga-3">
+                            <p class="text-h5 font-weight-black">{{ model.name }}</p>
+                            <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
+                                <v-hover>
+                                    <template v-slot:default="{ props }">
+                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                    </template>
+                                </v-hover>
+                            </a>
+                        </v-sheet>
+                    </template>
+                    <template v-slot:append>
+                        <v-badge :color="model?.followed ? 'green' : 'orange'"
+                            :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+                    </template>
+                    <v-card-text>
+                        <v-sheet class="d-flex flex-column ga-3">
+                            <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
+                                <label class="v-label">Description</label>
+                                <div class="text-medium-emphasis">{{ model?.description }}</div>
+                            </v-sheet>
 
-        <v-card class="h-100 overflow-y-auto" v-if="!isLoading && model">
-            <template v-slot:title>
-                <v-sheet class="d-flex ga-3">
-                    <p class="text-h5 font-weight-black">{{ model.name }}</p>
-                    <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
-                        <v-hover>
-                            <template v-slot:default="{ props }">
-                                <!-- {{ model?.url }} -->
-                                <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                            </template>
-                        </v-hover>
-                    </a>
-                </v-sheet>
-            </template>
-            <template v-slot:append>
-                <v-badge :color="model?.followed ? 'green' : 'orange'"
-                    :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
-            </template>
-            <v-card-text>
-                <v-sheet class="d-flex flex-column ga-3">
-                    <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
-                        <label class="v-label">Description</label>
-                        <div class="text-medium-emphasis">{{ model?.description }}</div>
-                    </v-sheet>
+                            <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
+                                :disabled="true">
+                            </PropertyPage>
+                            <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
+                                :disabled="true">
+                            </SecretPage>
 
-                    <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
-                        :disabled="true">
-                    </PropertyPage>
-                    <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager" :disabled="true">
-                    </SecretPage>
+                            <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
+                                <v-expansion-panel title="Webhooks">
+                                    <v-expansion-panel-text>
+                                        <v-row>
+                                            <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12"
+                                                md="4">
+                                                <WebhookPage :model="webhook"></WebhookPage>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-text>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
 
-                    <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
-                        <v-expansion-panel title="Webhooks">
-                            <v-expansion-panel-text>
-                                <v-row>
-                                    <v-col v-for="webhook in model.webhooks" :key="webhook.name" cols="12" md="4">
-                                        <WebhookPage :model="webhook"></WebhookPage>
-                                    </v-col>
-                                </v-row>
-                            </v-expansion-panel-text>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
+                        </v-sheet>
+                    </v-card-text>
+                </v-card>
+            </v-tabs-window-item>
 
-                </v-sheet>
-            </v-card-text>
-        </v-card>
+            <v-tabs-window-item value="two" v-if="model.provider_project">
+                <!-- TODO: show more detail info -->
+                <v-card class="h-100 overflow-y-auto d-flex flex-column">
+                    <template v-slot:title>
+                        <v-sheet class="d-flex ga-3">
+                            <p class="text-h5 font-weight-black">{{ model.provider_project.name }}</p>
+                            <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
+                                <v-hover>
+                                    <template v-slot:default="{ props }">
+                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                    </template>
+                                </v-hover>
+                            </a>
+                        </v-sheet>
+                    </template>
+                    <v-card-text class="d-flex flex-column pa-3 ga-3 elevation-3">
+                        <MarkdownBadge :badgeMarkdown="model.provider_project.badge_markdown ?? ''"
+                            v-if="model.provider_project.badge_markdown">
+                        </MarkdownBadge>
+
+                        <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
+                            <label class="v-label">Description</label>
+                            <div class="text-medium-emphasis">{{ model.provider_project.description }}</div>
+                        </v-sheet>
+
+                        <PropertyPage :modelValue="model.provider_project.properties ?? []"
+                            :validate-manager="validateManager" :disabled="true">
+                        </PropertyPage>
+
+                        <v-expansion-panels class="elevation-3" :static="true">
+                            <v-expansion-panel title="Workflow Runs">
+                                <v-expansion-panel-text>
+                                    <v-timeline v-if="model.provider_project.workflow_runs">
+                                        <v-timeline-item
+                                            v-for="(workflowRun, i) in model.provider_project.workflow_runs" :key="i"
+                                            dot-color="indigo-lighten-2" icon="md:schedule" fill-dot>
+                                            <v-card v-if="!isLoading" class="d-flex flex-column" hover>
+                                                <v-card-title class="text-h6">
+                                                    {{ timeFormat(workflowRun.createdAt) }}
+                                                </v-card-title>
+                                                <v-card-subtitle>
+                                                    <span class="d-inline-block text-truncate"
+                                                        style="max-width: 300px;">
+                                                        {{ workflowRun.name }}
+                                                    </span>
+                                                </v-card-subtitle>
+
+                                                <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
+                                                    <v-sheet>
+                                                        {{ workflowRun.description }}
+                                                    </v-sheet>
+
+                                                    <v-divider></v-divider>
+
+                                                    <MarkdownBadge :badgeMarkdown="workflowRun.badge_markdown ?? ''"
+                                                        v-if="workflowRun.badge_markdown">
+                                                    </MarkdownBadge>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-timeline-item>
+                                    </v-timeline>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+
+
+                    </v-card-text>
+                </v-card>
+            </v-tabs-window-item>
+        </v-tabs-window>
     </v-sheet>
 </template>
 
