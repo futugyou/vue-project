@@ -7,6 +7,7 @@ const ResourceDetail = () => import('@/components/infr-project/resource/Detail.v
 
 const PlatformList = () => import('@/components/infr-project/platform/PlatformList.vue')
 const PlatformDetail = () => import('@/components/infr-project/platform/PlatformDetail.vue')
+const PlatformProjectDetail = () => import('@/components/infr-project/platform/ProjectDetail.vue')
 
 
 const VaultList = () => import('@/components/infr-project/vault/List.vue')
@@ -36,6 +37,11 @@ export const ProjectRoutes = [
         path: '/platform/:id',
         name: 'PlatformDetail',
         component: PlatformDetail,
+    },
+    {
+        path: '/platform/:id/:projectId',
+        name: 'PlatformProjectDetail',
+        component: PlatformProjectDetail,
     },
     {
         path: '/vault',
