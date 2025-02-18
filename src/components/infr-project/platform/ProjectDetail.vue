@@ -155,6 +155,19 @@ const operateOptions = computed(() =>
                         </PropertyPage>
 
                         <v-expansion-panels class="elevation-3" :static="true">
+                            <v-expansion-panel title="Webhooks">
+                                <v-expansion-panel-text v-if="model.provider_project.webhooks">
+                                    <v-row>
+                                        <v-col v-for="webhook in model.provider_project.webhooks" :key="webhook.name"
+                                            cols="12" md="4">
+                                            <WebhookPage :model="webhook"></WebhookPage>
+                                        </v-col>
+                                    </v-row>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+
+                        <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Workflow Runs">
                                 <v-expansion-panel-text>
                                     <v-timeline v-if="model.provider_project.workflow_runs">
@@ -189,7 +202,6 @@ const operateOptions = computed(() =>
                                 </v-expansion-panel-text>
                             </v-expansion-panel>
                         </v-expansion-panels>
-
 
                     </v-card-text>
                 </v-card>

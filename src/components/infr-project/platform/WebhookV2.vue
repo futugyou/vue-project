@@ -23,12 +23,17 @@ watch(() => props.model, (newVal) => {
 
 <template>
     <v-card class="pa-3" v-if="editModel">
-        <v-text-field v-model="editModel.name" label="Name" :readonly="true" :hideDetails="false" />
+        <v-text-field v-model="editModel.name" label="Name" :readonly="true" :hideDetails="false">
+            <template v-slot:append>
+                <v-badge :color="editModel.activate ? 'green' : 'orange'"
+                    :content="editModel.activate ? 'Activate' : 'Inactive'" inline></v-badge>
+                <v-badge :color="editModel.followed ? 'green' : 'orange'"
+                    :content="editModel.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+            </template>
+        </v-text-field>
         <v-text-field v-model="editModel.url" label="URL" :readonly="true" :hideDetails="false" />
         <v-select label="State" v-model="editModel.state" :items="['Init', 'Creating', 'Ready']" :hideDetails="false"
             class="mt-2" :readonly="true"></v-select>
-        <v-switch v-model="editModel.activate" label="Activate" class="pl-2" color="info" :hideDetails="false"
-            :readonly="true" />
         <PropertyPage v-model="editModel.properties" :validate-manager="validateManager" :disabled="true">
         </PropertyPage>
         <SecretPage v-model="editModel.secrets" :validate-manager="validateManager" :disabled="true">
