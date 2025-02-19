@@ -422,12 +422,6 @@ export interface PlatformProject {
     description: string;
     /**
      * 
-     * @type {Uint8Array}
-     * @memberof PlatformProject
-     */
-    image_data: Uint8Array
-    /**
-     * 
      * @type {Array<Property>}
      * @memberof PlatformProject
      */
