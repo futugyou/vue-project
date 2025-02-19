@@ -140,6 +140,10 @@ const operateOptions = computed(() =>
                             </a>
                         </v-sheet>
                     </template>
+                    <template v-slot:append v-if="model.provider_project.environments">
+                        <v-badge color="green" v-for="item in model.provider_project.environments" :key="item"
+                            :content="item" inline></v-badge>
+                    </template>
                     <v-card-text class="d-flex flex-column pa-3 ga-3 elevation-3">
                         <MarkdownBadge :badgeMarkdown="model.provider_project.badge_markdown ?? ''"
                             v-if="model.provider_project.badge_markdown">
@@ -241,6 +245,40 @@ const operateOptions = computed(() =>
                                             </v-card>
                                         </v-timeline-item>
                                     </v-timeline>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+
+                        <v-expansion-panels class="elevation-3" :static="true">
+                            <v-expansion-panel title="Deployments">
+                                <v-expansion-panel-text v-if="model.provider_project.deployments">
+                                    <v-row>
+                                        <v-col v-for="deployment in model.provider_project.deployments"
+                                            :key="deployment.name" cols="12" md="4">
+                                            <v-card v-if="!isLoading" class="d-flex flex-column" hover>
+                                                <template v-slot:title>
+                                                    <span class="text-h6">
+                                                        {{ timeFormat(deployment.createdAt) }}
+                                                    </span>
+                                                </template>
+                                                <template v-slot:append>
+                                                    <v-badge :color="deployment.readyState == 'READY' ? 'green' : 'orange'"
+                                                        :content="deployment.readyState" inline></v-badge>
+                                                    <v-badge color="green" :content="deployment.readySubstate" inline></v-badge>
+                                                </template>
+                                                <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
+                                                    <span class="d-inline-block text-truncate">
+                                                        {{ deployment.name }}
+                                                    </span>
+                                                    <v-divider></v-divider>
+
+                                                    <MarkdownBadge :badgeMarkdown="deployment.badge_markdown ?? ''"
+                                                        v-if="deployment.badge_markdown">
+                                                    </MarkdownBadge>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-col>
+                                    </v-row>
                                 </v-expansion-panel-text>
                             </v-expansion-panel>
                         </v-expansion-panels>
