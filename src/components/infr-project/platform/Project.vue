@@ -212,9 +212,9 @@ const operateOptions = computed(() =>
 )
 
 const projectsOptions = computed(() =>
-    (props.projects ?? []).map((project) => ({
-        label: project.name,
-        value: project.provider_project_id,
+    (props.projects ?? []).filter(p => p.provider_project).map((project) => ({
+        label: project.provider_project!.name,
+        value: project.provider_project!.id,
     }))
 )
 
