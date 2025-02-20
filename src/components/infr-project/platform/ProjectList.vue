@@ -88,6 +88,7 @@ const HandleFollow = (project: PlatformProject) => {
                             </a>
                         </template>
 
+                        <div class="text-medium-emphasis pa-4 pt-0">{{ project.description }}</div>
                         <span class="text-subtitle-1 pl-4" v-if="project.properties.length > 0">Property</span>
                         <v-table density="compact">
                             <tbody>
