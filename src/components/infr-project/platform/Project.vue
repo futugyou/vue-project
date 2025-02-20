@@ -249,8 +249,8 @@ const getDetailUrl = (platformId: string, projectId: string) => {
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')" v-model="proxyModel.value.name"
                         :readonly="disabled" :rules="validateManager.requiredMinMax('Name', 3, 50)" label="Name"
                         :hideDetails="false">
-                        <template v-slot:append>
-                            <v-tooltip text="togo project detail page" location="start"
+                        <template v-slot:append v-if="proxyModel.value.followed">
+                            <v-tooltip text="to go project detail page" location="start"
                                 v-if="model && model.id && platformId">
                                 <template v-slot:activator="{ props }">
                                     <a :href="getDetailUrl(platformId, model.id)" target="_blank">
