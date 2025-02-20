@@ -99,7 +99,7 @@ const save = async () => {
     }
 
     var projectModel = confirmEditModel.value
-    const providerProject = (props.projects ?? []).find(p => p.provider_project_id == projectModel.provider_project_id)
+    const providerProject = (props.projects ?? []).filter(p => p.provider_project).find(p => p.provider_project!.id == projectModel.provider_project_id)
     if (providerProject) {
         const properties = _.unionBy(providerProject.properties, confirmEditModel.value.properties, "key")
         projectModel.properties = properties
