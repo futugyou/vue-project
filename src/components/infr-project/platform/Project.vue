@@ -71,6 +71,7 @@ const authService = useAuth()
 const validateManager = ValidateManager()
 const props = defineProps<{
     platformId: string,
+    platformName: string,
     provider: string,
     model?: PlatformProject,
     projects?: PlatformProject[],
@@ -225,8 +226,8 @@ const disabled = computed(() => {
     return !authService.isAuthenticated()
 })
 
-const getDetailUrl = (platformId: string, projectId: string) => {
-    return "/platform/" + platformId + "/" + projectId
+const getDetailUrl = (platformName: string, projectId: string) => {
+    return "/platform/" + platformName + "/" + projectId
 }
 
 </script>
@@ -251,9 +252,9 @@ const getDetailUrl = (platformId: string, projectId: string) => {
                         :hideDetails="false">
                         <template v-slot:append v-if="proxyModel.value.followed">
                             <v-tooltip text="to go project detail page" location="start"
-                                v-if="model && model.id && platformId">
+                                v-if="model && model.id && platformName">
                                 <template v-slot:activator="{ props }">
-                                    <a :href="getDetailUrl(platformId, model.id)" target="_blank">
+                                    <a :href="getDetailUrl(platformName, model.id)" target="_blank">
                                         <v-icon icon="md:info" v-bind="props"></v-icon>
                                     </a>
                                 </template>
@@ -310,9 +311,9 @@ const getDetailUrl = (platformId: string, projectId: string) => {
                         </v-hover>
                     </a>
                     <v-spacer></v-spacer>
-                    <v-tooltip text="togo project detail page" location="start" v-if="model && model.id && platformId">
+                    <v-tooltip text="togo project detail page" location="start" v-if="model && model.id && platformName">
                         <template v-slot:activator="{ props }">
-                            <a :href="getDetailUrl(platformId, model.id)" target="_blank">
+                            <a :href="getDetailUrl(platformName, model.id)" target="_blank">
                                 <v-icon icon="md:info" v-bind="props"></v-icon>
                             </a>
                         </template>

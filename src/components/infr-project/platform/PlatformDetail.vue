@@ -146,7 +146,8 @@ const HandleProjectFollow = (pro: PlatformProject) => {
             </v-list>
             <v-list density="compact" class="flex-fill" open-strategy="multiple" nav :lines="false" data-v-menu>
                 <v-list-item slim v-for="(pro, i) in selfProjects" :key="i" :value="pro" color="primary"
-                    @click="showProject(pro)" v-if="detail" :active="tab == 'three' && (project && pro.id == project.id)">
+                    @click="showProject(pro)" v-if="detail"
+                    :active="tab == 'three' && (project && pro.id == project.id)">
                     <v-list-item-title>
                         <span class="pl-5 text-subtitle-2">{{ pro.name }} </span>
                     </v-list-item-title>
@@ -155,8 +156,9 @@ const HandleProjectFollow = (pro: PlatformProject) => {
             <div class="pa-2 d-flex justify-center" v-if="logined && detail">
                 <VuetifyModal v-model:dialog="dialog" text="Add Project" :width="700" title="Add Project" hideFooter
                     :disabled="disabled">
-                    <PlatformProjectVue :platform-id="detail.id" @cancel="platformChangeCanceled" @save="platformChanged"
-                        :disabled="disabled" :provider="detail.provider" :projects="providerProjects">
+                    <PlatformProjectVue :platform-id="detail.id" :platform-name="detail.name"
+                        @cancel="platformChangeCanceled" @save="platformChanged" :disabled="disabled"
+                        :provider="detail.provider" :projects="providerProjects">
                     </PlatformProjectVue>
                 </VuetifyModal>
             </div>
@@ -173,9 +175,9 @@ const HandleProjectFollow = (pro: PlatformProject) => {
             </v-tabs-window-item>
 
             <v-tabs-window-item value="three" v-if="project && detail" class="pa-3">
-                <PlatformProjectVue :platform-id="detail.id" :model="project" :provider="detail.provider"
-                    @cancel="platformChangeCanceled" @save="platformChanged" :disabled="disabled"
-                    :projects="providerProjects" :follow="targerByFollow">
+                <PlatformProjectVue :platform-id="detail.id" :platform-name="detail.name" :model="project"
+                    :provider="detail.provider" @cancel="platformChangeCanceled" @save="platformChanged"
+                    :disabled="disabled" :projects="providerProjects" :follow="targerByFollow">
                 </PlatformProjectVue>
             </v-tabs-window-item>
         </v-tabs-window>
