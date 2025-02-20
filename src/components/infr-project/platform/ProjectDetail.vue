@@ -160,8 +160,8 @@ const operateOptions = computed(() =>
 
                         <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Environment Variables">
-                                <v-expansion-panel-text v-if="model.provider_project.environment_variables">
-                                    <v-table>
+                                <v-expansion-panel-text>
+                                    <v-table v-if="(model.provider_project.environment_variables ?? []).length > 0">
                                         <thead>
                                             <tr>
                                                 <th class="text-left">
@@ -262,9 +262,11 @@ const operateOptions = computed(() =>
                                                     </span>
                                                 </template>
                                                 <template v-slot:append>
-                                                    <v-badge :color="deployment.readyState == 'READY' ? 'green' : 'orange'"
+                                                    <v-badge
+                                                        :color="deployment.readyState == 'READY' ? 'green' : 'orange'"
                                                         :content="deployment.readyState" inline></v-badge>
-                                                    <v-badge color="green" :content="deployment.readySubstate" inline></v-badge>
+                                                    <v-badge color="green" :content="deployment.readySubstate"
+                                                        inline></v-badge>
                                                 </template>
                                                 <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
                                                     <span class="d-inline-block text-truncate">
