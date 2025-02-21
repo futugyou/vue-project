@@ -18,7 +18,8 @@ const { vaultList } = storeToRefs(vaultStore)
 const props = defineProps<{
     modelValue: Secret[],
     validateManager: ValidateManagerType,
-    disabled?: boolean,
+    readonly?: boolean,
+    simple?: boolean,
 }>()
 
 const logined = computed(() =>
@@ -82,9 +83,9 @@ watch(editModel, (newVal) => {
     }
 }, { deep: true })
 
-const disabled = computed(() => {
-    if (props.disabled != undefined) {
-        return props.disabled
+const readonly = computed(() => {
+    if (props.readonly != undefined) {
+        return props.readonly
     }
     return !logined.value
 })
@@ -96,19 +97,20 @@ const disabled = computed(() => {
     <v-sheet class="elevation-3">
         <div class="d-flex align-center ga-6 pa-3">
             <label class="v-label">Secrets</label>
-            <v-btn @click="addSecret()" variant="text" v-if="logined" icon="md:add" :readonly="disabled"></v-btn>
+            <v-btn @click="addSecret()"variant="text" v-if="!simple && logined" :readonly="readonly"
+                icon="md:add"></v-btn>
         </div>
 
-        <v-row v-for="(secret, index) in editModel" :key="index" class="mb-2" v-if="logined">
+        <v-row v-for="(secret, index) in editModel" :key="index" :class="readonly ? '' : 'mb-2'" v-if="!simple">
             <v-col :cols="logined ? 5 : 6" class="pt-0">
                 <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key"
-                    label="Key" :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="false"
-                    :readonly="disabled" />
+                    label="Key" :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="readonly"
+                    :readonly="readonly" />
             </v-col>
             <v-col :cols="logined ? 5 : 6" class="pt-0 d-flex align-start">
                 <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
-                    label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="false"
-                    :readonly="disabled" class="mb-5" :items="vaultOptions" item-value="value"
+                    label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="readonly"
+                    :readonly="readonly" class="mb-5" :items="vaultOptions" item-value="value"
                     item-title="label"></v-select>
                 <v-tooltip :text="secret.mask_value">
                     <template v-slot:activator="{ props }">
@@ -117,11 +119,11 @@ const disabled = computed(() => {
                 </v-tooltip>
             </v-col>
             <v-col cols="2" class="pt-2" v-if="logined">
-                <v-btn icon="md:remove" @click="removeSecret(index)" :readonly="disabled"></v-btn>
+                <v-btn icon="md:remove" @click="removeSecret(index)" :readonly="readonly"></v-btn>
             </v-col>
         </v-row>
 
-        <v-table v-if="!logined && editModel.length > 0" class="mb-2">
+        <v-table v-if="simple && editModel.length > 0" class="mb-2">
             <thead>
                 <tr>
                     <th class="text-left">

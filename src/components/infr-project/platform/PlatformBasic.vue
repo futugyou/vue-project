@@ -189,7 +189,7 @@ const logined = computed(() =>
                     <PropertyPage :readonly="disabled" v-model="proxyModel.value.properties"
                         :validate-manager="validateManager">
                     </PropertyPage>
-                    <SecretPage :disabled="disabled" v-model="proxyModel.value.secrets" :validate-manager="validateManager">
+                    <SecretPage :readonly="disabled" v-model="proxyModel.value.secrets" :validate-manager="validateManager">
                     </SecretPage>
 
                     <v-spacer></v-spacer>

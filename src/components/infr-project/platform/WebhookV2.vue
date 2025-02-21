@@ -36,7 +36,7 @@ watch(() => props.model, (newVal) => {
             class="mt-2" :readonly="true"></v-select>
         <PropertyPage v-model="editModel.properties" :validate-manager="validateManager" :simple="true">
         </PropertyPage>
-        <SecretPage v-model="editModel.secrets" :validate-manager="validateManager" :disabled="true">
+        <SecretPage v-model="editModel.secrets" :validate-manager="validateManager" :simple="true">
         </SecretPage>
     </v-card>
 </template>

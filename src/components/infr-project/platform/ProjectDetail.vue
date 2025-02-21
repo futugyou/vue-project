@@ -104,7 +104,7 @@ const operateOptions = computed(() =>
                                 :simple="true">
                             </PropertyPage>
                             <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
-                                :disabled="true">
+                                :simple="true">
                             </SecretPage>
 
                             <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">

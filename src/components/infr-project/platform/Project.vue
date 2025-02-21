@@ -284,7 +284,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                         :readonly="disabled">
                     </PropertyPage>
                     <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"
-                        :disabled="disabled"></SecretPage>
+                        :readonly="disabled"></SecretPage>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ma-4 ga-3">
@@ -335,7 +335,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                         :readonly="disabled">
                     </PropertyPage>
                     <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
-                        :disabled="disabled">
+                        :readonly="disabled">
                     </SecretPage>
 
                     <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
