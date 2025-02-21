@@ -186,7 +186,7 @@ const logined = computed(() =>
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple :readonly="disabled"
                         :hideDetails="false"></v-combobox>
 
-                    <PropertyPage :disabled="disabled" v-model="proxyModel.value.properties"
+                    <PropertyPage :readonly="disabled" v-model="proxyModel.value.properties"
                         :validate-manager="validateManager">
                     </PropertyPage>
                     <SecretPage :disabled="disabled" v-model="proxyModel.value.secrets" :validate-manager="validateManager">

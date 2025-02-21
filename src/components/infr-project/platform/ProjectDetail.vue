@@ -101,7 +101,7 @@ const operateOptions = computed(() =>
                             </v-sheet>
 
                             <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
-                                :disabled="true">
+                                :simple="true">
                             </PropertyPage>
                             <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
                                 :disabled="true">
@@ -155,7 +155,7 @@ const operateOptions = computed(() =>
                         </v-sheet>
 
                         <PropertyPage :modelValue="model.provider_project.properties ?? []"
-                            :validate-manager="validateManager" :disabled="true">
+                            :validate-manager="validateManager" :simple="true">
                         </PropertyPage>
 
                         <v-expansion-panels class="elevation-3" :static="true">

@@ -281,7 +281,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                         label="Auto Import Webhooks" :readonly="disabled"></v-switch>
 
                     <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
-                        :disabled="disabled">
+                        :readonly="disabled">
                     </PropertyPage>
                     <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"
                         :disabled="disabled"></SecretPage>
@@ -332,7 +332,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                     </v-sheet>
 
                     <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
-                        :disabled="disabled">
+                        :readonly="disabled">
                     </PropertyPage>
                     <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
                         :disabled="disabled">
