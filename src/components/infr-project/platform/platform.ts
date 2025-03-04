@@ -593,6 +593,12 @@ export interface Deployment {
      * @memberof Deployment
      */
     badge_markdown: string
+    /**
+     * 
+     * @type {string}
+     * @memberof Deployment
+     */
+    description: string
 }
 
 /**

@@ -14,7 +14,7 @@ import SecretPage from './Secret.vue'
 import { timeFormat } from '@/tools/timeFormat'
 
 import {
-    OperateEnum, PlatformApiFactory, PlatformProject
+    OperateEnum, PlatformApiFactory, PlatformProject, Deployment
 } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
@@ -64,6 +64,14 @@ const operateOptions = computed(() =>
         value: OperateEnum[key as keyof typeof OperateEnum],
     }))
 )
+
+const getDeploymentMessage = (deployment: Deployment) => {
+    if (deployment.description != undefined && deployment.description != "") {
+        return deployment.description
+    } else {
+        return deployment.name ?? ""
+    }
+}
 
 </script>
 
@@ -270,12 +278,12 @@ const operateOptions = computed(() =>
                                                     <v-badge
                                                         :color="deployment.readyState == 'READY' ? 'green' : 'orange'"
                                                         :content="deployment.readyState" inline></v-badge>
-                                                    <v-badge color="green" :content="deployment.readySubstate" v-if="deployment.readySubstate"
-                                                        inline></v-badge>
+                                                    <v-badge color="green" :content="deployment.readySubstate"
+                                                        v-if="deployment.readySubstate" inline></v-badge>
                                                 </template>
                                                 <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
                                                     <span class="d-inline-block text-truncate">
-                                                        {{ deployment.name }}
+                                                        {{ getDeploymentMessage(deployment) }}
                                                     </span>
                                                     <v-divider></v-divider>
 
