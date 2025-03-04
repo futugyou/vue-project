@@ -158,6 +158,7 @@ const operateOptions = computed(() =>
                             :validate-manager="validateManager" :simple="true">
                         </PropertyPage>
 
+                        <!-- Environment Variables -->
                         <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Environment Variables">
                                 <v-expansion-panel-text>
@@ -200,6 +201,7 @@ const operateOptions = computed(() =>
                             </v-expansion-panel>
                         </v-expansion-panels>
 
+                        <!-- Webhooks -->
                         <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Webhooks">
                                 <v-expansion-panel-text v-if="model.provider_project.webhooks">
@@ -213,6 +215,7 @@ const operateOptions = computed(() =>
                             </v-expansion-panel>
                         </v-expansion-panels>
 
+                        <!-- Workflow Runs -->
                         <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Workflow Runs">
                                 <v-expansion-panel-text>
@@ -249,12 +252,14 @@ const operateOptions = computed(() =>
                             </v-expansion-panel>
                         </v-expansion-panels>
 
+                        <!-- Deployments -->
                         <v-expansion-panels class="elevation-3" :static="true">
                             <v-expansion-panel title="Deployments">
-                                <v-expansion-panel-text v-if="model.provider_project.deployments">
-                                    <v-row>
-                                        <v-col v-for="deployment in model.provider_project.deployments"
-                                            :key="deployment.name" cols="12" md="4">
+                                <v-expansion-panel-text>
+                                    <v-timeline v-if="model.provider_project.deployments">
+                                        <v-timeline-item v-for="(deployment, i) in model.provider_project.deployments"
+                                            :key="i" dot-color="indigo-lighten-2" icon="md:schedule" fill-dot
+                                            width="100%">
                                             <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                                                 <template v-slot:title>
                                                     <span class="text-h6">
@@ -279,8 +284,8 @@ const operateOptions = computed(() =>
                                                     </MarkdownBadge>
                                                 </v-card-text>
                                             </v-card>
-                                        </v-col>
-                                    </v-row>
+                                        </v-timeline-item>
+                                    </v-timeline>
                                 </v-expansion-panel-text>
                             </v-expansion-panel>
                         </v-expansion-panels>
