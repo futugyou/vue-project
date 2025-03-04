@@ -270,7 +270,7 @@ const operateOptions = computed(() =>
                                                     <v-badge
                                                         :color="deployment.readyState == 'READY' ? 'green' : 'orange'"
                                                         :content="deployment.readyState" inline></v-badge>
-                                                    <v-badge color="green" :content="deployment.readySubstate"
+                                                    <v-badge color="green" :content="deployment.readySubstate" v-if="deployment.readySubstate"
                                                         inline></v-badge>
                                                 </template>
                                                 <v-card-text class="d-flex flex-column ga-3 overflow-hidden">
