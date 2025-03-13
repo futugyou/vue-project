@@ -53,9 +53,9 @@ const vaultOptions = computed(() =>
 )
 
 const fetchVaultData = async () => {
-    if (!logined.value) {
-        return
-    }
+    // if (!logined.value) {
+    //     return
+    // }
 
     if (vaultList.value.length > 0) {
         return
