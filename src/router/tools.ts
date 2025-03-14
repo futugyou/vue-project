@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const PdfViewer = () => import('@/components/tools/PdfViewer.vue')
 const Translate  = () => import('@/components/tools/translate/Translate.vue')

@@ -4,8 +4,10 @@ import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { getParameter, SyncParameter, syncParameter } from './parameter'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
+import { getParameter, syncParameter } from './parameter'
+import type { SyncParameter } from './parameter'
 import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'

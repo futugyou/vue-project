@@ -5,7 +5,8 @@ import { useRoute } from 'vue-router'
 import Spinners from '@/common/Spinners.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { timeFormat } from '@/tools/timeFormat'
-import { getEcsServiceDetail, compareEcsTaskDefinition, EcsTaskCompare } from "./ecs"
+import { getEcsServiceDetail, compareEcsTaskDefinition } from "./ecs"
+import type { EcsTaskCompare } from "./ecs"
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'

@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect, computed, onUnmounted, Ref, toRaw } from 'vue'
+import { ref, watch, watchEffect, computed, onUnmounted } from 'vue'
+import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import {
-    PlatformApiFactory, PlatformDetailView, CreatePlatformRequest, ProviderEnum,
-    UpdatePlatformRequest, checkPlatfromPropertySecret
-} from './platform'
+import { PlatformApiFactory, ProviderEnum, checkPlatfromPropertySecret } from './platform'
+
+import type { PlatformDetailView, CreatePlatformRequest, UpdatePlatformRequest } from './platform'
 
 import { ValidateManager } from '@/tools/validate'
 import PropertyPage from './Property.vue'

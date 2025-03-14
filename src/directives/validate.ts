@@ -1,5 +1,5 @@
-import { Directive, DirectiveBinding, inject } from 'vue'
-import { ValidateManager, ValidateManagerType } from '@/tools/validate'
+import type { Directive, DirectiveBinding } from 'vue'
+import type { ValidateManagerType } from '@/tools/validate'
 
 
 export const validateDirective: Directive = {

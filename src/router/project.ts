@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const ResourceList = () => import('@/components/infr-project/resource/List.vue')
 const ResourceEdit = () => import('@/components/infr-project/resource/Edit.vue')

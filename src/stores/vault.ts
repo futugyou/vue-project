@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { VaultView } from '../components/infr-project/vault/vault'
+import type { VaultView } from '../components/infr-project/vault/vault'
 
 export const useVaultStore = defineStore('vault-list-data', () => {
     const vaultList = ref<VaultView[]>([])

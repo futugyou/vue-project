@@ -1,5 +1,5 @@
 
-import { Router } from 'vue-router'
+import type { Router } from 'vue-router'
 import { useAuth } from '@/plugins/auth'
 
 declare global {

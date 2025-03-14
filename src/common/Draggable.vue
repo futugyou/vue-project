@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 
-import Moveable, { OnRotate, OnDrag, OnScale } from "vue3-moveable"
+import Moveable from "vue3-moveable"
+import type { OnRotate, OnDrag, OnScale } from "vue3-moveable"
 
 defineProps({
     selector: String

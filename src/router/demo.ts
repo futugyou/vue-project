@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const Home = () => import('@/components/vuedemo/HelloWorld.vue')
 const Base = () => import('@/components/vuedemo/Base.vue')

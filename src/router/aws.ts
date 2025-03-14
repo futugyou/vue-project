@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const Account = () => import('@/components/aws/account/Account.vue')
 const Parameter = () => import('@/components/aws/parameter/Parameter.vue')

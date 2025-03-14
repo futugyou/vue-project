@@ -1,4 +1,4 @@
-import _ from 'lodash-es'
+import { get } from 'lodash-es'
 
 // https://www.drawio.com/doc/faq/embed-mode
 export type UrlParameters = {
@@ -24,7 +24,7 @@ export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters, add
 
     if (urlParameters) {
         for (const key in urlParameters) {
-            const value = _.get(urlParameters, key)
+            const value = get(urlParameters, key)
             if (value !== undefined) {
                 if (typeof value === 'boolean') {
                     urlSearchParams.append(key, value ? '1' : '0')

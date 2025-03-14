@@ -1,45 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "composite": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "useDefineForClassFields": true,
-    "esModuleInterop": true,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
-    "noImplicitThis": true,
-    "types": [
-      "offscreencanvas"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
-  },
-  "include": [
-    "vite.config.*",
-    "vitest.config.*",
-    "cypress.config.*",
-    "nightwatch.conf.*",
-    "playwright.config.*",
-    "env.d.ts",
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/**/__tests__/*"
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
   ]
 }

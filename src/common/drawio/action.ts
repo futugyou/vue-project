@@ -1,4 +1,4 @@
-import { Ref } from "vue"
+import type { Ref } from "vue"
 
 const action = (iframeRef: Ref<HTMLIFrameElement | undefined>, action: string, data: any) => {
     iframeRef.value?.contentWindow?.postMessage(

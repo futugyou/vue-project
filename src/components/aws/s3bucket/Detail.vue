@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed } from 'vue'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import BreadcrumbGroup, { BreadcrumbItem } from '@/common/BreadcrumbGroup.vue'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
+import BreadcrumbGroup from '@/common/BreadcrumbGroup.vue'
+import type { BreadcrumbItem } from '@/common/BreadcrumbGroup.vue'
 import Button from '@/common/Button.vue'
 import OpenIcon from '@/icons/Open.vue'
 import ReloadIcon from '@/icons/Reload.vue'
 
 import { timeFormat } from '@/tools/timeFormat'
-import { S3Bucket, S3BucketItem, getS3BucketItems, getS3ItemUrl } from './s3bucket'
+import { getS3BucketItems, getS3ItemUrl } from './s3bucket'
+import type { S3Bucket, S3BucketItem } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'

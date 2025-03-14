@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, PropType, computed, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
+import type { PropType } from 'vue'
 
 import Empty from '@/common/EmptyStates.vue'
 

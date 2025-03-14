@@ -1,6 +1,6 @@
 
 <script lang="ts" setup>
-import { ref, PropType, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 
 import PDFViewer from '@/common/PDFViewer.vue'
@@ -8,7 +8,8 @@ import Button from '@/common/Button.vue'
 import Operate from '@/icons/Operate.vue'
 import TranslateBtn from '@/icons/Translate.vue'
 
-import { translateText, TranslateModel } from '@/components/tools/translate/Translate'
+import { translateText } from '@/components/tools/translate/Translate'
+import type { TranslateModel } from '@/components/tools/translate/Translate'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'

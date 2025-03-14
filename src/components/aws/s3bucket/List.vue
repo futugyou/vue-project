@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Detail from './Detail.vue'
 import { timeFormat } from '@/tools/timeFormat'
 
-import { S3Bucket, getS3Buckets } from './s3bucket'
+import { getS3Buckets } from './s3bucket'
+import type { S3Bucket } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'

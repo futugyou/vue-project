@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, watch, computed } from 'vue'
-import _ from 'lodash-es'
+import { map } from 'lodash-es'
 
 import { useAuth } from '@/plugins/auth'
 
-import { PlatformProject } from './platform'
+import type { PlatformProject } from './platform'
 import Empty from '@/common/EmptyStates.vue'
 
 const authService = useAuth()
@@ -19,7 +19,7 @@ const selfProjects = computed(() =>
 )
 
 const providerProjects = computed(() =>
-    _.map(props.projects.filter(p => p.id == "" && p.provider_project), p => ({
+    map(props.projects.filter(p => p.id == "" && p.provider_project), p => ({
         id: p.provider_project!.id,
         name: p.provider_project!.name,
         url: p.provider_project!.url,

@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 import { ref, watch, computed, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import {
-    VaultApiFactory, VaultView, CreateVaultRequest, ChangeVaultRequest, StorageMediaEnum, VaultTypeEnum,
-    CreateVaultsResponse
-} from './vault'
+import { VaultApiFactory,  StorageMediaEnum, VaultTypeEnum } from './vault'
+
+import type { VaultView, CreateVaultRequest, ChangeVaultRequest,CreateVaultsResponse } from './vault'
 
 import { ValidateManager } from '@/tools/validate'
 
@@ -24,7 +23,7 @@ const isLoading = ref(false)
 const props = defineProps<{
     vault: VaultView
 }>()
-const editModel = ref<VaultView>(_.cloneDeep(props.vault))
+const editModel = ref<VaultView>(cloneDeep(props.vault))
 
 const cancel = () => {
     emit('cancel')
@@ -97,7 +96,7 @@ const emit = defineEmits<{
 }>()
 
 watch(() => props.vault, (newVal) => {
-    editModel.value = _.cloneDeep(newVal)
+    editModel.value = cloneDeep(newVal)
 })
 
 const storageMediaOptions = computed(() =>

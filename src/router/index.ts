@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory, Router, RouterHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { Router, RouterHistory } from 'vue-router'
 
 import { AwsRoutes } from './aws'
 import { DemoRoutes } from './demo'

@@ -6,7 +6,8 @@ import { isEqual } from 'lodash-es'
 import Spinners from '@/common/Spinners.vue'
 import RegionList from "@/components/aws/region/list.vue"
 import { timeFormat } from '@/tools/timeFormat'
-import { Account, defaultAccount, checkAccount, editAccount, createAccount } from './account'
+import { defaultAccount, checkAccount, editAccount, createAccount } from './account'
+import type { Account } from './account'
 import { getRegions } from '@/tools/regions'
 
 import { useMessageStore } from '@/stores/message'

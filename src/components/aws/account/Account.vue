@@ -2,11 +2,13 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import TableAndPaging  from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Edit from './Edit.vue'
 
-import { Account, getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
+import {  getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
+import type { Account  } from './account'
 import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'

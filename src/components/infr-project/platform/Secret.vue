@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref, watch, computed, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { orderBy, isEqual, cloneDeep } from 'lodash-es'
 
 import { useAuth } from '@/plugins/auth'
 import { useVaultStore } from '@/stores/vault'
 
-import { Secret } from './platform'
-import { ValidateManagerType } from '@/tools/validate'
+import type { Secret } from './platform'
+import type { ValidateManagerType } from '@/tools/validate'
 
 import { VaultApiFactory } from '../vault/vault'
 
@@ -66,20 +66,20 @@ const fetchVaultData = async () => {
         return
     }
 
-    vaultList.value = _.orderBy((data ?? []).filter(p => p.vault_type != "system"), "key", "desc")
+    vaultList.value = orderBy((data ?? []).filter(p => p.vault_type != "system"), "key", "desc")
 }
 
 watchEffect(async () => fetchVaultData())
 
 watch(() => props.modelValue, (newVal) => {
-    if (!_.isEqual(editModel.value, newVal)) {
+    if (!isEqual(editModel.value, newVal)) {
         editModel.value = newVal
     }
 }, { deep: true })
 
 watch(editModel, (newVal) => {
-    if (!_.isEqual(newVal, editModel)) {
-        emit('update:modelValue', _.cloneDeep(newVal))
+    if (!isEqual(newVal, editModel)) {
+        emit('update:modelValue', cloneDeep(newVal))
     }
 }, { deep: true })
 

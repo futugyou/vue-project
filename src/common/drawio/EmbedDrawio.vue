@@ -2,9 +2,12 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
-import { DrawAction, ExportFromat, LayoutType } from './action'
-import { handleEvent, MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent, OpenLinkEvent, ExitEvent, ExportEvent } from './event'
-import { UrlParameters, getEmbedUrl } from './types'
+import { DrawAction} from './action'
+import type {  ExportFromat, LayoutType } from './action'
+import { handleEvent  } from './event'
+import type { MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent, OpenLinkEvent, ExitEvent, ExportEvent } from './event'
+import type { UrlParameters } from './types'
+import { getEmbedUrl } from './types'
 
 export interface IEmbedDrawioProps {
     xml?: string

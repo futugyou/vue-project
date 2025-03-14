@@ -1,5 +1,6 @@
 
-import { pkce, PKCECodePair } from './pkce'
+import { pkce } from './pkce'
+import type { PKCECodePair } from './pkce'
 import { toUrlEncoded, btoa } from './util'
 
 import { jwtDecode } from 'jwt-decode'

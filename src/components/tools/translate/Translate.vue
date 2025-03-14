@@ -5,11 +5,9 @@ import Speech from '@/common/Speech.vue'
 import Dropdown from '@/common/Dropdown.vue'
 import Dictionary from './Dictionary.vue'
 
-import {
-    translateText, TranslateModel,
-    detectLanguage, DetectLanguageModel,
-    languageList, LanguageListModel,
-} from './Translate'
+import type { TranslateModel,  DetectLanguageModel, LanguageListModel } from './Translate'
+
+import { translateText, detectLanguage, languageList } from './Translate'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'

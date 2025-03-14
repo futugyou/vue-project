@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ref, watch, computed } from 'vue'
-import _ from 'lodash-es'
+import { isEqual, cloneDeep } from 'lodash-es'
 
 import { useAuth } from '@/plugins/auth'
 
-import { Property } from './platform'
-import { ValidateManagerType } from '@/tools/validate'
+import type { Property } from './platform'
+import type { ValidateManagerType } from '@/tools/validate'
 
 const authService = useAuth()
 
@@ -23,8 +23,8 @@ const emit = defineEmits<{
 }>()
 
 watch(editModel, (newVal) => {
-    if (!_.isEqual(newVal, editModel)) {
-        emit('update:modelValue', _.cloneDeep(newVal))
+    if (!isEqual(newVal, editModel)) {
+        emit('update:modelValue', cloneDeep(newVal))
     }
 }, { deep: true })
 
@@ -42,7 +42,7 @@ const removeProperty = (index: number) => {
 }
 
 watch(() => props.modelValue, (newVal) => {
-    if (!_.isEqual(editModel.value, newVal)) {
+    if (!isEqual(editModel.value, newVal)) {
         editModel.value = newVal
     }
 }, { deep: true })

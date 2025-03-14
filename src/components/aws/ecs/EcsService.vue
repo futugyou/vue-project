@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
-import { EcsService, getEcsServices } from "./ecs"
-import { Account, defaultAccount } from '@/components/aws/account/account'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
+import { getEcsServices } from "./ecs"
+import type { EcsService } from "./ecs"
+import { defaultAccount } from '@/components/aws/account/account'
+import type { Account } from '@/components/aws/account/account'
 import AccountList from "@/components/aws/account/list.vue"
 import { timeFormat } from '@/tools/timeFormat'
 

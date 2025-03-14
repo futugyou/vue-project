@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, watch } from 'vue'
-import { Account, getAccounts } from './account'
+import { getAccounts } from './account'
+import type { Account } from './account'
 
 const props = withDefaults(
     defineProps<{

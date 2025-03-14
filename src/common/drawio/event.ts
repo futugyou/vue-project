@@ -1,4 +1,4 @@
-import { DraftAction, MergeAction, PromptAction, ExportFromat, TemplateAction, ExportAction } from "./action"
+import type { DraftAction, MergeAction, PromptAction, ExportFromat, TemplateAction, ExportAction } from "./action"
 
 type EventHandler = {
     [key in DrawioEvent['event']]?: (data: Extract<DrawioEvent, { event: key }>) => void

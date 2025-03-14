@@ -1,5 +1,6 @@
 import { AuthService } from '@/tools/auth'
-import { App, inject, provide } from 'vue'
+import { inject } from 'vue'
+import type { App } from 'vue'
 
 export const AuthKey = Symbol('AuthService')
 

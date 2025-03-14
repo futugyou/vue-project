@@ -1,4 +1,5 @@
-import { ref, isRef, unref, watchEffect, Ref } from 'vue'
+import { ref, isRef, unref, watchEffect } from 'vue'
+import type { Ref } from 'vue'
 
 export const useFetch = (
     url: string | Ref<string>,

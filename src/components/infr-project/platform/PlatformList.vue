@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { orderBy } from 'lodash-es'
 
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
 import Spinners from '@/common/Spinners.vue'
-import { PlatformView, PlatformApiFactory, PlatformDetailView } from './platform'
+import { PlatformApiFactory } from './platform'
+import type { PlatformView, PlatformDetailView } from './platform'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import PlatformBasic from './PlatformBasic.vue'
 
@@ -34,7 +36,7 @@ const fetchData = async () => {
         return
     }
 
-    platforms.value = _.orderBy(data, "updated_at", "desc")
+    platforms.value = orderBy(data, "updated_at", "desc")
 }
 
 watchEffect(async () => fetchData())

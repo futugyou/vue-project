@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch, onUnmounted, computed, watchEffect, toRef, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { unionBy, cloneDeep } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
@@ -12,10 +12,8 @@ import WebhookPage from './WebhookV2.vue'
 import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
 
-import {
-    OperateEnum, PlatformApiFactory, UpdatePlatformProjectRequest,
-    PlatformDetailView, PlatformProject, ProviderEnum, checkPlatfromProjectProperty, Property, Secret, Webhook
-} from './platform'
+import { OperateEnum, PlatformApiFactory, ProviderEnum, checkPlatfromProjectProperty } from './platform'
+import type { UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, Property, Secret, Webhook} from './platform'
 import { ValidateManager } from '@/tools/validate'
 
 interface ConfirmEditModel {
@@ -48,7 +46,7 @@ const convertToConfirmEditModel = (model: PlatformProject | undefined): ConfirmE
         }
     }
 
-    var confirmEditModel = _.cloneDeep({
+    var confirmEditModel = cloneDeep({
         operate: OperateEnum.Upsert,
         followed: model.followed,
         id: model.id,
@@ -102,7 +100,7 @@ const save = async () => {
     var projectModel = confirmEditModel.value
     const providerProject = (props.projects ?? []).filter(p => p.provider_project).find(p => p.provider_project!.id == projectModel.provider_project_id)
     if (providerProject) {
-        const properties = _.unionBy(providerProject.properties, confirmEditModel.value.properties, "key")
+        const properties = unionBy(providerProject.properties, confirmEditModel.value.properties, "key")
         projectModel.properties = properties
     }
 

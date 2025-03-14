@@ -1,6 +1,6 @@
 
 <script lang="ts" setup>
-import { ref, PropType, computed, watchEffect, watch } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import { computedAsync } from '@vueuse/core'
 import * as pdfjsLib from 'pdfjs-dist'

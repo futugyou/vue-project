@@ -2,7 +2,8 @@
 
 import { ref } from 'vue'
 import SimpleButton from '@/common/SimpleButton.vue'
-import EmbedDrawio, { MergeEvent, PromptCancelEvent, PromptEvent, DraftEvent } from '@/common/drawio'
+import EmbedDrawio from '@/common/drawio'
+import type { MergeEvent, PromptCancelEvent, PromptEvent, DraftEvent } from '@/common/drawio'
 
 const drawioRef = ref<InstanceType<typeof EmbedDrawio> | null>(null)
 const urlParameters: any = {

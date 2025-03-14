@@ -66,6 +66,7 @@ watch(isSmallScreen, () => {
 </template>
 
 <style scoped lang="scss">
+@use 'sass:color';
 $primary-color: var(--vt-c-black-soft);
 $minor-color: var(--vt-c-black-soft);
 $sidebar-width: 4rem;
@@ -98,7 +99,7 @@ li {
 
     &:hover {
         color: $minor-color;
-        background-color: lighten($color: rgb(0 0 255 / 20%), $amount: 5);
+        background-color: color.scale(rgb(0 0 255 / 20%), $lightness: 10%);
     }
 
     & a {

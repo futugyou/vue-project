@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import { ref, computed, onUnmounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { storeToRefs } from 'pinia' 
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import {
-    VaultApiFactory, VaultView, CreateVaultsRequest, StorageMediaEnum, VaultTypeEnum,
-    VaultDefault, CreateVaultModel
-} from './vault'
+import { VaultApiFactory, StorageMediaEnum, VaultTypeEnum } from './vault'
+
+import type { VaultView, CreateVaultsRequest,  CreateVaultModel } from './vault'
 
 import { ValidateManager } from '@/tools/validate'
 import FileInput from '@/common/FileInput.vue'

@@ -1,19 +1,22 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import RegionList from "@/components/aws/region/list.vue"
 import AccountList from "@/components/aws/account/list.vue"
 import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 
-import { Parameter, getParameters, getParameterCompare } from './parameter'
+import { getParameters, getParameterCompare } from './parameter'
+import type { Parameter} from './parameter'
 import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
-import { Account, defaultAccount } from '@/components/aws/account/account'
+import { defaultAccount } from '@/components/aws/account/account'
+import type { Account } from '@/components/aws/account/account'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)

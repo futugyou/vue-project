@@ -2,14 +2,15 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { orderBy } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import { ResourceView, ResourceApiFactory } from './resource'
+import { ResourceApiFactory } from './resource'
+import type { ResourceView } from './resource'
 import ResourceData from './ResourceData.vue'
 
 const store = useMessageStore()
@@ -32,7 +33,7 @@ const fetchData = async () => {
         return
     }
 
-    resources.value = _.orderBy(data, "updated_at", "desc")
+    resources.value = orderBy(data, "updated_at", "desc")
 }
 
 watchEffect(async () => fetchData())

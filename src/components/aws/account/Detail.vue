@@ -4,7 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
-import { Account, defaultAccount, getAccount, deleteAccount } from './account'
+import {  defaultAccount, getAccount, deleteAccount } from './account'
+import type { Account  } from './account'
 import Edit from './Edit.vue'
 
 import { useMessageStore } from '@/stores/message'

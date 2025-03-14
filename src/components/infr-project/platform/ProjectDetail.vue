@@ -2,7 +2,6 @@
 import { ref, watch, onUnmounted, computed, watchEffect } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import MarkdownBadge from '@/common/MarkdownBadge.vue'
@@ -13,9 +12,8 @@ import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
 import { timeFormat } from '@/tools/timeFormat'
 
-import {
-    OperateEnum, PlatformApiFactory, PlatformProject, Deployment
-} from './platform'
+import { OperateEnum, PlatformApiFactory } from './platform'
+import type { PlatformProject, Deployment } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
 const route = useRoute()

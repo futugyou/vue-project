@@ -5,7 +5,8 @@ import { useFetch } from '../../composables/fetch'
 import ChildComp from './ChildComp.vue'
 import MouseComp from './MouseComp.vue'
 
-import { messageKey, locationKey, i18nKey, I18nInject } from '../../tools/injectkey'
+import type { I18nInject } from '../../tools/injectkey'
+import { messageKey, locationKey, i18nKey } from '../../tools/injectkey'
 import { useAuth } from '@/plugins/auth'
 
 const authService = useAuth()

@@ -2,7 +2,8 @@
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { MessageInfo, useMessageStore } from '@/stores/message'
+import {  useMessageStore } from '@/stores/message'
+import type { MessageInfo } from '@/stores/message'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)

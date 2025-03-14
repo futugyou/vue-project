@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onUnmounted } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import {
-    ResourceApiFactory, CreateResourceRequest, ResourceViewDetail, ResourceTypeEnum, UpdateResourceRequest
-} from './resource'
+import { ResourceApiFactory, ResourceTypeEnum } from './resource'
+
+import type {  CreateResourceRequest, UpdateResourceRequest } from './resource'
 
 import { ValidateManager } from '@/tools/validate'
 

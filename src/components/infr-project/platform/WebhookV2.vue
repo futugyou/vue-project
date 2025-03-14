@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 
-import { Webhook } from './platform'
+import type { Webhook } from './platform'
 
 import { ValidateManager } from '@/tools/validate'
 import PropertyPage from './Property.vue'

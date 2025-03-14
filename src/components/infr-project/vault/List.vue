@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import { ref, watchEffect, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { orderBy } from 'lodash-es'
 
 import { useMessageStore } from '@/stores/message'
 import { useVaultStore } from '@/stores/vault'
 import { useAuth } from '@/plugins/auth'
 
-import TableAndPaging, { TableField } from '@/common/TableAndPaging.vue'
+import TableAndPaging from '@/common/TableAndPaging.vue'
+import type { TableField } from '@/common/TableAndPaging.vue'
 import Spinners from '@/common/Spinners.vue'
-import { VaultView, VaultApiFactory, VaultDefault } from './vault'
+import { VaultApiFactory, VaultDefault } from './vault'
+import type { VaultView } from './vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
 import Edit from './Edit.vue'
@@ -44,7 +46,7 @@ const fetchData = async () => {
         return
     }
 
-    vaults.value = _.orderBy(data, "key", "desc")
+    vaults.value = orderBy(data, "key", "desc")
 }
 
 watchEffect(async () => fetchData())

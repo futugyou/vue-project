@@ -2,14 +2,15 @@
 import { ref, computed } from 'vue'
 import { useRoute, } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { orderBy } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
-import { PlatformApiFactory, PlatformDetailView, PlatformProject } from './platform'
+import { PlatformApiFactory } from './platform'
+import type { PlatformDetailView, PlatformProject } from './platform'
 import PlatformProjectVue from './Project.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import PlatformBasic from './PlatformBasic.vue'
@@ -36,7 +37,7 @@ const sortedPlatformDetailView = (data: PlatformDetailView | undefined) => {
         return undefined
     }
 
-    return { ...data, projects: _.orderBy(data.projects, 'id', 'asc') }
+    return { ...data, projects: orderBy(data.projects, 'id', 'asc') }
 }
 
 const fetchData = async () => {

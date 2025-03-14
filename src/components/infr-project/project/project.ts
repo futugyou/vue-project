@@ -1,4 +1,5 @@
-import { BaseAPI, FetchAPI, FetchArgs, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
+import { BaseAPI, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
+import type { FetchAPI, FetchArgs } from "@/tools/fetch"
 
 const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
 

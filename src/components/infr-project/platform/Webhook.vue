@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { ref, watch, computed, onUnmounted, Ref } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import { useAuth } from '@/plugins/auth'
 
-import { PlatformApiFactory, UpdatePlatformWebhookRequest, Webhook, DefaultWebhook, WebhookStateEnum, PlatformDetailView } from './platform'
+import type { UpdatePlatformWebhookRequest, Webhook, PlatformDetailView } from './platform'
+import { PlatformApiFactory, DefaultWebhook, WebhookStateEnum } from './platform'
 
 import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
@@ -25,7 +26,7 @@ const convertWebhook = (mode: Webhook | undefined): WebhookModel => {
     }
 
     return {
-        ..._.cloneDeep(mode),
+        ...cloneDeep(mode),
         sync: false,
     }
 }

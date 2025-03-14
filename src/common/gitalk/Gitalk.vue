@@ -3,13 +3,16 @@ import { ref, watch, watchEffect } from 'vue'
 import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
-import _ from 'lodash-es'
+import { orderBy,uniqBy } from 'lodash-es'
 import { useLocalStorage, StorageSerializers } from '@vueuse/core'
 
 import {
-    getIssue, getIssueComments, Comment, githubLogin, GitHubUser, Issue, createIssueComment,
+    getIssue, getIssueComments,  githubLogin,  createIssueComment,
     getGraphQLIssueComments, likeIssueComment, unLikeIssueComment
 } from './github'
+
+import type {  Comment, GitHubUser, Issue} from './github'
+
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
@@ -80,7 +83,7 @@ const fetchComments = async () => {
         commends = data
     }
 
-    comments.value = _.orderBy(_.uniqBy(commends.concat(comments.value), "id"), "id", "desc")
+    comments.value = orderBy(uniqBy(commends.concat(comments.value), "id"), "id", "desc")
 }
 
 const handleLogin = () => {

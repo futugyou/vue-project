@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 
-import {
-    TranslateModel, lookupDictionaryExamples,
-    lookupDictionary, DictionaryLookupModel,
-    DictionaryExampleModel,
-} from './Translate'
+import { lookupDictionaryExamples, lookupDictionary } from './Translate'
+
+import type { TranslateModel, DictionaryLookupModel, DictionaryExampleModel } from './Translate'
 
 import ItemWithSpeech from '@/common/ItemWithSpeech.vue'
-import { ArrayChunks } from '@/tools/util'
 
 export interface IDictionaryProps {
     text: string,

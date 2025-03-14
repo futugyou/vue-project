@@ -2,7 +2,7 @@
 import { ref, } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import _ from 'lodash-es'
+import { orderBy } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
@@ -10,7 +10,8 @@ import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import ResourceData from './ResourceData.vue'
-import { ResourceApiFactory, ResourceViewDetail } from './resource'
+import { ResourceApiFactory } from './resource'
+import type { ResourceViewDetail } from './resource'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -40,7 +41,7 @@ const fetchData = async () => {
         return
     }
 
-    histories.value = _.orderBy(data, "updated_at", "desc")
+    histories.value = orderBy(data, "updated_at", "desc")
 }
 
 fetchData()
