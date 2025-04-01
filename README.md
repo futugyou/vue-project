@@ -43,6 +43,13 @@ npx npm-check-updates -u
 npm install
 ```
 
+## remove unused package
+
+```sh
+npm install -g depcheck
+depcheck
+```
+
 [lodashjs](https://www.lodashjs.com/)
 
 [jspdf](https://github.com/parallax/jsPDF)
