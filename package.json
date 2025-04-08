@@ -14,7 +14,7 @@
     "@opentelemetry/auto-instrumentations-web": "^0.46.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "@vueuse/core": "^13.0.0",
+    "@vueuse/core": "^13.1.0",
     "@xstate/vue": "^4.0.2",
     "gsap": "^3.12.7",
     "immer": "^10.1.1",
