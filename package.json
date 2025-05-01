@@ -16,7 +16,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "@vueuse/core": "^13.1.0",
     "@xstate/vue": "^4.0.2",
-    "gsap": "^3.12.7",
+    "gsap": "^3.13.0",
     "immer": "^10.1.1",
     "jspdf": "^3.0.1",
     "jwt-decode": "^4.0.0",
