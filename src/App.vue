@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, shallowRef, watchEffect } from 'vue'
+import { ref, shallowRef, watchEffect, defineAsyncComponent } from 'vue'
 import type { Component } from 'vue'
-import { SpeedInsights } from '@vercel/speed-insights/vue'
 
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
@@ -23,6 +22,13 @@ import DemoRoute from '@/components/vuedemo/DemoRoute.vue'
 import AwsRoute from '@/components/aws/AwsRoute.vue'
 import ToolsRoute from '@/components/tools/ToolsRoute.vue'
 import ProjectRoute from '@/components/infr-project/ProjectRoute.vue'
+
+let SpeedInsightsComponent = null
+if (import.meta.env.PROD) {
+    SpeedInsightsComponent = defineAsyncComponent(() =>
+        import('@vercel/speed-insights/vue').then(m => m.SpeedInsights)
+    )
+}
 
 const rootContainer = ref("nomalRootContainer")
 const onRouteChange = () => {
@@ -85,7 +91,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
 </script>
 
 <template>
-    <SpeedInsights />
+    <component :is="SpeedInsightsComponent" v-if="SpeedInsightsComponent" />
     <Alert></Alert>
     <v-app>
         <v-app-bar density="compact" :elevation="2" @click="onRouteChange" v-if="rootContainer == 'nomalRootContainer'">
@@ -101,7 +107,8 @@ const isSidebarOpen = shallowRef<Boolean>(false)
             <User></User>
         </v-app-bar>
         <v-fab icon="$vuetify" variant="tonal" location="top start" position="fixed" app width="40" height="40"
-            color="primary" @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
+            color="primary" @click="isSidebarOpen = !isSidebarOpen"
+            v-if="rootContainer == 'subAppRootContainer'"></v-fab>
         <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
             v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
             <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />

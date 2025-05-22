@@ -1,12 +1,10 @@
 import './assets/main.css'
 import 'the-new-css-reset/css/reset.css'
 
-import { HoneycombSDK } from './tools/honeycomb'
-HoneycombSDK.start()
+import { lazyInjectAnalytics } from './env-init'
 
 import { createApp } from 'vue'
 import type { App as AppInstance } from 'vue'
-import { inject } from '@vercel/analytics'
 
 import { router, clearRouter } from './router'
 import { handleMicroData } from '@/tools/baseAppEvent'
@@ -28,7 +26,7 @@ const mount = () => {
     console.log(3, 'micro app vue demo rendered')
 
     handleMicroData(router!)
-    inject()
+    lazyInjectAnalytics()
 }
 
 const unmount = () => {
