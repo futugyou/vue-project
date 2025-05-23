@@ -2,17 +2,17 @@
 import { ref, watch, watchEffect, computed } from 'vue'
 
 import { useEventListener } from '@/composables/event'
-import { DrawAction} from './action'
-import type {  ExportFromat, LayoutType } from './action'
-import { handleEvent  } from './event'
+import { DrawAction } from './action'
+import type { ExportFromat, LayoutType } from './action'
+import { handleEvent } from './event'
 import type { MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent, OpenLinkEvent, ExitEvent, ExportEvent } from './event'
 import type { UrlParameters } from './types'
 import { getEmbedUrl } from './types'
 
 export interface IEmbedDrawioProps {
     xml?: string
-    baseUrl?: string,
-    urlParameters?: UrlParameters,
+    baseUrl?: string
+    urlParameters?: UrlParameters
     configuration?: { [key: string]: any }
     title?: string
     format?: ExportFromat
@@ -29,11 +29,35 @@ export interface IEmbedDrawioProps {
 
 const props = defineProps<IEmbedDrawioProps>()
 
+const defaultUrlParameters: UrlParameters = {
+    ui: 'kennedy',
+    spin: true,
+    libraries: true,
+    saveAndExit: true,
+    modified: false,
+}
+
+const defaultConfiguration: { [key: string]: any } = {
+    defaultFonts: ['Humor Sans'],
+}
+
+const finalUrlParameters = computed<UrlParameters>(() => ({
+    ...defaultUrlParameters,
+    ...(props.urlParameters ?? {})
+}))
+
+const finalConfiguration = computed<{ [key: string]: any }>(() => ({
+    ...defaultConfiguration,
+    ...(props.configuration ?? {})
+}))
+
 const parser = new DOMParser()
 const xml = ref(props.xml ?? "")
 const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xml"))
 
-const iframeUrl = ref(getEmbedUrl(props.baseUrl, props.urlParameters, !!props.configuration))
+const iframeUrl = computed(() =>
+    getEmbedUrl(props.baseUrl, finalUrlParameters.value, props.configuration != null)
+)
 const iframeRef = ref<HTMLIFrameElement>()
 
 const action = new DrawAction(iframeRef)
@@ -46,9 +70,7 @@ const messageHandler = (evt: MessageEvent) => {
                 action.load(xml.value, true, props.title,)
             },
             configure: (data) => {
-                if (!!props.configuration) {
-                    action.configure(props.configuration)
-                }
+                action.configure(finalConfiguration.value)
             },
             autosave: (data) => {
                 if (props.onAutosave) {
@@ -184,7 +206,7 @@ defineExpose({
     <iframe className="diagrams-iframe" ref="iframeRef" :src="iframeUrl" />
 </template>
 
-<style scoped  lang="scss">
+<style scoped lang="scss">
 iframe {
     width: 100%;
     height: 100%;

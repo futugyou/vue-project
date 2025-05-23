@@ -44,6 +44,7 @@ export type DrawioEvent =
 
 export type InitEvent = {
     event: 'init'
+    autosave: boolean
 }
 
 export type ConfigureEvent = {
