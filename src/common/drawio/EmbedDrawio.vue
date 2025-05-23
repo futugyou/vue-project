@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect, computed } from 'vue'
+import { ref, watch, watchEffect, computed, onMounted } from 'vue'
 
 import { useEventListener } from '@/composables/event'
 import { DrawAction } from './action'
@@ -67,7 +67,11 @@ const messageHandler = (evt: MessageEvent) => {
         evt,
         {
             init: (data) => {
-                action.load(xml.value, true, props.title,)
+                var autosave = false
+                if (finalConfiguration.value["autosave"]) {
+                    autosave = true
+                }
+                action.load(xml.value, autosave, props.title,)
             },
             configure: (data) => {
                 action.configure(finalConfiguration.value)
@@ -93,6 +97,10 @@ const messageHandler = (evt: MessageEvent) => {
                 if (props.onExit) {
                     props.onExit(data)
                 }
+                if (window.opener) {
+                    sessionStorage.removeItem('drawio-edit-value')
+                    window.close()
+                }
             },
             save: (data) => {
                 action.drawioExport({ format: props.format ?? "xmlsvg", exit: data.exit })
@@ -115,7 +123,11 @@ const messageHandler = (evt: MessageEvent) => {
             },
             template: (data) => {
                 if (data.message?.callback && data.xml) {
-                    action.load(data.xml, true, props.title,)
+                    var autosave = false
+                    if (finalConfiguration.value["autosave"]) {
+                        autosave = true
+                    }
+                    action.load(data.xml, autosave, props.title,)
                 }
             },
             draft: (data) => {
@@ -137,6 +149,14 @@ const messageHandler = (evt: MessageEvent) => {
                 }
 
                 xml.value = data.xml
+                if (window.opener) {
+                    var d = {
+                        data: data.data,
+                        xml: data.xml,
+                        type: "drawio-export-event",
+                    }
+                    window.opener.postMessage(d, location.origin)
+                }
             },
         },
         props.baseUrl,
@@ -188,6 +208,11 @@ const drawioExport = (format: ExportFromat) => {
 }
 
 useEventListener(window, 'message', messageHandler)
+
+onMounted(() => {
+    const storedValue = sessionStorage.getItem('drawio-edit-value') || ''
+    xml.value = storedValue
+})
 
 defineExpose({
     merge,
