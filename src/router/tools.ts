@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 const PdfViewer = () => import('@/components/tools/PdfViewer.vue')
 const Translate  = () => import('@/components/tools/translate/Translate.vue')
 const Ocr = () => import('@/components/tools/Ocr.vue')
-const Drawio = () => import('@/components/tools/Drawio.vue')
+const Drawio = () => import('@/common/drawio/EmbedDrawio.vue')
 
 export const ToolsRoutes = [
     {

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { ref, computed, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { isEqual, cloneDeep } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
@@ -9,7 +10,7 @@ import { useAuth } from '@/plugins/auth'
 
 import { ResourceApiFactory, ResourceTypeEnum } from './resource'
 
-import type {  CreateResourceRequest, UpdateResourceRequest } from './resource'
+import type { CreateResourceRequest, UpdateResourceRequest } from './resource'
 
 import { ValidateManager } from '@/tools/validate'
 
@@ -136,9 +137,32 @@ const resourceTypeOptions = computed(() =>
     }))
 )
 
+
 onUnmounted(() => {
     validateManager.clearInputs()
+    window.removeEventListener('message', handleMessage)
 })
+
+onMounted(() => {
+    window.addEventListener('message', handleMessage)
+})
+
+let popupWindow: Window | null = null;
+const showDrawIO = () => {
+    sessionStorage.setItem('drawio-edit-value', editModel.value.data)
+    popupWindow = window.open('/drawio', '_blank')
+}
+
+const handleMessage = (event: MessageEvent) => {
+    if (event.origin !== location.origin) return;
+    if (event.data?.type == "drawio-export-event") {
+        console.log(event.data)
+        editModel.value = {
+            ...cloneDeep(editModel.value),
+            data: event.data.xml,
+        }
+    }
+}
 
 </script>
 
@@ -151,14 +175,15 @@ onUnmounted(() => {
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'id')" v-model="proxyModel.value.id"
                         label="Id" disabled :hideDetails="false" v-if="proxyModel.value.id != ''" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
-                        :rules="validateManager.requiredMinMax('Name', 3, 150)" v-model="proxyModel.value.name" label="Name"
-                        :hideDetails="false" />
+                        :rules="validateManager.requiredMinMax('Name', 3, 150)" v-model="proxyModel.value.name"
+                        label="Name" :hideDetails="false" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'data')"
                         :rules="validateManager.requiredMin('data', 3)" v-model="proxyModel.value.data" label="Data"
                         :hideDetails="false" />
-                    <v-select :ref="el => validateManager.setInputRef(el, 'type')" :rules="validateManager.required('Type')"
-                        v-model="proxyModel.value.type" class="mb-5" :items="resourceTypeOptions" label="Type"
-                        item-value="value" item-title="label"></v-select>
+                    <v-select :ref="el => validateManager.setInputRef(el, 'type')"
+                        :rules="validateManager.required('Type')" v-model="proxyModel.value.type" class="mb-5"
+                        :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
+                    <v-btn text="show drawio" @click="showDrawIO" v-if="proxyModel.value.type == 'DrawIO'"></v-btn>
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
                     <v-sheet class="d-flex justify-end ga-3">
