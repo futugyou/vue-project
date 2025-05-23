@@ -156,7 +156,11 @@ const messageHandler = (evt: MessageEvent) => {
                         type: "drawio-export-event",
                     }
                     window.opener.postMessage(d, location.origin)
-                }
+                    if (data.message.exit) {
+                        sessionStorage.removeItem('drawio-edit-value')
+                        window.close()
+                    }
+                } 
             },
         },
         props.baseUrl,
