@@ -29,10 +29,10 @@
     "tesseract.js": "^6.0.1",
     "the-new-css-reset": "^1.11.3",
     "v-code-diff": "^1.13.1",
-    "vue": "^3.5.14",
+    "vue": "^3.5.15",
     "vue-router": "^4.5.1",
     "vue3-moveable": "^0.28.0",
-    "vuetify": "^3.8.6",
+    "vuetify": "^3.8.7",
     "xstate": "^5.19.2"
   },
   "devDependencies": {
