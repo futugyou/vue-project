@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect, computed, onMounted } from 'vue'
+import { ref, watch, watchEffect, computed, onMounted, onUnmounted } from 'vue'
 
 import { useEventListener } from '@/composables/event'
 import { DrawAction } from './action'
@@ -216,6 +216,10 @@ useEventListener(window, 'message', messageHandler)
 onMounted(() => {
     const storedValue = sessionStorage.getItem('drawio-edit-value') || ''
     xml.value = storedValue
+})
+
+onUnmounted(() => {
+    sessionStorage.removeItem('drawio-edit-value')
 })
 
 defineExpose({

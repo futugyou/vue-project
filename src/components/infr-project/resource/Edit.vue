@@ -146,6 +146,7 @@ const resourceTypeOptions = computed(() =>
 onUnmounted(() => {
     validateManager.clearInputs()
     window.removeEventListener('message', handleMessage)
+    sessionStorage.removeItem('drawio-edit-value')
 })
 
 onMounted(() => {
@@ -166,7 +167,7 @@ const handleMessage = (event: MessageEvent) => {
         editModel.value = {
             ...cloneDeep(editModel.value),
             data: event.data.xml,
-            type: ResourceTypeEnum.DrawIO,
+            type: 'DrawIO',
         }
     }
 }

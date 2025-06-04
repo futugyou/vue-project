@@ -63,7 +63,7 @@ const newResourceVersion = () => {
 <template>
     <v-sheet class="d-flex flex-column align-center overflow-y-auto" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-timeline v-if="!isLoading" align="start" justify="center">
+        <v-timeline v-if="!isLoading" align="start" justify="center" class="w-100">
             <v-timeline-item dot-color="indigo-lighten-2" icon="md:schedule" v-if="authService.isAuthenticated()">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <v-card-text class="d-flex flex-column align-center ga-3">
@@ -73,7 +73,8 @@ const newResourceVersion = () => {
                     </v-card-text>
                 </v-card>
             </v-timeline-item>
-            <v-timeline-item v-for="(history, i) in histories" :key="i" dot-color="indigo-lighten-2" icon="md:schedule">
+            <v-timeline-item v-for="(history, i) in histories" :key="i" dot-color="indigo-lighten-2" icon="md:schedule"
+                class="w-100 pa-5">
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ dispalyTime(history) }} </template>
 
@@ -97,7 +98,8 @@ const newResourceVersion = () => {
 
                         <v-divider></v-divider>
 
-                        <ResourceData :data="history.data" :type="history.type"></ResourceData>
+                        <ResourceData :data="history.data" :type="history.type" :imageData="history.imageData" >
+                        </ResourceData>
                     </v-card-text>
                 </v-card>
             </v-timeline-item>
