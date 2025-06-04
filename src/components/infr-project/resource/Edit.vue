@@ -43,6 +43,8 @@ const DefaultResourceEditModel: ResourceEditModel = {
 }
 
 const editModel = ref<ResourceEditModel>(DefaultResourceEditModel)
+const imageData = ref<string>("")
+const imagePreview = ref(false)
 
 const cancel = () => {
     if (resourceId.length == 0) {
@@ -157,9 +159,11 @@ const handleMessage = (event: MessageEvent) => {
     if (event.origin !== location.origin) return;
     if (event.data?.type == "drawio-export-event") {
         console.log(event.data)
+        imageData.value = event.data.data
         editModel.value = {
             ...cloneDeep(editModel.value),
             data: event.data.xml,
+            type: ResourceTypeEnum.DrawIO,
         }
     }
 }
@@ -169,7 +173,7 @@ const handleMessage = (event: MessageEvent) => {
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-card class="h-100" v-if="!isLoading && authService.isAuthenticated()">
+        <v-card class="h-100 pa-5 ga-5" v-if="!isLoading && authService.isAuthenticated()" style="overflow-y: auto;">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions }">
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'id')" v-model="proxyModel.value.id"
@@ -180,17 +184,36 @@ const handleMessage = (event: MessageEvent) => {
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'data')"
                         :rules="validateManager.requiredMin('data', 3)" v-model="proxyModel.value.data" label="Data"
                         :hideDetails="false" />
-                    <v-select :ref="el => validateManager.setInputRef(el, 'type')"
-                        :rules="validateManager.required('Type')" v-model="proxyModel.value.type" class="mb-5"
-                        :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
-                    <v-btn text="show drawio" @click="showDrawIO" v-if="proxyModel.value.type == 'DrawIO'"></v-btn>
+
+                    <v-sheet class="d-flex">
+                        <v-select :ref="el => validateManager.setInputRef(el, 'type')"
+                            :rules="validateManager.required('Type')" v-model="proxyModel.value.type" class="mb-5"
+                            :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
+                        <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">
+                            <template v-slot:activator="{ props }">
+                                <v-icon icon="md:info" v-bind="props" class="ma-2" @click="showDrawIO"></v-icon>
+                            </template>
+                        </v-tooltip>
+                        <v-tooltip text="preview" v-if="proxyModel.value.type == 'DrawIO' && imageData">
+                            <template v-slot:activator="{ props }">
+                                <v-icon icon="md:image" v-bind="props" class="ma-2"
+                                    @click="imagePreview = !imagePreview"></v-icon>
+                            </template>
+                        </v-tooltip>
+                    </v-sheet>
+
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
+
                     <v-sheet class="d-flex justify-end ga-3">
                         <component :is="actions"></component>
                     </v-sheet>
                 </template>
             </v-confirm-edit>
+
+            <v-sheet class="d-flex justify-space-around ma-3" v-if="imagePreview && imageData">
+                <v-img :width="300" aspect-ratio="16/9" cover :src="imageData"></v-img>
+            </v-sheet>
         </v-card>
     </v-sheet>
 </template>
