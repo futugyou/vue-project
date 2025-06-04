@@ -21,22 +21,43 @@ export const detectFormat = (str: string): 'json' | 'yaml' | 'xml' | 'unknown' =
     return 'unknown'
 }
 
+const isLikelyJsonStructure = (obj: unknown): boolean => {
+    return typeof obj === 'object' && obj !== null
+}
+
 export const formatContent = (str: string): { format: string, formatted: string } => {
+    if (str == "") {
+        return { format: 'unknown', formatted: str }
+    }
+
     try {
-        const formatted = JSON.stringify(JSON.parse(str), null, 2)
-        return { format: 'json', formatted: formatted }
+        const parsed = JSON.parse(str)
+        if (isLikelyJsonStructure(parsed)) {
+            const formatted = JSON.stringify(parsed, null, 2)
+            if (formatted != "") {
+                return { format: 'json', formatted: formatted }
+            }
+        }
     } catch { }
 
     try {
         const parser = new XMLParser({ ignoreAttributes: false })
         const obj = parser.parse(str)
         const builder = new XMLBuilder({ format: true, indentBy: '  ' })
-        return { format: 'xml', formatted: builder.build(obj) }
+        const formatted = builder.build(obj)
+        if (formatted != "") {
+            return { format: 'xml', formatted: formatted }
+        }
     } catch { }
 
     try {
-        const objFromYaml = yaml.load(str)
-        return { format: 'yaml', formatted: yaml.dump(objFromYaml, { noRefs: true }) }
+        const parsed = yaml.load(str)
+        if (isLikelyJsonStructure(parsed)) {
+            const formatted = yaml.dump(parsed, { noRefs: true })
+            if (formatted != "") {
+                return { format: 'yaml', formatted: formatted }
+            }
+        }
     } catch { }
 
     return { format: 'unknown', formatted: str }
