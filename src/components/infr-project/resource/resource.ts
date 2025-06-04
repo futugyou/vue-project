@@ -20,6 +20,12 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
      * @type {string}
      * @memberof CreateResourceRequest
      */
+    imageData: string
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateResourceRequest
+     */
     name: string
     /**
      * 
@@ -61,6 +67,12 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
      * @memberof UpdateResourceRequest
      */
     data: string
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateResourceRequest
+     */
+    imageData: string
     /**
      * 
      * @type {string}
@@ -179,6 +191,12 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
      * @memberof ResourceViewDetail
      */
     data: string
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceViewDetail
+     */
+    imageData: string
     /**
      * 
      * @type {string}

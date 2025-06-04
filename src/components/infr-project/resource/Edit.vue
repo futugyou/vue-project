@@ -71,6 +71,7 @@ const fetchData = async () => {
     }
 
     if (data) {
+        imageData.value = data.imageData
         editModel.value = {
             id: data.id,
             name: data.name,
@@ -100,6 +101,7 @@ const save = async () => {
             data: editModel.value.data,
             name: editModel.value.name,
             tags: editModel.value.tags,
+            imageData: imageData.value,
             type: res_type,
         }
         response = await ResourceApiFactory().v1ResourcePost(request)
@@ -108,6 +110,7 @@ const save = async () => {
             data: editModel.value.data,
             name: editModel.value.name,
             tags: editModel.value.tags,
+            imageData: imageData.value,
         }
         response = await ResourceApiFactory().v1ResourceIdPut(request, resourceId)
     }
@@ -194,7 +197,7 @@ const handleMessage = (event: MessageEvent) => {
                                 <v-icon icon="md:info" v-bind="props" class="ma-2" @click="showDrawIO"></v-icon>
                             </template>
                         </v-tooltip>
-                        <v-tooltip text="preview" v-if="proxyModel.value.type == 'DrawIO' && imageData">
+                        <v-tooltip text="preview" v-if="imageData">
                             <template v-slot:activator="{ props }">
                                 <v-icon icon="md:image" v-bind="props" class="ma-2"
                                     @click="imagePreview = !imagePreview"></v-icon>
