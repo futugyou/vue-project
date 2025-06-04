@@ -41,7 +41,7 @@ const fetchData = async () => {
         return
     }
 
-    histories.value = orderBy(data, "updated_at", "desc")
+    histories.value = orderBy(data, "version", "desc")
 }
 
 fetchData()
