@@ -2,6 +2,7 @@
 import { ref, watch, watchEffect, computed, onMounted, onUnmounted } from 'vue'
 
 import { useEventListener } from '@/composables/event'
+import { useIDBClient } from '@/composables/useIDBClient'
 import { DrawAction } from './action'
 import type { ExportFromat, LayoutType } from './action'
 import { handleEvent } from './event'
@@ -16,6 +17,7 @@ export interface IEmbedDrawioProps {
     configuration?: { [key: string]: any }
     title?: string
     format?: ExportFromat
+    storageSuffix?: string
     onLoad?: (e: LoadEvent) => void
     onAutosave?: (e: AutosaveEvent) => void
     onMerge?: (e: MergeEvent) => void
@@ -27,7 +29,11 @@ export interface IEmbedDrawioProps {
     onSaveOrExport?: (e: ExportEvent) => void
 }
 
-const props = defineProps<IEmbedDrawioProps>()
+const storageKeyPrefix = "drawio-xmlsvg-value-"
+const props = withDefaults(defineProps<IEmbedDrawioProps>(), {
+    storageSuffix: "new",
+})
+const storagekey = storageKeyPrefix + props.storageSuffix
 
 const defaultUrlParameters: UrlParameters = {
     ui: 'kennedy',
@@ -55,6 +61,7 @@ const finalConfiguration = computed<{ [key: string]: any }>(() => ({
 const parser = new DOMParser()
 const xml = ref(props.xml ?? "")
 const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xml"))
+const db = useIDBClient('drawio-db', 'images')
 
 const iframeUrl = computed(() =>
     getEmbedUrl(props.baseUrl, finalUrlParameters.value, props.configuration != null)
@@ -106,7 +113,6 @@ const messageHandler = (evt: MessageEvent) => {
                     props.onExit(data)
                 }
                 if (window.opener) {
-                    sessionStorage.removeItem('drawio-edit-value')
                     window.close()
                 }
             },
@@ -165,7 +171,6 @@ const messageHandler = (evt: MessageEvent) => {
                     }
                     window.opener.postMessage(d, location.origin)
                     if (data.message.exit) {
-                        sessionStorage.removeItem('drawio-edit-value')
                         window.close()
                     }
                 }
@@ -221,13 +226,23 @@ const drawioExport = (format: ExportFromat) => {
 
 useEventListener(window, 'message', messageHandler)
 
-onMounted(() => {
-    const storedValue = sessionStorage.getItem('drawio-edit-value') || ''
+onMounted(async () => {
+    // this is used for other to component send xml data when open with windows.open
+    let storedValue = sessionStorage.getItem('drawio-edit-value') || ''
+    if (storedValue == "") {
+        storedValue = (await db.getData<string>(storagekey)) ?? ""
+    }
     xml.value = storedValue
 })
 
 onUnmounted(() => {
     sessionStorage.removeItem('drawio-edit-value')
+})
+
+watch(xml, async (newVal, oldVal) => {
+    if (newVal && newVal !== oldVal) {
+        await db.setData(storagekey, newVal)
+    }
 })
 
 defineExpose({
