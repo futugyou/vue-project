@@ -13,7 +13,12 @@ export const handleEvent = (event: MessageEvent, handlers: EventHandler, baseUrl
         return
     }
 
-    console.log(event.data)
+    if (import.meta.env.MODE === "production") {
+        console.log(event.data?.event ?? "");
+    } else {
+        console.log(event.data);
+    }
+
     try {
         const data = JSON.parse(event.data) as DrawioEvent
         if (data.event in handlers) {
@@ -41,10 +46,16 @@ export type DrawioEvent =
     | DraftEvent
     | ExportEvent
     | PromptCancelEvent
+    | LocalOpenerEvent
 
 export type InitEvent = {
     event: 'init'
     autosave: boolean
+}
+
+export type LocalOpenerEvent = {
+    event: 'drawio-data'
+    xml: string
 }
 
 export type ConfigureEvent = {

@@ -39,6 +39,7 @@ const defaultUrlParameters: UrlParameters = {
 
 const defaultConfiguration: { [key: string]: any } = {
     defaultFonts: ['Humor Sans'],
+    autosave: true,
 }
 
 const finalUrlParameters = computed<UrlParameters>(() => ({
@@ -67,11 +68,23 @@ const messageHandler = (evt: MessageEvent) => {
         evt,
         {
             init: (data) => {
-                var autosave = false
-                if (finalConfiguration.value["autosave"]) {
-                    autosave = true
-                }
+                var autosave = finalConfiguration.value.autosave == true
                 action.load(xml.value, autosave, props.title,)
+            },
+            load: (data) => {
+                if (props.onLoad) {
+                    props.onLoad(data)
+                }
+            },
+            // this event sender is other page not Drawio.
+            // it used to load xml data manualy.
+            // It looks consistent with the `init` logic, but it should call the merge action.
+            'drawio-data': (data) => {
+                if (data.xml != "" && xml.value != data.xml) {
+                    var autosave = finalConfiguration.value.autosave == true
+                    // TODO: it will trigger load event again, i want use merger, but it seems not work!
+                    action.load(data.xml, autosave, props.title,)
+                }
             },
             configure: (data) => {
                 action.configure(finalConfiguration.value)
@@ -82,11 +95,6 @@ const messageHandler = (evt: MessageEvent) => {
                 }
 
                 xml.value = data.xml
-            },
-            load: (data) => {
-                if (props.onLoad) {
-                    props.onLoad(data)
-                }
             },
             openLink: (data) => {
                 if (props.onOpenLink) {
@@ -160,7 +168,7 @@ const messageHandler = (evt: MessageEvent) => {
                         sessionStorage.removeItem('drawio-edit-value')
                         window.close()
                     }
-                } 
+                }
             },
         },
         props.baseUrl,
