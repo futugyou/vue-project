@@ -154,8 +154,8 @@ onMounted(() => {
 })
 
 let popupWindow: Window | null = null;
-const showDrawIO = () => {
-    sessionStorage.setItem('drawio-edit-value', editModel.value.data)
+const showDrawIO = (data: string) => {
+    sessionStorage.setItem('drawio-edit-value', data)
     popupWindow = window.open('/drawio', '_blank')
 }
 
@@ -195,7 +195,8 @@ const handleMessage = (event: MessageEvent) => {
                             :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
                         <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">
                             <template v-slot:activator="{ props }">
-                                <v-icon icon="md:info" v-bind="props" class="ma-2" @click="showDrawIO"></v-icon>
+                                <v-icon icon="md:info" v-bind="props" class="ma-2"
+                                    @click="() => showDrawIO(proxyModel.value.data)"></v-icon>
                             </template>
                         </v-tooltip>
                         <v-tooltip text="preview" v-if="imageData">
