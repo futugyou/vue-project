@@ -147,6 +147,12 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
      * @memberof ResourceView
      */
     tags: Array<string>
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceView
+     */
+    imageData: string
 }
 
 /**
