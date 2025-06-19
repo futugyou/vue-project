@@ -48,7 +48,29 @@ const defaultUrlParameters: UrlParameters = {
 const defaultConfiguration: { [key: string]: any } = {
     defaultFonts: ['Humor Sans'],
     autosave: true,
-}
+    language: "zh",
+    customLibraries: ["L.scratchpad"],
+    formatWidth: "240",
+    createTarget: false,
+    pageFormat: {
+        x: 0,
+        y: 0,
+        width: 827,
+        height: 1169
+    },
+    search: true,
+    showStartScreen: true,
+    gridColor: "#d0d0d0",
+    darkGridColor: "#424242",
+    darkMode: "auto",
+    openCounter: 2,
+    unit: 1,
+    isRulerOn: false,
+    // enableChatGpt: true,
+    gptApiKey: "dummy-key",
+    gptModel: "openai/gpt-4.1",
+    gptUrl: "https://models.github.ai/inference/chat/completions"
+};
 
 const finalUrlParameters = computed<UrlParameters>(() => {
     let p = ({
@@ -74,7 +96,7 @@ const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xm
 const db = useIDBClient('drawio-db', 'images')
 
 const iframeUrl = computed(() =>
-    getEmbedUrl(props.baseUrl, finalUrlParameters.value, props.configuration != null)
+    getEmbedUrl(props.baseUrl, finalUrlParameters.value, finalConfiguration != null)
 )
 const iframeRef = ref<HTMLIFrameElement>()
 
