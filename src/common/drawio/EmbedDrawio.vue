@@ -9,6 +9,7 @@ import { handleEvent } from './event'
 import type { MergeEvent, PromptEvent, PromptCancelEvent, DraftEvent, LoadEvent, AutosaveEvent, OpenLinkEvent, ExitEvent, ExportEvent } from './event'
 import type { UrlParameters } from './types'
 import { getEmbedUrl } from './types'
+import { useAuth } from '@/plugins/auth'
 
 export interface IEmbedDrawioProps {
     xml?: string
@@ -29,6 +30,7 @@ export interface IEmbedDrawioProps {
     onSaveOrExport?: (e: ExportEvent) => void
 }
 
+const authService = useAuth()
 const storageKeyPrefix = "drawio-xmlsvg-value-"
 const props = withDefaults(defineProps<IEmbedDrawioProps>(), {
     storageSuffix: "new",
@@ -48,10 +50,18 @@ const defaultConfiguration: { [key: string]: any } = {
     autosave: true,
 }
 
-const finalUrlParameters = computed<UrlParameters>(() => ({
-    ...defaultUrlParameters,
-    ...(props.urlParameters ?? {})
-}))
+const finalUrlParameters = computed<UrlParameters>(() => {
+    let p = ({
+        ...defaultUrlParameters,
+        ...(props.urlParameters ?? {})
+    })
+    if (!authService.isAuthenticated()) {
+        p.saveAndExit = false
+        p.noSaveBtn = true
+        p.noExitBtn = false
+    }
+    return p
+})
 
 const finalConfiguration = computed<{ [key: string]: any }>(() => ({
     ...defaultConfiguration,
