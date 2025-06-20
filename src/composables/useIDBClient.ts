@@ -13,6 +13,9 @@ interface IDBClient {
 
 const clientCache = new Map<string, IDBClient>()
 
+/**
+ * @deprecated Use composables/useIDBClientEx.ts
+ */
 export const useIDBClient = (
     dbName: string,
     storeName: string,

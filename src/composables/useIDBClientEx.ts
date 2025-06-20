@@ -6,24 +6,62 @@ import { useLocalStorage, useSessionStorage } from '@vueuse/core'
 
 type FallbackType = 'local' | 'session'
 
-interface BasicStoreClient {
+/**
+ * Basic client interface for a single IndexedDB object store.
+ */
+export interface BasicStoreClient {
     setData: (key: string, value: any) => Promise<void>
     getData: <T = any>(key: string) => Promise<T | undefined>
     deleteData: (key: string) => Promise<void>
 }
 
+/**
+ * The main IDB client interface, supporting single or multiple stores.
+ */
 export interface IDBClient {
+    /**
+     * Sets data in a specified store. If only one store is configured, `storeName` is optional.
+     * @param key The key to store the data under.
+     * @param value The data to store.
+     * @param storeName Optional. The name of the object store. Required if multiple stores are configured.
+     */
     setData: (key: string, value: any, storeName?: string) => Promise<void>
+    /**
+     * Retrieves data from a specified store. If only one store is configured, `storeName` is optional.
+     * @param key The key of the data to retrieve.
+     * @param storeName Optional. The name of the object store. Required if multiple stores are configured.
+     */
     getData: <T = any>(key: string, storeName?: string) => Promise<T | undefined>
+    /**
+     * Deletes data from a specified store. If only one store is configured, `storeName` is optional.
+     * @param key The key of the data to delete.
+     * @param storeName Optional. The name of the object store. Required if multiple stores are configured.
+     */
     deleteData: (key: string, storeName?: string) => Promise<void>
-    isReady: () => boolean
+    /**
+     * Returns a Promise that resolves to true when the IndexedDB client is ready
+     * (initialized successfully or fallen back to storage).
+     */
+    isReady: () => Promise<boolean>
 
-    /** use when using multiple storeNames */
+    /**
+     * Returns a BasicStoreClient for a specific object store.
+     * Use this when you are working with multiple stores and want a simpler interface for a single store.
+     * @param storeName The name of the object store.
+     */
     getClientFor: (storeName: string) => BasicStoreClient
 }
 
 const clientCache = new Map<string, IDBClient>()
 
+/**
+ * A Vue composable for interacting with IndexedDB, with a fallback to localStorage or sessionStorage.
+ * Supports single or multiple object stores within a single database.
+ * @param dbName The name of the IndexedDB database.
+ * @param storeNames The name(s) of the object store(s) to use. Can be a string or an array of strings.
+ * @param fallback The fallback storage type ('local' for localStorage, 'session' for sessionStorage). Defaults to 'local'.
+ * @returns An IDBClient instance for data operations.
+ */
 export const useIDBClient = (
     dbName: string,
     storeNames: string | string[],
@@ -31,17 +69,18 @@ export const useIDBClient = (
 ): IDBClient => {
     const stores = Array.isArray(storeNames) ? storeNames : [storeNames]
     const isSingleStore = stores.length === 1
-    const ready = ref(false)
     let useFallback = false
 
     const fallbackStorageMap = shallowRef(new Map<string, Record<string, any>>())
 
+    // Create a unique cache key based on dbName, storeNames, and fallback type
     const cacheKey = `${dbName}/${stores.join(',')}/${fallback}`
     if (clientCache.has(cacheKey)) {
         return clientCache.get(cacheKey)!
     }
 
     let dbPromise: Promise<IDBPDatabase> | null = null
+    let initPromise: Promise<boolean> // <--- NEW: Promise to track initialization status
 
     const init = async () => {
         try {
@@ -55,7 +94,7 @@ export const useIDBClient = (
                 },
             })
             await dbPromise
-            ready.value = true
+            return true // Successfully initialized IndexedDB
         } catch (e) {
             console.warn(`[useIDBClient] IndexedDB unavailable, using ${fallback}Storage instead.`, e)
             useFallback = true
@@ -68,25 +107,42 @@ export const useIDBClient = (
                         : useLocalStorage<Record<string, any>>(storageKey, {})
                 fallbackStorageMap.value.set(store, fallbackStore.value)
             }
-
-            ready.value = true
+            return true // Successfully fell back to storage
         }
     }
 
-    // Fire-and-forget init
-    init()
+    // Fire-and-forget init, but store its promise
+    initPromise = init()
 
     const resolveStore = (storeName?: string): string => {
-        if (isSingleStore) return stores[0]
-        if (!storeName) throw new Error(`[useIDBClient] Must specify store name when using multiple stores`)
-        if (!stores.includes(storeName)) throw new Error(`[useIDBClient] Invalid store name: ${storeName}`)
+        if (isSingleStore) {
+            if (storeName && storeName !== stores[0]) {
+                console.warn(`[useIDBClient] Specified storeName "${storeName}" ignored as only a single store "${stores[0]}" is configured.`)
+            }
+            return stores[0]
+        }
+        if (!storeName) {
+            throw new Error(`[useIDBClient] Must specify store name when using multiple stores: ${stores.join(', ')}`)
+        }
+        if (!stores.includes(storeName)) {
+            throw new Error(`[useIDBClient] Invalid store name: "${storeName}". Available stores: ${stores.join(', ')}`)
+        }
         return storeName
     }
 
     const client: IDBClient = {
         async setData(key: string, value: any, storeName?: string) {
+            await initPromise; // Ensure client is ready before any operation
             const store = resolveStore(storeName)
             if (useFallback) {
+                if (!fallbackStorageMap.value.has(store)) {
+                    const storageKey = `fallback:${dbName}/${store}/${fallback}`
+                    const newFallbackStore =
+                        fallback === 'session'
+                            ? useSessionStorage<Record<string, any>>(storageKey, {})
+                            : useLocalStorage<Record<string, any>>(storageKey, {})
+                    fallbackStorageMap.value.set(store, newFallbackStore.value)
+                }
                 fallbackStorageMap.value.get(store)![key] = value
             } else {
                 const db = await dbPromise!
@@ -95,9 +151,10 @@ export const useIDBClient = (
         },
 
         async getData<T = any>(key: string, storeName?: string) {
+            await initPromise; // Ensure client is ready before any operation
             const store = resolveStore(storeName)
             if (useFallback) {
-                return fallbackStorageMap.value.get(store)![key] as T
+                return fallbackStorageMap.value.get(store)?.[key] as T
             } else {
                 const db = await dbPromise!
                 return db.get(store, key)
@@ -105,20 +162,25 @@ export const useIDBClient = (
         },
 
         async deleteData(key: string, storeName?: string) {
+            await initPromise; // Ensure client is ready before any operation
             const store = resolveStore(storeName)
             if (useFallback) {
-                delete fallbackStorageMap.value.get(store)![key]
+                const storeData = fallbackStorageMap.value.get(store)
+                if (storeData) {
+                    delete storeData[key]
+                }
             } else {
                 const db = await dbPromise!
                 await db.delete(store, key)
             }
         },
 
+        // isReady now returns the initPromise directly
         isReady() {
-            return ready.value
+            return initPromise;
         },
+
         getClientFor: (storeName: string): BasicStoreClient => {
-            // if isSingleStore, no matter what you use, it will return the default
             const resolved = resolveStore(storeName)
             return {
                 async setData(key, value) {
@@ -131,7 +193,7 @@ export const useIDBClient = (
                     return client.deleteData(key, resolved)
                 },
             }
-        }
+        },
     }
 
     clientCache.set(cacheKey, client)

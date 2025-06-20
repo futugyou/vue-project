@@ -2,7 +2,7 @@
 import { ref, watch, watchEffect, computed, onMounted, onUnmounted } from 'vue'
 
 import { useEventListener } from '@/composables/event'
-import { useIDBClient } from '@/composables/useIDBClient'
+import { useIDBClient } from '@/composables/useIDBClientEx'
 import { DrawAction } from './action'
 import type { ExportFromat, LayoutType } from './action'
 import { handleEvent } from './event'
