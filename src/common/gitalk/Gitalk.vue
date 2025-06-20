@@ -3,15 +3,16 @@ import { ref, watch, watchEffect } from 'vue'
 import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
 import moment from 'moment'
-import { orderBy,uniqBy } from 'lodash-es'
-import { useLocalStorage, StorageSerializers } from '@vueuse/core'
+import { orderBy, uniqBy } from 'lodash-es'
+import { useIDBClient } from '@/composables/useIDBClientEx'
+import { useIDBRef } from '@/composables/useIDBRefEx'
 
 import {
-    getIssue, getIssueComments,  githubLogin,  createIssueComment,
+    getIssue, getIssueComments, githubLogin, createIssueComment,
     getGraphQLIssueComments, likeIssueComment, unLikeIssueComment
 } from './github'
 
-import type {  Comment, GitHubUser, Issue} from './github'
+import type { Comment, GitHubUser, Issue } from './github'
 
 import { queryStringify } from '@/tools/util'
 import Like from '@/icons/Like.vue'
@@ -30,7 +31,6 @@ export interface IGitalkProps {
 }
 
 const props = defineProps<IGitalkProps>()
-
 const page = ref(0)
 const per_page = (props.per_page <= 0 || props.per_page == undefined) ? 30 : props.per_page
 
@@ -39,10 +39,12 @@ const issue = ref<Issue>({} as Issue)
 const comments = ref<Comment[]>([])
 // this is used by display 'markdown' or 'raw' text
 const commentMark = ref<boolean[]>([])
-const loginUser = useLocalStorage<GitHubUser>(props.owner + props.repo + "_user", null, { serializer: StorageSerializers.object })
 const userComment = ref<string>("")
+
+const db = useIDBClient('gittalk', ['user', 'tmp'])
+const loginUser = useIDBRef<GitHubUser>(db, 'user', props.owner + props.repo + "_user")
 // store user comment when user redirect to github login page
-const tmpComment = useLocalStorage<string>(props.owner + props.repo + props.issue_number + "_comment", "")
+const tmpComment = useIDBRef<string>(db, 'tmp', props.owner + props.repo + props.issue_number + "_comment", "")
 
 const showMarkdown = ref<boolean>(false)
 const isLoading = ref(false)
@@ -219,8 +221,8 @@ const createComment = async () => {
     isLoading.value = false
 }
 
-const logout = () => {
-    loginUser.value = null
+const logout = async () => {
+    await loginUser.remove()
 }
 
 // page init, load issue data
@@ -275,7 +277,7 @@ watchEffect(
             isLoading.value = true
             const { data, err } = await githubLogin(code, props.clientID, props.clientSecret)
             if (err.status != 200) {
-                loginUser.value = null
+                await loginUser.remove()
                 isLoading.value = false
                 // TODO
                 return
@@ -310,11 +312,11 @@ watch(
             <div>
                 <a :href="issue.html_url" target="_blank">{{ issue.comments ?? 0 }}</a> comments
             </div>
-            <div v-if="!loginUser" class="login">
+            <div v-if="!loginUser.value" class="login">
                 <Button Text="Login" @click="handleLogin" :IsLoading="isLoading"></Button>
             </div>
-            <div v-if="loginUser" class="user-avatar">
-                <img :src="loginUser.avatar_url" />
+            <div v-if="loginUser.value" class="user-avatar">
+                <img :src="loginUser.value.avatar_url" />
                 <div class="logout">
                     <Button Text="Logout" @click="logout" :IsLoading="isLoading"></Button>
                 </div>
@@ -322,9 +324,9 @@ watch(
         </div>
         <div class="comment-container" style="gap: 5px;">
             <div class="comment-item">
-                <div class="user-avatar" v-if="loginUser">
-                    <img :src="loginUser.avatar_url" :alt="loginUser.login"
-                        @click="() => handleImgClick(loginUser?.html_url)" />
+                <div class="user-avatar" v-if="loginUser.value">
+                    <img :src="loginUser.value.avatar_url" :alt="loginUser.value.login"
+                        @click="() => handleImgClick(loginUser.value.html_url)" />
                 </div>
                 <div class="user-avatar" v-if="!loginUser">
                     <GithubIcon></GithubIcon>
@@ -340,7 +342,7 @@ watch(
             </div>
             <div class="btn-group">
                 <!-- <button v-if="!loginUser">Login</button> -->
-                <Button Text="Submit" v-if="loginUser" :IsLoading="isLoading" @click="createComment"></Button>
+                <Button Text="Submit" v-if="loginUser.value" :IsLoading="isLoading" @click="createComment"></Button>
                 <Button :Text='showMarkdown ? "Edit" : "Preview"' :IsLoading="isLoading"
                     @click="() => showMarkdown = !showMarkdown"></Button>
             </div>
