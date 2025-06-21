@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<IEmbedDrawioProps>(), {
 })
 let storagekey = storageKeyPrefix + props.storageSuffix
 const route = useRoute()
-const resourceId = (route.query.suffix ?? "") as string
+const suffix = (route.query.suffix ?? "") as string
 if (suffix) {
     storagekey = storageKeyPrefix + suffix
 }
