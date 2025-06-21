@@ -101,9 +101,7 @@ const xml = ref(props.xml ?? "")
 const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xml"))
 const db = useIDBClient('drawio-db', 'images')
 
-const iframeUrl = computed(() =>
-    getEmbedUrl(props.baseUrl, finalUrlParameters.value, finalConfiguration != null)
-)
+const iframeUrl = computed(() => getEmbedUrl(props.baseUrl, finalUrlParameters.value))
 const iframeRef = ref<HTMLIFrameElement>()
 
 const action = new DrawAction(iframeRef)

@@ -12,15 +12,13 @@ export type UrlParameters = {
     noExitBtn?: boolean
 }
 
-export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters, addConfiguration?: boolean) => {
+export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters) => {
     const url = new URL('/', baseUrl ?? 'https://embed.diagrams.net')
     const urlSearchParams = new URLSearchParams()
 
     urlSearchParams.append('proto', 'json')
     urlSearchParams.append('returnbounds', '1')
-    if (addConfiguration) {
-        urlSearchParams.append('configure', '1')
-    }
+    urlSearchParams.append('configure', '1')
 
     if (urlParameters) {
         for (const key in urlParameters) {
