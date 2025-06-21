@@ -4,6 +4,7 @@ import { marked } from 'marked'
 import { formatContent } from '@/tools/textFormat'
 
 const props = defineProps({
+    id: String,
     data: String,
     type: String,
     imageData: String,
@@ -14,7 +15,7 @@ let popupWindow: Window | null = null;
 const showDrawIO = () => {
     if (props.data) {
         sessionStorage.setItem('drawio-edit-value', props.data)
-        popupWindow = window.open('/drawio', '_blank')
+        popupWindow = window.open('/drawio?suffix=' + props.id, '_blank')
     }
 }
 

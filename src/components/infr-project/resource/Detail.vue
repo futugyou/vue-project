@@ -98,7 +98,7 @@ const newResourceVersion = () => {
 
                         <v-divider></v-divider>
 
-                        <ResourceData :data="history.data" :type="history.type" :imageData="history.imageData" >
+                        <ResourceData :data="history.data" :type="history.type" :imageData="history.imageData" :id="history.id">
                         </ResourceData>
                     </v-card-text>
                 </v-card>

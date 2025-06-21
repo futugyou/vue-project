@@ -159,7 +159,7 @@ const showDrawIO = (data: ResourceEditModel) => {
     sessionStorage.setItem('drawio-edit-data-' + data.id, JSON.stringify(data))
     // this is for drawio
     sessionStorage.setItem('drawio-edit-value', data.data)
-    popupWindow = window.open('/drawio', '_blank')
+    popupWindow = window.open('/drawio?suffix=' + resourceId, '_blank')
 }
 
 const handleMessage = (event: MessageEvent) => {

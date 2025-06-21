@@ -91,7 +91,7 @@ const createResource = () => {
 
                         <v-divider></v-divider>
 
-                        <ResourceData :data="resource.data" :type="resource.type" :imageData="resource.imageData" ></ResourceData>
+                        <ResourceData :data="resource.data" :type="resource.type" :imageData="resource.imageData" :id="resource.id" ></ResourceData>
 
                         <v-divider></v-divider>
 

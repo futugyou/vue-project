@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch, watchEffect, computed, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { useEventListener } from '@/composables/event'
 import { useIDBClient } from '@/composables/useIDBClientEx'
@@ -35,7 +36,12 @@ const storageKeyPrefix = "drawio-xmlsvg-value-"
 const props = withDefaults(defineProps<IEmbedDrawioProps>(), {
     storageSuffix: "new",
 })
-const storagekey = storageKeyPrefix + props.storageSuffix
+let storagekey = storageKeyPrefix + props.storageSuffix
+const route = useRoute()
+const resourceId = (route.query.suffix ?? "") as string
+if (suffix) {
+    storagekey = storageKeyPrefix + suffix
+}
 
 const defaultUrlParameters: UrlParameters = {
     ui: 'kennedy',
