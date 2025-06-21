@@ -33,6 +33,7 @@ export const getEmbedUrl = (baseUrl?: string, urlParameters?: UrlParameters) => 
         }
     }
 
+    urlSearchParams.append('ts', `${Date.now()}`)
     url.search = urlSearchParams.toString()
 
     return url.toString()

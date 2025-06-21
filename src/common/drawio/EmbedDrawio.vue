@@ -72,7 +72,6 @@ const defaultConfiguration: { [key: string]: any } = {
     openCounter: 2,
     unit: 1,
     isRulerOn: false,
-    // enableChatGpt: true,
     gptApiKey: "dummy-key",
     gptModel: "openai/gpt-4.1",
     gptUrl: "https://models.github.ai/inference/chat/completions"
@@ -91,18 +90,21 @@ const finalUrlParameters = computed<UrlParameters>(() => {
     return p
 })
 
-const finalConfiguration = computed<{ [key: string]: any }>(() => ({
+const finalConfiguration = ref<{ [key: string]: any }>({
     ...defaultConfiguration,
     ...(props.configuration ?? {})
-}))
+});
 
 const parser = new DOMParser()
 const xml = ref(props.xml ?? "")
 const xmlNode = computed(() => parser.parseFromString(xml.value, "application/xml"))
 const db = useIDBClient('drawio-db', 'images')
 
-const iframeUrl = computed(() => getEmbedUrl(props.baseUrl, finalUrlParameters.value))
+const iframeUrl = ref(getEmbedUrl(props.baseUrl, finalUrlParameters.value))
 const iframeRef = ref<HTMLIFrameElement>()
+
+const configBtn = ref(null)
+const chatConfigStr = ref<string>("{}")
 
 const action = new DrawAction(iframeRef)
 
@@ -260,6 +262,35 @@ const drawioExport = (format: ExportFromat) => {
     action.drawioExport({ format })
 }
 
+const updateIfChanged = (newConfig: Record<string, any>) => {
+    const oldStr = JSON.stringify(finalConfiguration.value)
+    const newStr = JSON.stringify(newConfig)
+
+    if (oldStr !== newStr) {
+        finalConfiguration.value = newConfig
+        iframeUrl.value = getEmbedUrl(props.baseUrl, finalUrlParameters.value)
+    }
+}
+
+const handleSave = (isActive: { value: boolean }) => {
+    try {
+        const parsed = JSON.parse(chatConfigStr.value)
+        updateIfChanged(parsed)
+        isActive.value = false
+    } catch (e) {
+    }
+}
+
+const handleReset = (isActive: { value: boolean }) => {
+    const resetConfig = {
+        ...defaultConfiguration,
+        ...(props.configuration ?? {})
+    }
+
+    updateIfChanged(resetConfig)
+    chatConfigStr.value = JSON.stringify(resetConfig, null, 2)
+}
+
 useEventListener(window, 'message', messageHandler)
 
 onMounted(async () => {
@@ -269,6 +300,7 @@ onMounted(async () => {
         storedValue = (await db.getData<string>(storagekey)) ?? ""
     }
     xml.value = storedValue
+    chatConfigStr.value = JSON.stringify(finalConfiguration.value, null, 2)
 })
 
 onUnmounted(() => {
@@ -280,6 +312,7 @@ watch(xml, async (newVal, oldVal) => {
         await db.setData(storagekey, newVal)
     }
 })
+
 
 defineExpose({
     merge,
@@ -295,7 +328,38 @@ defineExpose({
 </script>
 
 <template>
-    <iframe className="diagrams-iframe" ref="iframeRef" :src="iframeUrl" />
+    <v-sheet class="h-100 w-100 position-relative">
+        <v-sheet class="position-absolute right-0" style="background-color: transparent;">
+            <v-hover>
+                <template v-slot:default="{ isHovering, props }">
+                    <v-btn ref="configBtn" density="compact" icon="settings" variant="text"
+                        :color="isHovering ? '#75FBFD' : undefined">
+                    </v-btn>
+                </template>
+            </v-hover>
+            <v-dialog :activator="configBtn!" max-width="50%">
+                <template v-slot:default="{ isActive }">
+                    <v-card rounded="lg">
+                        <v-card-text>
+                            <v-textarea :counter="300" class="mb-2" rows="10" variant="outlined"
+                                v-model="chatConfigStr"></v-textarea>
+                        </v-card-text>
+
+                        <v-divider class="mt-2"></v-divider>
+
+                        <v-card-actions class="my-2 d-flex justify-end">
+                            <v-btn class="text-none" rounded="xl" text="Reset" @click="handleReset(isActive)"></v-btn>
+                            <v-btn class="text-none" rounded="xl" text="Cancel" @click="isActive.value = false"></v-btn>
+
+                            <v-btn class="text-none" color="primary" rounded="xl" text="Save" variant="flat"
+                                @click="handleSave(isActive)"></v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </template>
+            </v-dialog>
+        </v-sheet>
+        <iframe className="diagrams-iframe" ref="iframeRef" :src="iframeUrl" />
+    </v-sheet>
 </template>
 
 <style scoped lang="scss">
