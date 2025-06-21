@@ -142,11 +142,11 @@ const resourceTypeOptions = computed(() =>
     }))
 )
 
-
 onUnmounted(() => {
     validateManager.clearInputs()
     window.removeEventListener('message', handleMessage)
     sessionStorage.removeItem('drawio-edit-value')
+    sessionStorage.removeItem('drawio-edit-data-' + editModel.value.id)
 })
 
 onMounted(() => {
@@ -154,20 +154,29 @@ onMounted(() => {
 })
 
 let popupWindow: Window | null = null;
-const showDrawIO = (data: string) => {
-    sessionStorage.setItem('drawio-edit-value', data)
+const showDrawIO = (data: ResourceEditModel) => {
+    // this is for edit self
+    sessionStorage.setItem('drawio-edit-data-' + data.id, JSON.stringify(data))
+    // this is for drawio
+    sessionStorage.setItem('drawio-edit-value', data.data)
     popupWindow = window.open('/drawio', '_blank')
 }
 
 const handleMessage = (event: MessageEvent) => {
     if (event.origin !== location.origin) return;
     if (event.data?.type == "drawio-export-event") {
-        console.log(event.data)
+        let tmpDataRaw = sessionStorage.getItem('drawio-edit-data-' + editModel.value.id);
+        let tmpData: ResourceEditModel;
+        try {
+            tmpData = tmpDataRaw ? JSON.parse(tmpDataRaw) as ResourceEditModel : editModel.value;
+        } catch (e) {
+            tmpData = editModel.value;
+        }
+
         imageData.value = event.data.data
         editModel.value = {
-            ...cloneDeep(editModel.value),
+            ...cloneDeep(tmpData),
             data: event.data.xml,
-            type: 'DrawIO',
         }
     }
 }
@@ -196,7 +205,7 @@ const handleMessage = (event: MessageEvent) => {
                         <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">
                             <template v-slot:activator="{ props }">
                                 <v-icon icon="md:info" v-bind="props" class="ma-2"
-                                    @click="() => showDrawIO(proxyModel.value.data)"></v-icon>
+                                    @click="() => showDrawIO(proxyModel.value)"></v-icon>
                             </template>
                         </v-tooltip>
                         <v-tooltip text="preview" v-if="imageData">
