@@ -2,8 +2,8 @@
   <script setup lang="ts">
   import { ref } from 'vue'
   
-  const googleClientId = import.meta.env.VUE_APP_GoogleClientId
-  const googleAppId = import.meta.env.VUE_APP_GoogleAppId
+  const googleClientId = import.meta.env.VUE_APP_GOOGLE_CLIENT_ID
+  const googleAppId = import.meta.env.VUE_APP_GOOGLE_APP_ID
   
   const showPicker = ref(false);
   const authenticatedToken = ref<string | null>(null);
@@ -20,10 +20,10 @@
   }
   
   /**
-   * Handles the 'picker:cancel' event.
+   * Handles the 'picker:canceled' event.
    * Fired when the user closes the picker without making a selection.
    */
-  const handlePickerCancel = () => {
+  const handlePickerCanceled = () => {
     console.log('Picker Cancelled');
     showPicker.value = false; // Hide the picker
   }
@@ -50,13 +50,14 @@
   
       <drive-picker
         v-if="showPicker"
+        prompt="" 
         :client-id="googleClientId"
         :app-id="googleAppId"
         @picker:authenticated="handlePickerAuthenticated"
-        @picker:cancel="handlePickerCancel"
+        @picker:canceled="handlePickerCanceled"
         @picker:picked="handlePickerPicked"
       >
-        <drive-picker-docs-view starred="true"></drive-picker-docs-view>
+        <drive-picker-docs-view></drive-picker-docs-view>
       </drive-picker>
   
       <div v-if="authenticatedToken">

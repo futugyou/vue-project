@@ -21,8 +21,8 @@ interface ImportMetaEnv {
     readonly VUE_APP_REDIRECT_URI: string
     readonly VUE_APP_AUTHORIZE: string
     readonly VUE_APP_TOKEN: string
-    readonly VUE_APP_GoogleClientId: string
-    readonly VUE_APP_GoogleAppId: string
+    readonly VUE_APP_GOOGLE_CLIENT_ID: string
+    readonly VUE_APP_GOOGLE_APP_ID: string
 }
 
 interface ImportMeta {
