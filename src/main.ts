@@ -13,6 +13,8 @@ import { registerDirectives } from './directives'
 // @ts-ignore
 import App from './App.vue'
 
+import '@googleworkspace/drive-picker-element'
+
 let app: AppInstance | null = null
 
 const mount = () => {

@@ -22,7 +22,8 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => /^micro-app/.test(tag),
+          isCustomElement: (tag) =>
+            /^micro-app/.test(tag) || tag.startsWith('drive-picker'),
         },
       },
     }),
