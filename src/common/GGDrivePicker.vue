@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { OAuthErrorEvent, OAuthResponseEvent, PickerCanceledEvent, PickerPickedEvent, PickerErrorEvent } from '@googleworkspace/drive-picker-element'
+import { useSessionStorage } from '@vueuse/core'
 
 const googleClientId = import.meta.env.VUE_APP_GOOGLE_CLIENT_ID
 const googleAppId = import.meta.env.VUE_APP_GOOGLE_APP_ID
 
 const showPicker = ref(false);
-const authenticatedToken = ref<string | null>(null);
+const authenticatedToken = useSessionStorage<string>("google-oauth", "");
 const selectedFiles = ref<any[]>([]);
 
 /**
@@ -16,7 +17,7 @@ const selectedFiles = ref<any[]>([]);
 const handlePickerAuthenticated = (event: CustomEvent<{ token: string }>) => {
   console.log('Picker Authenticated. Token:', event.detail.token)
   // Store the token if you need it for other Google API calls
-  authenticatedToken.value = event.detail.token
+  authenticatedToken.value = event.detail.token || ""
 }
 
 /**
@@ -25,6 +26,7 @@ const handlePickerAuthenticated = (event: CustomEvent<{ token: string }>) => {
  */
 const handleOAuthError = (event: OAuthErrorEvent) => {
   console.log('Picker Auth Error:', event.detail)
+  authenticatedToken.value = ""
 }
 
 /**
@@ -73,6 +75,7 @@ const handlePickerPicked = (event: PickerPickedEvent) => {
     <button @click="showPicker = true" :disabled="showPicker">Open Drive Picker</button>
 
     <drive-picker v-if="showPicker" prompt="" :client-id="googleClientId" :app-id="googleAppId"
+      v-bind="authenticatedToken ? { 'oauth-token': authenticatedToken } : {}"
       @picker:authenticated="handlePickerAuthenticated" @picker:canceled="handlePickerCanceled"
       @picker:picked="handlePickerPicked" @picker:oauth:error="handleOAuthError"
       @picker:oauth:response="handleOAuthResponse" @picker:error="handlePickerError">
