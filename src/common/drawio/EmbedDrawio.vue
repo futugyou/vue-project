@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 
 import { useEventListener } from '@/composables/event'
 import { useIDBClient } from '@/composables/useIDBClientEx'
+import { useLocalStorage } from '@vueuse/core'
 import { DrawAction } from './action'
 import type { ExportFromat, LayoutType } from './action'
 import { handleEvent } from './event'
@@ -90,10 +91,16 @@ const finalUrlParameters = computed<UrlParameters>(() => {
     return p
 })
 
-const finalConfiguration = ref<{ [key: string]: any }>({
-    ...defaultConfiguration,
-    ...(props.configuration ?? {})
-});
+const storagedConfig = useLocalStorage<{ [key: string]: any }>(".configuration", {})
+const finalConfiguration = ref<{ [key: string]: any }>({})
+const getFinalConfiguration = (override?: Record<string, any>): Record<string, any> => {
+    return {
+        ...defaultConfiguration,
+        ...(storagedConfig.value ?? {}),
+        ...(props.configuration ?? {}),
+        ...(override ?? {})
+    }
+}
 
 const parser = new DOMParser()
 const xml = ref(props.xml ?? "")
@@ -275,13 +282,18 @@ const updateIfChanged = (newConfig: Record<string, any>) => {
 const handleSave = (isActive: { value: boolean }) => {
     try {
         const parsed = JSON.parse(chatConfigStr.value)
-        updateIfChanged(parsed)
+        storagedConfig.value = parsed
+        const merged = getFinalConfiguration(parsed)
+        updateIfChanged(merged)
+
         isActive.value = false
     } catch (e) {
     }
 }
 
 const handleReset = (isActive: { value: boolean }) => {
+    storagedConfig.value = {}
+
     const resetConfig = {
         ...defaultConfiguration,
         ...(props.configuration ?? {})
@@ -289,6 +301,7 @@ const handleReset = (isActive: { value: boolean }) => {
 
     updateIfChanged(resetConfig)
     chatConfigStr.value = JSON.stringify(resetConfig, null, 2)
+    // isActive.value = false
 }
 
 useEventListener(window, 'message', messageHandler)
@@ -304,7 +317,10 @@ onMounted(async () => {
         storedValue = (await db.getData<string>(storagekey)) ?? ""
     }
     xml.value = storedValue
-    chatConfigStr.value = JSON.stringify(finalConfiguration.value, null, 2)
+
+    const merged = getFinalConfiguration()
+    finalConfiguration.value = merged
+    chatConfigStr.value = JSON.stringify(merged, null, 2)
 })
 
 onUnmounted(() => {
