@@ -65,7 +65,8 @@ const clientCache = new Map<string, IDBClient>()
 export const useIDBClient = (
     dbName: string,
     storeNames: string | string[],
-    fallback: FallbackType = 'local'
+    fallback: FallbackType = 'local',
+    allowDynamicStore: boolean = false,
 ): IDBClient => {
     const stores = Array.isArray(storeNames) ? storeNames : [storeNames]
     const isSingleStore = stores.length === 1
@@ -116,12 +117,14 @@ export const useIDBClient = (
 
     // 
     const ensureStoreExists = async (storeName: string): Promise<void> => {
+        if (!allowDynamicStore) return
+
         const db = await dbPromise!
         if (db.objectStoreNames.contains(storeName)) return
-    
+
         const newVersion = db.version + 1
         db.close()
-    
+
         dbPromise = openDB(dbName, newVersion, {
             upgrade(upgradeDb) {
                 if (!upgradeDb.objectStoreNames.contains(storeName)) {
@@ -129,10 +132,10 @@ export const useIDBClient = (
                 }
             },
         })
-    
+
         await dbPromise
     }
-    
+
 
     const resolveStore = (storeName?: string): string => {
         if (isSingleStore) {
