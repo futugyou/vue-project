@@ -294,8 +294,12 @@ const handleReset = (isActive: { value: boolean }) => {
 useEventListener(window, 'message', messageHandler)
 
 onMounted(async () => {
-    // this is used for other to component send xml data when open with windows.open
-    let storedValue = sessionStorage.getItem('drawio-edit-value') || ''
+    let storedValue = ""
+    if (window.opener) {
+        // this is used for other to component send xml data when open with windows.open
+        storedValue = sessionStorage.getItem('drawio-edit-value') || ""
+    }
+
     if (storedValue == "") {
         storedValue = (await db.getData<string>(storagekey)) ?? ""
     }
