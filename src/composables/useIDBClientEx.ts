@@ -114,6 +114,26 @@ export const useIDBClient = (
     // Fire-and-forget init, but store its promise
     initPromise = init()
 
+    // 
+    const ensureStoreExists = async (storeName: string): Promise<void> => {
+        const db = await dbPromise!
+        if (db.objectStoreNames.contains(storeName)) return
+    
+        const newVersion = db.version + 1
+        db.close()
+    
+        dbPromise = openDB(dbName, newVersion, {
+            upgrade(upgradeDb) {
+                if (!upgradeDb.objectStoreNames.contains(storeName)) {
+                    upgradeDb.createObjectStore(storeName)
+                }
+            },
+        })
+    
+        await dbPromise
+    }
+    
+
     const resolveStore = (storeName?: string): string => {
         if (isSingleStore) {
             if (storeName && storeName !== stores[0]) {
@@ -145,6 +165,7 @@ export const useIDBClient = (
                 }
                 fallbackStorageMap.value.get(store)![key] = value
             } else {
+                await ensureStoreExists(store)
                 const db = await dbPromise!
                 await db.put(store, value, key)
             }
@@ -156,6 +177,7 @@ export const useIDBClient = (
             if (useFallback) {
                 return fallbackStorageMap.value.get(store)?.[key] as T
             } else {
+                await ensureStoreExists(store)
                 const db = await dbPromise!
                 return db.get(store, key)
             }
@@ -171,6 +193,7 @@ export const useIDBClient = (
                 }
             } else {
                 const db = await dbPromise!
+                if (!db.objectStoreNames.contains(store)) return
                 await db.delete(store, key)
             }
         },
