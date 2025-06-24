@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { orderBy } from 'lodash-es'
@@ -53,12 +53,6 @@ const {
         return orderBy(data, "updated_at", "desc")
     },
     retry: false,
-    onError(err: any) {
-        msg.value = {
-            errorMessages: [err.message ?? 'request error'],
-            delay: 3000,
-        }
-    },
     persister: experimental_createQueryPersister({
         storage: {
             getItem: (key: string) => db.getData<ResourceView[]>(key),
@@ -69,6 +63,19 @@ const {
     }).persisterFn,
 })
 // watchEffect(async () => fetchData())
+watch(
+    () => error.value,
+    (err) => {
+        if (err) {
+            msg.value = {
+                errorMessages: [err.message ?? 'request error'],
+                delay: 3000,
+            }
+        }
+    },
+    { immediate: true }
+)
+
 const resources = computed(() => data.value ?? [])
 const buildUrl = (id: string) => '/resource/' + id
 
