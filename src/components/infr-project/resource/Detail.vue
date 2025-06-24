@@ -22,7 +22,7 @@ const router = useRouter()
 
 const isLoading = ref(true)
 const resourceId = route.params.id as string
-const histories = ref<ResourceViewDetail[]>()
+const histories = ref<ResourceViewDetail[]>([])
 
 const fetchData = async () => {
     if (resourceId == undefined) {
@@ -41,7 +41,7 @@ const fetchData = async () => {
         return
     }
 
-    histories.value = orderBy(data, "version", "desc")
+    histories.value = orderBy(data!, "version", "desc")
 }
 
 fetchData()
@@ -98,7 +98,8 @@ const newResourceVersion = () => {
 
                         <v-divider></v-divider>
 
-                        <ResourceData :data="history.data" :type="history.type" :imageData="history.imageData" :id="history.id">
+                        <ResourceData :data="history.data" :type="history.type" :imageData="history.imageData"
+                            :id="history.id">
                         </ResourceData>
                     </v-card-text>
                 </v-card>

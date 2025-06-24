@@ -1,82 +1,19 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { orderBy } from 'lodash-es'
-import { useQuery } from '@tanstack/vue-query'
-import { experimental_createQueryPersister } from '@tanstack/query-persist-client-core'
 
 import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
-import { useMessageStore } from '@/stores/message'
-import { useIDBClient } from '@/composables/useIDBClientEx'
 import { useAuth } from '@/plugins/auth'
 
-import { ResourceApiFactory } from './resource'
-import type { ResourceView } from './resource'
 import ResourceData from './ResourceData.vue'
+import { useResources } from './resourceQuery'
 
-const store = useMessageStore()
-const { msg } = storeToRefs(store)
 const authService = useAuth()
 const router = useRouter()
-const db = useIDBClient('resource', 'datas')
 
-// const resources = ref<ResourceView[]>([])
-// const isLoading = ref(true)
+const { isPending: isLoading, data: resources, } = useResources()
 
-// const fetchData = async () => {
-//     isLoading.value = true
-//     const { data, error } = await ResourceApiFactory().v1ResourceGet()
-//     isLoading.value = false
-//     if (error) {
-//         msg.value = {
-//             errorMessages: [error.message],
-//             delay: 3000,
-//         }
-//         return
-//     }
-
-//     resources.value = orderBy(data, "updated_at", "desc")
-// }
-const {
-    isPending: isLoading,
-    isError,
-    isFetching,
-    data,
-    error,
-} = useQuery({
-    queryKey: ['resourceList'],
-    queryFn: async () => {
-        const { data, error } = await ResourceApiFactory().v1ResourceGet()
-        if (error) throw error
-        return orderBy(data, "updated_at", "desc")
-    },
-    retry: false,
-    persister: experimental_createQueryPersister({
-        storage: {
-            getItem: (key: string) => db.getData<ResourceView[]>(key),
-            setItem: (key: string, value: ResourceView[]) => db.setData(key, value),
-            removeItem: (key: string) => db.deleteData(key),
-            entries: () => entries<string>(),
-        },
-    }).persisterFn,
-})
-// watchEffect(async () => fetchData())
-watch(
-    () => error.value,
-    (err) => {
-        if (err) {
-            msg.value = {
-                errorMessages: [err.message ?? 'request error'],
-                delay: 3000,
-            }
-        }
-    },
-    { immediate: true }
-)
-
-const resources = computed(() => data.value ?? [])
 const buildUrl = (id: string) => '/resource/' + id
 
 const createResource = () => {
