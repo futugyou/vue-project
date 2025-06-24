@@ -9,6 +9,7 @@ import vuetify from './vuetify'
 import { usePinia } from '@/stores/plugins'
 import { authService } from '@/tools/auth'
 import { globalMessageKey } from '@/tools/injectkey'
+import { VueQueryPlugin, vueQueryOptions } from './query'
 
 export function registerPlugins(app: App) {
     app.provide(globalMessageKey, 'hello!')
@@ -24,4 +25,5 @@ export function registerPlugins(app: App) {
             }
         })
         .use(CodeDiff)
+        .use(VueQueryPlugin, vueQueryOptions)
 }
