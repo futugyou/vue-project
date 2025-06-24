@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { isEqual, cloneDeep } from 'lodash-es'
+import { useQueryClient } from '@tanstack/vue-query'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
@@ -16,7 +17,7 @@ import { ValidateManager } from '@/tools/validate'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
-
+const queryClient = useQueryClient()
 const authService = useAuth()
 
 const route = useRoute()
@@ -126,6 +127,9 @@ const save = async () => {
     }
 
     if (data) {
+        // TODO: use useQuery in this page
+        // queryClient.setQueryData(['resource',data.id], data)
+        queryClient.invalidateQueries({ queryKey: ['resourceList'] })
         cancel()
     }
 }
