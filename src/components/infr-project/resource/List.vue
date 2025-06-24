@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { orderBy } from 'lodash-es'
+import { useQuery } from '@tanstack/vue-query'
+import { experimental_createQueryPersister } from '@tanstack/query-persist-client-core'
 
 import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useMessageStore } from '@/stores/message'
+import { useIDBClient } from '@/composables/useIDBClientEx'
 import { useAuth } from '@/plugins/auth'
 
 import { ResourceApiFactory } from './resource'
@@ -17,27 +20,56 @@ const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
 const router = useRouter()
+const db = useIDBClient('resource', 'datas')
 
-const resources = ref<ResourceView[]>([])
-const isLoading = ref(true)
+// const resources = ref<ResourceView[]>([])
+// const isLoading = ref(true)
 
-const fetchData = async () => {
-    isLoading.value = true
-    const { data, error } = await ResourceApiFactory().v1ResourceGet()
-    isLoading.value = false
-    if (error) {
+// const fetchData = async () => {
+//     isLoading.value = true
+//     const { data, error } = await ResourceApiFactory().v1ResourceGet()
+//     isLoading.value = false
+//     if (error) {
+//         msg.value = {
+//             errorMessages: [error.message],
+//             delay: 3000,
+//         }
+//         return
+//     }
+
+//     resources.value = orderBy(data, "updated_at", "desc")
+// }
+const {
+    isPending: isLoading,
+    isError,
+    isFetching,
+    data,
+    error,
+} = useQuery({
+    queryKey: ['resourceList'],
+    queryFn: async () => {
+        const { data, error } = await ResourceApiFactory().v1ResourceGet()
+        if (error) throw error
+        return orderBy(data, "updated_at", "desc")
+    },
+    retry: false,
+    onError(err: any) {
         msg.value = {
-            errorMessages: [error.message],
+            errorMessages: [err.message ?? 'request error'],
             delay: 3000,
         }
-        return
-    }
-
-    resources.value = orderBy(data, "updated_at", "desc")
-}
-
-watchEffect(async () => fetchData())
-
+    },
+    persister: experimental_createQueryPersister({
+        storage: {
+            getItem: (key: string) => db.getData<ResourceView[]>(key),
+            setItem: (key: string, value: ResourceView[]) => db.setData(key, value),
+            removeItem: (key: string) => db.deleteData(key),
+            entries: () => entries<string>(),
+        },
+    }).persisterFn,
+})
+// watchEffect(async () => fetchData())
+const resources = computed(() => data.value ?? [])
 const buildUrl = (id: string) => '/resource/' + id
 
 const createResource = () => {
@@ -91,7 +123,9 @@ const createResource = () => {
 
                         <v-divider></v-divider>
 
-                        <ResourceData :data="resource.data" :type="resource.type" :imageData="resource.imageData" :id="resource.id" ></ResourceData>
+                        <ResourceData :data="resource.data" :type="resource.type" :imageData="resource.imageData"
+                            :id="resource.id">
+                        </ResourceData>
 
                         <v-divider></v-divider>
 
