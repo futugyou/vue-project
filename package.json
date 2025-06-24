@@ -13,6 +13,7 @@
     "@googleworkspace/drive-picker-element": "^0.5.1",
     "@honeycombio/opentelemetry-web": "^0.20.0",
     "@opentelemetry/auto-instrumentations-web": "^0.48.0",
+    "@tanstack/query-persist-client-core": "^5.81.2",
     "@tanstack/vue-query": "^5.81.2",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
