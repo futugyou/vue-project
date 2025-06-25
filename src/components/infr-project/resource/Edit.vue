@@ -14,6 +14,7 @@ import { ResourceApiFactory, ResourceTypeEnum } from './resource'
 import type { CreateResourceRequest, UpdateResourceRequest } from './resource'
 
 import { ValidateManager } from '@/tools/validate'
+import { formatContent } from '@/tools/textFormat'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -185,6 +186,11 @@ const handleMessage = (event: MessageEvent) => {
     }
 }
 
+const getFormatTetx = (text: string) => {
+    const { formatted: result } = formatContent(text)
+    return result
+}
+
 </script>
 
 <template>
@@ -198,9 +204,12 @@ const handleMessage = (event: MessageEvent) => {
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
                         :rules="validateManager.requiredMinMax('Name', 3, 150)" v-model="proxyModel.value.name"
                         label="Name" :hideDetails="false" />
-                    <v-text-field :ref="el => validateManager.setInputRef(el, 'data')"
-                        :rules="validateManager.requiredMin('data', 3)" v-model="proxyModel.value.data" label="Data"
-                        :hideDetails="false" />
+
+                    <v-textarea :counter="300" class="mb-2" rows="10" variant="outlined"
+                        :ref="el => validateManager.setInputRef(el, 'data')"
+                        :rules="validateManager.requiredMin('data', 3)" label="Data"
+                        :model-value="getFormatTetx(proxyModel.value.data)"
+                        @update:modelValue="value => proxyModel.value.data = value"></v-textarea>
 
                     <v-sheet class="d-flex">
                         <v-select :ref="el => validateManager.setInputRef(el, 'type')"
