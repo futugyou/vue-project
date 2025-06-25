@@ -47,6 +47,7 @@ const DefaultResourceEditModel: ResourceEditModel = {
 const editModel = ref<ResourceEditModel>(DefaultResourceEditModel)
 const imageData = ref<string>("")
 const imagePreview = ref(false)
+const proxyModelRef = ref()
 
 const cancel = () => {
     if (resourceId.length == 0) {
@@ -179,16 +180,27 @@ const handleMessage = (event: MessageEvent) => {
         }
 
         imageData.value = event.data.data
-        editModel.value = {
-            ...cloneDeep(tmpData),
-            data: event.data.xml,
+        
+        if (proxyModelRef.value) {
+            proxyModelRef.value.data = event.data.xml
         }
+        // editModel.value = {
+        //     ...cloneDeep(tmpData),
+        //     data: event.data.xml,
+        // }
     }
 }
 
 const getFormatTetx = (text: string) => {
     const { formatted: result } = formatContent(text)
     return result
+}
+
+const bindProxy = (proxy: any) => {
+    if (!proxyModelRef.value) {
+        proxyModelRef.value = proxy.value
+    }
+    return true
 }
 
 </script>
@@ -231,6 +243,8 @@ const getFormatTetx = (text: string) => {
 
                     <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
                         :hideDetails="false"></v-combobox>
+
+                    <span v-if="bindProxy(proxyModel)" style="display:none;" />
 
                     <v-sheet class="d-flex justify-end ga-3">
                         <component :is="actions"></component>
