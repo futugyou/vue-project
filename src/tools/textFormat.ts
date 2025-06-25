@@ -43,7 +43,13 @@ export const formatContent = (str: string): { format: string, formatted: string 
     try {
         const parser = new XMLParser({ ignoreAttributes: false })
         const obj = parser.parse(str)
-        const builder = new XMLBuilder({ format: true, indentBy: '  ' })
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            format: true,
+            indentBy: '  ',
+            attributesGroupName: false,
+          })
+          
         const formatted = builder.build(obj)
         if (formatted != "") {
             return { format: 'xml', formatted: formatted }
