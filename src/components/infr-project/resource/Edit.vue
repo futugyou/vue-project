@@ -180,7 +180,7 @@ const handleMessage = (event: MessageEvent) => {
         }
 
         imageData.value = event.data.data
-        
+
         if (proxyModelRef.value) {
             proxyModelRef.value.data = event.data.xml
         }
@@ -217,7 +217,7 @@ const bindProxy = (proxy: any) => {
                         :rules="validateManager.requiredMinMax('Name', 3, 150)" v-model="proxyModel.value.name"
                         label="Name" :hideDetails="false" />
 
-                    <v-textarea :counter="300" class="mb-2" rows="10" variant="outlined"
+                    <v-textarea :counter="300" class="mb-5" rows="10" variant="outlined"
                         :ref="el => validateManager.setInputRef(el, 'data')"
                         :rules="validateManager.requiredMin('data', 3)" label="Data"
                         :model-value="getFormatTetx(proxyModel.value.data)"
@@ -225,8 +225,9 @@ const bindProxy = (proxy: any) => {
 
                     <v-sheet class="d-flex">
                         <v-select :ref="el => validateManager.setInputRef(el, 'type')"
-                            :rules="validateManager.required('Type')" v-model="proxyModel.value.type" class="mb-5"
-                            :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
+                            :disabled="proxyModel.value.id != ''" :rules="validateManager.required('Type')"
+                            v-model="proxyModel.value.type" class="mb-5" :items="resourceTypeOptions" label="Type"
+                            item-value="value" item-title="label"></v-select>
                         <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">
                             <template v-slot:activator="{ props }">
                                 <v-icon icon="md:info" v-bind="props" class="ma-2"
