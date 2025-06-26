@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect, computed, onMounted, onUnmounted } from 'vue'
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useEventListener } from '@/composables/event'
@@ -332,7 +332,6 @@ watch(xml, async (newVal, oldVal) => {
         await db.setData(storagekey, newVal)
     }
 })
-
 
 defineExpose({
     merge,
