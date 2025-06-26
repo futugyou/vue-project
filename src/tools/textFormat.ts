@@ -41,18 +41,23 @@ export const formatContent = (str: string): { format: string, formatted: string 
     } catch { }
 
     try {
-        const parser = new XMLParser({ ignoreAttributes: false })
+        const parser = new XMLParser({ ignoreAttributes: false, trimValues: true, })
         const obj = parser.parse(str)
-        const builder = new XMLBuilder({
-            ignoreAttributes: false,
-            format: true,
-            indentBy: '  ',
-            attributesGroupName: false,
-          })
-          
-        const formatted = builder.build(obj)
-        if (formatted != "") {
-            return { format: 'xml', formatted: formatted }
+        const keys = Object.keys(obj)
+        const hasSingleRoot = keys.length === 1 && typeof obj[keys[0]] === 'object'
+        const looksLikeXML = str.trim().startsWith('<') && str.trim().endsWith('>') && hasSingleRoot
+        if (looksLikeXML) {
+            const builder = new XMLBuilder({
+                ignoreAttributes: false,
+                format: true,
+                indentBy: '  ',
+                attributesGroupName: false,
+            })
+
+            const formatted = builder.build(obj)
+            if (formatted != "") {
+                return { format: 'xml', formatted: formatted }
+            }
         }
     } catch { }
 
