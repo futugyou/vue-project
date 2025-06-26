@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { isEqual, cloneDeep } from 'lodash-es'
 import { useQueryClient } from '@tanstack/vue-query'
 
 import Spinners from '@/common/Spinners.vue'
@@ -15,6 +14,8 @@ import type { CreateResourceRequest, UpdateResourceRequest } from './resource'
 
 import { ValidateManager } from '@/tools/validate'
 import { formatContent } from '@/tools/textFormat'
+
+import { useMarkedMermaid } from '@/composables/useMarkedMermaid'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -171,23 +172,11 @@ const showDrawIO = (data: ResourceEditModel) => {
 const handleMessage = (event: MessageEvent) => {
     if (event.origin !== location.origin) return;
     if (event.data?.type == "drawio-export-event") {
-        let tmpDataRaw = sessionStorage.getItem('drawio-edit-data-' + editModel.value.id);
-        let tmpData: ResourceEditModel;
-        try {
-            tmpData = tmpDataRaw ? JSON.parse(tmpDataRaw) as ResourceEditModel : editModel.value;
-        } catch (e) {
-            tmpData = editModel.value;
-        }
-
         imageData.value = event.data.data
 
         if (proxyModelRef.value) {
             proxyModelRef.value.data = event.data.xml
         }
-        // editModel.value = {
-        //     ...cloneDeep(tmpData),
-        //     data: event.data.xml,
-        // }
     }
 }
 
@@ -203,6 +192,15 @@ const bindProxy = (proxy: any) => {
     return true
 }
 
+const mermaidData = ref()
+const { renderedHtml } = useMarkedMermaid(mermaidData, { className: "markdown-body" })
+
+const HandleDataUpdated = (text: string) => {
+    if (proxyModelRef.value) {
+        proxyModelRef.value.data = text
+        mermaidData.value = text
+    }
+}
 </script>
 
 <template>
@@ -221,7 +219,7 @@ const bindProxy = (proxy: any) => {
                         :ref="el => validateManager.setInputRef(el, 'data')"
                         :rules="validateManager.requiredMin('data', 3)" label="Data"
                         :model-value="getFormatTetx(proxyModel.value.data)"
-                        @update:modelValue="value => proxyModel.value.data = value"></v-textarea>
+                        @update:modelValue="HandleDataUpdated"></v-textarea>
 
                     <v-sheet class="d-flex">
                         <v-select :ref="el => validateManager.setInputRef(el, 'type')"
@@ -256,6 +254,9 @@ const bindProxy = (proxy: any) => {
             <v-sheet class="d-flex justify-space-around ma-3" v-if="imagePreview && imageData">
                 <v-img :width="300" aspect-ratio="16/9" cover :src="imageData"></v-img>
             </v-sheet>
+
+            <v-sheet class="markdown-body" aspect-ratio="16/9" v-html="renderedHtml"
+                v-if="renderedHtml && editModel.type == 'Markdown'"></v-sheet>
         </v-card>
     </v-sheet>
 </template>
