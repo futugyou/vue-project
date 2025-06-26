@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useQueryClient } from '@tanstack/vue-query'
+import ResourceData from './ResourceData.vue'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
@@ -14,8 +15,6 @@ import type { CreateResourceRequest, UpdateResourceRequest } from './resource'
 
 import { ValidateManager } from '@/tools/validate'
 import { formatContent } from '@/tools/textFormat'
-
-import { useMarkedMermaid } from '@/composables/useMarkedMermaid'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -34,6 +33,7 @@ interface ResourceEditModel {
     name: string
     type: string
     data: string
+    imageData: string
     tags: Array<string>
 }
 
@@ -42,11 +42,11 @@ const DefaultResourceEditModel: ResourceEditModel = {
     name: "",
     type: "Markdown",
     data: "",
+    imageData: "",
     tags: []
 }
 
 const editModel = ref<ResourceEditModel>(DefaultResourceEditModel)
-const imageData = ref<string>("")
 const imagePreview = ref(false)
 const proxyModelRef = ref()
 
@@ -75,17 +75,17 @@ const fetchData = async () => {
     }
 
     if (data) {
-        imageData.value = data.imageData
         editModel.value = {
             id: data.id,
             name: data.name,
             type: data.type,
             data: data.data,
             tags: data.tags,
+            imageData: data.imageData,
         }
     }
-
 }
+
 fetchData()
 
 const save = async () => {
@@ -105,7 +105,7 @@ const save = async () => {
             data: editModel.value.data,
             name: editModel.value.name,
             tags: editModel.value.tags,
-            imageData: imageData.value,
+            imageData: editModel.value.imageData,
             type: res_type,
         }
         response = await ResourceApiFactory().v1ResourcePost(request)
@@ -114,7 +114,7 @@ const save = async () => {
             data: editModel.value.data,
             name: editModel.value.name,
             tags: editModel.value.tags,
-            imageData: imageData.value,
+            imageData: editModel.value.imageData,
         }
         response = await ResourceApiFactory().v1ResourceIdPut(request, resourceId)
     }
@@ -141,7 +141,6 @@ const emit = defineEmits<{
     (e: 'cancel'): void
 }>()
 
-
 const resourceTypeOptions = computed(() =>
     Object.keys(ResourceTypeEnum).map((key) => ({
         label: key,
@@ -153,7 +152,6 @@ onUnmounted(() => {
     validateManager.clearInputs()
     window.removeEventListener('message', handleMessage)
     sessionStorage.removeItem('drawio-edit-value')
-    sessionStorage.removeItem('drawio-edit-data-' + editModel.value.id)
 })
 
 onMounted(() => {
@@ -162,8 +160,6 @@ onMounted(() => {
 
 let popupWindow: Window | null = null;
 const showDrawIO = (data: ResourceEditModel) => {
-    // this is for edit self
-    sessionStorage.setItem('drawio-edit-data-' + data.id, JSON.stringify(data))
     // this is for drawio
     sessionStorage.setItem('drawio-edit-value', data.data)
     popupWindow = window.open('/drawio?suffix=' + resourceId, '_blank')
@@ -172,10 +168,9 @@ const showDrawIO = (data: ResourceEditModel) => {
 const handleMessage = (event: MessageEvent) => {
     if (event.origin !== location.origin) return;
     if (event.data?.type == "drawio-export-event") {
-        imageData.value = event.data.data
-
         if (proxyModelRef.value) {
             proxyModelRef.value.data = event.data.xml
+            proxyModelRef.value.imageData = event.data.data
         }
     }
 }
@@ -192,13 +187,9 @@ const bindProxy = (proxy: any) => {
     return true
 }
 
-const mermaidData = ref()
-const { renderedHtml } = useMarkedMermaid(mermaidData, { className: "markdown-body" })
-
-const HandleDataUpdated = (text: string) => {
+const HandleResourceChanged = (text: string | string[], type: string) => {
     if (proxyModelRef.value) {
-        proxyModelRef.value.data = text
-        mermaidData.value = text
+        proxyModelRef.value[type] = text
     }
 }
 </script>
@@ -212,27 +203,29 @@ const HandleDataUpdated = (text: string) => {
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'id')" v-model="proxyModel.value.id"
                         label="Id" disabled :hideDetails="false" v-if="proxyModel.value.id != ''" />
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'name')"
-                        :rules="validateManager.requiredMinMax('Name', 3, 150)" v-model="proxyModel.value.name"
-                        label="Name" :hideDetails="false" />
+                        :rules="validateManager.requiredMinMax('Name', 3, 150)" :model-value="proxyModel.value.name"
+                        @update:modelValue="value => HandleResourceChanged(value, 'name')" label="Name"
+                        :hideDetails="false" />
 
                     <v-textarea :counter="300" class="mb-5" rows="10" variant="outlined"
                         :ref="el => validateManager.setInputRef(el, 'data')"
                         :rules="validateManager.requiredMin('data', 3)" label="Data"
                         :model-value="getFormatTetx(proxyModel.value.data)"
-                        @update:modelValue="HandleDataUpdated"></v-textarea>
+                        @update:modelValue="value => HandleResourceChanged(value, 'data')"></v-textarea>
 
                     <v-sheet class="d-flex">
                         <v-select :ref="el => validateManager.setInputRef(el, 'type')"
                             :disabled="proxyModel.value.id != ''" :rules="validateManager.required('Type')"
-                            v-model="proxyModel.value.type" class="mb-5" :items="resourceTypeOptions" label="Type"
-                            item-value="value" item-title="label"></v-select>
+                            :model-value="proxyModel.value.type"
+                            @update:modelValue="value => HandleResourceChanged(value, 'type')" class="mb-5"
+                            :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
                         <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">
                             <template v-slot:activator="{ props }">
                                 <v-icon icon="md:info" v-bind="props" class="ma-2"
                                     @click="() => showDrawIO(proxyModel.value)"></v-icon>
                             </template>
                         </v-tooltip>
-                        <v-tooltip text="preview" v-if="imageData">
+                        <v-tooltip text="preview">
                             <template v-slot:activator="{ props }">
                                 <v-icon icon="md:image" v-bind="props" class="ma-2"
                                     @click="imagePreview = !imagePreview"></v-icon>
@@ -240,8 +233,8 @@ const HandleDataUpdated = (text: string) => {
                         </v-tooltip>
                     </v-sheet>
 
-                    <v-combobox v-model="proxyModel.value.tags" label="Tags" chips multiple
-                        :hideDetails="false"></v-combobox>
+                    <v-combobox label="Tags" chips multiple :hideDetails="false" :model-value="proxyModel.value.tags"
+                        @update:modelValue="value => HandleResourceChanged(value, 'tags')"></v-combobox>
 
                     <span v-if="bindProxy(proxyModel)" style="display:none;" />
 
@@ -251,12 +244,9 @@ const HandleDataUpdated = (text: string) => {
                 </template>
             </v-confirm-edit>
 
-            <v-sheet class="d-flex justify-space-around ma-3" v-if="imagePreview && imageData">
-                <v-img :width="300" aspect-ratio="16/9" cover :src="imageData"></v-img>
-            </v-sheet>
-
-            <v-sheet class="markdown-body" aspect-ratio="16/9" v-html="renderedHtml"
-                v-if="renderedHtml && editModel.type == 'Markdown'"></v-sheet>
+            <ResourceData :data="proxyModelRef.data" :type="proxyModelRef.type" :imageData="proxyModelRef.imageData"
+                :id="proxyModelRef.id" v-if="imagePreview && proxyModelRef">
+            </ResourceData>
         </v-card>
     </v-sheet>
 </template>
