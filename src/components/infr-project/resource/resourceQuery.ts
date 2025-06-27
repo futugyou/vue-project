@@ -1,51 +1,55 @@
 
-import { watch } from 'vue'
-import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 import { orderBy } from 'lodash-es'
-import { useQuery } from '@tanstack/vue-query'
-import { experimental_createQueryPersister } from '@tanstack/query-persist-client-core'
 
-import { useMessageStore } from '@/stores/message'
-import { useIDBClient } from '@/composables/useIDBClientEx'
-
+import { useBaseQuery } from '@/composables/useBaseQuery'
 import { ResourceApiFactory } from './resource'
-import type { ResourceView } from './resource'
+import type { ResourceView, ResourceViewDetail } from './resource'
 
 export const useResources = (alertError: boolean = true) => {
-    const store = useMessageStore()
-    const { msg } = storeToRefs(store)
-    const db = useIDBClient('resource', 'datas')
-
-    const query = useQuery({
-        queryKey: ['resourceList'],
-        queryFn: async () => {
+    return useBaseQuery<ResourceView[]>(
+        ['resourceList'],
+        async () => {
             const { data, error } = await ResourceApiFactory().v1ResourceGet()
             if (error) throw error
             return orderBy(data, 'updated_at', 'desc')
         },
-        persister: experimental_createQueryPersister({
-            storage: {
-                getItem: (key: string) => db.getData<ResourceView[]>(key),
-                setItem: (key: string, value: ResourceView[]) => db.setData(key, value),
-                removeItem: (key: string) => db.deleteData(key),
-            },
-        }).persisterFn,
-    })
-
-    watch(
-        () => query.error.value,
-        (err) => {
-            if (err && alertError) {
-                msg.value = {
-                    errorMessages: [err.message ?? 'request error'],
-                    delay: 3000,
-                }
-            }
-        },
-        { immediate: true }
+        {
+            alertError,
+            idbName: 'resource',
+            idbStoreName: 'datas',
+        }
     )
+}
 
-    return {
-        ...query,
-    }
+export const useResourceHistory = (resourceId: string, alertError: boolean = true) => {
+    return useBaseQuery<ResourceViewDetail[]>(
+        ['resource-history', resourceId],
+        async () => {
+            const { data, error } = await ResourceApiFactory().v1ResourceIdHistoryGet(resourceId)
+            if (error) throw error
+            return orderBy(data, 'version', 'desc')
+        },
+        {
+            alertError,
+            idbName: 'resource',
+            idbStoreName: 'datas',
+        }
+    )
+}
+
+export const useResource = (resourceId: string, alertError: boolean = true) => {
+    return useBaseQuery<ResourceViewDetail>(
+        ['resource', resourceId],
+        async () => {
+            const { data, error } = await ResourceApiFactory().v1ResourceIdGet(resourceId)
+            if (error) throw error
+            return data!
+        },
+        {
+            alertError,
+            idbName: 'resource',
+            idbStoreName: 'datas',
+        }
+    )
 }
