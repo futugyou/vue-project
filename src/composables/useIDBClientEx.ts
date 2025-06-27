@@ -3,6 +3,7 @@ import { ref, shallowRef } from 'vue'
 import { openDB } from 'idb'
 import type { IDBPDatabase } from 'idb'
 import { useLocalStorage, useSessionStorage } from '@vueuse/core'
+import type { AsyncStorage } from '@tanstack/query-persist-client-core'
 
 type FallbackType = 'local' | 'session'
 
@@ -224,4 +225,12 @@ export const useIDBClient = (
 
     clientCache.set(cacheKey, client)
     return client
+}
+
+export function idbClientStorage<T>(db: IDBClient, storeName?: string | undefined): AsyncStorage<T> {
+    return {
+        getItem: (key: string) => db.getData<T>(key, storeName),
+        setItem: (key: string, value: T) => db.setData(key, value, storeName),
+        removeItem: (key: string) => db.deleteData(key, storeName),
+    }
 }

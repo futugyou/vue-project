@@ -51,7 +51,7 @@ onUnmounted(() => {
 
     <v-sheet v-else-if="type == 'Markdown'">
         <v-responsive :aspect-ratio="16 / 9">
-            <v-sheet class="markdown-body" aspect-ratio="16/9" v-html="renderedHtml"></v-sheet>
+            <v-sheet class="markdown-body" v-html="renderedHtml"></v-sheet>
         </v-responsive>
     </v-sheet>
 
