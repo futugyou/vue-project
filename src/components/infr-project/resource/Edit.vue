@@ -1,20 +1,20 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { cloneDeep } from 'lodash-es'
 import { useQueryClient } from '@tanstack/vue-query'
-import ResourceData from './ResourceData.vue'
 
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import { ResourceApiFactory, ResourceTypeEnum } from './resource'
-
 import type { CreateResourceRequest, UpdateResourceRequest } from './resource'
-
 import { ValidateManager } from '@/tools/validate'
 import { formatContent } from '@/tools/textFormat'
+import { useResource } from './resourceQuery'
+import ResourceData from './ResourceData.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
@@ -24,9 +24,9 @@ const authService = useAuth()
 const route = useRoute()
 const router = useRouter()
 const validateManager = ValidateManager()
-const isLoading = ref(false)
 
 const resourceId = (route.query.id ?? "") as string
+const { isPending: isLoading, data } = useResource(resourceId)
 
 interface ResourceEditModel {
     id: string
@@ -57,36 +57,6 @@ const cancel = () => {
         router.push({ name: "ResourceDetail", force: true, params: { id: resourceId } })
     }
 }
-
-const fetchData = async () => {
-    if (resourceId.length == 0) {
-        return
-    }
-
-    isLoading.value = true
-    const { data, error } = await ResourceApiFactory().v1ResourceIdGet(editModel.value.id)
-    isLoading.value = false
-    if (error) {
-        msg.value = {
-            errorMessages: [error.message],
-            delay: 3000,
-        }
-        return
-    }
-
-    if (data) {
-        editModel.value = {
-            id: data.id,
-            name: data.name,
-            type: data.type,
-            data: data.data,
-            tags: data.tags,
-            imageData: data.imageData,
-        }
-    }
-}
-
-fetchData()
 
 const save = async () => {
     const validateMsg = await validateManager.validateInputs()
@@ -130,9 +100,9 @@ const save = async () => {
     }
 
     if (data) {
-        // TODO: use useQuery in this page
-        // queryClient.setQueryData(['resource',data.id], data)
         queryClient.invalidateQueries({ queryKey: ['resourceList'] })
+        queryClient.invalidateQueries({ queryKey: ['resource', resourceId] })
+        queryClient.invalidateQueries({ queryKey: ['resource-history', resourceId] })
         cancel()
     }
 }
@@ -157,6 +127,12 @@ onUnmounted(() => {
 onMounted(() => {
     window.addEventListener('message', handleMessage)
 })
+
+watch(data, (newVal) => {
+    if (newVal) {
+        editModel.value = cloneDeep(newVal)
+    }
+}, { immediate: true })
 
 let popupWindow: Window | null = null;
 const showDrawIO = (data: ResourceEditModel) => {
