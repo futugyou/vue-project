@@ -1,50 +1,22 @@
 <script lang="ts" setup>
 import { ref, } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { orderBy } from 'lodash-es'
 
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
-import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
 
 import ResourceData from './ResourceData.vue'
-import { ResourceApiFactory } from './resource'
 import type { ResourceViewDetail } from './resource'
+import { useResourceHistory } from './resourceQuery'
 
-const store = useMessageStore()
-const { msg } = storeToRefs(store)
 const authService = useAuth()
 
 const route = useRoute()
 const router = useRouter()
 
-const isLoading = ref(true)
 const resourceId = route.params.id as string
-const histories = ref<ResourceViewDetail[]>([])
-
-const fetchData = async () => {
-    if (resourceId == undefined) {
-        return
-    }
-
-    isLoading.value = true
-    const { data, error } = await ResourceApiFactory().v1ResourceIdHistoryGet(resourceId)
-    isLoading.value = false
-    if (error) {
-        msg.value = {
-            errorMessages: [error.message],
-            delay: 3000,
-        }
-
-        return
-    }
-
-    histories.value = orderBy(data!, "version", "desc")
-}
-
-fetchData()
+const { isPending: isLoading, data: histories, } = useResourceHistory(resourceId)
 
 const dispalyTime = (history: ResourceViewDetail) => {
     var t = timeFormat(history.updated_at)
