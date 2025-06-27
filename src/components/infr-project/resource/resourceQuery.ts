@@ -39,10 +39,14 @@ export const useResourceHistory = (resourceId: string, alertError: boolean = tru
 }
 
 export const useResource = (resourceId: string, alertError: boolean = true) => {
+    const id = resourceId?.trim()
+    if (!id) {
+        return { isPending: ref<boolean>(false), data: ref<ResourceViewDetail>() }
+    }
     return useBaseQuery<ResourceViewDetail>(
         ['resource', resourceId],
         async () => {
-            const { data, error } = await ResourceApiFactory().v1ResourceIdGet(resourceId)
+            const { data, error } = await ResourceApiFactory().v1ResourceIdGet(id)
             if (error) throw error
             return data!
         },
