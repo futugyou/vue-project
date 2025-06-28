@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, onUnmounted, } from 'vue'
+import { ref, computed, onUnmounted, } from 'vue'
 import { formatContent } from '@/tools/textFormat'
 import { useMarkedMermaid } from '@/composables/useMarkedMermaid'
+import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const props = withDefaults(defineProps<{
     id: string,
@@ -12,7 +13,7 @@ const props = withDefaults(defineProps<{
 }>(), {
     id: "",
     data: "",
-    type: "",
+    type: "Markdown",
     imageData: "",
     showDrawio: true,
 })
@@ -24,7 +25,7 @@ const { renderedHtml } = useMarkedMermaid(
 
 let popupWindow: Window | null = null;
 const showDrawIO = () => {
-    if (props.data && props.showDrawio) {
+    if (props.data && props.showDrawio && props.type == "DrawIO") {
         sessionStorage.setItem('drawio-edit-value', props.data)
         popupWindow = window.open('/drawio?suffix=' + props.id, '_blank')
     }
@@ -42,24 +43,35 @@ onUnmounted(() => {
     sessionStorage.removeItem('drawio-edit-value')
 })
 
+const dialogVisible = ref(false)
+const openDialog = () => dialogVisible.value = true
+
 </script>
 
 <template>
     <v-sheet class="d-flex justify-space-around ma-3" v-if="imageData">
-        <v-img :width="300" aspect-ratio="16/9" cover :src="imageData" @click="showDrawIO"></v-img>
+        <v-img v-if="showDrawio" :aspect-ratio="16 / 9" cover :src="imageData" @click="showDrawIO" />
+        <v-img v-else :aspect-ratio="16 / 9" cover :src="imageData" @click="openDialog" />
     </v-sheet>
 
-    <v-sheet v-else-if="type == 'Markdown'">
-        <v-responsive :aspect-ratio="16 / 9">
-            <v-sheet class="markdown-body" v-html="renderedHtml"></v-sheet>
+    <v-sheet class="d-flex justify-space-around ma-3" @click="openDialog" v-else>
+        <v-responsive v-if="type === 'Markdown'" :aspect-ratio="16 / 9">
+            <v-sheet class="markdown-body" v-html="renderedHtml" />
         </v-responsive>
-    </v-sheet>
-
-    <v-sheet v-else>
-        <v-responsive :aspect-ratio="16 / 9" v-if="formatText">
+        <v-responsive v-else :aspect-ratio="16 / 9" v-if="formatText">
             <v-sheet>
                 <div class="text-body-1 word-break">{{ formatText }}</div>
             </v-sheet>
         </v-responsive>
     </v-sheet>
+
+    <v-dialog v-model="dialogVisible" max-width="90%" scrollable>
+        <v-card>
+            <v-card-text>
+                <v-img v-if="imageData" cover :src="imageData" />
+                <v-sheet v-else-if="type === 'Markdown'" class="markdown-body" v-html="renderedHtml" />
+                <div v-else class="text-body-1 word-break">{{ formatText }}</div>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>
