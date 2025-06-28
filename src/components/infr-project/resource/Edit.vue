@@ -103,7 +103,19 @@ const save = async () => {
         queryClient.invalidateQueries({ queryKey: ['resourceList'] })
         queryClient.invalidateQueries({ queryKey: ['resource', resourceId] })
         queryClient.invalidateQueries({ queryKey: ['resource-history', resourceId] })
-        cancel()
+        msg.value = {
+            errorMessages: ['The page will close in 3 seconds.'],
+            delay: 3000,
+        }
+
+        setTimeout(() => {
+            // why invalidateQueries again?
+            // Because the data of a and b comes from cqrs, it is best to wait a while before `invalidateQueries`.
+            // If strong consistency is required, it is best to poll the data and `invalidateQueries` after obtaining the latest data.
+            queryClient.invalidateQueries({ queryKey: ['resourceList'] })
+            queryClient.invalidateQueries({ queryKey: ['resource', resourceId] })
+            cancel()
+        }, 3000)
     }
 }
 
