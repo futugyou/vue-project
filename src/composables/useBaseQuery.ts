@@ -11,6 +11,7 @@ interface BaseQueryOptions<TData> extends Omit<UseQueryOptions<TData>, 'queryKey
     alertError?: boolean
     idbName: string
     idbStoreName: string
+    staleTime?: number
 }
 
 export const useBaseQuery = <TData>(

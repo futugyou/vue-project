@@ -18,6 +18,7 @@ export const useResources = (alertError: boolean = true) => {
             alertError,
             idbName: 'resource',
             idbStoreName: 'datas',
+            staleTime: 1000 * 60,
         }
     )
 }
@@ -54,6 +55,7 @@ export const useResource = (resourceId: string, alertError: boolean = true) => {
             alertError,
             idbName: 'resource',
             idbStoreName: 'datas',
+            staleTime: 1000 * 60,             
         }
     )
 }
