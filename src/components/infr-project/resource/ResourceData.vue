@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref, computed, onUnmounted, } from 'vue'
+import { toSvg } from 'html-to-image'
+
 import { formatContent } from '@/tools/textFormat'
 import { useMarkedMermaid } from '@/composables/useMarkedMermaid'
-import VuetifyModal from '@/common/VuetifyModal.vue'
 
 const props = withDefaults(defineProps<{
     id: string,
@@ -46,6 +47,21 @@ onUnmounted(() => {
 const dialogVisible = ref(false)
 const openDialog = () => dialogVisible.value = true
 
+const getResourceDataImage = async () => {
+    if (props.imageData) {
+        return props.imageData
+    }
+    var imageDom = document.getElementById('image-preview')
+    if (imageDom) {
+        var a = await toSvg(imageDom)
+        console.log(a)
+    }
+    return ""
+}
+
+defineExpose({
+    getResourceDataImage: getResourceDataImage,
+})
 </script>
 
 <template>
@@ -56,11 +72,11 @@ const openDialog = () => dialogVisible.value = true
 
     <v-sheet class="d-flex justify-space-around ma-3" @click="openDialog" v-else>
         <v-responsive v-if="type === 'Markdown'" :aspect-ratio="16 / 9">
-            <v-sheet class="markdown-body" v-html="renderedHtml" />
+            <v-sheet class="markdown-body" v-html="renderedHtml" id="image-preview" />
         </v-responsive>
         <v-responsive v-else :aspect-ratio="16 / 9" v-if="formatText">
             <v-sheet>
-                <div class="text-body-1 word-break">{{ formatText }}</div>
+                <div id="image-preview" class="text-body-1 word-break">{{ formatText }}</div>
             </v-sheet>
         </v-responsive>
     </v-sheet>
