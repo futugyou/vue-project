@@ -48,6 +48,7 @@ const DefaultResourceEditModel: ResourceEditModel = {
 
 const editModel = ref<ResourceEditModel>(DefaultResourceEditModel)
 const imagePreview = ref(false)
+const resourceDataRef = ref()
 const proxyModelRef = ref()
 
 const cancel = () => {
@@ -66,6 +67,10 @@ const save = async () => {
 
     isLoading.value = true
     let response
+    let imageData = editModel.value.imageData
+    if (!imageData) {
+        imageData = resourceDataRef.value?.getResourceDataImage() ?? ""
+    }
     if (resourceId.length == 0) {
         const r_type: unknown = editModel.value.type ?? ""
         const res_type = Object.values(ResourceTypeEnum).includes(r_type as ResourceTypeEnum)
@@ -75,7 +80,7 @@ const save = async () => {
             data: editModel.value.data,
             name: editModel.value.name,
             tags: editModel.value.tags,
-            imageData: editModel.value.imageData,
+            imageData: imageData,
             type: res_type,
         }
         response = await ResourceApiFactory().v1ResourcePost(request)
@@ -84,7 +89,7 @@ const save = async () => {
             data: editModel.value.data,
             name: editModel.value.name,
             tags: editModel.value.tags,
-            imageData: editModel.value.imageData,
+            imageData: imageData,
         }
         response = await ResourceApiFactory().v1ResourceIdPut(request, resourceId)
     }
@@ -232,8 +237,8 @@ const HandleResourceChanged = (text: string | string[], type: string) => {
                 </template>
             </v-confirm-edit>
 
-            <ResourceData :data="proxyModelRef.data" :type="proxyModelRef.type" :imageData="proxyModelRef.imageData"
-                :id="proxyModelRef.id" v-if="imagePreview && proxyModelRef">
+            <ResourceData ref="resourceDataRef" :data="proxyModelRef.data" :type="proxyModelRef.type"
+                :imageData="proxyModelRef.imageData" :id="proxyModelRef.id" v-if="imagePreview && proxyModelRef">
             </ResourceData>
         </v-card>
     </v-sheet>
