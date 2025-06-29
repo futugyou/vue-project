@@ -115,12 +115,12 @@ const save = async () => {
 
         setTimeout(() => {
             // why invalidateQueries again?
-            // Because the data of a and b comes from cqrs, it is best to wait a while before `invalidateQueries`.
+            // Because the data of resourceList and resource comes from cqrs, it is best to wait a while before `invalidateQueries`.
             // If strong consistency is required, it is best to poll the data and `invalidateQueries` after obtaining the latest data.
             queryClient.invalidateQueries({ queryKey: ['resourceList'] })
             queryClient.invalidateQueries({ queryKey: ['resource', resourceId] })
             cancel()
-        }, 3000)
+        }, 3000) // Assume that the backend can complete the cqrs process in 3 seconds
     }
 }
 
