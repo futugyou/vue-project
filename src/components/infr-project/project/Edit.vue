@@ -12,9 +12,7 @@ import { useAuth } from '@/plugins/auth'
 import { ProjectStateEnum } from './project'
 import type { CreateProjectRequest } from './project'
 import { ValidateManager } from '@/tools/validate'
-import { formatContent } from '@/tools/textFormat'
 import { useProject } from './projectQuery'
-import ResourceData from './ResourceData.vue'
 
 interface ProjectEditModel {
     id: string
@@ -48,7 +46,6 @@ const DefaultProjectEditModel: ProjectEditModel = {
 
 const { isPending: isLoading, data } = useProject(projectId)
 
-const imagePreview = ref(false)
 const proxyModelRef = ref()
 
 const cancel = () => {
@@ -61,7 +58,7 @@ const save = async () => {
     }
 }
 
-const editModel = ref<CreateProjectRequest>(DefaultProjectEditModel)
+const editModel = ref<ProjectEditModel>(DefaultProjectEditModel)
 
 const projectTypeOptions = computed(() =>
     Object.keys(ProjectStateEnum).map((key) => ({

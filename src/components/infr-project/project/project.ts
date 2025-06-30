@@ -134,7 +134,7 @@ export interface ProjectView {
      * @type {string}
      * @memberof ProjectView
      */
-    state: string
+    state: ProjectStateEnum
     /**
      * 
      * @type {Array<string>}
