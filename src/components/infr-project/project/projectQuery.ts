@@ -22,6 +22,10 @@ export const useProjects = (alertError: boolean = true) => {
 }
 
 export const useProject = (projectId: string, alertError: boolean = true) => {
+    const id = projectId?.trim()
+    if (!id) {
+        return { isPending: ref<boolean>(false), data: ref<ProjectView>() }
+    }
     return useBaseQuery<ProjectView>(
         ['project', projectId],
         async () => {
