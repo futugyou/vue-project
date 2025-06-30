@@ -19,9 +19,9 @@ updates:
       vercel:
         patterns:
         - "@vercel*"
-      vueuse:
+      tanstack:
         patterns:
-        - "@vueuse*"
+        - "@tanstack*"
         
   - package-ecosystem: "github-actions"
     directory: "/"
