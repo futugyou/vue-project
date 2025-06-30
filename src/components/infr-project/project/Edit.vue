@@ -90,17 +90,18 @@ const bindProxy = (proxy: any) => {
     return true
 }
 
-const HandleProjectChanged = (text: string | string[], type: string) => {
+const HandleProjectChanged = (text: any, type: string) => {
     if (proxyModelRef.value) {
         proxyModelRef.value[type] = text
     }
 }
+
 </script>
 
 <template>
     <v-sheet class="d-flex flex-column ga-3" height="100%">
         <Spinners v-if="isLoading"></Spinners>
-        <v-card class="h-100 pa-5 ga-5" v-if="!isLoading && authService.isAuthenticated()" style="overflow-y: auto;">
+        <v-card class="h-100 pa-5 ga-5" v-if="!isLoading" style="overflow-y: auto;">
             <v-confirm-edit v-model="editModel" @cancel="cancel" @save="save">
                 <template v-slot:default="{ model: proxyModel, actions }">
                     <v-text-field :ref="el => validateManager.setInputRef(el, 'id')" v-model="proxyModel.value.id"
@@ -116,12 +117,27 @@ const HandleProjectChanged = (text: string | string[], type: string) => {
                         :model-value="proxyModel.value.description"
                         @update:modelValue="value => HandleProjectChanged(value, 'description')"></v-textarea>
 
-
                     <v-select :ref="el => validateManager.setInputRef(el, 'state')"
                         :disabled="proxyModel.value.id != ''" :rules="validateManager.required('state')"
                         :model-value="proxyModel.value.state"
                         @update:modelValue="value => HandleProjectChanged(value, 'state')" class="mb-5"
                         :items="projectTypeOptions" label="state" item-value="value" item-title="label"></v-select>
+
+                    <v-sheet class="mb-4">
+                        <v-date-input prepend-icon="" prepend-inner-icon="$calendar" variant="solo"
+                            :ref="el => validateManager.setInputRef(el, 'start_date')"
+                            :rules="validateManager.required('start_date')" :model-value="proxyModel.value.start_date"
+                            @update:modelValue="value => HandleProjectChanged(value, 'start_date')"
+                            label="Select start date"></v-date-input>
+                    </v-sheet>
+
+                    <v-sheet class="mb-4">
+                        <v-date-input prepend-icon="" prepend-inner-icon="$calendar" variant="solo"
+                            :ref="el => validateManager.setInputRef(el, 'end_date')"
+                            :model-value="proxyModel.value.end_date"
+                            @update:modelValue="value => HandleProjectChanged(value, 'end_date')"
+                            label="Select end date"></v-date-input>
+                    </v-sheet>
 
                     <v-combobox label="Tags" chips multiple :hideDetails="false" :model-value="proxyModel.value.tags"
                         @update:modelValue="value => HandleProjectChanged(value, 'tags')"></v-combobox>
