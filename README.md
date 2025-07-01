@@ -60,3 +60,12 @@ depcheck
 [moveable](https://github.com/daybrush/moveable)
 
 [drawio embed](https://www.drawio.com/doc/faq/embed-mode)
+
+## use nvm install node
+
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.zshrc
+nvm install 22.16.0
+nvm use 22.16.0
+```
