@@ -1,20 +1,30 @@
 import moment from 'moment'
 
-export const timeFormat = (input: moment.MomentInput): string => {
-    var day = moment(input)
+const timeCheck = (input: moment.MomentInput): [moment.Moment | null, boolean] => {
+    const day = moment(input)
     if (!day.isValid()) {
+        return [null, false]
+    }
+    if (day.year() === 1 && day.month() === 0 && day.date() === 1) {
+        return [null, false]
+    }
+    return [day, true]
+}
+
+export const timeFormat = (input: moment.MomentInput): string => {
+    const [day, ok] = timeCheck(input)
+    if (!ok) {
         return "-"
     }
-    if (day.year() == 1 && day.month() == 0 && day.day() == 1) {
-        return "-"
-    }
-    return day.format('lll')
+
+    return day!.format('lll')
 }
 
 export const shortTimeFormat = (input: moment.MomentInput): string => {
-    var day = moment(input)
-    if (day.year() == 1 && day.month() == 0 && day.day() == 1) {
+    const [day, ok] = timeCheck(input)
+    if (!ok) {
         return "-"
     }
-    return day.format('L')
+
+    return day!.format('L')
 }
