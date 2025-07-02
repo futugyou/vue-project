@@ -47,6 +47,18 @@ export interface ProjectResource {
      * @memberof ProjectResource
      */
     resource_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectResource
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectResource
+     */
+    type?: string;
 }
 
 /**
