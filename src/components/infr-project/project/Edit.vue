@@ -45,12 +45,11 @@ const DefaultProjectEditModel: ProjectEditModel = {
 }
 
 const { isPending: isProjectPending, data } = useProject(projectId)
-const { isPending: isCreatePending, isError: isCreateError, mutate: createMutate } = useProjectCreate(true)
-const { isPending: isUpdatePending, isError: isUpdateError, mutate: updateMutate } = useProjectUpdate(true)
+const { isPending: isCreatePending, mutateAsync: createMutate } = useProjectCreate(true)
+const { isPending: isUpdatePending, mutateAsync: updateMutate } = useProjectUpdate(true)
 
 
 const isLoading = computed(() => isProjectPending.value || isCreatePending.value || isUpdatePending.value)
-const isError = computed(() => isCreateError.value || isCreateError.value)
 
 const proxyModelRef = ref()
 
@@ -64,6 +63,7 @@ const save = async () => {
     if (validateMsg.length > 0) {
         return
     }
+
     if (projectId.length == 0) {
         var create: CreateProjectRequest = {
             description: editModel.value.description,
@@ -73,9 +73,14 @@ const save = async () => {
             state: editModel.value.state,
             tags: editModel.value.tags
         }
-        createMutate(create)
+
+        try {
+            await createMutate(create)
+            queryClient.invalidateQueries({ queryKey: ['projectList'] })
+        } finally {
+        }
     } else {
-        updateMutate({
+        const update = {
             id: projectId, body: {
                 description: editModel.value.description,
                 end_date: editModel.value.end_date,
@@ -84,14 +89,14 @@ const save = async () => {
                 state: editModel.value.state,
                 tags: editModel.value.tags
             }
-        })
-        if (!isError.value) {
-            queryClient.invalidateQueries({ queryKey: ['project', projectId] })
         }
 
-    }
-    if (!isError.value) {
-        queryClient.invalidateQueries({ queryKey: ['projectList'] })
+        try {
+            await updateMutate(update)
+            queryClient.invalidateQueries({ queryKey: ['project', projectId] })
+            queryClient.invalidateQueries({ queryKey: ['projectList'] })
+        } finally {
+        }
     }
 }
 
