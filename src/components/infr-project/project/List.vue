@@ -6,7 +6,7 @@ import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useAuth } from '@/plugins/auth'
 
-import { useProjects } from './projectQuery'
+import { useProjects, useProjectCreate, useProjectUpdate } from './projectQuery'
 
 const authService = useAuth()
 const router = useRouter()
@@ -52,18 +52,20 @@ const createProject = () => {
                         <v-sheet class="d-flex flex-wrap ga-2">
                             <v-chip>
                                 <strong>{{ project.state }}</strong>&nbsp;
-                            </v-chip>  
+                            </v-chip>
                             <v-chip v-for="tag in project.tags">
                                 <strong>{{ tag }}</strong>&nbsp;
                             </v-chip>
                         </v-sheet>
 
-                        <v-divider></v-divider> 
-                        <v-divider></v-divider>
+                        <p class="mb-8">
+                            {{ project.description ?? "" }}
+                        </p>
 
-                        <div class="d-flex ga-2 justify-center">
-                            <v-chip>Start: {{ shortTimeFormat(project.start_date) }}</v-chip>
-                            <v-chip>End: {{ shortTimeFormat(project.end_date) }}</v-chip>
+                        <v-divider v-if="project.start_date || project.end_date"></v-divider>
+                        <div class="d-flex ga-2 justify-space-between" v-if="project.start_date || project.end_date">
+                            <v-chip v-if="project.start_date">Start: {{ shortTimeFormat(project.start_date) }}</v-chip>
+                            <v-chip v-if="project.end_date">End: {{ shortTimeFormat(project.end_date) }}</v-chip>
                         </div>
                     </v-card-text>
                 </v-card>
