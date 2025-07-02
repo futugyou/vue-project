@@ -41,9 +41,9 @@ export const useProject = (projectId: string, alertError: boolean = true) => {
     )
 }
 
-export const useProjectCreate = (project: CreateProjectRequest, alertError: boolean = true) => {
+export const useProjectCreate = (alertError: boolean = true) => {
     return useBaseMutation<CreateProjectRequest, ProjectView>(
-        async () => {
+        async (project: CreateProjectRequest) => {
             const { data, error } = await ProjectApiFactory().v1ProjectPost(project)
             if (error) throw error
             return data!
@@ -54,9 +54,9 @@ export const useProjectCreate = (project: CreateProjectRequest, alertError: bool
     )
 }
 
-export const useProjectUpdate = (id: string, body: UpdateProjectRequest, alertError: boolean = true) => {
-    return useBaseMutation<UpdateProjectRequest, ProjectView>(
-        async () => {
+export const useProjectUpdate = (alertError: boolean = true) => {
+    return useBaseMutation<{ id: string, body: UpdateProjectRequest }, ProjectView>(
+        async ({ id, body }) => {
             const { data, error } = await ProjectApiFactory().v1ProjectIdPut(body, id)
             if (error) throw error
             return data!
@@ -67,9 +67,9 @@ export const useProjectUpdate = (id: string, body: UpdateProjectRequest, alertEr
     )
 }
 
-export const useProjectPlatform = (id: string, body: Array<UpdateProjectPlatformRequest>, alertError: boolean = true) => {
-    return useBaseMutation<Array<UpdateProjectPlatformRequest>, ProjectView>(
-        async () => {
+export const useProjectPlatform = (alertError: boolean = true) => {
+    return useBaseMutation<{ id: string, body: Array<UpdateProjectPlatformRequest> }, ProjectView>(
+        async ({ id, body }) => {
             const { data, error } = await ProjectApiFactory().v1ProjectIdPlatformPut(body, id)
             if (error) throw error
             return data!
@@ -80,9 +80,9 @@ export const useProjectPlatform = (id: string, body: Array<UpdateProjectPlatform
     )
 }
 
-export const useProjectDesign = (id: string, body: Array<UpdateProjectDesignRequest>, alertError: boolean = true) => {
-    return useBaseMutation<Array<UpdateProjectDesignRequest>, ProjectView>(
-        async () => {
+export const useProjectDesign = (alertError: boolean = true) => {
+    return useBaseMutation<{ id: string, body: Array<UpdateProjectDesignRequest> }, ProjectView>(
+        async ({ id, body }) => {
             const { data, error } = await ProjectApiFactory().v1ProjectIdDesignPut(body, id)
             if (error) throw error
             return data!
