@@ -6,7 +6,7 @@ import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useAuth } from '@/plugins/auth'
 
-import { useProjects, useProjectCreate, useProjectUpdate } from './projectQuery'
+import { useProjects } from './projectQuery'
 
 const authService = useAuth()
 const router = useRouter()

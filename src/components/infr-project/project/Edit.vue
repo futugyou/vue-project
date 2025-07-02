@@ -12,7 +12,7 @@ import { useAuth } from '@/plugins/auth'
 import { ProjectStateEnum } from './project'
 import type { CreateProjectRequest } from './project'
 import { ValidateManager } from '@/tools/validate'
-import { useProject } from './projectQuery'
+import { useProject, useProjectCreate, useProjectUpdate } from './projectQuery'
 
 interface ProjectEditModel {
     id: string
@@ -44,21 +44,56 @@ const DefaultProjectEditModel: ProjectEditModel = {
     tags: []
 }
 
-const { isPending: isLoading, data } = useProject(projectId)
+const { isPending: isProjectPending, data } = useProject(projectId)
+const { isPending: isCreatePending, isError: isCreateError, mutate: createMutate } = useProjectCreate(true)
+const { isPending: isUpdatePending, isError: isUpdateError, mutate: updateMutate } = useProjectUpdate(true)
+
+
+const isLoading = computed(() => isProjectPending.value || isCreatePending.value || isUpdatePending.value)
+const isError = computed(() => isCreateError.value || isCreateError.value)
 
 const proxyModelRef = ref()
 
 const cancel = () => {
 }
 
+const editModel = ref<ProjectEditModel>(DefaultProjectEditModel)
+
 const save = async () => {
     const validateMsg = await validateManager.validateInputs()
     if (validateMsg.length > 0) {
         return
     }
-}
+    if (projectId.length == 0) {
+        var create: CreateProjectRequest = {
+            description: editModel.value.description,
+            end_date: editModel.value.end_date,
+            name: editModel.value.name,
+            start_date: editModel.value.start_date,
+            state: editModel.value.state,
+            tags: editModel.value.tags
+        }
+        createMutate(create)
+    } else {
+        updateMutate({
+            id: projectId, body: {
+                description: editModel.value.description,
+                end_date: editModel.value.end_date,
+                name: editModel.value.name,
+                start_date: editModel.value.start_date,
+                state: editModel.value.state,
+                tags: editModel.value.tags
+            }
+        })
+        if (!isError.value) {
+            queryClient.invalidateQueries({ queryKey: ['project', projectId] })
+        }
 
-const editModel = ref<ProjectEditModel>(DefaultProjectEditModel)
+    }
+    if (!isError.value) {
+        queryClient.invalidateQueries({ queryKey: ['projectList'] })
+    }
+}
 
 const projectTypeOptions = computed(() =>
     Object.keys(ProjectStateEnum).map((key) => ({
