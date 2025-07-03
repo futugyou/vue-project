@@ -62,10 +62,10 @@ const createProject = () => {
                             {{ project.description ?? "" }}
                         </p>
 
-                        <v-divider v-if="project.start_date || project.end_date"></v-divider>
-                        <div class="d-flex ga-2 justify-space-between" v-if="project.start_date || project.end_date">
-                            <v-chip v-if="project.start_date">Start: {{ shortTimeFormat(project.start_date) }}</v-chip>
-                            <v-chip v-if="project.end_date">End: {{ shortTimeFormat(project.end_date) }}</v-chip>
+                        <v-divider v-if="project.start_time || project.end_time"></v-divider>
+                        <div class="d-flex ga-2 justify-space-between" v-if="project.start_time || project.end_time">
+                            <v-chip v-if="project.start_time">Start: {{ shortTimeFormat(project.start_time) }}</v-chip>
+                            <v-chip v-if="project.end_time">End: {{ shortTimeFormat(project.end_time) }}</v-chip>
                         </div>
                     </v-card-text>
                 </v-card>

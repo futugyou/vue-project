@@ -116,7 +116,7 @@ export interface ProjectView {
      * @type {string}
      * @memberof ProjectView
      */
-    end_date: string
+    end_time: string
     /**
      * 
      * @type {string}
@@ -140,7 +140,7 @@ export interface ProjectView {
      * @type {string}
      * @memberof ProjectView
      */
-    start_date: string
+    start_time: string
     /**
      * 
      * @type {string}
@@ -230,7 +230,7 @@ export interface UpdateProjectRequest {
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    end_date: string
+    end_time: string
     /**
      * 
      * @type {string}
@@ -242,7 +242,7 @@ export interface UpdateProjectRequest {
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    start_date: string
+    start_time: string
     /**
      * 
      * @type {string}
@@ -284,7 +284,7 @@ export interface CreateProjectRequest {
      * @type {string}
      * @memberof CreateProjectRequest
      */
-    end_date: string
+    end_time: string
     /**
      * 
      * @type {string}
@@ -296,7 +296,7 @@ export interface CreateProjectRequest {
      * @type {string}
      * @memberof CreateProjectRequest
      */
-    start_date: string
+    start_time: string
     /**
      * 
      * @type {string}

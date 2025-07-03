@@ -19,8 +19,8 @@ interface ProjectEditModel {
     name: string
     tags: Array<string>
     description: string,
-    end_date: string,
-    start_date: string,
+    end_time: string,
+    start_time: string,
     state: ProjectStateEnum,
 }
 
@@ -37,9 +37,9 @@ const projectId = (route.query.id ?? "") as string
 const DefaultProjectEditModel: ProjectEditModel = {
     id: projectId,
     description: "",
-    end_date: "",
+    end_time: "",
     name: "",
-    start_date: "",
+    start_time: "",
     state: ProjectStateEnum.Preparing,
     tags: []
 }
@@ -67,9 +67,9 @@ const save = async () => {
     if (projectId.length == 0) {
         var create: CreateProjectRequest = {
             description: editModel.value.description,
-            end_date: editModel.value.end_date,
+            end_time: editModel.value.end_time,
             name: editModel.value.name,
-            start_date: editModel.value.start_date,
+            start_time: editModel.value.start_time,
             state: editModel.value.state,
             tags: editModel.value.tags
         }
@@ -83,9 +83,9 @@ const save = async () => {
         const update = {
             id: projectId, body: {
                 description: editModel.value.description,
-                end_date: editModel.value.end_date,
+                end_time: editModel.value.end_time,
                 name: editModel.value.name,
-                start_date: editModel.value.start_date,
+                start_time: editModel.value.start_time,
                 state: editModel.value.state,
                 tags: editModel.value.tags
             }
@@ -162,17 +162,17 @@ const HandleProjectChanged = (text: any, type: string) => {
 
                     <v-sheet class="mb-4">
                         <v-date-input prepend-icon="" prepend-inner-icon="$calendar" variant="solo"
-                            :ref="el => validateManager.setInputRef(el, 'start_date')"
-                            :rules="validateManager.required('start_date')" :model-value="proxyModel.value.start_date"
-                            @update:modelValue="value => HandleProjectChanged(value, 'start_date')"
+                            :ref="el => validateManager.setInputRef(el, 'start_time')"
+                            :rules="validateManager.required('start_time')" :model-value="proxyModel.value.start_time"
+                            @update:modelValue="value => HandleProjectChanged(value, 'start_time')"
                             label="Select start date"></v-date-input>
                     </v-sheet>
 
                     <v-sheet class="mb-4">
                         <v-date-input prepend-icon="" prepend-inner-icon="$calendar" variant="solo"
-                            :ref="el => validateManager.setInputRef(el, 'end_date')"
-                            :model-value="proxyModel.value.end_date"
-                            @update:modelValue="value => HandleProjectChanged(value, 'end_date')"
+                            :ref="el => validateManager.setInputRef(el, 'end_time')"
+                            :model-value="proxyModel.value.end_time"
+                            @update:modelValue="value => HandleProjectChanged(value, 'end_time')"
                             label="Select end date"></v-date-input>
                     </v-sheet>
 

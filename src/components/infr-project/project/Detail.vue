@@ -41,7 +41,7 @@ onMounted(() => {
           </v-col>
           <v-col cols="12" md="6">
             <strong>Start and end time:</strong>
-            {{ project.start_date }} ~ {{ project.end_date }}
+            {{ project.start_time }} ~ {{ project.end_time }}
           </v-col>
 
           <v-col cols="12">
