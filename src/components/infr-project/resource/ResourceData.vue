@@ -65,12 +65,12 @@ defineExpose({
 </script>
 
 <template>
-    <v-sheet class="d-flex justify-space-around ma-3" v-if="imageData">
+    <v-sheet class="d-flex justify-space-around ma-3 cursor-zoom-in" v-if="imageData">
         <v-img v-if="showDrawio" :aspect-ratio="16 / 9" cover :src="imageData" @click="showDrawIO" />
         <v-img v-else :aspect-ratio="16 / 9" cover :src="imageData" @click="openDialog" />
     </v-sheet>
 
-    <v-sheet class="d-flex justify-space-around ma-3" @click="openDialog" v-else>
+    <v-sheet class="d-flex justify-space-around ma-3 cursor-zoom-in" @click="openDialog" v-else>
         <v-responsive v-if="type === 'Markdown'" :aspect-ratio="16 / 9">
             <v-sheet class="markdown-body" v-html="renderedHtml" id="image-preview" />
         </v-responsive>
@@ -81,8 +81,8 @@ defineExpose({
         </v-responsive>
     </v-sheet>
 
-    <v-dialog v-model="dialogVisible" max-width="90%" scrollable>
-        <v-card>
+    <v-dialog v-model="dialogVisible" max-width="90%" scrollable :closeOnContentClick="true" :persistent="true">
+        <v-card class="cursor-zoom-out">
             <v-card-text>
                 <v-img v-if="imageData" cover :src="imageData" />
                 <v-sheet v-else-if="type === 'Markdown'" class="markdown-body" v-html="renderedHtml" />
