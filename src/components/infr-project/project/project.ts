@@ -23,42 +23,16 @@ export interface ProjectDesign {
     name: string
     /**
      * 
-     * @type {Array<ProjectResource>}
+     * @type {string}
      * @memberof ProjectDesign
      */
-    resources: Array<ProjectResource>
-}
-
-/**
- * 
- * @export
- * @interface ProjectResource
- */
-export interface ProjectResource {
+    resource_id: string
     /**
      * 
-     * @type {string}
-     * @memberof ProjectResource
+     * @type {number}
+     * @memberof ProjectDesign
      */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectResource
-     */
-    resource_id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectResource
-     */
-    description?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectResource
-     */
-    type?: string;
+    resource_version: number
 }
 
 /**
@@ -175,10 +149,16 @@ export interface UpdateProjectDesignRequest {
     name: string
     /**
      * 
-     * @type {Array<ProjectResource>}
+     * @type {string}
      * @memberof UpdateProjectDesignRequest
      */
-    resources: Array<ProjectResource>
+    resource_id: string
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateProjectDesignRequest
+     */
+    resource_version: number
 }
 
 /**

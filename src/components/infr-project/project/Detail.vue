@@ -66,21 +66,8 @@ onMounted(() => {
                   <v-list-item>
                     <v-list-item-title>{{ design.name }}</v-list-item-title>
                     <v-list-item-subtitle>{{ design.description }}</v-list-item-subtitle>
+                    <!-- resource_id / resource_version -->
                   </v-list-item>
-
-                  <v-divider class="my-2" />
-
-                  <v-list dense>
-                    <v-list-item v-for="(res, rIndex) in design.resources" :key="'res-' + rIndex">
-                      <template v-slot:prepend>
-                        <v-icon icon="md:docs" v-if="res.type === 'doc'"></v-icon>
-                        <v-icon icon="md:image" v-else> </v-icon>
-                      </template>
-
-                      <v-list-item-title>{{ res.name }}</v-list-item-title>
-                      <v-list-item-subtitle v-if="res.description">{{ res.description }}</v-list-item-subtitle>
-                    </v-list-item>
-                  </v-list>
                 </v-card>
               </v-col>
             </v-row>
