@@ -45,7 +45,7 @@
     "xstate": "^5.20.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.54.0",
+    "@playwright/test": "^1.54.1",
     "@tsconfig/node18": "^18.2.4",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash-es": "^4.17.12",
