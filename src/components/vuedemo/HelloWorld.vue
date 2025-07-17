@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SearchBox from '@/common/SearchBox.vue'
 </script>
 
 <template>
@@ -9,6 +10,7 @@
             <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>. What's next?
         </h3>
     </div>
+    <SearchBox></SearchBox>
 </template>
 
 <style scoped>
@@ -29,7 +31,6 @@ h3 {
 }
 
 @media (min-width: 1024px) {
-
     .greetings h1,
     .greetings h3 {
         text-align: left;
