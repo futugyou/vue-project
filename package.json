@@ -60,6 +60,6 @@
     "typescript": "~5.8.3",
     "vite": "^7.0.5",
     "vite-plugin-top-level-await": "^1.6.0",
-    "vue-tsc": "^3.0.2"
+    "vue-tsc": "^3.0.3"
   }
 }
