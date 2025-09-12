@@ -10,7 +10,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@googleworkspace/drive-picker-element": "^0.6.1",
+    "@googleworkspace/drive-picker-element": "^0.6.2",
     "@honeycombio/opentelemetry-web": "^1.0.2",
     "@opentelemetry/auto-instrumentations-web": "^0.51.0",
     "@tanstack/query-persist-client-core": "^5.87.4",
