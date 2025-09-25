@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@googleworkspace/drive-picker-element": "^0.6.2",
-    "@honeycombio/opentelemetry-web": "^1.0.2",
+    "@honeycombio/opentelemetry-web": "^1.0.3",
     "@opentelemetry/auto-instrumentations-web": "^0.51.0",
     "@tanstack/query-persist-client-core": "^5.90.2",
     "@tanstack/vue-query": "^5.90.2",
