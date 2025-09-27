@@ -22,6 +22,9 @@ updates:
       tanstack:
         patterns:
         - "@tanstack*"
+      grafana:
+        patterns:
+        - "@grafana*"
         
   - package-ecosystem: "github-actions"
     directory: "/"

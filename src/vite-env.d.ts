@@ -23,6 +23,7 @@ interface ImportMetaEnv {
     readonly VUE_APP_TOKEN: string
     readonly VUE_APP_GOOGLE_CLIENT_ID: string
     readonly VUE_APP_GOOGLE_APP_ID: string
+    readonly VUE_APP_GRAFANA_CLOUD_URL: string
 }
 
 interface ImportMeta {

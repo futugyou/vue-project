@@ -11,6 +11,9 @@ import { router, clearRouter } from './router'
 import { handleMicroData } from '@/tools/baseAppEvent'
 import { registerPlugins } from './plugins'
 import { registerDirectives } from './directives'
+
+import { initFaro } from './plugins/grafana'
+
 // @ts-ignore
 import App from './App.vue'
 
@@ -19,9 +22,10 @@ import '@googleworkspace/drive-picker-element'
 let app: AppInstance | null = null
 
 const mount = () => {
+    initFaro()
     app = createApp(App)
     app.use(router!)
-    
+
     registerPlugins(app)
     registerDirectives(app)
 

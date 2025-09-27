@@ -23,7 +23,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) =>
+          isCustomElement: (tag: any) =>
             /^micro-app/.test(tag) || tag.startsWith('drive-picker'),
         },
       },
@@ -41,7 +41,9 @@ export default defineConfig({
     }
   },
   server: {
+    host: '0.0.0.0',
     port: 8080,
+    allowedHosts: [".cloudstudio.work"],
     cors: {
       origin: "*",
       methods: "*",

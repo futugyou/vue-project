@@ -19,7 +19,7 @@
                 },
                 {
                     "key": "Access-Control-Allow-Headers",
-                    "value": "traceparent, Accept, Origin, Content-Type, Content-Length, Accept-Encoding, Authorization, X-CSRF-Token, x-requested-with, account-id"
+                    "value": "traceparent, Accept, Origin, Content-Type, Content-Length, Accept-Encoding, Authorization, X-CSRF-Token, x-requested-with, account-id, x-faro-session-id"
                 },
                 {
                     "key": "Access-Control-Expose-Headers",
