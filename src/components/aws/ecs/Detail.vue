@@ -53,8 +53,8 @@ const compareDefinitions = async () => {
     compareTaskDefinitions.value = []
     let model: EcsTaskCompare = {
         Id: ecsServiceDetail.value.id,
-        source_task_arn: checkedTaskDefinitions.value[0],
-        dest_task_arn: checkedTaskDefinitions.value[1]
+        source_task_arn: checkedTaskDefinitions.value[0]!,
+        dest_task_arn: checkedTaskDefinitions.value[1]!
     }
 
     dialog.value = true

@@ -102,7 +102,7 @@ const getBreadcrumbText = (key: string) => {
         return ""
     }
 
-    return s[s.length - 1]
+    return s[s.length - 1]!
 }
 
 const showSubResource = async (r: S3BucketItem) => {
@@ -137,7 +137,7 @@ const openFile = async (r: S3BucketItem) => {
 const handleBreadcrumbClick = (key: string) => {
     let tmp: BreadcrumbItem[] = []
     for (let index = 0; index < itemPerfix.value.length; index++) {
-        const element = itemPerfix.value[index]
+        const element = itemPerfix.value[index]!
         tmp.push(element)
         if (element.key == key) {
             break

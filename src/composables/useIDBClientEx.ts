@@ -143,7 +143,7 @@ export const useIDBClient = (
             if (storeName && storeName !== stores[0]) {
                 console.warn(`[useIDBClient] Specified storeName "${storeName}" ignored as only a single store "${stores[0]}" is configured.`)
             }
-            return stores[0]
+            return stores[0]!
         }
         if (!storeName) {
             throw new Error(`[useIDBClient] Must specify store name when using multiple stores: ${stores.join(', ')}`)

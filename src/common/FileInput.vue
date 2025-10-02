@@ -51,7 +51,7 @@ const handlerFile = (fileList: FileList) => {
     if (Accept.value && Accept.value != "*") {
         const supportedMimeTypes = Accept.value.split(",")
         for (let i = 0; i < fileList.length; i++) {
-            const file = fileList[i]
+            const file = fileList[i]!
             if (!supportedMimeTypes.includes(file.type)) {
                 msg.value = {
                     errorMessages: ["file type Must " + Accept.value],

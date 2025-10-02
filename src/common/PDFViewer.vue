@@ -1,4 +1,3 @@
-
 <script lang="ts" setup>
 import { ref, watchEffect, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
@@ -53,9 +52,9 @@ const onFileChange = (fileList: FileList) => {
         return
     }
 
-    const file = fileList[0]
+    const file = fileList[0]!
     const extension = file.name.split('.')[1]
-    pagePrefix.value = file.name.split('.')[0]
+    pagePrefix.value = file.name.split('.')[0]!
 
     if (extension !== 'pdf') {
         alert('Please select a PDF file')
@@ -179,7 +178,7 @@ const readPDFRawPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number
 
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D
     const transform = outputScale.value !== 1 ? [outputScale.value, 0, 0, outputScale.value, 0, 0] as any[] : undefined
-    await page.render({ canvasContext: ctx, transform, viewport, }).promise
+    await page.render({ canvasContext: ctx, transform, viewport, canvas: canvas }).promise
 }
 
 const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
@@ -196,7 +195,7 @@ const readAllTextContent = async (pdf: pdfjsLib.PDFDocumentProxy) => {
 
         let pageTextContent = ""
         for (let ii = 0; ii < content.items.length; ii++) {
-            const element = content.items[ii]
+            const element = content.items[ii]!
             if ('str' in element) {
                 pageTextContent += element.str
                 if (element.hasEOL) {
@@ -292,35 +291,35 @@ defineExpose({
     currentPage: currentPage,
     extractedText,
 })
-    // const pdfTask = pdfjsLib.getDocument(url)
-    // const pdf = await pdfTask.promise
-    // let textContent = []
-    // const maxPages = pdf.numPages
-    // for (let i = 1; i <= maxPages; i++) {
-    //     const page = await pdf.getPage(i)
-    //     const operatorList = await page.getOperatorList()
-    //     const fns = operatorList.fnArray
-    //     const args = operatorList.argsArray
-    //     args.forEach((arg, i) => {
-    //         if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return }
-    //         const imgKey = arg[0]
+// const pdfTask = pdfjsLib.getDocument(url)
+// const pdf = await pdfTask.promise
+// let textContent = []
+// const maxPages = pdf.numPages
+// for (let i = 1; i <= maxPages; i++) {
+//     const page = await pdf.getPage(i)
+//     const operatorList = await page.getOperatorList()
+//     const fns = operatorList.fnArray
+//     const args = operatorList.argsArray
+//     args.forEach((arg, i) => {
+//         if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return }
+//         const imgKey = arg[0]
 
-    //         page.objs.get(imgKey, async (img: any) => {
-    //             const canvas = await imageBitmapToCanvas(img.bitmap)
-    //             const rootElement = document.getElementById('area') as HTMLElement
-    //             rootElement.replaceChildren(canvas)
+//         page.objs.get(imgKey, async (img: any) => {
+//             const canvas = await imageBitmapToCanvas(img.bitmap)
+//             const rootElement = document.getElementById('area') as HTMLElement
+//             rootElement.replaceChildren(canvas)
 
-    //             const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"], format: "a4", orientation: "portrait" })
-    //             const pageWidth = doc.internal.pageSize.getWidth()
-    //             console.log(pageWidth, img.width)
-    //             const a = pageWidth * 0.88
-    //             const b = pageWidth * 0.88 / img.width * img.height
-    //             doc.text("Hello world!", 10, 10)
-    //             doc.addImage({ imageData: canvas, x: pageWidth * 0.06, y: 20, width: a, height: b })
-    //             doc.save("a4.pdf")
-    //         })
-    //     })
-    // }
+//             const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"], format: "a4", orientation: "portrait" })
+//             const pageWidth = doc.internal.pageSize.getWidth()
+//             console.log(pageWidth, img.width)
+//             const a = pageWidth * 0.88
+//             const b = pageWidth * 0.88 / img.width * img.height
+//             doc.text("Hello world!", 10, 10)
+//             doc.addImage({ imageData: canvas, x: pageWidth * 0.06, y: 20, width: a, height: b })
+//             doc.save("a4.pdf")
+//         })
+//     })
+// }
 // }
 
 </script>
@@ -333,8 +332,8 @@ defineExpose({
             </div>
             <div class="header-option-group" style="justify-content: center;">
                 <div>
-                    <input flag type="number" min="1" :max="totalPages" :value="currentPage" @change="onCurrentPageChange"
-                        :disabled="loading" />
+                    <input flag type="number" min="1" :max="totalPages" :value="currentPage"
+                        @change="onCurrentPageChange" :disabled="loading" />
                 </div>
                 <div>
                     <label style="line-height: 32px;">/ totals : {{ totalPages }}</label>
@@ -391,7 +390,7 @@ defineExpose({
         </div>
     </div>
 </template>
-  
+
 <style scoped>
 .full-content {
     height: 100%;

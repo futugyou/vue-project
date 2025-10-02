@@ -108,8 +108,8 @@ const compareParameter = async () => {
     dialog.value = true
     subLoading.value = true
     compareParameterDatas.value = []
-    const sourceid = checkedParameters.value[0]
-    const destid = checkedParameters.value[1]
+    const sourceid = checkedParameters.value[0]!
+    const destid = checkedParameters.value[1]!
     const { data, error } = await getParameterCompare(sourceid, destid)
     subLoading.value = false
 

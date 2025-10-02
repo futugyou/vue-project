@@ -91,7 +91,7 @@ const inputeChange = async (event: Event) => {
         return
     }
 
-    const d = r.sort((a, b) => b.score - a.score)[0]
+    const d = r.sort((a, b) => b.score - a.score)[0]!
     if (d.isTranslationSupported) {
         from.value = d.language
     }
@@ -132,7 +132,7 @@ const makeTranslateModel = (t: string, single: boolean) => {
 
     for (let i = 0; i < reg.length; i++) {
         model.push({
-            Text: reg[i].trim(),
+            Text: reg[i]!.trim(),
             Translation: ''
         })
     }
@@ -149,7 +149,7 @@ watchEffect(async () => {
 
     const r = data as LanguageListModel
     for (const key in r.translation) {
-        const value = r.translation[key]
+        const value = r.translation[key]!
         if (!langItems.value[key]) {
             langItems.value[key] = value.name
         }

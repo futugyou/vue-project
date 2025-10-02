@@ -80,7 +80,7 @@ const save = async () => {
         if ("vaults" in data) {
             const vaultView = data as CreateVaultsResponse
             if (vaultView.vaults.length > 0) {
-                emit('save', vaultView.vaults[0])
+                emit('save', vaultView.vaults[0]!)
             }
         } else {
             const vaultView = data as VaultView

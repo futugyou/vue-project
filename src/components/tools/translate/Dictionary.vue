@@ -62,12 +62,12 @@ watch(
         let d = data as DictionaryLookupModel[]
         let modelExamples: TranslateModel[] = []
         for (let i = 0; i < d.length; i++) {
-            const dic = d[i]
+            const dic = d[i]!
             for (let j = 0; j < dic.translations.length; j++) {
-                const trans = dic.translations[j]
+                const trans = dic.translations[j]!
                 let subExamples: TranslateModel[] = []
                 for (let l = 0; l < trans.backTranslations.length; l++) {
-                    const back = trans.backTranslations[l]
+                    const back = trans.backTranslations[l]!
                     subExamples.push({
                         "Text": back.normalizedText,
                         "Translation": trans.normalizedTarget,
@@ -92,11 +92,11 @@ watch(
         }
 
         for (let i = 0; i < d.length; i++) {
-            const dic = d[i]
+            const dic = d[i]!
             for (let j = 0; j < dic.translations.length; j++) {
-                const trans = dic.translations[j]
+                const trans = dic.translations[j]!
                 for (let l = 0; l < trans.backTranslations.length; l++) {
-                    const back = trans.backTranslations[l]
+                    const back = trans.backTranslations[l]!
                     const example = (examples as DictionaryExampleModel[])
                         .find(p => p.normalizedSource == back.normalizedText
                             && p.normalizedTarget == trans.normalizedTarget)

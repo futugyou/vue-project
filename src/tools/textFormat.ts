@@ -44,7 +44,7 @@ export const formatContent = (str: string): { format: string, formatted: string 
         const parser = new XMLParser({ ignoreAttributes: false, trimValues: true, })
         const obj = parser.parse(str)
         const keys = Object.keys(obj)
-        const hasSingleRoot = keys.length === 1 && typeof obj[keys[0]] === 'object'
+        const hasSingleRoot = keys.length === 1 && typeof obj[keys[0]!] === 'object'
         const looksLikeXML = str.trim().startsWith('<') && str.trim().endsWith('>') && hasSingleRoot
         if (looksLikeXML) {
             const builder = new XMLBuilder({

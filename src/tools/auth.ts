@@ -119,7 +119,7 @@ export class AuthService<TIDToken = JWTIDToken> {
             return null
         }
 
-        const pairs = split[1].split('&')
+        const pairs = split[1]!.split('&')
         for (const pair of pairs) {
             const [key, value] = pair.split('=')
             if (key === 'code') {

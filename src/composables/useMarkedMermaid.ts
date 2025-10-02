@@ -48,8 +48,8 @@ const createMermaidMarkedExtension = (config?: MermaidConfig): MarkedExtension =
             tokenizer(src: string, _tokens: TokensList): MermaidToken | void {
                 const match = mermaidReg.exec(src)
                 if (match) {
-                    const code = match[1]
-                    const raw = match[0]
+                    const code = match[1]!
+                    const raw = match[0]!
                     return {
                         type: 'mermaid',
                         raw,

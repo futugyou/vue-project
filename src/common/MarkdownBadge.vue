@@ -6,7 +6,7 @@ const props = defineProps({
 })
 
 interface ExtractedData {
-    url: string
+    url?: string
     link?: string
     alt?: string
     type: number

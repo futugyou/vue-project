@@ -119,6 +119,7 @@ export const flattenObject = (obj: Record<string, any>, parentKey = '', result: 
 }
 
 export const Uint8ArrayToURL = (uint8Array: Uint8Array): string => {
-    const blob = new Blob([uint8Array], { type: 'image/png' })
-    return URL.createObjectURL(blob)
+    const arr = Uint8Array.from(uint8Array);
+    const blob = new Blob([arr], { type: 'image/png' });
+    return URL.createObjectURL(blob);
 }

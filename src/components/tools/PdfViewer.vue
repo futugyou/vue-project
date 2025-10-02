@@ -53,7 +53,7 @@ const translate = async () => {
     let model: TranslateModel[] = []
     for (let i = 0; i < reg.length; i++) {
         model.push({
-            Text: reg[i],
+            Text: reg[i]!,
             Translation: ''
         })
     }

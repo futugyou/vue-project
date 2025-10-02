@@ -166,7 +166,7 @@ const onFileChange = async (fileList: FileList) => {
                 .filter(line => line.trim() && !line.startsWith('#'))
                 .reduce((acc, line) => {
                     const [key, ...value] = line.split('=')
-                    acc[key.trim()] = value.join('=').trim()
+                    acc[key!.trim()] = value.join('=').trim()
                     return acc;
                 }, {} as Record<string, string>)
         }
