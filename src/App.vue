@@ -4,17 +4,8 @@ import type { Component } from 'vue'
 
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
-import SidebarMenu from '@/common/SidebarMenu.vue'
+import SidebarMenuForSubApp from '@/common/SidebarMenuForSubApp.vue'
 import User from "@/components/user/user.vue"
-
-import IconECSService from '@/icons/ECSService.vue'
-import IconSSM from '@/icons/SSM.vue'
-import IconIAMUser from '@/icons/IAMUser.vue'
-import IconS3Bucket from '@/icons/S3Bucket.vue'
-import IconHome from '@/icons/Home.vue'
-import IconPdf from '@/icons/Pdf.vue'
-import IconOrc from '@/icons/Scan.vue'
-import IconTranslate from '@/icons/Translate.vue'
 
 import { handleGlobalData } from '@/tools/baseAppEvent'
 
@@ -35,41 +26,6 @@ const onRouteChange = () => {
     handleGlobalData()
 }
 
-const SidebarMenuItems = [{
-    route: "/",
-    label: "Home",
-    icon: IconHome,
-}, {
-    route: "/pdf",
-    label: "Pdf",
-    icon: IconPdf,
-}, {
-    route: "/ocr",
-    label: "Ocr",
-    icon: IconOrc,
-}, {
-    route: "/translate",
-    label: "Translate",
-    icon: IconTranslate,
-}, {
-    route: "/account",
-    label: "Account",
-    icon: IconIAMUser,
-}, {
-    route: "/parameter",
-    label: "Parameter",
-    icon: IconSSM,
-}, {
-    route: "/ecs",
-    label: "Ecs Service",
-    icon: IconECSService,
-}, {
-    route: "/s3",
-    label: "S3Bucket",
-    icon: IconS3Bucket,
-},
-]
-
 watchEffect(() => {
     if (window.__MICRO_APP_ENVIRONMENT__) {
         rootContainer.value = "subAppRootContainer"
@@ -88,6 +44,7 @@ const componentDic: Record<string, Component> = {
 const components = shallowRef(componentDic)
 
 const isSidebarOpen = shallowRef<Boolean>(false)
+
 </script>
 
 <template>
@@ -111,7 +68,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
             v-if="rootContainer == 'subAppRootContainer'"></v-fab>
         <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
             v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
-            <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
+            <SidebarMenuForSubApp />
         </v-navigation-drawer>
 
         <v-main height="100%">
