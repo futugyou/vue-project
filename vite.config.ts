@@ -9,6 +9,7 @@ const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '')
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "./",
   envPrefix: "VUE_APP_",
   build: {
     target: 'esnext',
