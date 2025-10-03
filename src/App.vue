@@ -4,7 +4,7 @@ import type { Component } from 'vue'
 
 import TabContainer from '@/common/TabContainer.vue'
 import Alert from '@/common/Alert.vue'
-import SidebarMenuForSubApp from '@/common/SidebarMenuForSubApp.vue'
+import SidenavForSubApp from '@/common/SidenavForSubApp.vue'
 import User from "@/components/user/user.vue"
 
 import { handleGlobalData } from '@/tools/baseAppEvent'
@@ -68,7 +68,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
             v-if="rootContainer == 'subAppRootContainer'"></v-fab>
         <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
             v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
-            <SidebarMenuForSubApp />
+            <SidenavForSubApp />
         </v-navigation-drawer>
 
         <v-main height="100%">

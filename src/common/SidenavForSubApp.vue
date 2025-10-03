@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef, watch } from 'vue'
 
-import SidebarMenu from '@/common/SidebarMenu.vue'
+import Sidenav from '@/common/Sidenav.vue'
 import IconECSService from '@/icons/ECSService.vue'
 import IconSSM from '@/icons/SSM.vue'
 import IconIAMUser from '@/icons/IAMUser.vue'
@@ -11,7 +11,7 @@ import IconPdf from '@/icons/Pdf.vue'
 import IconOrc from '@/icons/Scan.vue'
 import IconTranslate from '@/icons/Translate.vue'
 
-const SidebarMenuItems = [{
+const SidenavItems = [{
     route: "/",
     label: "Home",
     icon: IconHome,
@@ -49,7 +49,7 @@ const SidebarMenuItems = [{
 </script>
 
 <template>
-    <SidebarMenu class="subappsidebar" :items="SidebarMenuItems" />
+    <Sidenav class="subappsidebar" :items="SidenavItems" />
 </template>
 
 <style scoped></style>
