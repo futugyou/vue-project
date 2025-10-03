@@ -123,3 +123,14 @@ export const Uint8ArrayToURL = (uint8Array: Uint8Array): string => {
     const blob = new Blob([arr], { type: 'image/png' });
     return URL.createObjectURL(blob);
 }
+
+export const isPublic = String(import.meta.env.VUE_APP_PUBLIC_AVAILABILITY).toLowerCase() === "true";
+
+export const INFR_PROJECT_BASE_PATH = isPublic ? import.meta.env.VUE_APP_PUBLIC_INFR_PROJECT_SERVER.replace(/\/+$/, "") : import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
+export const AWS_BASE_PATH = isPublic ? import.meta.env.VUE_APP_PUBLIC_AWS_SERVER.replace(/\/+$/, "") : import.meta.env.VUE_APP_AWS_SERVER.replace(/\/+$/, "")
+
+export const AUTH_CLIENT_ID = isPublic ? import.meta.env.VUE_APP_PUBLIC_CLIENT_ID : import.meta.env.VUE_APP_CLIENT_ID
+export const AUTH_PROVIDER = isPublic ? import.meta.env.VUE_APP_PUBLIC_PROVIDER : import.meta.env.VUE_APP_PROVIDER
+export const AUTH_ENDPOINT = isPublic ? import.meta.env.VUE_APP_PUBLIC_AUTHORIZE : import.meta.env.VUE_APP_AUTHORIZE
+export const AUTH_TOKEN_ENDPOINT = isPublic ? import.meta.env.VUE_APP_PUBLIC_TOKEN : import.meta.env.VUE_APP_TOKEN
+export const AUTH_REDIRECT_URL = isPublic ? import.meta.env.VUE_APP_PUBLIC_REDIRECT_URI : import.meta.env.VUE_APP_REDIRECT_URI

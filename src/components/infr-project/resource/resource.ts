@@ -1,14 +1,14 @@
 import { BaseAPI, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
 import type { FetchAPI, FetchArgs } from "@/tools/fetch"
 
-const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
+import { INFR_PROJECT_BASE_PATH as BASE_PATH } from "@/tools/util"
 
 /**
  * 
  * @export
  * @interface CreateResourceRequest
  */
- export interface CreateResourceRequest {
+export interface CreateResourceRequest {
     /**
      * 
      * @type {string}
@@ -46,7 +46,7 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
  * @export
  * @interface CreateResourceResponse
  */
- export interface CreateResourceResponse {
+export interface CreateResourceResponse {
     /**
      * 
      * @type {string}
@@ -60,7 +60,7 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
  * @export
  * @interface UpdateResourceRequest
  */
- export interface UpdateResourceRequest {
+export interface UpdateResourceRequest {
     /**
      * 
      * @type {string}
@@ -92,7 +92,7 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
  * @export
  * @interface ResourceView
  */
- export interface ResourceView {
+export interface ResourceView {
     /**
      * 
      * @type {string}
@@ -160,7 +160,7 @@ const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, ""
  * @export
  * @interface ResourceViewDetail
  */
- export interface ResourceViewDetail {
+export interface ResourceViewDetail {
     /**
      * 
      * @type {string}

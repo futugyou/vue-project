@@ -1,7 +1,7 @@
 import { BaseAPI, RequiredError, FetchParamCreator, fetchData } from "@/tools/fetch"
 import type { FetchAPI, FetchArgs } from "@/tools/fetch"
 
-const BASE_PATH = import.meta.env.VUE_APP_INFR_PROJECT_SERVER.replace(/\/+$/, "")
+import { INFR_PROJECT_BASE_PATH as BASE_PATH } from "@/tools/util"
 
 export const VaultDefault: VaultView = { id: "", key: "", mask_value: "", storage_media: "Local", tags: [], type_identity: "common", vault_type: "common", }
 /**

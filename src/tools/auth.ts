@@ -4,6 +4,7 @@ import type { PKCECodePair } from './pkce'
 import { toUrlEncoded, btoa } from './util'
 
 import { jwtDecode } from 'jwt-decode'
+import { AUTH_CLIENT_ID, AUTH_PROVIDER, AUTH_ENDPOINT, AUTH_TOKEN_ENDPOINT, AUTH_REDIRECT_URL } from "@/tools/util"
 
 export const getToken = () => {
     let token = ''
@@ -348,12 +349,12 @@ export class AuthService<TIDToken = JWTIDToken> {
 }
 
 export const authService = new AuthService({
-    clientId: import.meta.env.VUE_APP_CLIENT_ID,
+    clientId: AUTH_CLIENT_ID,
     location: window.location,
-    provider: import.meta.env.VUE_APP_PROVIDER,
-    authorizeEndpoint: import.meta.env.VUE_APP_AUTHORIZE,
-    tokenEndpoint: import.meta.env.VUE_APP_TOKEN,
-    redirectUri: import.meta.env.VUE_APP_REDIRECT_URI || window.location.origin,
+    provider: AUTH_PROVIDER,
+    authorizeEndpoint: AUTH_ENDPOINT,
+    tokenEndpoint: AUTH_TOKEN_ENDPOINT,
+    redirectUri: AUTH_REDIRECT_URL || window.location.origin,
     autoRefresh: true,
     scopes: ['openid', 'profile']
 })
