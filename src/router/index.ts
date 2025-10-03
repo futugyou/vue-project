@@ -11,7 +11,14 @@ const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes).concat(ProjectRo
 
 let router: Router | null = null
 let history: RouterHistory | null = null
-const baseUrl = window.__MICRO_APP_BASE_ROUTE__ || import.meta.env.BASE_URL
+let baseUrl = import.meta.env.BASE_URL
+if (window.__MICRO_APP_ENVIRONMENT__) {
+    if (window.__MICRO_APP_BASE_ROUTE__) {
+        baseUrl = window.__MICRO_APP_BASE_ROUTE__
+    } else {
+        baseUrl = "/vue"
+    }
+}
 console.log('base url is:', baseUrl)
 history = createWebHistory(baseUrl)
 router = createRouter({
