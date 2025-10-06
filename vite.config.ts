@@ -56,7 +56,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 8080,
-    allowedHosts: [".cloudstudio.work"],
+    allowedHosts: [".cloudstudio.work", ".cloudstudio.club", ".github.app"],
     cors: {
       origin: "*",
       methods: "*",

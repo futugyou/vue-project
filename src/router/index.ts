@@ -18,8 +18,12 @@ if (window.__MICRO_APP_ENVIRONMENT__) {
     } else {
         baseUrl = "/vue"
     }
+} else {
+    const path = window.location.pathname;
+    baseUrl = path.startsWith('/vue') ? '/vue/' : '/';
+    document.querySelector('vue-app-base')?.setAttribute('href', baseUrl);
 }
-console.log('base url is:', baseUrl)
+console.log('href is:', window.location.href, 'base url is:', baseUrl)
 history = createWebHistory(baseUrl)
 router = createRouter({
     history,

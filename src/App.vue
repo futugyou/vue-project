@@ -14,7 +14,7 @@ import AwsRoute from '@/components/aws/AwsRoute.vue'
 import ToolsRoute from '@/components/tools/ToolsRoute.vue'
 import ProjectRoute from '@/components/infr-project/ProjectRoute.vue'
 
-let SpeedInsightsComponent = null
+let SpeedInsightsComponent: any = null
 if (import.meta.env.PROD) {
     SpeedInsightsComponent = defineAsyncComponent(() =>
         import('@vercel/speed-insights/vue').then(m => m.SpeedInsights)
@@ -64,8 +64,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
             <User></User>
         </v-app-bar>
         <v-fab icon="$vuetify" variant="tonal" location="top start" position="fixed" app width="40" height="40"
-            color="primary" @click="isSidebarOpen = !isSidebarOpen"
-            v-if="rootContainer == 'subAppRootContainer'"></v-fab>
+            color="primary" @click="isSidebarOpen = !isSidebarOpen" v-if="rootContainer == 'subAppRootContainer'"></v-fab>
         <v-navigation-drawer expand-on-hover rail rail-width="64" width="12rem"
             v-if="rootContainer == 'subAppRootContainer' && isSidebarOpen">
             <SidenavForSubApp />
