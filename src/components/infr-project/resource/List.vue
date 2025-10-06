@@ -14,10 +14,14 @@ const router = useRouter()
 
 const { isPending: isLoading, data: resources, } = useResources()
 
-const buildUrl = (id: string) => '/resource/' + id
+const buildUrl = (id: string) => {
+    const r = router.resolve({ name: 'ResourceDetail', params: { id } })
+    return r.href
+}
 
 const createResource = () => {
-    window.open(router.resolve({ path: '/resource/edit' }).href, '_blank')
+    const r = router.resolve({ name: 'ResourceEdit' })
+    window.open(r.href, '_blank')
 }
 </script>
 

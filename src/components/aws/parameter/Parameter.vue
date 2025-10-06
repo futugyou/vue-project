@@ -5,7 +5,7 @@ import TableAndPaging from '@/common/TableAndPaging.vue'
 import type { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import RegionList from "@/components/aws/region/list.vue"
-import AccountList from "@/components/aws/account/list.vue"
+import AccountList from "@/components/aws/account/List.vue"
 import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 

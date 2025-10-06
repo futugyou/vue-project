@@ -13,10 +13,14 @@ const router = useRouter()
 
 const { isPending: isLoading, data: projects, } = useProjects()
 
-const buildUrl = (id: string) => '/project/' + id
+const buildUrl = (id: string) => {
+    const r = router.resolve({ name: 'ProjectDetail', params: { id } })
+    return r.href
+}
 
 const createProject = () => {
-    window.open(router.resolve({ path: '/project/edit' }).href, '_blank')
+    const r = router.resolve({ name: 'ProjectEdit' })
+    window.open(r.href, '_blank')
 }
 </script>
 

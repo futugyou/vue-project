@@ -97,7 +97,7 @@ const readonly = computed(() => {
     <v-sheet class="elevation-3">
         <div class="d-flex align-center ga-6 pa-3">
             <label class="v-label">Secrets</label>
-            <v-btn @click="addSecret()"variant="text" v-if="!simple && logined" :readonly="readonly"
+            <v-btn @click="addSecret()" variant="text" v-if="!simple && logined" :readonly="readonly"
                 icon="md:add"></v-btn>
         </div>
 

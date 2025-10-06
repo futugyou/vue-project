@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed, onUnmounted, } from 'vue'
+import { useRouter } from 'vue-router'
 import { toSvg } from 'html-to-image'
 
 import { formatContent } from '@/tools/textFormat'
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<{
     showDrawio: true,
 })
 
+const router = useRouter()
 const { renderedHtml } = useMarkedMermaid(
     computed(() => props.type === 'Markdown' ? props.data : ''),
     { className: 'markdown-body' }
@@ -28,7 +30,8 @@ let popupWindow: Window | null = null;
 const showDrawIO = () => {
     if (props.data && props.showDrawio && props.type == "DrawIO") {
         sessionStorage.setItem('drawio-edit-value', props.data)
-        popupWindow = window.open('/drawio?suffix=' + props.id, '_blank')
+        const r = router.resolve({ name: 'Drawio', query: { suffix: props.id } })
+        popupWindow = window.open(r.href, '_blank')
     }
 }
 

@@ -155,7 +155,8 @@ let popupWindow: Window | null = null;
 const showDrawIO = (data: ResourceEditModel) => {
     // this is for drawio
     sessionStorage.setItem('drawio-edit-value', data.data)
-    popupWindow = window.open('/drawio?suffix=' + resourceId, '_blank')
+    const r = router.resolve({ name: 'Drawio', query: { suffix: resourceId } })
+    popupWindow = window.open(r.href, '_blank')
 }
 
 const handleMessage = (event: MessageEvent) => {
@@ -201,15 +202,13 @@ const HandleResourceChanged = (text: string | string[], type: string) => {
                         :hideDetails="false" />
 
                     <v-textarea :counter="300" class="mb-5" rows="10" variant="outlined"
-                        :ref="el => validateManager.setInputRef(el, 'data')"
-                        :rules="validateManager.requiredMin('data', 3)" label="Data"
-                        :model-value="getFormatTetx(proxyModel.value.data)"
+                        :ref="el => validateManager.setInputRef(el, 'data')" :rules="validateManager.requiredMin('data', 3)"
+                        label="Data" :model-value="getFormatTetx(proxyModel.value.data)"
                         @update:modelValue="value => HandleResourceChanged(value, 'data')"></v-textarea>
 
                     <v-sheet class="d-flex">
-                        <v-select :ref="el => validateManager.setInputRef(el, 'type')"
-                            :disabled="proxyModel.value.id != ''" :rules="validateManager.required('Type')"
-                            :model-value="proxyModel.value.type"
+                        <v-select :ref="el => validateManager.setInputRef(el, 'type')" :disabled="proxyModel.value.id != ''"
+                            :rules="validateManager.required('Type')" :model-value="proxyModel.value.type"
                             @update:modelValue="value => HandleResourceChanged(value, 'type')" class="mb-5"
                             :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
                         <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">

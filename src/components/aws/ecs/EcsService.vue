@@ -7,7 +7,7 @@ import { getEcsServices } from "./ecs"
 import type { EcsService } from "./ecs"
 import { defaultAccount } from '@/components/aws/account/account'
 import type { Account } from '@/components/aws/account/account'
-import AccountList from "@/components/aws/account/list.vue"
+import AccountList from "@/components/aws/account/List.vue"
 import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'

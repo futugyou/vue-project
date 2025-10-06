@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch, onUnmounted, computed, watchEffect, toRef, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { unionBy, cloneDeep } from 'lodash-es'
 
@@ -13,7 +14,7 @@ import PropertyPage from './Property.vue'
 import SecretPage from './Secret.vue'
 
 import { OperateEnum, PlatformApiFactory, ProviderEnum, checkPlatfromProjectProperty } from './platform'
-import type { UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, Property, Secret, Webhook} from './platform'
+import type { UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, Property, Secret, Webhook } from './platform'
 import { ValidateManager } from '@/tools/validate'
 
 interface ConfirmEditModel {
@@ -66,6 +67,7 @@ const store = useMessageStore()
 const { msg } = storeToRefs(store)
 
 const authService = useAuth()
+const router = useRouter()
 const validateManager = ValidateManager()
 const props = defineProps<{
     platformId: string,
@@ -225,7 +227,8 @@ const disabled = computed(() => {
 })
 
 const getDetailUrl = (platformName: string, projectId: string) => {
-    return "/platform/" + platformName + "/" + projectId
+    const r = router.resolve({ name: 'PlatformProjectDetail', params: { id: platformName, projectId: projectId } })
+    return r.href
 }
 
 </script>
@@ -267,8 +270,8 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                         :rules="validateManager.requiredMinMax('Description', 3, 250)" label="Description"
                         :hideDetails="false" class="mb-3" />
 
-                    <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project"
-                        :hideDetails="false" :readonly="disabled" :items="projectsOptions" item-value="value" clearable
+                    <v-select v-model="proxyModel.value.provider_project_id" label="Provider Project" :hideDetails="false"
+                        :readonly="disabled" :items="projectsOptions" item-value="value" clearable
                         item-title="label"></v-select>
 
                     <v-select :ref="el => validateManager.setInputRef(el, 'operate')" :readonly="disabled"
@@ -281,8 +284,8 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                     <PropertyPage v-model="proxyModel.value.properties" :validate-manager="validateManager"
                         :readonly="disabled">
                     </PropertyPage>
-                    <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager"
-                        :readonly="disabled"></SecretPage>
+                    <SecretPage v-model="proxyModel.value.secrets" :validate-manager="validateManager" :readonly="disabled">
+                    </SecretPage>
 
                     <v-spacer></v-spacer>
                     <v-sheet class="d-flex justify-end ma-4 ga-3">
@@ -332,8 +335,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                     <PropertyPage :modelValue="model.properties ?? []" :validate-manager="validateManager"
                         :readonly="disabled">
                     </PropertyPage>
-                    <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager"
-                        :readonly="disabled">
+                    <SecretPage :modelValue="model.secrets ?? []" :validate-manager="validateManager" :readonly="disabled">
                     </SecretPage>
 
                     <v-expansion-panels v-if="model.webhooks" class="elevation-3" :static="true">
