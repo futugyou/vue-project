@@ -35,7 +35,7 @@
     "mermaid": "^11.12.0",
     "moment": "^2.30.1",
     "octokit": "^5.0.3",
-    "pdfjs-dist": "^5.4.149",
+    "pdfjs-dist": "^5.4.296",
     "pinia": "^3.0.3",
     "tesseract.js": "^6.0.1",
     "the-new-css-reset": "^1.11.3",
