@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 
 import TableAndPaging from '@/common/TableAndPaging.vue'
 import type { TableField } from '@/common/TableAndPaging.vue'
@@ -12,6 +13,7 @@ import Empty from '@/common/EmptyStates.vue'
 import { getParameters, getParameterCompare } from './parameter'
 import type { Parameter} from './parameter'
 import { timeFormat } from '@/tools/timeFormat'
+import { patchWindowOpen } from '@/tools/util'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
@@ -20,6 +22,7 @@ import type { Account } from '@/components/aws/account/account'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const router = useRouter()
 
 const parameters = ref<Parameter[]>([])
 const selectedRegion = ref<string>('')
@@ -134,6 +137,11 @@ const changeAccount = (acc: Account) => {
     checkedParameters.value = []
 }
 
+const openParameterDetail = (id: string) => {
+    const r = router.resolve({ name: 'ParameterDetail', params: { parameterId: id } })
+    patchWindowOpen(r.href)
+}
+
 </script>
 
 <template>
@@ -172,11 +180,11 @@ const changeAccount = (acc: Account) => {
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_key="body">
-                <router-link :to="'/parameter/' + body.id" page-path="" class="detail-link" target="_blank">
+                <v-btn variant="text" class="detail-link justify-start" @click="openParameterDetail(body.id)">
                     <span>
                         {{ body.key }}
                     </span>
-                </router-link>
+                </v-btn>
             </template>
             <template v-slot:body_operation="body">
                 <v-checkbox v-model="checkedParameters" :disabled="checkedParametersStatus(body.id)" :value="body.id"

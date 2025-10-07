@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 
 import TableAndPaging from '@/common/TableAndPaging.vue'
 import type { TableField } from '@/common/TableAndPaging.vue'
@@ -9,11 +10,13 @@ import { defaultAccount } from '@/components/aws/account/account'
 import type { Account } from '@/components/aws/account/account'
 import AccountList from "@/components/aws/account/List.vue"
 import { timeFormat } from '@/tools/timeFormat'
+import { patchWindowOpen } from '@/tools/util'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
+const router = useRouter()
 
 const isLoading = ref(true)
 const limit = ref(30)
@@ -71,6 +74,12 @@ const changeAccount = (acc: Account) => {
     selectedAccount.value = acc
     ecsServices.value = []
 }
+
+const openEcsDetail = (id: string) => {
+    const r = router.resolve({ name: 'EcsServiceDetail', params: { id: id } })
+    patchWindowOpen(r.href)
+}
+
 </script>
 
 <template>
@@ -88,11 +97,11 @@ const changeAccount = (acc: Account) => {
         <TableAndPaging :items="ecsServices" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_service_name="body">
-                <router-link :to="'/ecs/' + body.id" page-path="" class="detail-link" target="_blank">
+                <v-btn variant="text" class="detail-link justify-start" @click="openEcsDetail(body.id)">
                     <span>
                         {{ body.service_name }}
                     </span>
-                </router-link>
+                </v-btn>
             </template>
         </TableAndPaging>
     </v-sheet>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { orderBy } from 'lodash-es'
 
@@ -13,10 +14,12 @@ import { PlatformApiFactory } from './platform'
 import type { PlatformView, PlatformDetailView } from './platform'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import PlatformBasic from './PlatformBasic.vue'
+import { patchWindowOpen } from '@/tools/util'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
 const authService = useAuth()
+const router = useRouter()
 
 const platforms = ref<PlatformView[]>([])
 const isLoading = ref(true)
@@ -93,6 +96,11 @@ const platformCreateCanceled = () => {
     dialog.value = false
 }
 
+const openPlatfromDetail = (platformName: string) => {
+    const r = router.resolve({ name: 'PlatformDetail', params: { id: platformName } })
+    patchWindowOpen(r.href)
+}
+
 </script>
 
 <template>
@@ -110,11 +118,11 @@ const platformCreateCanceled = () => {
         <TableAndPaging :items="platforms" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_name="body">
-                <router-link :to="'/platform/' + body.name" page-path="" class="detail-link" target="_blank">
+                <v-btn variant="text" class="detail-link justify-start" @click="openPlatfromDetail(body.name)">
                     <span>
                         {{ body.name }}
                     </span>
-                </router-link>
+                </v-btn>
             </template>
             <template v-slot:body_tags="body">
                 <v-sheet class="d-flex flex-wrap ga-2">

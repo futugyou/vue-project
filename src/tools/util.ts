@@ -136,7 +136,9 @@ export const AUTH_TOKEN_ENDPOINT = isPublic ? import.meta.env.VUE_APP_PUBLIC_TOK
 export const AUTH_REDIRECT_URL = isPublic ? import.meta.env.VUE_APP_PUBLIC_REDIRECT_URI : import.meta.env.VUE_APP_REDIRECT_URI
 
 export const patchWindowOpen = (url: string) => {
-    let win = (window.rawWindow ?? window) as Window & typeof globalThis
+    // window.rawWindow is main app window, window is sub app window
+    // let win = (window.rawWindow ?? window) as Window & typeof globalThis
+    let win = window
 
     if (url.startsWith('http://') || url.startsWith('https://')) {
         win.open(url, '_blank')
