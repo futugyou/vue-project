@@ -27,18 +27,19 @@ if (window.__MICRO_APP_ENVIRONMENT__) {
 console.log('href is:', window.location.href, 'base url is:', baseUrl)
 
 const patchWindowOpenWithRouter = (router: Router) => {
-    const rawOpen = window.open
+    let win = (window.rawWindow ?? window) as Window & typeof globalThis
+    const rawOpen = win.open
 
-    window.open = function (url, target, features) {
+    win.open = function (url, target, features) {
         if (url === undefined || url instanceof URL) {
-            return rawOpen.call(window, url, target ?? '_blank', features)
+            return rawOpen.call(win, url, target ?? '_blank', features)
         }
 
         if (url.startsWith('http://') || url.startsWith('https://')) {
-            return rawOpen.call(window, url, target ?? '_blank', features)
+            return rawOpen.call(win, url, target ?? '_blank', features)
         }
 
-        if (window.__MICRO_APP_ENVIRONMENT__) {
+        if (win.__MICRO_APP_ENVIRONMENT__) {
             let origin = location.origin.replace(/\/+$/, '')
             let path = location.pathname.replace(/^\/+/, '')
 
@@ -46,9 +47,9 @@ const patchWindowOpenWithRouter = (router: Router) => {
 
             console.log('window open url is:', finalUrl);
 
-            return rawOpen.call(window, finalUrl, target ?? '_blank', features)
+            return rawOpen.call(win, finalUrl, target ?? '_blank', features)
         } else {
-            return rawOpen.call(window, url, target ?? '_blank', features)
+            return rawOpen.call(win, url, target ?? '_blank', features)
         }
     }
 }
