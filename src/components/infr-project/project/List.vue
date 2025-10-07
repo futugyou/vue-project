@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useAuth } from '@/plugins/auth'
+import { patchWindowOpen } from '@/tools/util'
 
 import { useProjects } from './projectQuery'
 
@@ -15,12 +16,12 @@ const { isPending: isLoading, data: projects, } = useProjects()
 
 const openProjectPage = (id: string) => {
     const r = router.resolve({ name: 'ProjectDetail', params: { id } })
-    window.open(r.href, '_blank')
+    patchWindowOpen(r.href)
 }
 
 const createProject = () => {
     const r = router.resolve({ name: 'ProjectEdit' })
-    window.open(r.href, '_blank')
+    patchWindowOpen(r.href)
 }
 </script>
 

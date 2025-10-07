@@ -134,3 +134,24 @@ export const AUTH_PROVIDER = isPublic ? import.meta.env.VUE_APP_PUBLIC_PROVIDER 
 export const AUTH_ENDPOINT = isPublic ? import.meta.env.VUE_APP_PUBLIC_AUTHORIZE : import.meta.env.VUE_APP_AUTHORIZE
 export const AUTH_TOKEN_ENDPOINT = isPublic ? import.meta.env.VUE_APP_PUBLIC_TOKEN : import.meta.env.VUE_APP_TOKEN
 export const AUTH_REDIRECT_URL = isPublic ? import.meta.env.VUE_APP_PUBLIC_REDIRECT_URI : import.meta.env.VUE_APP_REDIRECT_URI
+
+export const patchWindowOpen = (url: string) => {
+    let win = (window.rawWindow ?? window) as Window & typeof globalThis
+
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        win.open(url, '_blank')
+    }
+
+    if (win.__MICRO_APP_ENVIRONMENT__) {
+        let origin = location.origin.replace(/\/+$/, '')
+        let path = location.pathname.replace(/^\/+/, '')
+
+        let finalUrl = origin + '/' + path + '?' + path + '=' + url
+
+        console.log('window open url is:', finalUrl);
+
+        win.open(finalUrl, '_blank')
+    } else {
+        win.open(url, '_blank')
+    }
+}

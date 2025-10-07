@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/vue-query'
 import Spinners from '@/common/Spinners.vue'
 import { useMessageStore } from '@/stores/message'
 import { useAuth } from '@/plugins/auth'
+import { patchWindowOpen } from '@/tools/util'
 
 import { ResourceApiFactory, ResourceTypeEnum } from './resource'
 import type { CreateResourceRequest, UpdateResourceRequest } from './resource'
@@ -156,7 +157,7 @@ const showDrawIO = (data: ResourceEditModel) => {
     // this is for drawio
     sessionStorage.setItem('drawio-edit-value', data.data)
     const r = router.resolve({ name: 'Drawio', query: { suffix: resourceId } })
-    popupWindow = window.open(r.href, '_blank')
+    patchWindowOpen(r.href)
 }
 
 const handleMessage = (event: MessageEvent) => {

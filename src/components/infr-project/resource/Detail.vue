@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
 import { useAuth } from '@/plugins/auth'
+import { patchWindowOpen } from '@/tools/util'
 
 import ResourceData from './ResourceData.vue'
 import type { ResourceViewDetail } from './resource'
@@ -27,7 +28,8 @@ const dispalyTime = (history: ResourceViewDetail) => {
 }
 
 const newResourceVersion = () => {
-    window.open(router.resolve({ path: '/resource/edit', query: { id: resourceId } }).href, '_blank')
+    let r = router.resolve({ path: '/resource/edit', query: { id: resourceId } })
+    patchWindowOpen(r.href)
 }
 
 </script>

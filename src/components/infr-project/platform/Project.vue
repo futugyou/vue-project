@@ -16,6 +16,7 @@ import SecretPage from './Secret.vue'
 import { OperateEnum, PlatformApiFactory, ProviderEnum, checkPlatfromProjectProperty } from './platform'
 import type { UpdatePlatformProjectRequest, PlatformDetailView, PlatformProject, Property, Secret, Webhook } from './platform'
 import { ValidateManager } from '@/tools/validate'
+import { patchWindowOpen } from '@/tools/util'
 
 interface ConfirmEditModel {
     operate: OperateEnum
@@ -228,7 +229,7 @@ const disabled = computed(() => {
 
 const openProjectDetail = (platformName: string, projectId: string) => {
     const r = router.resolve({ name: 'PlatformProjectDetail', params: { id: platformName, projectId: projectId } })
-    window.open(r.href, '_blank')
+    patchWindowOpen(r.href)
 }
 
 </script>
@@ -255,7 +256,8 @@ const openProjectDetail = (platformName: string, projectId: string) => {
                             <v-tooltip text="to go project detail page" location="start"
                                 v-if="model && model.id && platformName">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn variant="text" icon="md:info" @click="openProjectDetail(platformName, model.id)"></v-btn>
+                                    <v-btn variant="text" icon="md:info"
+                                        @click="openProjectDetail(platformName, model.id)"></v-btn>
                                 </template>
                             </v-tooltip>
                         </template>

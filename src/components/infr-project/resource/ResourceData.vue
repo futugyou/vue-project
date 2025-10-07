@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { toSvg } from 'html-to-image'
 
 import { formatContent } from '@/tools/textFormat'
+import { patchWindowOpen } from '@/tools/util'
 import { useMarkedMermaid } from '@/composables/useMarkedMermaid'
 
 const props = withDefaults(defineProps<{
@@ -31,7 +32,7 @@ const showDrawIO = () => {
     if (props.data && props.showDrawio && props.type == "DrawIO") {
         sessionStorage.setItem('drawio-edit-value', props.data)
         const r = router.resolve({ name: 'Drawio', query: { suffix: props.id } })
-        popupWindow = window.open(r.href, '_blank')
+        patchWindowOpen(r.href)
     }
 }
 

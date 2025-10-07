@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import Spinners from '@/common/Spinners.vue'
 import { shortTimeFormat } from '@/tools/timeFormat'
 import { useAuth } from '@/plugins/auth'
+import { patchWindowOpen } from '@/tools/util'
 
 import ResourceData from './ResourceData.vue'
 import { useResources } from './resourceQuery'
@@ -16,12 +17,12 @@ const { isPending: isLoading, data: resources, } = useResources()
 
 const openResourcePage = (id: string) => {
     const r = router.resolve({ name: 'ResourceDetail', params: { id } })
-    window.open(r.href, '_blank')
+    patchWindowOpen(r.href)
 }
 
 const createResource = () => {
     const r = router.resolve({ name: 'ResourceEdit' })
-    window.open(r.href, '_blank')
+    patchWindowOpen(r.href)
 }
 </script>
 
