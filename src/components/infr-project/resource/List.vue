@@ -14,9 +14,9 @@ const router = useRouter()
 
 const { isPending: isLoading, data: resources, } = useResources()
 
-const buildUrl = (id: string) => {
+const openResourcePage = (id: string) => {
     const r = router.resolve({ name: 'ResourceDetail', params: { id } })
-    return r.href
+    window.open(r.href, '_blank')
 }
 
 const createResource = () => {
@@ -42,15 +42,8 @@ const createResource = () => {
                 <v-card v-if="!isLoading" class="d-flex flex-column" hover>
                     <template v-slot:title> {{ resource.name }} </template>
 
-                    <template v-slot:append>
-                        <a :href="buildUrl(resource.id!)" target="_blank">
-                            <v-hover>
-                                <template v-slot:default="{ isHovering, props }">
-                                    <v-icon icon="md:open_in_new" v-bind="props"
-                                        :color="isHovering ? '#75FBFD' : undefined"></v-icon>
-                                </template>
-                            </v-hover>
-                        </a>
+                    <template v-slot:append>                        
+                        <v-btn variant="text" icon="md:open_in_new" @click="openResourcePage(resource.id!)"></v-btn>
                     </template>
 
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">

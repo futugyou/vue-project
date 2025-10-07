@@ -13,9 +13,9 @@ const router = useRouter()
 
 const { isPending: isLoading, data: projects, } = useProjects()
 
-const buildUrl = (id: string) => {
+const openProjectPage = (id: string) => {
     const r = router.resolve({ name: 'ProjectDetail', params: { id } })
-    return r.href
+    window.open(r.href, '_blank')
 }
 
 const createProject = () => {
@@ -42,14 +42,7 @@ const createProject = () => {
                     <template v-slot:title> {{ project.name }} </template>
 
                     <template v-slot:append>
-                        <a :href="buildUrl(project.id!)" target="_blank">
-                            <v-hover>
-                                <template v-slot:default="{ isHovering, props }">
-                                    <v-icon icon="md:open_in_new" v-bind="props"
-                                        :color="isHovering ? '#75FBFD' : undefined"></v-icon>
-                                </template>
-                            </v-hover>
-                        </a>
+                        <v-btn variant="text" icon="md:open_in_new" @click="openProjectPage(project.id!)"></v-btn>
                     </template>
 
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">

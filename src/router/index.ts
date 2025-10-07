@@ -21,14 +21,41 @@ if (window.__MICRO_APP_ENVIRONMENT__) {
 } else {
     const path = window.location.pathname;
     baseUrl = path.startsWith('/vue') ? '/vue/' : '/';
-    document.querySelector('vue-app-base')?.setAttribute('href', baseUrl);
+    document.querySelector('#vue-app-base')?.setAttribute('href', baseUrl);
 }
+
 console.log('href is:', window.location.href, 'base url is:', baseUrl)
+
+const patchWindowOpenWithRouter = (router) => {
+    const rawOpen = window.open
+
+    window.open = function (url, target, features) {
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            return rawOpen.call(window, url, target ?? '_blank', features)
+        }
+
+        if (window.__MICRO_APP_ENVIRONMENT__) {
+            let origin = location.origin.replace(/\/+$/, '')
+            let path = location.pathname.replace(/^\/+/, '')
+
+            let finalUrl = origin + '/' + path + '?' + path + '=' + url
+
+            console.log('window open url is:', finalUrl);
+
+            return rawOpen.call(window, finalUrl, target ?? '_blank', features)
+        } else {
+            return rawOpen.call(window, url, target ?? '_blank', features)
+        }
+    }
+}
+
 history = createWebHistory(baseUrl)
 router = createRouter({
     history,
     routes
 }) as Router
+
+patchWindowOpenWithRouter(router)
 
 // route guards
 router.beforeEach((to: any, from: any, next: any) => {
@@ -50,5 +77,4 @@ const clearRouter = (fn: () => void) => {
     router = null
     history = null
 }
-
-export { router, clearRouter }
+export { router, clearRouter, patchWindowOpenWithRouter }

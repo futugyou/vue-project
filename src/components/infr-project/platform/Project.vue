@@ -226,9 +226,9 @@ const disabled = computed(() => {
     return !authService.isAuthenticated()
 })
 
-const getDetailUrl = (platformName: string, projectId: string) => {
+const openProjectDetail = (platformName: string, projectId: string) => {
     const r = router.resolve({ name: 'PlatformProjectDetail', params: { id: platformName, projectId: projectId } })
-    return r.href
+    window.open(r.href, '_blank')
 }
 
 </script>
@@ -255,9 +255,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                             <v-tooltip text="to go project detail page" location="start"
                                 v-if="model && model.id && platformName">
                                 <template v-slot:activator="{ props }">
-                                    <a :href="getDetailUrl(platformName, model.id)" target="_blank">
-                                        <v-icon icon="md:info" v-bind="props"></v-icon>
-                                    </a>
+                                    <v-btn variant="text" icon="md:info" @click="openProjectDetail(platformName, model.id)"></v-btn>
                                 </template>
                             </v-tooltip>
                         </template>
@@ -314,9 +312,7 @@ const getDetailUrl = (platformName: string, projectId: string) => {
                     <v-spacer></v-spacer>
                     <v-tooltip text="togo project detail page" location="start" v-if="model && model.id && platformName">
                         <template v-slot:activator="{ props }">
-                            <a :href="getDetailUrl(platformName, model.id)" target="_blank">
-                                <v-icon icon="md:info" v-bind="props"></v-icon>
-                            </a>
+                            <v-btn variant="text" icon="md:info" @click="openProjectDetail(platformName, model.id)"></v-btn>
                         </template>
                     </v-tooltip>
                 </v-sheet>
