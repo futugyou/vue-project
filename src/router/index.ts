@@ -26,10 +26,14 @@ if (window.__MICRO_APP_ENVIRONMENT__) {
 
 console.log('href is:', window.location.href, 'base url is:', baseUrl)
 
-const patchWindowOpenWithRouter = (router) => {
+const patchWindowOpenWithRouter = (router: Router) => {
     const rawOpen = window.open
 
     window.open = function (url, target, features) {
+        if (url === undefined || url instanceof URL) {
+            return rawOpen.call(window, url, target ?? '_blank', features)
+        }
+
         if (url.startsWith('http://') || url.startsWith('https://')) {
             return rawOpen.call(window, url, target ?? '_blank', features)
         }
