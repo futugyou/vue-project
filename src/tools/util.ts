@@ -144,7 +144,7 @@ export const patchWindowOpen = (url: string) => {
         win.open(url, '_blank')
     }
 
-    if (win.__MICRO_APP_ENVIRONMENT__) {
+    if (window.__MICRO_APP_ENVIRONMENT__) {
         // in a micro-frontend environment, window.rawWindow must exist and represent the main window.
         // use main app window to get location info
         // for exmaple: main url is `https://main.testing.app/vueapp?vueapp=%2Fvue%2Fproject`, sub app url is  `https://sub.vue.app/vue/project`
