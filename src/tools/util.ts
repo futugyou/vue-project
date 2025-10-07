@@ -137,16 +137,26 @@ export const AUTH_REDIRECT_URL = isPublic ? import.meta.env.VUE_APP_PUBLIC_REDIR
 
 export const patchWindowOpen = (url: string) => {
     // window.rawWindow is main app window, window is sub app window
-    // let win = (window.rawWindow ?? window) as Window & typeof globalThis
-    let win = window
+    let win = (window.rawWindow ?? window) as Window & typeof globalThis
+    // let win = window
 
     if (url.startsWith('http://') || url.startsWith('https://')) {
         win.open(url, '_blank')
     }
 
     if (win.__MICRO_APP_ENVIRONMENT__) {
-        let origin = location.origin.replace(/\/+$/, '')
-        let path = location.pathname.replace(/^\/+/, '')
+        // in a micro-frontend environment, window.rawWindow must exist and represent the main window.
+        // use main app window to get location info
+        // for exmaple: main url is `https://main.testing.app/vueapp?vueapp=%2Fvue%2Fproject`, sub app url is  `https://sub.vue.app/vue/project`
+        // main: 
+        //      origin: https://main.testing.app
+        //      path: /vueapp
+        // sub:
+        //      origin: https://sub.vue.app
+        //      path: /vue/project        
+        // i want get /vueapp, NOT /vue/project
+        let origin = win.location.origin.replace(/\/+$/, '')
+        let path = win.location.pathname.replace(/^\/+/, '')
 
         let finalUrl = origin + '/' + path + '?' + path + '=' + url
 
