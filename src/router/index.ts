@@ -16,7 +16,7 @@ if (window.__MICRO_APP_ENVIRONMENT__) {
     if (window.__MICRO_APP_BASE_ROUTE__) {
         baseUrl = window.__MICRO_APP_BASE_ROUTE__
     } else {
-        baseUrl = "/vue"
+        baseUrl = "/vue/"
     }
 } else {
     const path = window.location.pathname;

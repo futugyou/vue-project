@@ -10,12 +10,32 @@ import IconHome from '@/icons/Home.vue'
 import IconPdf from '@/icons/Pdf.vue'
 import IconOrc from '@/icons/Scan.vue'
 import IconTranslate from '@/icons/Translate.vue'
+import IconProject from '@/icons/Project.vue'
+import IconPlatform from '@/icons/Platform.vue'
+import IconResource from '@/icons/Resource.vue'
+import IconVault from '@/icons/Vault.vue'
 
 const SidenavItems = [{
     route: "/",
     label: "Home",
     icon: IconHome,
 }, {
+    route: "/project",
+    label: "Project",
+    icon: IconProject,
+},{
+    route: "/platform",
+    label: "Platform",
+    icon: IconPlatform,
+},{
+    route: "/resource",
+    label: "Resource",
+    icon: IconResource,
+},{
+    route: "/vault",
+    label: "Vault",
+    icon: IconVault,
+},{
     route: "/pdf",
     label: "Pdf",
     icon: IconPdf,
