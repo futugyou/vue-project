@@ -3,6 +3,10 @@
 import { onMounted } from 'vue'
 
 onMounted(() => {
+    if (window.__MICRO_APP_ENVIRONMENT__){
+        return
+    }
+    
     if (!document.querySelector('script[src="https://cse.google.com/cse.js?cx=f3ef0e77511e642f8"]')) {
         const script = document.createElement('script')
         script.src = 'https://cse.google.com/cse.js?cx=f3ef0e77511e642f8'
