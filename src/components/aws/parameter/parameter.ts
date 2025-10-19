@@ -40,7 +40,7 @@ export const getParameters = async (page: number, limit: number, region: string,
         parameterGetEndpoint += '&alias=' + alias
     }
 
-    return fetchEx(parameterGetEndpoint, ...[, ,], true)
+    return fetchEx(parameterGetEndpoint, ...[, ,], false)
 }
 
 export const syncParameter = async (sync: SyncParameter) => {
@@ -50,7 +50,7 @@ export const syncParameter = async (sync: SyncParameter) => {
 
 export const getParameter = async (id: string) => {
     const parameterGetEndpoint = BASE_PATH + '/api/v1/parameters/' + id
-    return fetchEx(parameterGetEndpoint, ...[, ,], true)
+    return fetchEx(parameterGetEndpoint, ...[, ,], false)
 }
 
 export const getParameterCompare = async (sourceid: string, destid: string) => {

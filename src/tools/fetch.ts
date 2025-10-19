@@ -16,7 +16,7 @@ export const fetchEx = async (
     mothed = mothed ?? 'get'
     let error: any = null
     let data: any = null
-    const authorization = getToken()
+    const authorization = getToken() ?? ""
 
     if (needAuth && authorization == "") {
         return { data, error: new Error('user not login or do not have right') }
@@ -182,7 +182,7 @@ export const fetchData = async <T>(localVarFetchArgs: FetchArgs, fetch: FetchAPI
             if (error.message) {
                 return { error }
             }
-            
+
             error = { message: error }
             return { error }
         }

@@ -30,15 +30,15 @@ export const getEcsServices = async (page: number, limit: number, account_id: st
         ecsEndpoint += '&account_id=' + account_id
     }
 
-    return fetchEx(ecsEndpoint, ...[, ,], true)
+    return fetchEx(ecsEndpoint, ...[, ,], false)
 }
 
 export const getEcsServiceDetail = async (id: string) => {
     const ecsEndpoint = BASE_PATH + '/api/v1/ecsservices/' + id
-    return fetchEx(ecsEndpoint, ...[, ,], true)
+    return fetchEx(ecsEndpoint, ...[, ,], false)
 }
 
 export const compareEcsTaskDefinition = async (com: EcsTaskCompare) => {
     const ecsEndpoint = BASE_PATH + '/api/v1/ecsservices/compare'
-    return fetchEx(ecsEndpoint, 'post', com, true)
+    return fetchEx(ecsEndpoint, 'post', com, false)
 }

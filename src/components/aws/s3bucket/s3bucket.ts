@@ -32,7 +32,7 @@ export const getS3Buckets = async (page: number, limit: number, bucketName: stri
         parameterGetEndpoint += '&bucketName=' + bucketName
     }
 
-    return fetchEx(parameterGetEndpoint, ...[, ,], true)
+    return fetchEx(parameterGetEndpoint, ...[, ,], false)
 }
 
 export interface S3BucketItem {
@@ -65,7 +65,7 @@ export const getS3BucketItems = async (page: number, limit: number, bucketName: 
         parameterGetEndpoint += '&perfix=' + perfix
     }
 
-    return fetchEx(parameterGetEndpoint, ...[, ,], true)
+    return fetchEx(parameterGetEndpoint, ...[, ,], false)
 }
 
 export const getS3Download = async (bucketName: string, accountId: string, fileName: string) => {

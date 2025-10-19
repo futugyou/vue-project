@@ -56,17 +56,17 @@ export const createAccount = async (account: Account) => {
 
 export const getAccountsWithPaging = async (page: number, limit: number) => {
     const accountGetEndpoint = BASE_PATH + '/api/v1/accounts?page=' + page + '&limit=' + limit
-    return fetchEx(accountGetEndpoint, ...[, ,], true)
+    return fetchEx(accountGetEndpoint, ...[, ,], false)
 }
 
 export const getAccounts = async () => {
     const accountGetEndpoint = BASE_PATH + '/api/v1/accounts'
-    return fetchEx(accountGetEndpoint, ...[, ,], true)
+    return fetchEx(accountGetEndpoint, ...[, ,], false)
 }
 
 export const getAccount = async (id: string) => {
     const accountGetEndpoint = BASE_PATH + '/api/v1/accounts/' + id
-    return fetchEx(accountGetEndpoint, ...[, ,], true)
+    return fetchEx(accountGetEndpoint, ...[, ,], false)
 }
 
 export const deleteAccount = async (id: string) => {
