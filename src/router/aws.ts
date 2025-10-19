@@ -13,43 +13,36 @@ export const AwsRoutes = [
     {
         path: '/account',
         name: 'Account',
-        component: Account,        
-        meta: { requiresAuth: true }
+        component: Account,
     },
     {
         path: '/account/:accountId',
         name: 'AccountDetail',
         component: AccountDetail,
-        meta: { requiresAuth: true }
     },
     {
         path: '/parameter',
         name: 'Parameter',
-        component: Parameter,        
-        meta: { requiresAuth: true }
+        component: Parameter,
     },
     {
         path: '/parameter/:parameterId',
         name: 'ParameterDetail',
-        component: ParameterDetail,        
-        meta: { requiresAuth: true }
+        component: ParameterDetail,
     },
     {
         path: '/ecs',
         name: 'EcsService',
-        component: EcsService,        
-        meta: { requiresAuth: true }
+        component: EcsService,
     },
     {
         path: '/ecs/:id',
         name: 'EcsServiceDetail',
-        component: EcsServiceDetail,        
-        meta: { requiresAuth: true }
+        component: EcsServiceDetail,
     },
     {
         path: '/s3',
         name: 'S3Bucket',
-        component: S3List,        
-        meta: { requiresAuth: true }
+        component: S3List,
     }
 ] as RouteRecordRaw[]
