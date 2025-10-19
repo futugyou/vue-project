@@ -8,6 +8,7 @@ import type { BreadcrumbItem } from '@/common/BreadcrumbGroup.vue'
 import Button from '@/common/Button.vue'
 import OpenIcon from '@/icons/Open.vue'
 import ReloadIcon from '@/icons/Reload.vue'
+import { useAuth } from '@/plugins/auth'
 
 import { timeFormat } from '@/tools/timeFormat'
 import { getS3BucketItems, getS3ItemUrl } from './s3bucket'
@@ -15,6 +16,7 @@ import type { S3Bucket, S3BucketItem } from './s3bucket'
 
 import { useMessageStore } from '@/stores/message'
 import { storeToRefs } from 'pinia'
+const authService = useAuth()
 
 const props = defineProps<{
     s3Bucket: S3Bucket
@@ -39,7 +41,7 @@ const isSubLoading = ref(false)
 const limit = ref(30)
 const page = ref(1)
 
-const fields: TableField[] = [
+let fields: TableField[] = [
     {
         key: 'key',
         label: 'Key',
@@ -62,11 +64,14 @@ const fields: TableField[] = [
         label: 'CreationDate',
         format: timeFormat
     },
-    {
+]
+
+if (authService.isAuthenticated()) {
+    fields.push({
         key: 'operation',
         label: 'Operation'
-    }
-]
+    })
+}
 
 const fetchData = async () => {
     isLoading.value = true
@@ -118,6 +123,10 @@ const showSubResource = async (r: S3BucketItem) => {
 }
 
 const openFile = async (r: S3BucketItem) => {
+    if (!authService.isAuthenticated()) {
+        return
+    }
+
     if (!r.isDirectory) {
         isSubLoading.value = true
         const { data, error } = await getS3ItemUrl(bucket.value.name, bucket.value.accountId, r.key)
