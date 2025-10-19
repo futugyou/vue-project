@@ -8,6 +8,7 @@ export interface Account {
     accessKeyId: string
     secretAccessKey: string
     region: string
+    valid: boolean
     createdAt: number
 }
 
@@ -17,6 +18,7 @@ export const defaultAccount: Account = {
     accessKeyId: '',
     secretAccessKey: '',
     region: '',
+    valid: true,
     createdAt: 0
 }
 

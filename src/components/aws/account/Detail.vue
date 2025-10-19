@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAuth } from '@/plugins/auth'
 
 import Spinners from '@/common/Spinners.vue'
 import { timeFormat } from '@/tools/timeFormat'
-import {  defaultAccount, getAccount, deleteAccount } from './account'
-import type { Account  } from './account'
+import { defaultAccount, getAccount, deleteAccount } from './account'
+import type { Account } from './account'
 import Edit from './Edit.vue'
 
 import { useMessageStore } from '@/stores/message'
@@ -15,6 +16,7 @@ const { msg } = storeToRefs(store)
 
 const route = useRoute()
 const router = useRouter()
+const authService = useAuth()
 
 const isLoading = ref(true)
 const editModel = ref(false)
@@ -91,14 +93,15 @@ const accountDelete = async () => {
             </v-card-text>
 
             <v-card-actions>
-                <v-btn color="primary" variant="outlined" @click="editAccount">
+                <v-btn color="primary" variant="outlined" @click="editAccount" v-if="authService.isAuthenticated()">
                     Edit Account
                 </v-btn>
-                <v-btn color="secondary" variant="outlined" @click="accountDelete">
+                <v-btn color="secondary" variant="outlined" @click="accountDelete" v-if="authService.isAuthenticated()">
                     Delete Account
                 </v-btn>
             </v-card-actions>
         </v-card>
-        <Edit v-if="editModel" @close="editAccount" :account="account" @save="editAccount"></Edit>
+        <Edit v-if="editModel && authService.isAuthenticated()" @close="editAccount" :account="account"
+            @save="editAccount"></Edit>
     </v-sheet>
 </template>

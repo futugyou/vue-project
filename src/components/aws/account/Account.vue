@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
-
-import TableAndPaging  from '@/common/TableAndPaging.vue'
+import { useAuth } from '@/plugins/auth'
+import TableAndPaging from '@/common/TableAndPaging.vue'
 import type { TableField } from '@/common/TableAndPaging.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 import Edit from './Edit.vue'
 
-import {  getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
-import type { Account  } from './account'
+import { getAccountsWithPaging, deleteAccount, defaultAccount as defaultAccountraw } from './account'
+import type { Account } from './account'
 import { timeFormat } from '@/tools/timeFormat'
 
 import { useMessageStore } from '@/stores/message'
@@ -18,6 +18,7 @@ const { msg } = storeToRefs(store)
 
 const router = useRouter()
 
+const authService = useAuth()
 const accounts = ref<Account[]>([])
 const defaultAccount = ref<Account>(JSON.parse(localStorage.getItem('defaultAccount') ?? '{}'))
 const isLoading = ref(true)
@@ -26,7 +27,7 @@ const page = ref(1)
 const selecedAccount = ref<Account>(defaultAccountraw)
 const dialog = ref(false)
 
-const fields: TableField[] = [
+let fields: TableField[] = [
     {
         key: 'alias',
         label: 'Alias'
@@ -49,10 +50,17 @@ const fields: TableField[] = [
         format: timeFormat
     },
     {
+        key: 'valid',
+        label: 'Valid'
+    },
+]
+
+if (authService.isAuthenticated()) {
+    fields.push({
         key: 'operation',
         label: 'Operation'
-    }
-]
+    })
+}
 
 const fetchData = async () => {
     isLoading.value = true
@@ -67,8 +75,10 @@ const fetchData = async () => {
     }
 
     accounts.value = data ?? []
-    // // mock delay
-    // await new Promise((resolve) => setTimeout(resolve, 5000))
+    for (let i = 0; i < accounts.value.length; i++) {
+        const element = accounts.value[i]
+        setDefaultAccount(element)
+    }
 }
 
 watchEffect(async () => fetchData())
@@ -87,6 +97,10 @@ const close = () => {
 }
 
 const accountDelete = async (id: string) => {
+    if (!authService.isAuthenticated()) {
+        return
+    }
+
     const answer = window.confirm('Do you really want to delete?')
     if (answer) {
         await deleteAccount(id)
@@ -113,8 +127,10 @@ const setAccount = (alias: string) => {
 }
 
 const setDefaultAccount = (acc: Account) => {
-    localStorage.setItem('defaultAccount', JSON.stringify(acc))
-    defaultAccount.value = acc
+    if (acc.valid) {
+        localStorage.setItem('defaultAccount', JSON.stringify(acc))
+        defaultAccount.value = acc
+    }
 }
 
 </script>
@@ -126,19 +142,19 @@ const setDefaultAccount = (acc: Account) => {
             <h2 class="text-subtitle-1">Current Default Account is : {{ defaultAccount?.alias }}</h2>
             <v-spacer></v-spacer>
             <VuetifyModal v-model:dialog="dialog" text="Create Account" :width="700" :persistent="true"
-                title="Create Account" hideFooter>
+                v-if="authService.isAuthenticated()" title="Create Account" hideFooter>
                 <Edit @save="close" @close="close" :account="selecedAccount"></Edit>
             </VuetifyModal>
         </v-toolbar>
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_alias="body">
-                <span @click="setAccount(body.alias)" class="detail-link">
+                <span @click="setAccount(body.alias)" :class="{ 'detail-link': authService.isAuthenticated() }">
                     {{ body.alias }}
                 </span>
             </template>
             <template v-slot:body_operation="body">
-                <v-btn class="mr-3" @click="setDefaultAccount(body)"> Default
+                <v-btn class="mr-3" @click="setDefaultAccount(body)" v-if="body.valid"> Default
                 </v-btn>
                 <v-btn @click="accountDelete(body.id)"> Delete </v-btn>
             </template>

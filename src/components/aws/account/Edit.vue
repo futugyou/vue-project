@@ -2,6 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { isEqual } from 'lodash-es'
+import { useAuth } from '@/plugins/auth'
 
 import Spinners from '@/common/Spinners.vue'
 import RegionList from "@/components/aws/region/list.vue"
@@ -17,6 +18,7 @@ const { msg } = storeToRefs(store)
 
 const router = useRouter()
 
+const authService = useAuth()
 const props = withDefaults(
     defineProps<{
         account?: Account
@@ -61,6 +63,10 @@ const changeRegion = (key: string) => {
 }
 
 const save = async () => {
+    if (!authService.isAuthenticated()) {
+        return
+    }
+
     const { successed, message } = checkAccount(account.value)
     if (!successed) {
         msg.value = {
@@ -120,7 +126,7 @@ defineExpose({
 </script>
 
 <template>
-    <v-sheet class="d-flex flex-column align-center" height="100%">
+    <v-sheet class="d-flex flex-column align-center" height="100%" v-if="authService.isAuthenticated()">
         <Spinners v-if="isLoading"></Spinners>
         <v-card title="Account Information" v-if="!isLoading" class="d-flex flex-column align-center">
             <v-card-text class="d-flex flex-column text-body-1 ga-4 pa-4">
