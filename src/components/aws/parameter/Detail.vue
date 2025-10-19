@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAuth } from '@/plugins/auth'
 
 import Spinners from '@/common/Spinners.vue'
 import VuetifyModal from '@/common/VuetifyModal.vue'
@@ -25,11 +26,12 @@ const awsparameter = ref()
 const historys = ref<any[]>([])
 const tab = ref()
 const dialog = ref(false)
+const authService = useAuth()
 
 const checkedParameters = ref<string[]>([])
 const compareParameters = ref<string[]>([])
 
-const fields: TableField[] = [
+let fields: TableField[] = [
     {
         key: 'key',
         label: 'Name',
@@ -44,11 +46,14 @@ const fields: TableField[] = [
         label: 'OperateAt',
         format: timeFormat
     },
-    {
+]
+
+if (authService.isAuthenticated()) {
+    fields.push({
         key: 'operation',
         label: 'Operation'
-    }
-]
+    })
+}
 
 const displaySync = computed(() => {
     if (parameter.value
@@ -157,24 +162,26 @@ const syncFromAWS = async () => {
         <Spinners v-if="isLoading"></Spinners>
 
         <div class="compare-container" v-if="!isLoading && parameter != undefined && tab == 'one'">
-            <v-btn @click="syncFromAWS" :disabled="displaySync">
+            <v-btn @click="syncFromAWS" :disabled="displaySync" v-if="authService.isAuthenticated()">
                 SyncFromAWS
             </v-btn>
         </div>
 
         <div class="compare-container" v-if="historys != undefined && historys.length > 0 && tab == 'three'">
-            <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1">
+            <v-btn @click="compareWithAWS" :disabled="checkedParameters.length != 1"
+                v-if="authService.isAuthenticated()">
                 CompareWithAWS
             </v-btn>
 
-            <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2">
+            <v-btn @click="compareParameter" :disabled="checkedParameters.length != 2"
+                v-if="authService.isAuthenticated()">
                 Compare
             </v-btn>
         </div>
 
         <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4" v-if="!isLoading">
             <v-tab value="one" text="Latest"></v-tab>
-            <v-tab value="two" text="AWS"></v-tab>
+            <v-tab value="two" text="AWS" v-if="authService.isAuthenticated()"></v-tab>
             <v-tab value="three" text="History"></v-tab>
         </v-tabs>
         <v-tabs-window v-model="tab" v-if="!isLoading" grow>
@@ -186,7 +193,7 @@ const syncFromAWS = async () => {
                 </v-list>
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="awsparameter != undefined">
+            <v-tabs-window-item value="two" v-if="awsparameter != undefined && authService.isAuthenticated()">
                 <v-list lines="two">
                     <v-list-item title="Name" :subtitle="awsparameter.key"></v-list-item>
                     <v-list-item title="Version" :subtitle="awsparameter.version"></v-list-item>

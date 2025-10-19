@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging from '@/common/TableAndPaging.vue'
 import type { TableField } from '@/common/TableAndPaging.vue'
@@ -11,7 +12,7 @@ import Spinners from '@/common/Spinners.vue'
 import Empty from '@/common/EmptyStates.vue'
 
 import { getParameters, getParameterCompare } from './parameter'
-import type { Parameter} from './parameter'
+import type { Parameter } from './parameter'
 import { timeFormat } from '@/tools/timeFormat'
 import { patchWindowOpen } from '@/tools/util'
 
@@ -27,6 +28,7 @@ const router = useRouter()
 const parameters = ref<Parameter[]>([])
 const selectedRegion = ref<string>('')
 const selectedAccount = ref<Account>(defaultAccount)
+const authService = useAuth()
 
 const searchKey = ref<string>('')
 const isLoading = ref(true)
@@ -35,7 +37,7 @@ const limit = ref(30)
 const page = ref(1)
 const dialog = ref(false)
 
-const fields: TableField[] = [
+let fields: TableField[] = [
     {
         key: 'key',
         label: 'Key'
@@ -57,11 +59,14 @@ const fields: TableField[] = [
         label: 'OperateAt',
         format: timeFormat
     },
-    {
+]
+
+if (authService.isAuthenticated()) {
+    fields.push({
         key: 'operation',
         label: 'Operation'
-    }
-]
+    })
+}
 
 // max compare count is 2
 const checkedParameters = ref<string[]>([])
@@ -104,6 +109,10 @@ const changePagesize = (n: number) => {
 
 const compareParameterDatas = ref<any[]>([])
 const compareParameter = async () => {
+    if (!authService.isAuthenticated()) {
+        return
+    }
+
     if (checkedParameters.value.length != 2) {
         return
     }
@@ -164,13 +173,14 @@ const openParameterDetail = (id: string) => {
                 Region:
             </label>
             <RegionList id="region" :selected="selectedRegion" @changeRegion="changeRegion"></RegionList>
-            <v-spacer></v-spacer>
-            <v-btn @click="compareParameter" variant="outlined" :disabled="checkedParameters.length != 2">
+            <v-spacer v-if="authService.isAuthenticated()"></v-spacer>
+            <v-btn @click="compareParameter" variant="outlined" :disabled="checkedParameters.length != 2"
+                v-if="authService.isAuthenticated()">
                 Compare
             </v-btn>
         </v-toolbar>
         <VuetifyModal text="Compare Definitions" title="Compare Definitions" activator="somme" hideFooter
-            v-model:dialog="dialog">
+            v-if="authService.isAuthenticated()" v-model:dialog="dialog">
             <Spinners v-if="subLoading"></Spinners>
             <code-diff v-if="compareParameterDatas.length == 2 && subLoading == false"
                 :old-string="compareParameterDatas[0].value" :new-string="compareParameterDatas[1].value"
