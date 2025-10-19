@@ -76,7 +76,7 @@ const fetchData = async () => {
 
     accounts.value = data ?? []
     for (let i = 0; i < accounts.value.length; i++) {
-        const element = accounts.value[i]
+        const element = accounts.value[i]!
         setDefaultAccount(element)
     }
 }

@@ -53,7 +53,7 @@ const isSidebarOpen = shallowRef<Boolean>(false)
     <v-app>
         <v-app-bar density="compact" :elevation="2" @click="onRouteChange" v-if="rootContainer == 'nomalRootContainer'">
             <template v-slot:prepend>
-                <v-app-bar-nav-icon></v-app-bar-nav-icon>
+                <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
             </template>
             <v-app-bar-title>
                 <KeepAlive>
