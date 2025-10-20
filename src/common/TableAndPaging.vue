@@ -121,8 +121,10 @@ watch(pagesize, () => {
                                 <slot :name="`header_${field.key}`" v-bind="field">
                                     {{ field.label }}
                                 </slot>
-                                <v-icon icon="md:arrow_drop_down" v-if="sortKey == field.key && sorydir == 'desc'"></v-icon>
-                                <v-icon icon="md:arrow_drop_up" v-if="sortKey == field.key && sorydir == 'asc'"></v-icon>
+                                <v-icon icon="md:arrow_drop_down"
+                                    v-if="sortKey == field.key && sorydir == 'desc'"></v-icon>
+                                <v-icon icon="md:arrow_drop_up"
+                                    v-if="sortKey == field.key && sorydir == 'asc'"></v-icon>
                             </th>
                         </tr>
                     </thead>
@@ -147,19 +149,19 @@ watch(pagesize, () => {
                     data-test="v-pagination-root">
                     <ul class="v-pagination__list">
                         <li class="v-pagination__prev">
-                            <a class="page-link" href="#" @click="updatePage(-1)">Prev</a>
+                            <a class="page-link" @click="updatePage(-1); $event.preventDefault()">Prev</a>
                         </li>
                         <li class="v-pagination__item" v-if="page != 1">
-                            <a class="page-link" href="#" @click="updatePage(-1)">{{ page - 1 }}</a>
+                            <a class="page-link" @click="updatePage(-1); $event.preventDefault()">{{ page - 1 }}</a>
                         </li>
                         <li class="v-pagination__item v-pagination__item--is-active" aria-current="page">
                             <span class="page-link">{{ page }}</span>
                         </li>
                         <li class="v-pagination__item" v-if="pagesize == sortedItems!.length">
-                            <a class="page-link" href="#" @click="updatePage(1)">{{ page + 1 }}</a>
+                            <a class="page-link" @click="updatePage(1); $event.preventDefault()">{{ page + 1 }}</a>
                         </li>
                         <li class="v-pagination__next">
-                            <a class="page-link" href="#" @click="updatePage(1)"
+                            <a class="page-link" @click="updatePage(1); $event.preventDefault()"
                                 v-if="pagesize == sortedItems!.length">Next</a>
                         </li>
                     </ul>
@@ -184,5 +186,6 @@ th {
     height: 48px;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 </style>
