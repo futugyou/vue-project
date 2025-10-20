@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
     data: "",
     type: "Markdown",
     imageData: "",
-    showDrawio: true,
+    showDrawio: false,
 })
 
 const router = useRouter()
@@ -28,8 +28,8 @@ const { renderedHtml } = useMarkedMermaid(
 )
 
 let popupWindow: Window | null = null;
-const showDrawIO = () => {
-    if (props.data && props.showDrawio && props.type == "DrawIO") {
+const showDrawIOPage = () => {
+    if (props.type == "DrawIO") {
         sessionStorage.setItem('drawio-edit-value', props.data)
         const r = router.resolve({ name: 'Drawio', query: { suffix: props.id } })
         patchWindowOpen(r.href)
@@ -65,12 +65,13 @@ const getResourceDataImage = async () => {
 
 defineExpose({
     getResourceDataImage: getResourceDataImage,
+    showDrawIOPage: showDrawIOPage,
 })
 </script>
 
 <template>
     <v-sheet class="d-flex justify-space-around ma-3 cursor-zoom-in" v-if="imageData">
-        <v-img v-if="showDrawio" :aspect-ratio="16 / 9" cover :src="imageData" @click="showDrawIO" />
+        <v-img v-if="showDrawio" :aspect-ratio="16 / 9" cover :src="imageData" @click="showDrawIOPage" />
         <v-img v-else :aspect-ratio="16 / 9" cover :src="imageData" @click="openDialog" />
     </v-sheet>
 

@@ -70,7 +70,7 @@ const save = async () => {
     let response
     let imageData = editModel.value.imageData
     if (!imageData) {
-        imageData = resourceDataRef.value?.getResourceDataImage() ?? ""
+        imageData = (await resourceDataRef.value?.getResourceDataImage()) ?? ""
     }
     if (resourceId.length == 0) {
         const r_type: unknown = editModel.value.type ?? ""
@@ -203,13 +203,15 @@ const HandleResourceChanged = (text: string | string[], type: string) => {
                         :hideDetails="false" />
 
                     <v-textarea :counter="300" class="mb-5" rows="10" variant="outlined"
-                        :ref="el => validateManager.setInputRef(el, 'data')" :rules="validateManager.requiredMin('data', 3)"
-                        label="Data" :model-value="getFormatTetx(proxyModel.value.data)"
+                        :ref="el => validateManager.setInputRef(el, 'data')"
+                        :rules="validateManager.requiredMin('data', 3)" label="Data"
+                        :model-value="getFormatTetx(proxyModel.value.data)"
                         @update:modelValue="value => HandleResourceChanged(value, 'data')"></v-textarea>
 
                     <v-sheet class="d-flex">
-                        <v-select :ref="el => validateManager.setInputRef(el, 'type')" :disabled="proxyModel.value.id != ''"
-                            :rules="validateManager.required('Type')" :model-value="proxyModel.value.type"
+                        <v-select :ref="el => validateManager.setInputRef(el, 'type')"
+                            :disabled="proxyModel.value.id != ''" :rules="validateManager.required('Type')"
+                            :model-value="proxyModel.value.type"
                             @update:modelValue="value => HandleResourceChanged(value, 'type')" class="mb-5"
                             :items="resourceTypeOptions" label="Type" item-value="value" item-title="label"></v-select>
                         <v-tooltip text="show drawio" v-if="proxyModel.value.type == 'DrawIO'">
@@ -238,7 +240,8 @@ const HandleResourceChanged = (text: string | string[], type: string) => {
             </v-confirm-edit>
 
             <ResourceData ref="resourceDataRef" :data="proxyModelRef.data" :type="proxyModelRef.type"
-                :imageData="proxyModelRef.imageData" :id="proxyModelRef.id" v-if="imagePreview && proxyModelRef">
+                :showDrawio="false" :imageData="proxyModelRef.imageData" :id="proxyModelRef.id"
+                v-if="imagePreview && proxyModelRef">
             </ResourceData>
         </v-card>
     </v-sheet>

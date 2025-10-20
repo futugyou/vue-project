@@ -15,6 +15,7 @@ const authService = useAuth()
 
 const route = useRoute()
 const router = useRouter()
+const resourceDataRef = ref([])
 
 const resourceId = route.params.id as string
 const { isPending: isLoading, data: histories, } = useResourceHistory(resourceId)
@@ -32,6 +33,18 @@ const newResourceVersion = () => {
     patchWindowOpen(r.href)
 }
 
+let popupWindow: Window | null = null;
+const showDrawIO = (i: number, data: ResourceViewDetail) => {
+    const item = resourceDataRef.value?.[i] as any
+    if (item) {
+        item.showDrawIOPage()
+        return
+    }
+    
+    sessionStorage.setItem('drawio-edit-value', data.data)
+    const r = router.resolve({ name: 'Drawio', query: { suffix: resourceId } })
+    patchWindowOpen(r.href)
+}
 </script>
 
 <template>
@@ -53,6 +66,14 @@ const newResourceVersion = () => {
                     <template v-slot:title> {{ dispalyTime(history) }} </template>
 
                     <template v-slot:subtitle> {{ history.name }} </template>
+                    <template v-slot:append>
+                        <v-tooltip text="show drawio" v-if="history.type == 'DrawIO'" location="start">
+                            <template v-slot:activator="{ props }">
+                                <v-icon icon="md:open_in_new" v-bind="props" class="ma-2"
+                                    @click="() => showDrawIO(i, history)"></v-icon>
+                            </template>
+                        </v-tooltip>
+                    </template>
 
                     <v-card-text class="d-flex flex-column ga-3 text-truncate">
                         <v-sheet class="d-flex flex-wrap ga-2">
@@ -72,8 +93,8 @@ const newResourceVersion = () => {
 
                         <v-divider></v-divider>
 
-                        <ResourceData :data="history.data" :type="history.type" :imageData="history.imageData"
-                            :id="history.id">
+                        <ResourceData ref="resourceDataRef" :data="history.data" :type="history.type"
+                            :imageData="history.imageData" :showDrawio="false" :id="history.id">
                         </ResourceData>
                     </v-card-text>
                 </v-card>
