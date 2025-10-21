@@ -49,7 +49,7 @@ watch(() => props.badgeMarkdown, (newVal) => {
     <v-sheet v-if="d">
         <div>
             <p>
-                <a :href="d.link" target="_blank" v-if="d.type == 1" class="d-flex align-center justify-center">
+                <a :href="d.link" target="_blank" v-if="d.type == 1" class="d-flex align-center">
                     <img :src="d.url" :alt="d.alt">
                 </a>
                 <img :src="d.url" :alt="d.alt" v-if="d.type == 2">
