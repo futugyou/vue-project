@@ -22,7 +22,7 @@ watch(() => props.model, (newVal) => {
 </script>
 
 <template>
-    <v-card class="pa-3" v-if="editModel">
+    <v-card class="d-flex flex-column pa-3 ga-3" v-if="editModel">
         <v-text-field v-model="editModel.name" label="Name" :readonly="true" :hideDetails="true">
             <template v-slot:append>
                 <v-badge :color="editModel.activate ? 'green' : 'orange'"

@@ -83,22 +83,25 @@ const getDeploymentMessage = (deployment: Deployment) => {
         <v-tabs-window v-model="tab" v-if="!isLoading && model">
             <v-tabs-window-item value="one">
                 <v-card class="h-100 overflow-y-auto d-flex flex-column">
-                    <template v-slot:title>
-                        <v-sheet class="d-flex ga-3">
-                            <p class="text-h5 font-weight-black">{{ model.name }}</p>
-                            <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
-                                <v-hover>
-                                    <template v-slot:default="{ props }">
-                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                    </template>
-                                </v-hover>
-                            </a>
-                        </v-sheet>
-                    </template>
-                    <template v-slot:append>
-                        <v-badge :color="model?.followed ? 'green' : 'orange'"
-                            :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
-                    </template>
+                    <v-list-item>
+                        <template v-slot:title>
+                            <v-sheet class="d-flex ga-3">
+                                <p class="text-h5 font-weight-black">{{ model.name }}</p>
+                                <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
+                                    <v-hover>
+                                        <template v-slot:default="{ props }">
+                                            <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                        </template>
+                                    </v-hover>
+                                </a>
+                            </v-sheet>
+                        </template>
+                        <template v-slot:append>
+                            <v-badge :color="model?.followed ? 'green' : 'orange'"
+                                :content="model?.followed ? 'Followed' : 'Unfollowed'" inline></v-badge>
+                        </template>
+                    </v-list-item>
+
                     <v-card-text>
                         <v-sheet class="d-flex flex-column ga-3">
                             <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
@@ -131,30 +134,34 @@ const getDeploymentMessage = (deployment: Deployment) => {
                 </v-card>
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="model.provider_project">
+            <v-tabs-window-item value="two" v-if="model.provider_project.id">
                 <!-- TODO: show more detail info -->
                 <v-card class="h-100 overflow-y-auto d-flex flex-column">
-                    <template v-slot:title>
-                        <v-sheet class="d-flex ga-3 align-center">
-                            <p class="text-h5 font-weight-black">{{ model.provider_project.name }}</p>
-                            <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
-                                <v-hover>
-                                    <template v-slot:default="{ props }">
-                                        <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
-                                    </template>
-                                </v-hover>
-                            </a>
-                        </v-sheet>
-                    </template>
-                    <template v-slot:append v-if="model.provider_project.environments">
-                        <v-badge color="green" v-for="item in model.provider_project.environments" :key="item"
-                            :content="item" inline></v-badge>
-                    </template>
-                    <v-card-text class="d-flex flex-column pa-3 ga-3 elevation-3">
-                        <MarkdownBadge :badgeMarkdown="model.provider_project.badge_markdown ?? ''"
-                            v-if="model.provider_project.badge_markdown">
-                        </MarkdownBadge>
+                    <v-list-item>
+                        <template v-slot:title>
+                            <v-sheet class="d-flex ga-3 align-center">
+                                <p class="text-h5 font-weight-black">{{ model.provider_project.name }}</p>
+                                <a :href="model.url" target="_blank" class="ga-6 py-1 px-2">
+                                    <v-hover>
+                                        <template v-slot:default="{ props }">
+                                            <v-icon icon="md:open_in_new" v-bind="props"></v-icon>
+                                        </template>
+                                    </v-hover>
+                                </a>
 
+                                <MarkdownBadge :badgeMarkdown="model.provider_project.badge_markdown ?? ''"
+                                    v-if="model.provider_project.badge_markdown">
+                                </MarkdownBadge>
+
+                            </v-sheet>
+                        </template>
+                        <template v-slot:append v-if="model.provider_project.environments">
+                            <v-badge color="green" v-for="item in model.provider_project.environments" :key="item"
+                                :content="item" inline></v-badge>
+                        </template>
+                    </v-list-item>
+
+                    <v-card-text class="d-flex flex-column pa-3 ga-3 elevation-3">
                         <v-sheet class="d-flex flex-column pa-3 ga-3 elevation-3">
                             <label class="v-label">Description</label>
                             <div class="text-medium-emphasis">{{ model.provider_project.description }}</div>
