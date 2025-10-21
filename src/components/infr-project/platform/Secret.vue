@@ -94,20 +94,20 @@ const readonly = computed(() => {
 </script>
 
 <template>
-    <v-sheet class="elevation-3">
-        <div class="d-flex align-center ga-6 pa-3">
+    <v-sheet class="elevation-3  pa-3">
+        <div class="d-flex align-center ga-6 pb-3">
             <label class="v-label">Secrets</label>
             <v-btn @click="addSecret()" variant="text" v-if="!simple && logined" :readonly="readonly"
                 icon="md:add"></v-btn>
         </div>
 
-        <v-row v-for="(secret, index) in editModel" :key="index" :class="readonly ? '' : 'mb-2'" v-if="!simple">
-            <v-col :cols="logined ? 5 : 6" class="pt-0">
+        <v-row v-for="(secret, index) in editModel" :key="index" v-if="!simple">
+            <v-col :cols="logined ? 5 : 6" >
                 <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key"
                     label="Key" :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="readonly"
                     :readonly="readonly" />
             </v-col>
-            <v-col :cols="logined ? 5 : 6" class="pt-0 d-flex align-start">
+            <v-col :cols="logined ? 5 : 6" class="d-flex align-start">
                 <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
                     label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="readonly"
                     :readonly="readonly" class="mb-5" :items="vaultOptions" item-value="value"
@@ -118,7 +118,7 @@ const readonly = computed(() => {
                     </template>
                 </v-tooltip>
             </v-col>
-            <v-col cols="2" class="pt-2" v-if="logined">
+            <v-col cols="2" class="pt-2 d-flex align-center" v-if="logined">
                 <v-btn icon="md:remove" @click="removeSecret(index)" :readonly="readonly"></v-btn>
             </v-col>
         </v-row>
