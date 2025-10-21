@@ -149,9 +149,11 @@ const setDefaultAccount = (acc: Account) => {
         <TableAndPaging :items="accounts" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_alias="body">
-                <span @click="setAccount(body.alias)" :class="{ 'detail-link': authService.isAuthenticated() }">
-                    {{ body.alias }}
-                </span>
+                <v-btn variant="text" class="justify-start text-none" @click="setAccount(body.alias)" :readonly="!authService.isAuthenticated()">
+                    <span>
+                        {{ body.alias }}
+                    </span>
+                </v-btn>
             </template>
             <template v-slot:body_operation="body">
                 <v-btn class="mr-3" @click="setDefaultAccount(body)" v-if="body.valid"> Default

@@ -103,9 +103,11 @@ const showS2Resource = (r: S3Bucket) => {
         <TableAndPaging :items="buckets" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_name="body">
-                <span className="detail-link" @click="showS2Resource(body)">
-                    {{ body.name }}
-                </span>
+                <v-btn variant="text" class="justify-start text-none" @click="showS2Resource(body)">
+                    <span>
+                        {{ body.name }}
+                    </span>
+                </v-btn>
             </template>
         </TableAndPaging>
     </v-sheet>

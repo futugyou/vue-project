@@ -118,7 +118,7 @@ const openPlatfromDetail = (platformName: string) => {
         <TableAndPaging :items="platforms" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_name="body">
-                <v-btn variant="text" class="detail-link justify-start" @click="openPlatfromDetail(body.name)">
+                <v-btn variant="text" class="justify-start text-none" @click="openPlatfromDetail(body.name)">
                     <span>
                         {{ body.name }}
                     </span>

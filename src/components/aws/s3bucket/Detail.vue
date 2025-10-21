@@ -176,9 +176,12 @@ const handleBreadcrumbClick = (key: string) => {
                 <span className="detail-label" v-if="!body.isDirectory">
                     {{ body.key }}
                 </span>
-                <span className="detail-link" @click="showSubResource(body)" v-if="body.isDirectory">
-                    {{ body.key }}
-                </span>
+                <v-btn variant="text" class="justify-start text-none" @click="showSubResource(body)"
+                    v-if="body.isDirectory">
+                    <span>
+                        {{ body.key }}
+                    </span>
+                </v-btn>
             </template>
             <template v-slot:body_operation="body">
                 <div v-if="!body.isDirectory">

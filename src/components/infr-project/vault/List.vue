@@ -197,12 +197,12 @@ const logined = computed(() =>
             @updatePage="updatePage">
             <template v-slot:body_key="body">
                 <div>
-                    <span v-if="logined" @click="openVaultEdit(body)" class="detail-link">
-                        {{ body.key }}
-                    </span>
-                    <span v-else>
-                        {{ body.key }}
-                    </span>
+                    <v-btn variant="text" class="justify-start text-none" @click="openVaultEdit(body)"
+                        :readonly="!logined">
+                        <span>
+                            {{ body.key }}
+                        </span>
+                    </v-btn>
                 </div>
             </template>
             <template v-slot:body_mask_value="body">

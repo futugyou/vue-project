@@ -190,7 +190,7 @@ const openParameterDetail = (id: string) => {
         <TableAndPaging :items="parameters" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_key="body">
-                <v-btn variant="text" class="detail-link justify-start" @click="openParameterDetail(body.id)">
+                <v-btn variant="text" class="justify-start text-none" @click="openParameterDetail(body.id)">
                     <span>
                         {{ body.key }}
                     </span>

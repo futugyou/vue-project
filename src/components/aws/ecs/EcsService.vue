@@ -97,7 +97,7 @@ const openEcsDetail = (id: string) => {
         <TableAndPaging :items="ecsServices" :fields="fields" :isLoading="isLoading" @changePagesize="changePagesize"
             @updatePage="updatePage">
             <template v-slot:body_service_name="body">
-                <v-btn variant="text" class="detail-link justify-start" @click="openEcsDetail(body.id)">
+                <v-btn variant="text" class="justify-start text-none" @click="openEcsDetail(body.id)">
                     <span>
                         {{ body.service_name }}
                     </span>
