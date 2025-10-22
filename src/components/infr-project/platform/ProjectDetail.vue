@@ -134,7 +134,7 @@ const getDeploymentMessage = (deployment: Deployment) => {
                 </v-card>
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="two" v-if="model.provider_project.id">
+            <v-tabs-window-item value="two" v-if="model.provider_project && model.provider_project.id">
                 <!-- TODO: show more detail info -->
                 <v-card class="h-100 overflow-y-auto d-flex flex-column">
                     <v-list-item>
