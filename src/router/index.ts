@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { Router, RouterHistory } from 'vue-router'
 
+import { HomeRoutes } from './home'
 import { AwsRoutes } from './aws'
 import { DemoRoutes } from './demo'
 import { ProjectRoutes } from './project'
 import { ToolsRoutes } from './tools'
 import { handleRequiresAuth } from '@/tools/baseAppEvent'
 
-const routes = AwsRoutes.concat(DemoRoutes).concat(ToolsRoutes).concat(ProjectRoutes)
+const routes = HomeRoutes.concat(AwsRoutes).concat(ToolsRoutes).concat(ProjectRoutes).concat(DemoRoutes)
 
 let router: Router | null = null
 let history: RouterHistory | null = null

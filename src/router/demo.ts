@@ -1,6 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-const Home = () => import('@/components/vuedemo/HelloWorld.vue')
 const Base = () => import('@/components/vuedemo/Base.vue')
 const FormComp = () => import('@/components/vuedemo/FormComp.vue')
 const Dynamic = () => import('@/components/vuedemo/Dynamic.vue')
@@ -8,19 +7,12 @@ const BuiltIns = () => import('@/components/vuedemo/BuiltIns.vue')
 const Reactivity = () => import('@/components/vuedemo/Reactivity.vue')
 const RouteDemo = () => import('@/components/vuedemo/RouteDemo.vue')
 const PiniaDemo = () => import('@/components/vuedemo/PiniaDemo.vue')
-const Gitalk = () => import('@/components/vuedemo/GitalkDemo.vue')
 
 const removeQueryParams = (to: any) => {
     if (Object.keys(to.query).length) return { path: to.path, query: {}, hash: to.hash }
 }
 
 export const DemoRoutes = [
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-        meta: { transition: 'slide-fade' }
-    },
     {
         path: '/base',
         name: 'Base',
@@ -85,10 +77,5 @@ export const DemoRoutes = [
         name: 'Route2',
         component: RouteDemo,
         meta: { requiresAuth: true }
-    },
-    {
-        path: '/gitalk',
-        name: 'Gitalk',
-        component: Gitalk,
     }
 ] as RouteRecordRaw[]

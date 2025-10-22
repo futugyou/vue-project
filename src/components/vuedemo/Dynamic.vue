@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Base from './Base.vue'
 import ChildComp from './ChildComp.vue'
-import HelloWorld from './HelloWorld.vue'
 import { ref } from 'vue'
 
 const currentTab = ref('Base')
@@ -9,7 +8,6 @@ const currentTab = ref('Base')
 const tabs = {
     Base: Base,
     ChildComp: ChildComp,
-    HelloWorld: HelloWorld
 }
 </script>
 

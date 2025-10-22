@@ -13,8 +13,8 @@ const per_page = parseInt(import.meta.env.VUE_APP_GITTALK_PRE_PAGE + "")
 </script>
 
 <template>
-    <Gitalk :client-i-d="clientID" :client-secret="clientSecret" :repo="repo" :owner="owner" :issue_number="issue_number"
-        :per_page="per_page">
+    <Gitalk :client-i-d="clientID" :client-secret="clientSecret" :repo="repo" :owner="owner"
+        :issue_number="issue_number" :per_page="per_page">
     </Gitalk>
 </template>
 
