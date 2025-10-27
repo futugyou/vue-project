@@ -13,7 +13,7 @@
     "@googleworkspace/drive-picker-element": "^0.6.2",
     "@grafana/faro-web-sdk": "^1.19.0",
     "@grafana/faro-web-tracing": "^2.0.0-beta",
-    "@honeycombio/opentelemetry-web": "^1.0.3",
+    "@honeycombio/opentelemetry-web": "^1.1.0",
     "@opentelemetry/auto-instrumentations-web": "^0.53.0",
     "@tanstack/query-persist-client-core": "^5.91.4",
     "@tanstack/vue-query": "^5.90.5",
