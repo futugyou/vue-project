@@ -40,7 +40,7 @@
     "tesseract.js": "^6.0.1",
     "the-new-css-reset": "^1.11.3",
     "v-code-diff": "^1.13.1",
-    "vue": "^3.5.24",
+    "vue": "^3.5.25",
     "vue-router": "^4.6.3",
     "vue3-moveable": "^0.28.0",
     "vuetify": "^3.10.11",
@@ -63,6 +63,6 @@
     "typescript": "^5.9.3",
     "vite": "^7.2.2",
     "vite-plugin-top-level-await": "^1.6.0",
-    "vue-tsc": "^3.1.4"
+    "vue-tsc": "^3.1.5"
   }
 }
