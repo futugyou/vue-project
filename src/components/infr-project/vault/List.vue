@@ -4,13 +4,14 @@ import { storeToRefs } from 'pinia'
 import { orderBy } from 'lodash-es'
 
 import { useMessageStore } from '@/stores/message'
-import { useVaultStore } from '@/stores/vault'
 import { useAuth } from '@/plugins/auth'
 
 import TableAndPaging from '@/common/TableAndPaging.vue'
 import type { TableField } from '@/common/TableAndPaging.vue'
 import Spinners from '@/common/Spinners.vue'
 import { VaultApiFactory, VaultDefault } from './vault'
+
+import { useVaults } from './vaultQuery'
 import type { VaultView } from './vault'
 import VuetifyModal from '@/common/VuetifyModal.vue'
 
@@ -19,12 +20,9 @@ import Import from './Import.vue'
 
 const store = useMessageStore()
 const { msg } = storeToRefs(store)
-const vaultStore = useVaultStore()
-const { vaultList: vaults } = storeToRefs(vaultStore)
 const authService = useAuth()
 
 const vault = ref<VaultView>(VaultDefault)
-const isLoading = ref(true)
 const limit = ref(30)
 const page = ref(1)
 const editPageTitle = ref("Create Vault")
@@ -34,22 +32,7 @@ const dialogImport = ref(false)
 const vaultRawDic = ref<{ key: string, value: string }[]>([])
 const loadingState = ref<Record<string, boolean>>({})
 
-const fetchData = async () => {
-    isLoading.value = true
-    const { data, error } = await VaultApiFactory().v1VaultGet()
-    isLoading.value = false
-    if (error) {
-        msg.value = {
-            errorMessages: [error.message],
-            delay: 3000,
-        }
-        return
-    }
-
-    vaults.value = orderBy(data, "key", "desc")
-}
-
-watchEffect(async () => fetchData())
+const { isPending: isLoading, data: vaults, } = useVaults()
 
 const updatePage = (n: number) => {
     page.value = n
@@ -130,13 +113,13 @@ const close = () => {
 const valut_save = (newVault: VaultView) => {
     close()
     page.value = 1
-    const index = vaults.value.findIndex(vault => vault.id === newVault.id)
+    const index = (vaults.value ?? []).findIndex(vault => vault.id === newVault.id)
     if (index !== -1) {
-        vaults.value.splice(index, 1, newVault)
+        (vaults.value ?? []).splice(index, 1, newVault)
     } else {
-        vaults.value.push(newVault)
+        (vaults.value ?? []).push(newVault)
     }
-    vaults.value = [...vaults.value]
+    vaults.value = [...(vaults.value ?? [])]
     const i = vaultRawDic.value.findIndex(p => p.key == newVault.id)
     if (i !== -1) {
         vaultRawDic.value.splice(index, 1)
@@ -148,19 +131,19 @@ const valut_import = (newVaults: VaultView[]) => {
     close()
     page.value = 1
     Array.from(newVaults).map((newVault) => {
-        vaults.value.push(newVault)
+        (vaults.value ?? []).push(newVault)
     })
-    vaults.value = [...vaults.value]
+    vaults.value = [...(vaults.value ?? [])]
 }
 
 const vault_delete = (vault_id: string) => {
     close()
     page.value = 1
-    const index = vaults.value.findIndex(vault => vault.id === vault_id)
+    const index = (vaults.value ?? []).findIndex(vault => vault.id === vault_id)
     if (index !== -1) {
-        vaults.value.splice(index, 1)
+        (vaults.value ?? []).splice(index, 1)
     }
-    vaults.value = [...vaults.value]
+    vaults.value = [...(vaults.value ?? [])]
 }
 
 watch(dialog, (d) => {

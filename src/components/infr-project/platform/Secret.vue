@@ -1,19 +1,16 @@
 <script lang="ts" setup>
-import { ref, watch, computed, watchEffect } from 'vue'
-import { storeToRefs } from 'pinia'
+import { ref, watch, computed } from 'vue'
 import { orderBy, isEqual, cloneDeep } from 'lodash-es'
 
 import { useAuth } from '@/plugins/auth'
-import { useVaultStore } from '@/stores/vault'
 
 import type { Secret } from './platform'
 import type { ValidateManagerType } from '@/tools/validate'
 
 import { VaultApiFactory } from '../vault/vault'
+import { useVaults } from '../vault/vaultQuery'
 
 const authService = useAuth()
-const vaultStore = useVaultStore()
-const { vaultList } = storeToRefs(vaultStore)
 
 const props = defineProps<{
     modelValue: Secret[],
@@ -45,31 +42,14 @@ const removeSecret = (index: number) => {
     props.validateManager.removeInputRef(`s-value-${index}`)
 }
 
+const { isPending: isLoading, data: vaultList, } = useVaults()
+
 const vaultOptions = computed(() =>
-    vaultList.value.map((vault) => ({
+    (vaultList.value ?? []).map((vault) => ({
         label: vault.key + " - " + vault.storage_media,
         value: vault.id,
     }))
 )
-
-const fetchVaultData = async () => {
-    // if (!logined.value) {
-    //     return
-    // }
-
-    if (vaultList.value.length > 0) {
-        return
-    }
-    const { data, error } = await VaultApiFactory().v1VaultGet()
-    if (error) {
-        vaultList.value = []
-        return
-    }
-
-    vaultList.value = orderBy((data ?? []).filter(p => p.vault_type != "system"), "key", "desc")
-}
-
-watchEffect(async () => fetchVaultData())
 
 watch(() => props.modelValue, (newVal) => {
     if (!isEqual(editModel.value, newVal)) {
@@ -90,7 +70,6 @@ const readonly = computed(() => {
     return !logined.value
 })
 
-
 </script>
 
 <template>
@@ -102,15 +81,15 @@ const readonly = computed(() => {
         </div>
 
         <v-row v-for="(secret, index) in editModel" :key="index" v-if="!simple">
-            <v-col :cols="logined ? 5 : 6" >
+            <v-col :cols="logined ? 5 : 6">
                 <v-text-field :ref="el => validateManager.setInputRef(el, `s-key-${index}`)" v-model="secret.key"
                     label="Key" :rules="validateManager.requiredMinMax('Secret Key', 3, 150)" :hideDetails="readonly"
                     :readonly="readonly" />
             </v-col>
             <v-col :cols="logined ? 5 : 6" class="d-flex align-start">
                 <v-select :ref="el => validateManager.setInputRef(el, `s-value-${index}`)" v-model="secret.vault_id"
-                    label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)" :hideDetails="readonly"
-                    :readonly="readonly" class="mb-5" :items="vaultOptions" item-value="value"
+                    label="Value" :rules="validateManager.requiredMinMax('Secret Value', 3, 150)"
+                    :hideDetails="readonly" :readonly="readonly" class="mb-5" :items="vaultOptions" item-value="value"
                     item-title="label"></v-select>
                 <v-tooltip :text="secret.mask_value">
                     <template v-slot:activator="{ props }">
