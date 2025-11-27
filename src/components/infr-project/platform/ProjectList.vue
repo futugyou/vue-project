@@ -19,16 +19,7 @@ const selfProjects = computed(() =>
 )
 
 const providerProjects = computed(() =>
-    map(props.projects.filter(p => p.id == "" && p.provider_project), p => ({
-        id: p.provider_project!.id,
-        name: p.provider_project!.name,
-        url: p.provider_project!.url,
-        followed: false,
-        properties: p.provider_project!.properties,
-        provider_project_id: p.provider_project!.id,
-        secrets: [], webhooks: [],
-        description: p.provider_project!.description,
-    }))
+    props.projects.filter(p => p.provider_project_id != "" && !p.followed) ?? []
 )
 
 const disabled = computed(() => {
