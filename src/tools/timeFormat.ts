@@ -28,3 +28,12 @@ export const shortTimeFormat = (input: moment.MomentInput): string => {
 
     return day!.format('L')
 }
+
+export const fromNow = (input: moment.MomentInput): string => {
+    const [day, ok] = timeCheck(input)
+    if (!ok) {
+        return "-"
+    }
+
+    return moment(day).fromNow()
+}

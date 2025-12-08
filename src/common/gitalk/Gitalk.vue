@@ -2,7 +2,6 @@
 import { ref, watch, watchEffect } from 'vue'
 import { useBrowserLocation } from '@vueuse/core'
 import { marked } from 'marked'
-import moment from 'moment'
 import { orderBy, uniqBy } from 'lodash-es'
 import { useIDBClient } from '@/composables/useIDBClientEx'
 import { useIDBRef } from '@/composables/useIDBRefEx'
@@ -15,6 +14,7 @@ import {
 import type { Comment, GitHubUser, Issue } from './github'
 
 import { queryStringify } from '@/tools/util'
+import { shortTimeFormat } from '@/tools/timeFormat'
 import Like from '@/icons/Like.vue'
 import Reply from '@/icons/Reply.vue'
 import GithubIcon from '@/icons/Github.vue'
@@ -357,7 +357,8 @@ watch(
                     <div class="comment-head">
                         <div>
                             <div><a :href="comment.user.html_url" target="_blank">{{ comment.user.login }}</a> </div>
-                            <div>created at: {{ moment(comment.created_at).fromNow() }}</div>
+                            <div>created at: {{ shortTimeFormat(comment.created_at) }}
+                            </div>
                             <div>
                                 <span v-if="!commentMark[index]"
                                     @click="commentMark[index] = !commentMark[index]">code</span>
