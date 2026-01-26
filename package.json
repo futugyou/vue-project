@@ -47,7 +47,7 @@
     "xstate": "^5.25.1"
   },
   "devDependencies": {
-    "@grafana/faro-rollup-plugin": "^0.8.0",
+    "@grafana/faro-rollup-plugin": "^0.8.1",
     "@playwright/test": "^1.58.0",
     "@tsconfig/node18": "^18.2.6",
     "@types/js-yaml": "^4.0.9",
