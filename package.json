@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@googleworkspace/drive-picker-element": "^0.7.3",
-    "@grafana/faro-web-sdk": "^2.2.1",
-    "@grafana/faro-web-tracing": "^2.2.1",
+    "@grafana/faro-web-sdk": "^2.2.2",
+    "@grafana/faro-web-tracing": "^2.2.2",
     "@honeycombio/opentelemetry-web": "^1.3.0",
     "@opentelemetry/auto-instrumentations-web": "^0.56.0",
     "@tanstack/query-persist-client-core": "^5.91.19",
