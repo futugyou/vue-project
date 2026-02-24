@@ -40,10 +40,10 @@
     "tesseract.js": "^7.0.0",
     "the-new-css-reset": "^1.11.3",
     "v-code-diff": "^1.13.1",
-    "vue": "^3.5.28",
+    "vue": "^3.5.29",
     "vue-router": "^5.0.3",
     "vue3-moveable": "^0.28.0",
-    "vuetify": "^3.12.0",
+    "vuetify": "^4.0.0",
     "xstate": "^5.28.0"
   },
   "devDependencies": {
