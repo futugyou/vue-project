@@ -1,5 +1,5 @@
+import 'vuetify/styles/core'
 import './assets/main.css'
-import 'the-new-css-reset/css/reset.css'
 import 'github-markdown-css/github-markdown.css'
 
 import { lazyInjectAnalytics } from './env-init'
