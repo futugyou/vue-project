@@ -51,42 +51,41 @@ const projects = ref<Project[]>([
 </script>
 
 <template>
-    <v-sheet>
-        <v-container class="pa-4">
-            <v-row>
-                <v-col v-for="project in projects" :key="project.name" cols="12" sm="6" md="4">
-                    <v-card elevation="6" class="pa-4 h-100" v-ripple>
-                        <template v-slot:title> {{ project.name }} </template>
-                        <template v-slot:append>
-                            <v-progress-circular :model-value="project.progress" :size="100" :width="15"
-                                :color="project.color">
-                                <strong>{{ Math.ceil(project.progress) }}%</strong>
-                            </v-progress-circular>
-                        </template>
+    <v-sheet class="pa-4">
+        <v-row>
+            <v-col v-for="project in projects" :key="project.name" cols="12" sm="6" md="4">
+                <v-card elevation="6" class="pa-4 h-100" v-ripple>
+                    <template v-slot:title> {{ project.name }} </template>
+                    <template v-slot:append>
+                        <v-progress-circular :model-value="project.progress" :size="100" :width="15"
+                            :color="project.color">
+                            <strong>{{ Math.ceil(project.progress) }}%</strong>
+                        </v-progress-circular>
+                    </template>
 
-                        <v-card-subtitle class="mt-2">
-                            Overall progress
-                            <v-progress-linear striped :model-value="project.progress" :color="project.color"
-                                height="20" rounded>
-                                <strong>{{ Math.ceil(project.progress) }}%</strong>
+                    <v-card-subtitle class="mt-2">
+                        Overall progress
+                        <v-progress-linear striped :model-value="project.progress" :color="project.color" height="20"
+                            rounded>
+                            <strong>{{ Math.ceil(project.progress) }}%</strong>
+                        </v-progress-linear>
+                    </v-card-subtitle>
+
+                    <v-divider class="my-3"></v-divider>
+
+                    <v-list>
+                        <v-list-item v-for="sub in project.subs" :key="sub.name">
+                            <v-list-item-title class="text-capitalize"><strong>{{ sub.name
+                            }}</strong></v-list-item-title>
+                            <v-progress-linear striped :model-value="sub.progress" :color="sub.color" height="18"
+                                rounded>
+                                <strong>{{ Math.ceil(sub.progress) }}%</strong>
                             </v-progress-linear>
-                        </v-card-subtitle>
-
-                        <v-divider class="my-3"></v-divider>
-
-                        <v-list>
-                            <v-list-item v-for="sub in project.subs" :key="sub.name">
-                                <v-list-item-title class="text-capitalize"><strong>{{ sub.name }}</strong></v-list-item-title>
-                                <v-progress-linear striped :model-value="sub.progress" :color="sub.color" height="18"
-                                    rounded>
-                                    <strong>{{ Math.ceil(sub.progress) }}%</strong>
-                                </v-progress-linear>
-                            </v-list-item>
-                        </v-list>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-col>
+        </v-row>
         <SearchBox></SearchBox>
     </v-sheet>
 </template>
