@@ -34,17 +34,15 @@ router = createRouter({
 }) as Router
 
 // route guards
-router.beforeEach((to: any, from: any, next: any) => {
-    // it will NOT stop redirect
-    if (to.name == 'Redirect') {
+router.beforeEach(async (to, from) => { 
+    if (to.name === 'Redirect') {
+        return false 
+    }
+ 
+    if (to.meta.requiresAuth && !handleRequiresAuth()) { 
+        // return { name: 'Login' } 
         return false
-    }
-
-    if (to.meta.requiresAuth && !handleRequiresAuth()) {
-        next(false)
-    } else {
-        next()
-    }
+    } 
 })
 
 const clearRouter = (fn: () => void) => {
