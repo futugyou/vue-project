@@ -17,7 +17,7 @@
     "@opentelemetry/auto-instrumentations-web": "^0.58.0",
     "@tanstack/query-persist-client-core": "^5.92.1",
     "@tanstack/vue-query": "^5.92.9",
-    "@vercel/analytics": "^2.0.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "@vueuse/core": "^14.2.1",
     "@xstate/vue": "^5.0.0",
