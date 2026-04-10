@@ -60,7 +60,7 @@
     "rollup-plugin-visualizer": "^7.0.1",
     "sass": "^1.99.0",
     "typescript": "^5.9.3",
-    "vite": "^7.3.2",
+    "vite": "^8.0.8",
     "vite-plugin-top-level-await": "^1.6.0",
     "vue-tsc": "^3.2.6"
   }
