@@ -19,7 +19,7 @@
     "@tanstack/vue-query": "^5.100.6",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "@vueuse/core": "^14.2.1",
+    "@vueuse/core": "^14.3.0",
     "@xstate/vue": "^5.0.0",
     "fast-xml-parser": "^5.7.2",
     "github-markdown-css": "^5.9.0",
