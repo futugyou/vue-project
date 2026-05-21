@@ -75,15 +75,11 @@ defineExpose({
         <v-img v-else :aspect-ratio="16 / 9" cover :src="imageData" @click="openDialog" />
     </v-sheet>
 
-    <v-sheet class="d-flex justify-space-around ma-3 cursor-zoom-in" @click="openDialog" v-else>
-        <v-responsive v-if="type === 'Markdown'" :aspect-ratio="16 / 9">
-            <v-sheet class="markdown-body" v-html="renderedHtml" id="image-preview" />
-        </v-responsive>
-        <v-responsive v-else :aspect-ratio="16 / 9" v-if="formatText">
-            <v-sheet>
-                <div id="image-preview" class="text-body-1 word-break">{{ formatText }}</div>
-            </v-sheet>
-        </v-responsive>
+    <v-sheet class="d-flex justify-space-around ma-3 cursor-zoom-in" @click="openDialog" v-else> 
+        <v-sheet v-if="type === 'Markdown'" class="markdown-body" v-html="renderedHtml" id="image-preview" /> 
+        <v-sheet v-else>
+            <div id="image-preview" class="text-body-1 word-break" v-if="formatText">{{ formatText }}</div>
+        </v-sheet> 
     </v-sheet>
 
     <v-dialog v-model="dialogVisible" max-width="90%" scrollable :closeOnContentClick="true" :persistent="true">
