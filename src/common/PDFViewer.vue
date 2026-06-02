@@ -1,14 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, watch } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
-import { computedAsync } from '@vueuse/core'
 import * as pdfjsLib from 'pdfjs-dist'
-import Moveable from "vue3-moveable"
-
-import { jsPDF } from 'jspdf'
-import { imageBitmapToCanvas } from '@/tools/util'
-
-import Spinners from '@/common/Spinners.vue'
 import Button from '@/common/Button.vue'
 import FileInput from '@/common/FileInput.vue'
 import ZoomOut from '@/icons/ZoomOut.vue'
@@ -64,7 +57,7 @@ const onFileChange = (fileList: FileList) => {
     const reader = new FileReader()
 
     reader.onload = async () => {
-        const dataUrl = reader.result
+        const dataUrl = reader.result as string
         if (dataUrl) {
             loading.value = true
             await extractDataFromPdf(dataUrl)
@@ -265,8 +258,8 @@ const scalePdfViewer = () => {
     return canvas
 }
 
-const extractDataFromPdf = async (url: string | ArrayBuffer) => {
-    const pdfTask = pdfjsLib.getDocument(url)
+const extractDataFromPdf = async (url: string) => {
+    const pdfTask = pdfjsLib.getDocument({ url: url })
     pdfRaw.value = pdfTask
     const pdf = await pdfTask.promise
     totalPages = pdf.numPages
@@ -291,36 +284,6 @@ defineExpose({
     currentPage: currentPage,
     extractedText,
 })
-// const pdfTask = pdfjsLib.getDocument(url)
-// const pdf = await pdfTask.promise
-// let textContent = []
-// const maxPages = pdf.numPages
-// for (let i = 1; i <= maxPages; i++) {
-//     const page = await pdf.getPage(i)
-//     const operatorList = await page.getOperatorList()
-//     const fns = operatorList.fnArray
-//     const args = operatorList.argsArray
-//     args.forEach((arg, i) => {
-//         if (fns[i] !== pdfjsLib.OPS.paintImageXObject) { return }
-//         const imgKey = arg[0]
-
-//         page.objs.get(imgKey, async (img: any) => {
-//             const canvas = await imageBitmapToCanvas(img.bitmap)
-//             const rootElement = document.getElementById('area') as HTMLElement
-//             rootElement.replaceChildren(canvas)
-
-//             const doc = new jsPDF({ unit: 'px', hotfixes: ["px_scaling"], format: "a4", orientation: "portrait" })
-//             const pageWidth = doc.internal.pageSize.getWidth()
-//             console.log(pageWidth, img.width)
-//             const a = pageWidth * 0.88
-//             const b = pageWidth * 0.88 / img.width * img.height
-//             doc.text("Hello world!", 10, 10)
-//             doc.addImage({ imageData: canvas, x: pageWidth * 0.06, y: 20, width: a, height: b })
-//             doc.save("a4.pdf")
-//         })
-//     })
-// }
-// }
 
 </script>
 
