@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
 import faroUploader from '@grafana/faro-rollup-plugin'
+import vuetify from 'vite-plugin-vuetify'
 
 const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '')
 
@@ -31,6 +32,7 @@ export default defineConfig({
         },
       },
     }),
+    vuetify({ autoImport: true }),
     vueJsx(),
     visualizer({ open: true, filename: 'dist/stats.html' }),
     faroUploader({

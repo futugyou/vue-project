@@ -1,7 +1,8 @@
 import { ref, watchEffect, type Ref } from 'vue'
 import { marked } from 'marked'
 import type { Tokenizer, MarkedExtension, Tokens, RendererThis, TokensList } from 'marked'
-import mermaid from 'mermaid'
+
+type MermaidModule = typeof import('mermaid').default
 
 // Type definitions for the Mermaid Marked extension
 interface MermaidToken extends Tokens.Generic {
@@ -28,10 +29,11 @@ const generateElementId = (prefix = 'svg'): string => {
 
 /**
  * Creates a Marked extension for rendering Mermaid diagrams.
+ * @param mermaidInstance MUST be a valid Mermaid module instance.
  * @param config Optional configuration to customize the HTML wrapper.
  * @returns A MarkedExtension object.
  */
-const createMermaidMarkedExtension = (config?: MermaidConfig): MarkedExtension => {
+const createMermaidMarkedExtension = (mermaidInstance: MermaidModule, config?: MermaidConfig): MarkedExtension => {
     const mergedConfig = { ...defaultConfig, ...config }
 
     // const mermaidReg = /^```mermaid\n([\s\S]*?)\n```$/
@@ -71,7 +73,7 @@ const createMermaidMarkedExtension = (config?: MermaidConfig): MarkedExtension =
         async walkTokens(token) {
             if (token.type === 'mermaid') {
                 try {
-                    const renderResult = await mermaid.render(generateElementId(), token.code)
+                    const renderResult = await mermaidInstance.render(generateElementId(), token.code)
                     token.html = renderResult?.svg
                     token.ok = true
                     return
@@ -96,24 +98,34 @@ export const useMarkedMermaid = (markdownSrc: Ref<string> | string, mermaidConfi
     const renderedHtml = ref('')
     const markdownRef = typeof markdownSrc === 'string' ? ref(markdownSrc) : markdownSrc
 
-    // Initialize Mermaid.js (can be configured as needed)
-    mermaid.initialize({ startOnLoad: true })
-
-    // Create the Mermaid extension for Marked
-    const mermaidExtension = createMermaidMarkedExtension(mermaidConfig)
-    
     marked.use({
         async: true,
         pedantic: false,
         gfm: true,
     })
-    // Use the extension with Marked
-    marked.use(mermaidExtension)
+
+    let isExtensionRegistered = false
 
     watchEffect(async () => {
-        if (markdownRef.value) {
+        if (!markdownRef.value) return
+
+        try {
+            const { default: mermaid } = await import('mermaid')
+
+            mermaid.initialize({ startOnLoad: false })
+
+            if (!isExtensionRegistered) {
+                const mermaidExtension = createMermaidMarkedExtension(mermaid, mermaidConfig)
+                marked.use(mermaidExtension)
+                isExtensionRegistered = true
+            }
+
             const parsedResult = await marked.parse(markdownRef.value)
             renderedHtml.value = parsedResult
+        } catch (err) {
+            console.error('Failed to render markdown with mermaid:', err)
+            const fallbackResult = await marked.parse(markdownRef.value)
+            renderedHtml.value = fallbackResult
         }
     })
 
