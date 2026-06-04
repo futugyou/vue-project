@@ -188,4 +188,13 @@ th {
     align-items: center;
     cursor: pointer;
 }
+
+.v-pagination__list {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    list-style-type: none;
+    justify-content: center;
+    width: 100%;
+}
 </style>
