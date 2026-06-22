@@ -1,5 +1,6 @@
-import yaml from 'js-yaml'
-import { XMLParser, XMLBuilder } from 'fast-xml-parser'
+import { dump, load } from 'js-yaml'
+import { XMLParser } from 'fast-xml-parser'
+import XMLBuilder from 'fast-xml-builder'
 
 export const detectFormat = (str: string): 'json' | 'yaml' | 'xml' | 'unknown' => {
     try {
@@ -8,7 +9,7 @@ export const detectFormat = (str: string): 'json' | 'yaml' | 'xml' | 'unknown' =
     } catch { }
 
     try {
-        yaml.load(str)
+        load(str)
         return 'yaml'
     } catch { }
 
@@ -62,9 +63,9 @@ export const formatContent = (str: string): { format: string, formatted: string 
     } catch { }
 
     try {
-        const parsed = yaml.load(str)
+        const parsed = load(str)
         if (isLikelyJsonStructure(parsed)) {
-            const formatted = yaml.dump(parsed, { noRefs: true })
+            const formatted = dump(parsed, { noRefs: true })
             if (formatted != "") {
                 return { format: 'yaml', formatted: formatted }
             }
