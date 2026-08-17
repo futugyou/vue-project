@@ -43,7 +43,7 @@
     "vue": "^3.5.41",
     "vue-router": "^5.2.0",
     "vue3-moveable": "^0.28.0",
-    "vuetify": "^4.1.8",
+    "vuetify": "^4.1.9",
     "xstate": "^5.32.5"
   },
   "devDependencies": {
