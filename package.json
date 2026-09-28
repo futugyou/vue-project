@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@googleworkspace/drive-picker-element": "^0.7.3",
-    "@grafana/faro-web-sdk": "^2.12.0",
-    "@grafana/faro-web-tracing": "^2.12.0",
+    "@grafana/faro-web-sdk": "^2.12.1",
+    "@grafana/faro-web-tracing": "^2.12.1",
     "@honeycombio/opentelemetry-web": "^1.5.1",
     "@opentelemetry/auto-instrumentations-web": "^0.67.0",
     "@tanstack/query-persist-client-core": "^5.103.2",
@@ -47,7 +47,7 @@
     "xstate": "^5.33.2"
   },
   "devDependencies": {
-    "@grafana/faro-rollup-plugin": "^0.12.0",
+    "@grafana/faro-rollup-plugin": "^0.13.0",
     "@playwright/test": "^1.63.0",
     "@tsconfig/node18": "^18.2.7",
     "@types/js-yaml": "^4.0.9",
