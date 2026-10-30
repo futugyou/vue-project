@@ -14,7 +14,7 @@
     "@grafana/faro-web-sdk": "^2.13.0",
     "@grafana/faro-web-tracing": "^2.13.0",
     "@honeycombio/opentelemetry-web": "^1.5.1",
-    "@opentelemetry/auto-instrumentations-web": "^0.68.0",
+    "@opentelemetry/auto-instrumentations-web": "^0.69.0",
     "@tanstack/query-persist-client-core": "^5.105.0",
     "@tanstack/vue-query": "^5.105.0",
     "@vercel/analytics": "^2.0.1",
