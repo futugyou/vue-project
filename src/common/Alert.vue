@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import {  useMessageStore } from '@/stores/message'
+import { useMessageStore } from '@/stores/message'
 import type { MessageInfo } from '@/stores/message'
 
 const store = useMessageStore()
@@ -38,11 +38,18 @@ watch(msg, checkDisplayState)
 
 <template>
     <div v-if="showMessage" class="alert-container">
-        <v-banner icon="$warning" bg-color="#FFB74D" width="100%" v-for="text in errorMessages" :key="text" :text="text"
+        <v-banner icon="$warning" class="message" v-for="text in errorMessages" :key="text" :text="text"
             v-if="showMessage"></v-banner>
     </div>
 </template>
 <style scoped>
+.message {
+    background-color: #FFB74D;
+    width: 100%;
+    display: flex;
+    gap: 5px;
+}
+
 .alert-container {
     top: 50px;
     position: absolute;

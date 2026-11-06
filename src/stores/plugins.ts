@@ -2,7 +2,7 @@ import 'pinia'
 import { watch } from 'vue'
 import type { Ref } from 'vue'
 import { createPinia } from 'pinia'
-import type { PiniaPluginContext } from 'pinia'
+import type { PiniaPluginContext, StoreActions } from 'pinia'
 
 declare module 'pinia' {
     export interface PiniaCustomProperties {
