@@ -40,10 +40,10 @@
     "pinia": "^4.1.0",
     "tesseract.js": "^7.0.0",
     "v-code-diff": "^1.16.0",
-    "vue": "^3.5.45",
+    "vue": "^3.5.46",
     "vue-router": "^5.5.1",
     "vue3-moveable": "^0.28.0",
-    "vuetify": "^4.3.3",
+    "vuetify": "^4.3.4",
     "xstate": "^5.33.4"
   },
   "devDependencies": {
